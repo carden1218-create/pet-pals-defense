@@ -1,0 +1,2515 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
+<title>萌宠防线 — 抓宠·孵蛋·进化塔防</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect fill='%23ffc83a' width='32' height='32' rx='9'/%3E%3Ccircle cx='16' cy='18' r='9' fill='%23ff5a4a' stroke='%232b1b22' stroke-width='2.5'/%3E%3C/svg%3E">
+<style>
+  :root {
+    --ol: #2b1b22; --ink: #3a2630; --dim: #8a6a70;
+    --cream: #fff8e6; --cream2: #ffefc8;
+    --pink: #ff6f9a; --gold: #ffc83a; --mint: #5fcf86; --sky: #6cb8ff; --lav: #a98aff; --red: #ff6a5a;
+  }
+  * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+  html, body { margin: 0; height: 100%; overflow: hidden; }
+  body {
+    background: #2a1d33;
+    background-image: radial-gradient(circle at 50% 0%, #4a3360 0%, #2a1d33 70%);
+    font-family: "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "Noto Sans SC", "Noto Sans CJK SC", "Source Han Sans SC", sans-serif;
+    color: var(--ink); user-select: none; -webkit-user-select: none;
+  }
+  #app {
+    position: absolute; left: 50%; top: 50%;
+    width: 540px; height: 960px;
+    transform: translate(-50%, -50%) scale(var(--s, 1));
+    overflow: hidden; border-radius: 24px; background: #9ad77a;
+  }
+  #cv { position: absolute; left: 0; top: 0; width: 540px; height: 960px; display: block; touch-action: none; }
+  .overlay {
+    position: absolute; inset: 0; z-index: 8;
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    padding: 18px;
+  }
+  .hidden { display: none !important; }
+  .dim-bg { background: rgba(30,18,36,.55); }
+  .panel {
+    position: relative;
+    background: var(--cream); border: 4px solid var(--ol); border-radius: 26px;
+    box-shadow: 0 7px 0 var(--ol), 0 18px 40px rgba(0,0,0,.3);
+    padding: 18px 16px 16px; width: 100%;
+  }
+  .ribbon {
+    display: inline-block; position: relative; z-index: 2;
+    background: var(--gold); border: 4px solid var(--ol); border-radius: 16px;
+    box-shadow: 0 5px 0 var(--ol);
+    padding: 4px 22px; font-weight: 900; font-size: 24px; color: var(--ink);
+    letter-spacing: 2px;
+  }
+  .ribbon.pink { background: var(--pink); color: #fff; text-shadow: 0 2px 0 var(--ol), 2px 0 0 var(--ol), -2px 0 0 var(--ol), 0 -2px 0 var(--ol); }
+  .ribbon.lav { background: var(--lav); color: #fff; text-shadow: 0 2px 0 var(--ol), 2px 0 0 var(--ol), -2px 0 0 var(--ol), 0 -2px 0 var(--ol); }
+  .ribbon.mint { background: var(--mint); }
+  .center { text-align: center; }
+  h1 {
+    margin: 0; font-size: 58px; font-weight: 900; letter-spacing: 4px; text-align: center; color: #fff;
+    -webkit-text-stroke: 3px var(--ol); paint-order: stroke fill;
+    text-shadow: 0 6px 0 var(--ol);
+  }
+  .subtitle { margin: 6px 0 14px; text-align: center; color: var(--dim); font-size: 15px; font-weight: 700; }
+  .btn-row { display: flex; flex-wrap: wrap; gap: 10px; justify-content: center; }
+  button {
+    appearance: none; font: inherit; font-weight: 900; cursor: pointer;
+    border: 3px solid var(--ol); border-radius: 16px;
+    padding: 9px 18px; background: #fff; color: var(--ink);
+    box-shadow: 0 4px 0 var(--ol); font-size: 16px;
+  }
+  button:active { transform: translateY(3px); box-shadow: 0 1px 0 var(--ol); }
+  button:disabled { opacity: .45; cursor: default; transform: none; box-shadow: 0 4px 0 var(--ol); }
+  .b-pink { background: var(--pink); color: #fff; }
+  .b-gold { background: var(--gold); }
+  .b-mint { background: var(--mint); }
+  .b-sky { background: var(--sky); }
+  .b-lav { background: var(--lav); color: #fff; }
+  .b-red { background: var(--red); color: #fff; }
+  .b-big { font-size: 22px; padding: 12px 30px; border-radius: 20px; }
+  .pill {
+    display: inline-flex; align-items: center; gap: 4px;
+    background: #fff; border: 3px solid var(--ol); border-radius: 999px;
+    padding: 2px 10px; font-weight: 900; font-size: 15px;
+  }
+  .ico { display: inline-block; width: 18px; height: 18px; vertical-align: -3px; }
+
+  /* home */
+  #home { justify-content: flex-start; padding: 14px 12px 12px; }
+  #home .panel { flex: 1; display: flex; flex-direction: column; overflow: hidden; padding: 12px; }
+  .topbar { display: flex; justify-content: space-between; align-items: center; gap: 6px; margin-bottom: 8px; }
+  .tabs { display: grid; grid-template-columns: repeat(5, 1fr); gap: 6px; margin-bottom: 10px; }
+  .tabs button { padding: 8px 4px; font-size: 16px; border-radius: 14px; background: #fff3d6; }
+  .tabs button.on { background: var(--pink); color: #fff; }
+  #home-body { flex: 1; overflow-y: auto; overflow-x: hidden; padding: 2px 2px 8px; }
+  .sec-title { font-weight: 900; font-size: 15px; margin: 4px 2px 8px; color: var(--ink); }
+  .level-card {
+    position: relative; border: 3px solid var(--ol); border-radius: 18px; padding: 10px 12px 10px 96px;
+    margin-bottom: 10px; box-shadow: 0 4px 0 var(--ol); cursor: pointer; min-height: 88px;
+  }
+  .level-card canvas { position: absolute; left: 8px; top: 8px; width: 78px; height: 70px; border-radius: 12px; border: 2px solid var(--ol); }
+  .level-card h3 { margin: 0 0 3px; font-size: 18px; }
+  .level-card p { margin: 0; font-size: 13px; color: var(--ink); opacity: .8; line-height: 1.45; }
+  .level-card .tag { position: absolute; right: 10px; top: 8px; }
+  .level-card.locked { filter: grayscale(.85); opacity: .65; cursor: default; }
+  .lv-orchard { background: #c9f0a8; } .lv-beach { background: #ffe9a8; } .lv-volcano { background: #ffc0a0; } .lv-endless { background: #d8ccff; }
+
+  /* cards with rarity frames */
+  .grid3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 9px; }
+  .card {
+    position: relative; border: 3px solid var(--ol); border-radius: 16px; padding: 5px 5px 6px;
+    text-align: center; box-shadow: 0 4px 0 var(--ol); cursor: pointer;
+  }
+  .card .art { position: relative; border: 2px solid rgba(43,27,34,.55); border-radius: 11px; height: 104px; overflow: hidden; }
+  .card .art canvas { width: 104px; height: 104px; display: block; margin: 0 auto; }
+  .card .nm {
+    background: #fff; border: 2px solid var(--ol); border-radius: 10px; margin-top: 5px;
+    font-weight: 900; font-size: 14px; padding: 1px 2px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+  }
+  .card .meta { font-size: 11px; font-weight: 800; color: var(--ink); margin-top: 3px; }
+  .r1 { background: #7fd05a; } .r1 .art { background: radial-gradient(circle at 50% 60%, #f2ffe4, #c3ea9c); }
+  .r2 { background: #5aa8ff; } .r2 .art { background: radial-gradient(circle at 50% 60%, #eef6ff, #b0d4ff); }
+  .r3 { background: #b07aff; } .r3 .art { background: radial-gradient(circle at 50% 60%, #f6eeff, #d4b8ff); }
+  .r4 { background: linear-gradient(140deg, #ffe066, #ff9a3a); } .r4 .art { background: radial-gradient(circle at 50% 60%, #fffbe6, #ffd98a); }
+  .card.shiny .art { background: radial-gradient(circle at 50% 60%, #fff, #ffd6f4 55%, #c8e8ff); }
+  .card.locked { background: #c8bcc0; cursor: default; }
+  .card.locked .art { background: #e8e0e2; }
+  .el {
+    position: absolute; left: 4px; top: 4px; z-index: 2; width: 24px; height: 24px; border-radius: 50%;
+    border: 2px solid var(--ol); font-size: 13px; line-height: 20px; font-weight: 900; color: #fff; text-align: center;
+  }
+  .el-火 { background: #ff5a3a; } .el-水 { background: #3a9aff; } .el-草 { background: #45b850; }
+  .el-雷 { background: #ffc83a; color: var(--ol); } .el-土 { background: #b07a4a; } .el-光 { background: #fff07a; color: var(--ol); }
+  .rtag {
+    position: absolute; right: 4px; top: 4px; z-index: 2; font-size: 11px; font-weight: 900;
+    background: #fff; border: 2px solid var(--ol); border-radius: 8px; padding: 0 5px;
+  }
+  .stag {
+    position: absolute; left: 50%; top: 28px; transform: translateX(-50%); z-index: 2; font-size: 10px; font-weight: 900; color: #fff;
+    background: linear-gradient(90deg, #ff6fc8, #8a7aff, #4ac8ff); border: 2px solid var(--ol); border-radius: 8px; padding: 0 6px; white-space: nowrap;
+  }
+  .stars { color: #ffd23a; font-size: 15px; letter-spacing: -1px; -webkit-text-stroke: 1.2px var(--ol); paint-order: stroke fill; font-weight: 900; }
+  .stars .off { color: #e8dcd0; }
+  .role { display: inline-block; font-size: 11px; font-weight: 900; border: 2px solid var(--ol); border-radius: 8px; padding: 0 5px; background: #fff; }
+  .role-tank { background: #c8d8ff; } .role-dps { background: #ffc8c0; } .role-aoe { background: #ffd8a0; } .role-sup { background: #c8f0c0; }
+
+  .egg-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; }
+  .egg-card { border: 3px solid var(--ol); border-radius: 16px; background: #fff; text-align: center; padding: 4px 2px 6px; cursor: pointer; box-shadow: 0 4px 0 var(--ol); }
+  .egg-card canvas { width: 64px; height: 72px; display: block; margin: 0 auto; }
+  .egg-card .nm { font-weight: 900; font-size: 13px; }
+  .egg-card .meta { font-size: 11px; color: var(--dim); font-weight: 800; }
+  .box { background: #fff; border: 3px solid var(--ol); border-radius: 16px; padding: 10px; margin-bottom: 10px; }
+  .evo-row { display: flex; align-items: center; gap: 6px; background: #fff; border: 3px solid var(--ol); border-radius: 16px; padding: 6px 10px; margin-bottom: 8px; box-shadow: 0 3px 0 var(--ol); }
+  .evo-row canvas { width: 70px; height: 70px; }
+  .evo-row .arrow { font-size: 22px; font-weight: 900; color: #5fcf86; -webkit-text-stroke: 1px var(--ol); }
+  .evo-row .info { flex: 1; font-size: 13px; font-weight: 800; }
+
+  /* detail */
+  .chain { display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; }
+  .chain .st { text-align: center; }
+  .chain canvas { width: 100%; height: auto; aspect-ratio: 1; display: block; border-radius: 12px; border: 2px solid var(--ol); }
+  .chain .lab { font-weight: 900; font-size: 13px; margin-top: 3px; background: #7fd05a; border: 2px solid var(--ol); border-radius: 9px; }
+  .chain.sh .lab { background: #b07aff; color: #fff; }
+
+  /* battle hud */
+  #hud { position: absolute; left: 0; right: 0; top: 0; z-index: 5; padding: 8px 10px 0; pointer-events: none; }
+  #hud > * { pointer-events: auto; }
+  .hud-row { display: flex; justify-content: space-between; align-items: center; gap: 6px; }
+  .hud-stats { display: flex; gap: 5px; }
+  .hud-stats .pill { font-size: 15px; padding: 2px 8px; }
+  .hud-btns { display: flex; gap: 5px; }
+  .hud-btns button { padding: 4px 9px; font-size: 14px; border-radius: 12px; box-shadow: 0 3px 0 var(--ol); }
+  #hud-sub { margin-top: 6px; display: flex; justify-content: center; gap: 6px; align-items: center; }
+  #loot-pill { background: linear-gradient(90deg, #fff4c0, #ffd8f0); }
+  #tray {
+    position: absolute; left: 0; right: 0; bottom: 0; height: 94px; z-index: 5;
+    display: flex; gap: 6px; padding: 6px 8px; overflow-x: auto; overflow-y: hidden;
+    background: #ffefc8; border-top: 4px solid var(--ol);
+  }
+  #tray .tcard {
+    flex: 0 0 74px; height: 78px; border: 3px solid var(--ol); border-radius: 14px; text-align: center;
+    cursor: pointer; position: relative; box-shadow: 0 3px 0 var(--ol); padding-top: 1px;
+  }
+  #tray .tcard canvas { width: 56px; height: 52px; display: block; margin: 0 auto; }
+  #tray .tcard .nm { font-size: 11px; font-weight: 900; background: #fff; border-top: 2px solid var(--ol); border-radius: 0 0 11px 11px; white-space: nowrap; overflow: hidden; }
+  #tray .tcard.on { transform: translateY(-4px); box-shadow: 0 0 0 3px #fff, 0 0 0 6px var(--pink); }
+  #tray .tcard .el { width: 18px; height: 18px; font-size: 10px; line-height: 14px; left: 2px; top: 2px; }
+  #tray .empty { color: var(--ink); font-weight: 900; padding: 22px 10px; font-size: 14px; }
+  #inspect {
+    position: absolute; left: 50%; transform: translateX(-50%); bottom: 300px; z-index: 6; width: 300px;
+    background: var(--cream); border: 4px solid var(--ol); border-radius: 20px; box-shadow: 0 5px 0 var(--ol);
+    padding: 10px 12px; font-size: 14px; font-weight: 700;
+  }
+  #inspect h3 { margin: 0 0 2px; font-size: 18px; }
+  #toast {
+    position: absolute; left: 50%; top: 96px; transform: translateX(-50%);
+    background: rgba(43,27,34,.9); color: #fff8e6; z-index: 12; border: 3px solid #fff;
+    padding: 7px 16px; border-radius: 999px; font-weight: 900; font-size: 15px;
+    pointer-events: none; max-width: 92%; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+  }
+  #hatch-cv { width: 300px; height: 280px; display: block; margin: 0 auto; }
+  .sum-list { list-style: none; padding: 0; margin: 10px 0 14px; font-weight: 800; font-size: 16px; line-height: 1.9; text-align: left; }
+  .sum-list b { color: #e0507a; }
+  .chips { display: flex; flex-wrap: wrap; gap: 6px; justify-content: center; margin: 6px 0 12px; }
+  .chip { border: 3px solid var(--ol); border-radius: 12px; padding: 2px 8px; font-weight: 900; font-size: 14px; background: #fff; }
+  .q1 { background: #e4f8d0; } .q2 { background: #d6e8ff; } .q3 { background: #ecdcff; } .q4 { background: #ffe8a8; }
+
+  /* ===== v3 polish: glossy panels, candy buttons, gem card frames ===== */
+  .panel {
+    background: linear-gradient(180deg, #fffdf3 0%, #fff4d8 60%, #ffe9bd 100%);
+    box-shadow: inset 0 0 0 4px #fff, inset 0 -6px 0 rgba(214,160,90,.25), 0 7px 0 var(--ol), 0 18px 40px rgba(0,0,0,.35);
+  }
+  button {
+    background: linear-gradient(180deg, #ffffff 0%, #ffffff 48%, #f1e6d8 52%, #fff7ec 100%);
+    box-shadow: inset 0 -4px 0 rgba(0,0,0,.08), inset 0 2px 0 rgba(255,255,255,.9), 0 4px 0 var(--ol);
+    text-shadow: 0 1px 0 rgba(255,255,255,.5);
+  }
+  .b-pink { background: linear-gradient(180deg, #ff9dbb 0%, #ff7aa2 48%, #ff5a8c 52%, #ff6f9a 100%); color: #fff; text-shadow: 0 2px 0 rgba(120,20,60,.55); }
+  .b-gold { background: linear-gradient(180deg, #ffe680 0%, #ffd54a 48%, #ffbf2a 52%, #ffc83a 100%); }
+  .b-red  { background: linear-gradient(180deg, #ff9a8a 0%, #ff7a6a 48%, #f45a4a 52%, #ff6a5a 100%); color: #fff; text-shadow: 0 2px 0 rgba(120,20,20,.5); }
+  .b-go {
+    display: block; width: 100%; margin: 4px 0 6px; font-size: 26px; padding: 14px; border-radius: 22px; letter-spacing: 4px; color: #fff;
+    background: linear-gradient(180deg, #9cf07a 0%, #6fd94e 48%, #4cc23a 52%, #5fcf47 100%);
+    text-shadow: 0 2px 0 #1f6a1a, 2px 0 0 #1f6a1a, -2px 0 0 #1f6a1a, 0 -2px 0 #1f6a1a;
+    box-shadow: inset 0 -6px 0 rgba(0,60,0,.18), inset 0 3px 0 rgba(255,255,255,.6), 0 6px 0 var(--ol);
+    animation: pulse 1.6s ease-in-out infinite;
+  }
+  @keyframes pulse { 0%,100% { transform: scale(1); } 50% { transform: scale(1.025); } }
+  .tabs button.on { background: linear-gradient(180deg, #ff9dbb 0%, #ff7aa2 48%, #ff5a8c 52%, #ff6f9a 100%); color: #fff; text-shadow: 0 2px 0 rgba(120,20,60,.55); }
+  .pill { box-shadow: inset 0 -3px 0 rgba(0,0,0,.08), 0 3px 0 var(--ol); }
+  .ribbon { background: linear-gradient(180deg, #ffe680, #ffc83a); box-shadow: inset 0 3px 0 rgba(255,255,255,.6), 0 5px 0 var(--ol); }
+  .ribbon.pink { background: linear-gradient(180deg, #ff9dbb, #ff5a8c); }
+  h1 { color: #ffe14a; text-shadow: 0 6px 0 var(--ol), 0 10px 20px rgba(0,0,0,.35); font-size: 64px; }
+  #title-screen h1 { background: none; animation: bob 2.4s ease-in-out infinite; }
+  @keyframes bob { 0%,100% { transform: translateY(0) rotate(-1deg); } 50% { transform: translateY(-6px) rotate(1deg); } }
+
+  /* card frames: double border + rarity gem gradient + corner shine */
+  .card { box-shadow: inset 0 0 0 2px rgba(255,255,255,.75), inset 0 -4px 0 rgba(0,0,0,.15), 0 4px 0 var(--ol); overflow: hidden; }
+  .card::after { content: ""; position: absolute; left: -40%; top: -60%; width: 60%; height: 120%; transform: rotate(25deg);
+    background: linear-gradient(90deg, rgba(255,255,255,0), rgba(255,255,255,.35), rgba(255,255,255,0)); pointer-events: none; }
+  .r1 { background: linear-gradient(160deg, #a6e87e, #5fbf3e); }
+  .r2 { background: linear-gradient(160deg, #8cc6ff, #3a86f0); }
+  .r3 { background: linear-gradient(160deg, #cfa6ff, #8a52f0); }
+  .r4 { background: linear-gradient(160deg, #fff08a, #ffb03a 55%, #ff7a3a); }
+  .r4 .art, .r3 .art { box-shadow: inset 0 0 12px rgba(255,255,255,.8); }
+  .card.shiny { background: linear-gradient(135deg, #ff8ad8, #a98aff 40%, #6ad0ff 70%, #ffe680); }
+  .card.locked { background: linear-gradient(160deg, #d6ccd0, #b0a4a8); }
+  .card.locked::after { display: none; }
+
+  /* play tab */
+  .play-hero { position: relative; border: 4px solid var(--ol); border-radius: 20px; overflow: hidden; box-shadow: 0 5px 0 var(--ol); margin-bottom: 10px; background: #8fd46a; }
+  .play-hero canvas { display: block; width: 100%; height: auto; aspect-ratio: 240 / 150; }
+  .play-hero .ph-txt { background: linear-gradient(180deg, rgba(255,250,235,.96), #fff2d0); border-top: 3px solid var(--ol); padding: 8px 12px 10px; }
+  .play-hero h3 { margin: 0 0 2px; font-size: 22px; font-weight: 900; color: #e0507a; }
+  .play-hero p { margin: 0 0 6px; font-size: 13px; font-weight: 700; line-height: 1.5; }
+  .ph-stats { display: flex; gap: 6px; flex-wrap: wrap; }
+  .ph-stats .chip { font-size: 12px; background: #fff; }
+  .zone-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; }
+  .zone { text-align: center; border: 3px solid var(--ol); border-radius: 14px; overflow: hidden; background: #fff; box-shadow: 0 3px 0 var(--ol); }
+  .zone canvas { display: block; width: 100%; height: auto; aspect-ratio: 140 / 180; }
+  .zone b { display: block; font-size: 14px; border-top: 2px solid var(--ol); padding-top: 2px; }
+  .zone small { display: block; font-size: 11px; font-weight: 800; color: var(--dim); padding-bottom: 3px; }
+  .zone.locked canvas { filter: grayscale(.9) brightness(.7); }
+
+  /* loading */
+  #loading { position: absolute; inset: 0; z-index: 30; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 14px;
+    background: radial-gradient(circle at 50% 40%, #ffe9a8, #ffb86a); font-weight: 900; font-size: 18px; }
+  #loading .bar { width: 260px; height: 22px; border: 4px solid var(--ol); border-radius: 14px; background: #fff; overflow: hidden; box-shadow: 0 4px 0 var(--ol); }
+  #loading .bar i { display: block; height: 100%; width: 0; background: linear-gradient(180deg, #ff9dbb, #ff5a8c); transition: width .15s; }
+
+  /* ===== v4: layout + palette from the reference (placement/feel only) ===== */
+  :root { --pur1: #8a5cf0; --pur2: #5b33c4; --pur3: #3a1f86; --pur4: #2a1466; }
+  /* battle HUD: compact stack top-left, round buttons top-right, banner centre */
+  #hud { padding: 8px 8px 0; }
+  .hud-stats { flex-direction: column; align-items: flex-start; gap: 4px; }
+  .hud-stats .pill { font-size: 15px; padding: 2px 10px; background: rgba(43,27,34,.78); color: #fff; border-color: #fff; box-shadow: 0 2px 0 rgba(0,0,0,.35); }
+  .hud-stats .pill.sm { font-size: 13px; }
+  .hud-btns button.rnd { width: 46px; height: 46px; padding: 0; border-radius: 50%; font-size: 13px; line-height: 1; }
+  #hud-sub { position: absolute; left: 50%; top: 8px; transform: translateX(-50%); margin: 0; }
+  .banner { display: inline-block; white-space: nowrap; font-weight: 900; font-size: 13px; color: #fff; padding: 3px 14px;
+    background: linear-gradient(180deg, #ff7aa8, #e8457e); border: 3px solid var(--ol); border-radius: 12px; box-shadow: inset 0 2px 0 rgba(255,255,255,.45), 0 3px 0 var(--ol);
+    text-shadow: 0 2px 0 rgba(90,10,40,.6); }
+  /* bottom dock: dark purple panel with big pet cards */
+  #dock { position: absolute; left: 0; right: 0; bottom: 0; top: 724px; z-index: 5; display: flex; flex-direction: column;
+    background: linear-gradient(180deg, var(--pur2) 0%, var(--pur3) 55%, var(--pur4) 100%);
+    border-top: 4px solid var(--ol); box-shadow: inset 0 3px 0 rgba(255,255,255,.25); }
+  #dock-bar { display: flex; align-items: center; gap: 6px; padding: 7px 10px 5px; }
+  .dpill { font-weight: 900; font-size: 15px; color: #fff; background: rgba(20,8,50,.6); border: 2px solid rgba(255,255,255,.35); border-radius: 12px; padding: 2px 10px; }
+  .dpill.heart { color: #ffd0d8; }
+  .b-go-s { margin-left: auto; font-size: 18px; padding: 6px 16px; border-radius: 14px; color: #fff; letter-spacing: 1px;
+    background: linear-gradient(180deg, #9cf07a 0%, #6fd94e 48%, #4cc23a 52%, #5fcf47 100%);
+    text-shadow: 0 2px 0 #1f6a1a, 2px 0 0 #1f6a1a, -2px 0 0 #1f6a1a, 0 -2px 0 #1f6a1a; animation: pulse 1.4s ease-in-out infinite; }
+  #tray { position: static; flex: 1; height: auto; display: flex; gap: 8px; padding: 4px 10px 12px; overflow-x: auto; overflow-y: hidden;
+    background: none; border: 0; align-items: stretch; }
+  #tray .tcard { flex: 0 0 92px; height: auto; border: 3px solid var(--ol); border-radius: 14px; padding: 16px 0 0; overflow: hidden;
+    background: linear-gradient(180deg, #b48cff 0%, #7a4ae8 60%, #5a2ec8 100%); box-shadow: inset 0 0 0 2px rgba(255,255,255,.35), 0 4px 0 var(--ol); }
+  #tray .tcard.r1 { border-color: var(--ol); } 
+  #tray .tcard .tg { position: absolute; left: 50%; top: 2px; transform: translateX(-50%); font-size: 11px; font-weight: 900; color: var(--ol);
+    border: 2px solid var(--ol); border-radius: 8px; padding: 0 6px; white-space: nowrap; z-index: 2; }
+  #tray .tcard.r1 .tg { background: #a6e87e; } #tray .tcard.r2 .tg { background: #8cc6ff; } #tray .tcard.r3 .tg { background: #e0c0ff; } #tray .tcard.r4 .tg { background: #ffd84a; }
+  #tray .tcard.r4 { background: linear-gradient(180deg, #ffe07a 0%, #ff9a3a 55%, #e0602a 100%); }
+  #tray .tcard canvas { width: 84px; height: 84px; margin: 4px auto 0; }
+  #tray .tcard .nm { position: absolute; left: 0; right: 0; bottom: 0; font-size: 12px; line-height: 1.15; padding: 3px 2px 4px; color: #fff; background: rgba(30,10,70,.75);
+    border-top: 2px solid var(--ol); border-radius: 0; text-shadow: 0 1px 0 #000; }
+  #tray .tcard .nm .st { color: #ffd23a; font-size: 11px; letter-spacing: -1px; }
+  #tray .tcard .el { top: 20px; left: 3px; }
+  #tray .tcard.on { transform: translateY(-6px); box-shadow: 0 0 0 3px #fff, 0 0 0 6px #ffd23a, 0 4px 0 var(--ol); }
+  #tray .empty { color: #fff; padding: 40px 10px; font-size: 15px; text-align: center; width: 100%; line-height: 1.6; }
+  #inspect { bottom: 250px; background: linear-gradient(180deg, #fffdf3, #ffeec8); }
+  /* menus: purple frame + gold headers, light content cards */
+  .panel { background: linear-gradient(180deg, var(--pur1) 0%, var(--pur2) 55%, var(--pur3) 100%); color: #fff;
+    box-shadow: inset 0 0 0 3px rgba(255,255,255,.3), inset 0 -6px 0 rgba(0,0,0,.2), 0 7px 0 var(--ol), 0 18px 40px rgba(0,0,0,.4); }
+  .panel .subtitle, .sec-title { color: #fff !important; text-shadow: 0 2px 0 var(--ol), 1px 0 0 var(--ol), -1px 0 0 var(--ol), 0 -1px 0 var(--ol); }
+  .sec-title { font-weight: 900; }
+  .box, .card, .egg-card, .evo-row, .zone, .chip, button, #inspect, .play-hero .ph-txt { color: var(--ink); }
+  .tabs button { background: linear-gradient(180deg, #a98aff, #7a52e8); color: #fff; text-shadow: 0 2px 0 rgba(40,10,90,.6); }
+  .tabs button.on { background: linear-gradient(180deg, #ffe680 0%, #ffd54a 48%, #ffbf2a 52%, #ffc83a 100%); color: var(--ink); text-shadow: none; }
+  #hatch-msg, #detail-body > div:first-child { text-shadow: 0 2px 0 var(--ol); }
+  .sum-list b { color: #ffe14a; }
+  .sum-list { text-shadow: 0 2px 0 var(--ol); }
+  .chain .lab { color: var(--ink); }
+  .play-hero h3 { color: #8a3ae0; }
+  #help ul { text-shadow: 0 1px 0 var(--ol); }
+  .dim-bg { background: rgba(26,10,56,.62); }
+  #loot-pill.banner { background: linear-gradient(180deg, #ff7aa8, #e8457e); color: #fff; font-size: 13px; padding: 3px 14px; }
+  .pill, .role, .rtag, .tag { color: var(--ink); }
+  .panel .pill { text-shadow: none; }
+
+  /* ===== v5: hand-drawn crayon UI (9-slice crayon images, no vector gradients) ===== */
+  #app::after { content: ""; position: absolute; inset: 0; z-index: 40; pointer-events: none;
+    background: url(assets/ui/grain.png); opacity: .45; mix-blend-mode: soft-light; }
+  .panel { border-style: solid; border-width: 22px; border-image: url(assets/ui/panel.png) 44 fill / 22px stretch; background: none; box-shadow: none; border-radius: 0; padding: 10px 8px 8px; }
+  #home .panel { padding: 6px 4px 4px; }
+  button { border-style: solid; border-width: 11px; border-image: url(assets/ui/btn.png) 24 fill / 11px stretch; background: none; box-shadow: none; border-radius: 0; padding: 1px 6px; color: var(--ink); text-shadow: none; }
+  button:active { transform: translateY(2px); box-shadow: none; }
+  button:disabled { filter: grayscale(.7); opacity: .6; box-shadow: none; }
+  .b-pink, .tabs button.on { border-image-source: url(assets/ui/btn_pink.png); }
+  .b-gold { border-image-source: url(assets/ui/btn_gold.png); }
+  .b-red { border-image-source: url(assets/ui/btn_red.png); }
+  .b-go, .b-go-s { border-image-source: url(assets/ui/btn_green.png); background: none; box-shadow: none; }
+  .tabs button { border-image-source: url(assets/ui/btn_purple.png); background: none; padding: 2px 2px; }
+  .tabs button.on { border-image-source: url(assets/ui/btn_gold.png); color: var(--ink); text-shadow: none; }
+  .b-pink, .b-red, .b-go, .b-go-s, .tabs button { color: #fff; text-shadow: 0 2px 0 #24183a, 2px 0 0 #24183a, -2px 0 0 #24183a, 0 -2px 0 #24183a; }
+  .b-go { padding: 4px; font-size: 26px; }
+  .b-big { padding: 4px 18px; font-size: 22px; }
+  .hud-btns button.rnd { border-style: solid; border-width: 11px; border-image: url(assets/ui/round.png) 38 fill / 11px stretch; background: none; box-shadow: none; border-radius: 0; width: 50px; height: 50px; padding: 0; font-size: 13px; line-height: 1.05; white-space: nowrap; }
+  .hud-btns button.rnd.b-red { border-image-source: url(assets/ui/round_red.png); }
+  .pill, .chip, .role, .rtag { border-style: solid; border-width: 8px; border-image: url(assets/ui/pill.png) 20 fill / 8px stretch; background: none; box-shadow: none; border-radius: 0; padding: 0 6px; }
+  .hud-stats .pill { border-style: solid; border-width: 9px; border-image: url(assets/ui/pill_dark.png) 20 fill / 9px stretch; background: none; box-shadow: none; border-radius: 0; color: #fff; padding: 0 8px; }
+  .dpill { border-style: solid; border-width: 9px; border-image: url(assets/ui/pill_dark.png) 20 fill / 9px stretch; background: none; box-shadow: none; border-radius: 0; padding: 0 8px; }
+  .banner, #loot-pill.banner { border-style: solid; border-width: 9px; border-image: url(assets/ui/pill_pink.png) 20 fill / 9px stretch; background: none; box-shadow: none; border-radius: 0; padding: 0 10px; }
+  .ribbon { border-style: solid; border-width: 12px; border-image: url(assets/ui/ribbon.png) 26 fill / 12px stretch; background: none; box-shadow: none; border-radius: 0; padding: 0 16px; }
+  .ribbon.pink { border-image-source: url(assets/ui/ribbon_pink.png); }
+  .box, .play-hero .ph-txt, .evo-row, .zone, #inspect { border-style: solid; border-width: 14px; border-image: url(assets/ui/paper.png) 30 fill / 14px stretch; background: none; box-shadow: none; border-radius: 0; }
+  .box { padding: 4px 6px; }
+  .evo-row { padding: 2px 6px; }
+  .play-hero { border-style: solid; border-width: 14px; border-image: url(assets/ui/paper.png) 30 fill / 14px stretch; background: none; box-shadow: none; border-radius: 0; overflow: visible; }
+  .play-hero canvas { border-radius: 6px; }
+  .play-hero .ph-txt { border-width: 0; border-image: none; background: none; padding: 6px 4px 2px; }
+  .zone { padding: 0; overflow: visible; }
+  .zone b { border-top: 0; }
+  #inspect { padding: 4px 8px; }
+  .egg-card { border-style: solid; border-width: 12px; border-image: url(assets/ui/paper.png) 30 fill / 12px stretch; background: none; box-shadow: none; border-radius: 0; padding: 0 2px 2px; }
+  .card { border-style: solid; border-width: 12px; border-image: url(assets/ui/card1.png) 26 fill / 12px stretch; background: none; box-shadow: none; border-radius: 0; padding: 2px 2px 4px; overflow: visible; }
+  .card::after { display: none; }
+  .card.r2 { border-image-source: url(assets/ui/card2.png); }
+  .card.r3 { border-image-source: url(assets/ui/card3.png); }
+  .card.r4 { border-image-source: url(assets/ui/card4.png); }
+  .card.shiny { border-image-source: url(assets/ui/cards.png); }
+  .card.locked { border-image-source: url(assets/ui/cardx.png); }
+  .card .art, .r1 .art, .r2 .art, .r3 .art, .r4 .art, .card.shiny .art, .card.locked .art { border-style: solid; border-width: 8px; border-image: url(assets/ui/art.png) 22 fill / 8px stretch; background: none; box-shadow: none; border-radius: 0; }
+  .card .art canvas { margin-top: -4px; }
+  .card .nm { border-style: solid; border-width: 7px; border-image: url(assets/ui/pill.png) 20 fill / 7px stretch; background: none; box-shadow: none; border-radius: 0; padding: 0 2px; margin-top: 3px; }
+  .chain canvas { border: 0; border-radius: 0; background: none !important; }
+  .chain .st { border-style: solid; border-width: 10px; border-image: url(assets/ui/paper.png) 30 fill / 10px stretch; background: none; box-shadow: none; border-radius: 0; padding: 0 0 2px; }
+  .chain.sh .st { border-image-source: url(assets/ui/cards.png); }
+  .chain .lab { border-style: solid; border-width: 7px; border-image: url(assets/ui/pill.png) 20 fill / 7px stretch; background: none; box-shadow: none; border-radius: 0; }
+  .chain.sh .lab { border-image-source: url(assets/ui/pill_pink.png); color: #fff; }
+  #dock { border-style: solid; border-width: 8px; border-image: url(assets/ui/dock.png) 20 fill / 8px stretch; background: none; box-shadow: none; border-radius: 0; top: 720px; }
+  #tray .tcard { border-style: solid; border-width: 11px; border-image: url(assets/ui/tcard.png) 26 fill / 11px stretch; background: none; box-shadow: none; border-radius: 0; padding: 14px 0 0; overflow: visible; }
+  #tray .tcard.r4 { border-image-source: url(assets/ui/card4.png); }
+  #tray .tcard.on { transform: translateY(-8px) rotate(-2deg); box-shadow: none; filter: drop-shadow(0 0 0 #fff) drop-shadow(0 0 4px #ffe14a); }
+  #tray .tcard .tg { border-style: solid; border-width: 6px; border-image: url(assets/ui/pill.png) 20 fill / 6px stretch; background: none; box-shadow: none; border-radius: 0; top: -6px; padding: 0 4px; }
+  #tray .tcard.r1 .tg, #tray .tcard.r2 .tg, #tray .tcard.r3 .tg, #tray .tcard.r4 .tg { background: none; }
+  #tray .tcard .nm { background: none; border-top: 0; color: #fff; text-shadow: 0 2px 0 #24183a, 1px 0 0 #24183a, -1px 0 0 #24183a; }
+  #toast { border-style: solid; border-width: 10px; border-image: url(assets/ui/toast.png) 22 fill / 10px stretch; background: none; box-shadow: none; border-radius: 0; color: #fff8e6; }
+  .el { border: 2.5px solid #24183a; border-radius: 48% 52% 50% 46% / 52% 46% 54% 48%; background-image: url(assets/ui/grain.png); }
+  .stag { border-style: solid; border-width: 6px; border-image: url(assets/ui/pill_pink.png) 20 fill / 6px stretch; background: none; box-shadow: none; border-radius: 0; padding: 0 4px; }
+  .sec-title { margin: 6px 2px 4px; }
+  .dim-bg { background-color: rgba(26,10,56,.6); background-image: url(assets/ui/grain.png); }
+  #loading { background: #ffd98a url(assets/ui/grain.png); }
+  #loading .bar { border-style: solid; border-width: 8px; border-image: url(assets/ui/pill.png) 20 fill / 8px stretch; background: none; box-shadow: none; border-radius: 0; overflow: visible; }
+  #loading .bar i { background: #ff6a96; border-radius: 6px; }
+  h1 { color: #ffd84a; -webkit-text-stroke: 5px #24183a; text-shadow: 3px 5px 0 #24183a; }
+  .skill { margin: 5px 0; font-size: 13px; line-height: 1.4; }
+  .skill b { color: #e0507a; margin-right: 4px; }
+  /* English: longer words -> tighter type */
+  .lang-en .hud-btns button.rnd { font-size: 10px; letter-spacing: -0.4px; border-width: 8px; }
+  .lang-en .tabs button { font-size: 15px; }
+  .lang-en .dpill, .lang-en .pill { font-size: 12px; }
+  .lang-en .card .nm { font-size: 11px; line-height: 1.1; white-space: normal; overflow: visible; text-overflow: clip; letter-spacing: -0.2px; }
+  .lang-en #tray .tcard .nm { font-size: 10px; line-height: 1.1; white-space: normal; }
+  .lang-en .topbar .ribbon { font-size: 16px !important; padding: 2px 8px !important; white-space: nowrap; }
+  .lang-en .topbar button { font-size: 12px !important; padding: 4px 6px !important; }
+  .lang-en .topbar .pill { white-space: nowrap; font-size: 12px; }
+  .lang-en .topbar > div { gap: 4px !important; }
+  .lang-en .card .lab, .lang-en .chain .lab { font-size: 11px; line-height: 1.1; }
+  .lang-en .sum-list, .lang-en .help-list { font-size: 14px; }
+  .lang-en .subtitle { font-size: 14px; }
+  .lang-toggle { margin-top: 4px; }
+  /* ===== v9 growth: aptitude / grade / level / training ===== */
+  .tabs button { font-size: 15px; }
+  .lang-en .tabs button { font-size: 13px; }
+  .apt { display: flex; align-items: center; gap: 4px; margin: 3px 2px; font-size: 11px; font-weight: 900; color: var(--ink); position: relative; }
+  .apt .apt-l { white-space: nowrap; }
+  .apt .apt-bar { flex: 1; height: 9px; border: 2px solid var(--ol); border-radius: 6px; background: #fff7e6; overflow: hidden; min-width: 30px; }
+  .apt .apt-bar i { display: block; height: 100%; border-radius: 3px; background: repeating-linear-gradient(-45deg, rgba(255,255,255,.25) 0 3px, transparent 3px 7px), var(--ac, #9a9a9a); }
+  .apt b { white-space: nowrap; min-width: 18px; text-align: right; }
+  .apt.t0 { --ac: #a8a8a8; } .apt.t1 { --ac: #5cbf5a; } .apt.t2 { --ac: #3a9aff; } .apt.t3 { --ac: #b05aff; } .apt.t4 { --ac: #ff9a1a; }
+  .apt.t4 b { color: #e0507a; }
+  .apt.big { font-size: 14px; margin: 5px 0; } .apt.big .apt-bar { height: 15px; border-width: 3px; border-radius: 9px; }
+  .apt-spark { position: absolute; right: -4px; top: -10px; color: #ffcc22; font-size: 16px; text-shadow: 0 0 4px #fff; animation: spk 1.2s ease-in-out infinite; }
+  @keyframes spk { 0%,100% { transform: scale(.8) rotate(0); opacity: .7 } 50% { transform: scale(1.25) rotate(20deg); opacity: 1 } }
+  .apt-note { font-size: 11px; font-weight: 800; opacity: .75; }
+  .grade { display: inline-block; min-width: 22px; padding: 0 4px; border: 2px solid var(--ol); border-radius: 7px; font-weight: 900; font-size: 12px; text-align: center; background: #ddd; color: var(--ol); font-style: italic; }
+  .grade.g-C { background: #d8d0c8; } .grade.g-B { background: #9ee08a; } .grade.g-A { background: #8cc8ff; } .grade.g-S { background: #d6a2ff; } .grade.g-SS { background: linear-gradient(135deg, #ffe14a, #ff8a3a); color: #7a1a00; }
+  .card .art .grade { position: absolute; left: 4px; bottom: 4px; z-index: 2; }
+  .lvtag { display: inline-block; font-size: 11px; font-weight: 900; color: #fff; background: #3a2a5a; border-radius: 7px; padding: 0 5px; }
+  .card .art .lvtag { position: absolute; right: 4px; bottom: 4px; z-index: 2; }
+  .card.sel { outline: 4px solid #ffd23a; outline-offset: 1px; }
+  .card.hl { outline: 4px solid #ffcc22; box-shadow: 0 0 14px #fff2a0; }
+  .ultra { color: #ff4fa8; font-weight: 900; text-shadow: 0 0 6px #fff6a0; }
+  .stag.ultra { top: 26px; background: linear-gradient(90deg, #ff7ac8, #ffd23a, #7ad0ff); color: #3a1030; }
+  .ultra-card { box-shadow: 0 0 0 3px #ffd23a, 0 0 18px #ff9ad8; }
+  .train-panel { display: flex; gap: 10px; align-items: flex-start; }
+  .train-panel .tp-art { position: relative; flex: 0 0 96px; text-align: center; }
+  .train-panel .tp-art .grade { font-size: 16px; margin-top: 4px; }
+  .train-panel .tp-info { flex: 1; min-width: 0; }
+  .tp-name { font-weight: 900; font-size: 15px; }
+  .tp-lv { display: flex; align-items: center; gap: 6px; margin: 4px 0; font-weight: 800; font-size: 12px; }
+  .xpbar { flex: 1; height: 9px; border: 2px solid var(--ol); border-radius: 6px; background: #fff; overflow: hidden; }
+  .xpbar i { display: block; height: 100%; background: #7ad0ff; }
+  .trs { display: flex; align-items: center; gap: 5px; font-size: 12px; font-weight: 900; margin: 3px 0; }
+  .trs-l { flex: 0 0 46px; } .trs-v { flex: 0 0 auto; white-space: nowrap; }
+  .trs-bar { flex: 1; height: 9px; border: 2px solid var(--ol); border-radius: 6px; background: #fff; overflow: hidden; }
+  .trs-bar i { display: block; height: 100%; background: #ff8a5a; }
+  .food-row { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-bottom: 8px; }
+  .food-item { background: #fff7e6; border: 3px solid var(--ol); border-radius: 12px; padding: 4px; text-align: center; color: var(--ink); }
+  .food-item .fn { font-weight: 900; font-size: 12px; } .food-item .fd { font-size: 10px; font-weight: 800; opacity: .8; min-height: 24px; }
+  .food-item .feed-btn { padding: 2px 10px; font-size: 13px; margin-top: 2px; }
+  .own-row { display: flex; gap: 8px; align-items: center; background: #fff7e6; border: 3px solid var(--ol); border-radius: 12px; padding: 4px 8px; margin-bottom: 6px; color: var(--ink); }
+  .own-row .own-info { flex: 1; min-width: 0; font-size: 13px; }
+  .own-tr { font-size: 11px; font-weight: 800; opacity: .8; }
+  .hatch-apt { margin: 8px auto 0; max-width: 300px; background: #fff7e6; border: 3px solid var(--ol); border-radius: 12px; padding: 4px 8px; color: var(--ink); font-weight: 900; }
+  .topbar .ribbon { font-size: 17px !important; padding: 2px 8px !important; white-space: nowrap; }
+  .topbar button { font-size: 12px !important; padding: 4px 6px !important; white-space: nowrap; }
+  .topbar .pill { white-space: nowrap; font-size: 12px; }
+  .topbar > div { gap: 4px !important; }
+  .overlay { justify-content: flex-start; overflow-y: auto; padding-top: 34px; }
+  .overlay > * { flex-shrink: 0; }
+  .overlay > :first-child { margin-top: auto; }
+  .overlay > :last-child { margin-bottom: auto; }
+</style>
+</head>
+<body>
+<div id="app">
+  <canvas id="cv"></canvas>
+  <div id="loading"><h1 style="font-size:46px" data-i18n="game_title">萌宠防线</h1><div class="bar"><i id="load-bar"></i></div><div id="load-txt">…</div></div>
+
+  <div id="hud" class="hidden">
+    <div class="hud-row">
+      <div class="hud-stats">
+        <span class="pill" id="st-wave" data-i18n="wave_init">第 1 波</span>
+        <span class="pill sm" id="st-eggs" data-i18n="eggs_init">蛋 0</span>
+      </div>
+      <div class="hud-btns">
+        <button type="button" class="rnd" id="btn-speed">×1</button>
+        <button type="button" class="rnd" id="btn-pause" data-i18n="pause_btn">暂停</button>
+        <button type="button" class="rnd b-red" id="btn-end" data-i18n="end">结束</button>
+      </div>
+    </div>
+    <div id="hud-sub"><span class="banner hidden" id="loot-pill" data-i18n="loot_init">掉落 Lv.1</span></div>
+  </div>
+  <div id="dock" class="hidden">
+    <div id="dock-bar">
+      <span class="dpill" id="st-gold" data-i18n="gold_init">金币 0</span>
+      <span class="dpill" id="st-deploy" data-i18n="deploy_init">上阵 0/10</span>
+      <span class="dpill heart" id="st-lives">❤ 10</span>
+      <button type="button" class="b-go-s hidden" id="btn-next" data-i18n="fight">开战！</button>
+    </div>
+    <div id="tray"></div>
+  </div>
+  <div id="inspect" class="hidden"></div>
+
+  <div id="lang-screen" class="overlay hidden" data-lang-choice="1">
+    <div style="flex:1"></div>
+    <h1 style="font-size:40px">萌宠防线<br><span style="font-size:30px">Pet Pals Defense</span></h1>
+    <div class="panel center" style="margin-top:24px;max-width:360px">
+      <div style="margin-top:-38px"><span class="ribbon pink">语言 · Language</span></div>
+      <div class="btn-row" style="flex-direction:column;align-items:center;gap:14px;margin-top:10px">
+        <button type="button" class="b-pink b-big" id="btn-lang-zh">中文</button>
+        <button type="button" class="b-gold b-big" id="btn-lang-en">English</button>
+      </div>
+    </div>
+    <div style="flex:1.4"></div>
+  </div>
+
+  <div id="title-screen" class="overlay">
+    <div style="flex:1"></div>
+    <h1 data-i18n="game_title">萌宠防线</h1>
+    <p class="subtitle" style="color:#fff;text-shadow:0 2px 0 #2b1b22;font-size:17px" data-i18n="tagline">抓萌宠 · 孵蛋进化 · 无尽打史莱姆</p>
+    <div style="flex:1.2"></div>
+    <div class="btn-row" style="flex-direction:column;align-items:center">
+      <button type="button" class="b-pink b-big" id="btn-start" data-i18n="btn_start">开始冒险</button>
+      <button type="button" class="b-gold hidden" id="btn-continue" data-i18n="btn_continue">继续冒险</button>
+      <button type="button" class="b-mint lang-toggle" id="btn-lang-title" data-i18n="lang_toggle">English</button>
+    </div>
+    <p class="subtitle" style="color:#fff;text-shadow:0 2px 0 #2b1b22;font-size:13px;margin-top:16px" data-i18n="title_hint">史莱姆从上面来，把萌宠摆在下面挡住它们</p>
+  </div>
+
+  <div id="starter" class="overlay dim-bg hidden">
+    <div class="panel center">
+      <div style="margin-top:-38px"><span class="ribbon pink" data-i18n="pick_starter">选一只初始萌宠</span></div>
+      <p class="subtitle" data-i18n="starter_sub">它会陪你打第一场仗。别担心，打史莱姆会掉蛋，其他的都能孵出来！</p>
+      <div class="grid3" id="starter-grid"></div>
+    </div>
+  </div>
+
+  <div id="home" class="overlay hidden">
+    <div class="panel">
+      <div class="topbar">
+        <span class="ribbon" style="font-size:20px;padding:2px 14px" data-i18n="short_title">萌宠防线</span>
+        <div style="display:flex;gap:6px;align-items:center">
+          <span class="pill" id="home-gems">0</span>
+          <button type="button" id="btn-help" style="padding:4px 10px;font-size:14px" data-i18n="help">说明</button>
+          <button type="button" class="lang-toggle" id="btn-lang-home" style="padding:4px 10px;font-size:14px" data-i18n="lang_toggle">English</button>
+          <button type="button" id="btn-mute2" style="padding:4px 10px;font-size:14px">♪</button>
+        </div>
+      </div>
+      <div class="tabs">
+        <button type="button" class="on" data-tab="play" data-i18n="tab_play">冒险</button>
+        <button type="button" data-tab="book" data-i18n="tab_book">图鉴</button>
+        <button type="button" data-tab="hatch" data-i18n="tab_hatch">孵蛋</button>
+        <button type="button" data-tab="evo" data-i18n="tab_evo">进化</button>
+        <button type="button" data-tab="train" data-i18n="tab_train">培养</button>
+      </div>
+      <div id="home-body"></div>
+    </div>
+  </div>
+
+  <div id="detail" class="overlay dim-bg hidden">
+    <div class="panel">
+      <div class="center" style="margin-top:-40px"><span class="ribbon" id="detail-title" data-i18n="tab_book">图鉴</span></div>
+      <div id="detail-body" style="margin-top:10px"></div>
+      <div class="btn-row" style="margin-top:12px"><button type="button" class="b-pink" id="btn-detail-ok" data-i18n="back">返回</button></div>
+    </div>
+  </div>
+
+  <div id="hatch" class="overlay dim-bg hidden">
+    <div class="panel center">
+      <div style="margin-top:-40px"><span class="ribbon pink" id="hatch-title" data-i18n="hatching">孵化中…</span></div>
+      <canvas id="hatch-cv" width="300" height="280"></canvas>
+      <div id="hatch-msg" style="font-weight:900;min-height:3.4em;margin:4px 0 10px;font-size:16px;line-height:1.5"></div>
+      <div class="btn-row" id="hatch-btns"></div>
+    </div>
+  </div>
+
+  <div id="help" class="overlay dim-bg hidden">
+    <div class="panel">
+      <div class="center" style="margin-top:-40px"><span class="ribbon" data-i18n="how">怎么玩</span></div>
+      <ul style="margin:10px 0 12px;padding-left:1.2em;line-height:1.7;font-size:15px;font-weight:700">
+        <li data-i18n="help_1">只有一个模式：无尽冒险。史莱姆从上方沿 5 条小路走下来。点下面的萌宠卡片，再点底部的空位，把它放上去。</li>
+        <li data-i18n="help_2">前排萌宠会挡住同一条路的史莱姆，坦克最适合站前排。飞在天上的气球史莱姆挡不住！</li>
+        <li data-i18n="help_3">所有萌宠都从无尽冒险里来：打死史莱姆有机会掉蛋，首领必掉。蛋越稀有，越容易孵出稀有萌宠，还可能孵出闪闪发光的「异色」。</li>
+        <li data-i18n="help_4">两只同名同星的萌宠可以进化：1→2→3→4 星都会变样，4 星是最终形态，5 星满级。</li>
+        <li data-i18n="help_5">属性克制：火克草、草克水、水克火、雷克水、土克雷、光克土，克制伤害 ×1.5。</li>
+        <li data-i18n="help_6">越打越难：史莱姆血更厚、跑更快、数量更多，每 10 波换一张地图；但掉落等级也越来越高，好蛋和异色更多。随时可以点「结束」，收获全部保留。</li>
+      </ul>
+      <div class="btn-row"><button type="button" class="b-pink" id="btn-help-ok" data-i18n="got_it">知道了</button></div>
+    </div>
+  </div>
+
+  <div id="pause" class="overlay dim-bg hidden">
+    <div class="panel center" style="max-width:360px">
+      <div style="margin-top:-40px"><span class="ribbon" data-i18n="pause">暂停</span></div>
+      <div class="btn-row" style="margin-top:16px">
+        <button type="button" class="b-pink" id="btn-resume" data-i18n="resume">继续</button>
+        <button type="button" class="b-red" id="btn-quit" data-i18n="quit">结束本局</button>
+      </div>
+      <p class="subtitle" style="margin:12px 0 0" data-i18n="pause_note">结束后，已经掉落的蛋和宝石都会保留。</p>
+    </div>
+  </div>
+
+  <div id="result" class="overlay dim-bg hidden">
+    <div class="panel center" style="max-width:440px">
+      <div style="margin-top:-40px"><span class="ribbon pink" id="result-title" data-i18n="res_title">本局战报</span></div>
+      <div id="result-body"></div>
+      <div class="btn-row"><button type="button" class="b-pink" id="btn-result-ok" data-i18n="home">回家</button></div>
+    </div>
+  </div>
+
+  <div id="toast" class="hidden"></div>
+</div>
+<script>
+(() => {
+"use strict";
+
+const SAVE_KEY = "mengchong-td-v2";
+const OLD_SAVE_KEY = "mengchong-td-v1";
+const W = 540, H = 960;
+const LANES = 5;
+const LANE_X = [106, 188, 270, 352, 434];
+const FRONT_Y = 592, BACK_Y = 672;
+const FIELD_TOP = 112, FENCE_Y = 700, LEAK_Y = 716, DOCK_Y = 724;
+const EGG_COST = 60;
+const MAX_STAR = 5;
+const SLOTS = 10;
+const TAU = Math.PI * 2;
+
+const ELEMS = ["火","水","草","雷","土","光"];
+const ADV = { 火:"草", 草:"水", 水:"火", 雷:"水", 土:"雷", 光:"土" };
+function elemMul(a, d) { if (ADV[a] === d) return 1.5; if (ADV[d] === a) return 0.75; return 1; }
+const ELEM_COL = { 火:"#ff6a3a", 水:"#4aa8ff", 草:"#5ccf5a", 雷:"#ffd23a", 土:"#c08a5a", 光:"#fff59a" };
+const ROLE_NAME = { tank:"坦克", dps:"单体输出", aoe:"群体输出", sup:"辅助" };
+const RAR_NAME = ["", "普通", "稀有", "史诗", "传说"];
+const EGG_NAME = ["", "普通蛋", "稀有蛋", "史诗蛋", "传说蛋"];
+const LOOT_NAME = ["普通", "优良", "稀有", "史诗", "传说", "神话"];
+
+/* All creatures below are original designs for this game. */
+const PETS = [
+  { id:"chili", el:"火", role:"dps", rar:1, names:["椒椒鼠","辣椒鼠","爆椒鼠","炎椒鼠王"],
+    desc:"尾巴是一根小辣椒，吐出火籽专打一个。", hp:120, dmg:16, rate:0.6, range:340, typ:"single",
+    pal:{ main:"#f2483c", sub:"#ffc2a6", stem:"#4cba52", flame:"#ffb02e" },
+    spal:{ main:"#ffc93a", sub:"#fff2c0", stem:"#3f9a7a", flame:"#ff5ab0" } },
+  { id:"chestnut", el:"土", role:"tank", rar:1, names:["栗栗猬","刺栗猬","栗甲猬","栗堡巨猬"],
+    desc:"背着一身栗子刺，挡在前排，被咬还会反扎回去。", hp:460, dmg:16, rate:0.8, range:260, typ:"single", thorns:0.35,
+    pal:{ main:"#9a5e36", face:"#f6dcae", dark:"#5e3a24", tip:"#f2c879" },
+    spal:{ main:"#7ea6d8", face:"#eef6ff", dark:"#3f5f90", tip:"#ffffff" } },
+  { id:"berry", el:"草", role:"sup", rar:1, names:["莓宝兔","莓莓兔","莓冠兔","莓果女王兔"],
+    desc:"散发莓果香，给周围伙伴回血、加攻速。", hp:130, dmg:0, rate:2.0, range:240, typ:"heal", heal:0.12, haste:0.18,
+    pal:{ main:"#ff4f6d", seed:"#ffe066", leaf:"#4fbf5a", ear:"#fff0f2" },
+    spal:{ main:"#fff4ee", seed:"#ff6a8a", leaf:"#8ad66b", ear:"#ffe4f4" } },
+  { id:"lychee", el:"水", role:"sup", rar:1, names:["荔荔母","荔泡母","荔冠水母","荔海女王"],
+    desc:"喷出冰凉荔枝泡泡，炸开一片减速。", hp:120, dmg:14, rate:0.9, range:340, typ:"bubble", splash:62, slow:0.45, slowT:2,
+    pal:{ shell:"#ec4a5e", flesh:"#fff6ea", tent:"#ffd0d8", dot:"#b02840" },
+    spal:{ shell:"#8fd04a", flesh:"#f4ffe8", tent:"#dcf5b8", dot:"#4a8a20" } },
+  { id:"melon", el:"草", role:"tank", rar:2, names:["瓜瓜龟","西瓜龟","瓜甲龟","瓜堡玄龟"],
+    desc:"西瓜壳超硬，站在前排还会慢慢回血。", hp:640, dmg:13, rate:0.9, range:230, typ:"single", regen:0.03,
+    pal:{ shell:"#3fa84d", stripe:"#1f6b2c", rim:"#ff5a6a", skin:"#a6e07a" },
+    spal:{ shell:"#f3d34a", stripe:"#c4901a", rim:"#fff2a0", skin:"#b8e2ff" } },
+  { id:"lemon", el:"雷", role:"aoe", rar:2, names:["柠檬啾","柠电啾","雷柠鸟","霹雳柠凰"],
+    desc:"酸到放电！闪电在史莱姆之间跳来跳去。", hp:120, dmg:20, rate:0.95, range:340, typ:"chain", chain:3, fall:0.72,
+    pal:{ main:"#ffe14a", dark:"#e8b41e", beak:"#ff8a3a", bolt:"#4ab0ff" },
+    spal:{ main:"#b8f06a", dark:"#78c03a", beak:"#ff6aa8", bolt:"#ff9a2e" } },
+  { id:"coco", el:"水", role:"dps", rar:2, names:["椰椰獭","椰壳獭","椰浪獭","椰潮獭王"],
+    desc:"抱着椰子连发水弹，攻速超快。", hp:130, dmg:7, rate:0.22, range:310, typ:"single",
+    pal:{ fur:"#b07448", belly:"#f8e2c4", shell:"#6b4428", wave:"#5ac4ff", leaf:"#3fae5a" },
+    spal:{ fur:"#f29ab8", belly:"#fff0f6", shell:"#7a3a6a", wave:"#ffd23a", leaf:"#3fae9a" } },
+  { id:"taro", el:"土", role:"aoe", rar:3, names:["芋圆熊","芋泥熊","芋岩熊","芋山熊王"],
+    desc:"一屁股坐下去，地面震动，砸中一圈史莱姆。", hp:240, dmg:34, rate:1.2, range:310, typ:"slam", splash:78,
+    pal:{ fur:"#b88ae0", dot:"#8456b8", belly:"#f2e6ff", leaf:"#5cbf5a", rock:"#8c7a72" },
+    spal:{ fur:"#96d886", dot:"#4f9a40", belly:"#efffe6", leaf:"#ff8ab0", rock:"#b0a090" } },
+  { id:"peach", el:"光", role:"sup", rar:3, names:["桃桃猴","仙桃猴","桃光猴","蟠桃圣猴"],
+    desc:"头顶桃光，让附近伙伴伤害大涨，自己也会扔桃核。", hp:150, dmg:12, rate:1.0, range:300, typ:"single", buff:0.32, aura:220,
+    pal:{ fur:"#ffaa9a", face:"#ffe6d8", leaf:"#5cbf5a", halo:"#ffe27a", petal:"#ff8ac0" },
+    spal:{ fur:"#ffd25a", face:"#fff6d6", leaf:"#4fb0a0", halo:"#c8e8ff", petal:"#ffffff" } },
+  { id:"blueberry", el:"雷", role:"dps", rar:3, names:["莓莓鸮","蓝莓鸮","星莓鸮","雷莓夜鸮"],
+    desc:"超远距离狙击，偶尔打出会心暴击。", hp:130, dmg:58, rate:1.4, range:640, typ:"snipe", crit:0.28, critM:2.2,
+    pal:{ main:"#4f68dc", dark:"#2f3f9a", face:"#c4d6ff", calyx:"#253470", beak:"#ffb43a" },
+    spal:{ main:"#9a5ae0", dark:"#5a2a9a", face:"#f0dcff", calyx:"#3a1a60", beak:"#ffe14a" } },
+  { id:"pitaya", el:"火", role:"aoe", rar:4, names:["龙果宝","火龙果龙","赤鳞果龙","炎皇果龙"],
+    desc:"吐出火龙果火球，炸开还会持续灼烧。", hp:260, dmg:42, rate:1.0, range:390, typ:"fireball", splash:88, burn:10,
+    pal:{ main:"#ff4f9a", scale:"#7fd05a", belly:"#ffffff", flame:"#ffb02e" },
+    spal:{ main:"#ffd23a", scale:"#ff7ab0", belly:"#ffffff", flame:"#7ae0ff" } },
+  { id:"mango", el:"光", role:"dps", rar:4, names:["芒仔狮","芒鬃狮","金芒狮","耀阳芒狮王"],
+    desc:"芒果光束一击把史莱姆打晕，最强单体之一。", hp:280, dmg:80, rate:1.05, range:390, typ:"stun", stun:0.6,
+    pal:{ fur:"#ffb42e", mane:"#ff7a1a", face:"#ffe7a0", leaf:"#4fbf5a", sun:"#ffe14a" },
+    spal:{ fur:"#a8e05a", mane:"#3faa5a", face:"#efffc8", leaf:"#ff8a3a", sun:"#ffc0e0" } }
+];
+
+/* Every pet has its OWN attack (typ is unique per pet). sk = skill name, skd = what it does, up = stage 3/4 upgrade. fx = [normal, shiny] effect colour */
+const SKILL = {
+  chili:    { typ:"fireseed", sk:"辣椒火籽", skd:"吐出小火籽打一个敌人，命中后持续灼烧。", up:"3 阶起一次吐两颗，灼烧更久", burn:6, fx:["#ff6a2e","#ff5ab0"] },
+  chestnut: { typ:"spikeroll", sk:"栗刺滚滚", skd:"顺着本路滚出刺栗，扎穿一排敌人并把它们撞退；被咬还会反扎。", up:"3 阶起撞得更远，4 阶一次滚两颗", knock:26, fx:["#9a5e36","#7ea6d8"] },
+  berry:    { typ:"berrypop", sk:"莓果爆爆", skd:"把莓果抛给附近伙伴，回血并提升攻击力。", up:"3 阶起回血更多，4 阶范围更大", haste:0, buff:0.15, aura:240, fx:["#ff4f6d","#fff0c0"] },
+  lychee:   { typ:"bubble", sk:"荔枝泡泡", skd:"吐出大泡泡，炸开让一片敌人变慢。", up:"3 阶起泡泡更大，4 阶会把敌人困住一下", fx:["#bfe6ff","#d6ffb0"] },
+  melon:    { typ:"shell", sk:"瓜壳护盾", skd:"给自己和左右伙伴套上西瓜壳护盾，再喷三颗瓜子。", up:"3 阶起护盾更厚，4 阶连身后的伙伴也套上", shield:0.2, fx:["#3fa84d","#f3d34a"] },
+  lemon:    { typ:"chain", sk:"柠檬连环电", skd:"闪电在敌人之间跳来跳去，越跳越弱。", up:"3 阶多跳 1 次，4 阶再多跳 1 次", fx:["#ffe14a","#ff9a2e"] },
+  coco:     { typ:"squirt", sk:"椰汁连射", skd:"超快连射椰汁，一直打同一个敌人伤害会越叠越高。", up:"3 阶起一次射两道", fx:["#8fdcff","#ffd23a"] },
+  taro:     { typ:"slam", sk:"芋泥震地", skd:"跳起来一屁股砸地，冲击波震伤一圈敌人。", up:"3 阶起冲击波更大，还会把敌人震晕", fx:["#b88ae0","#96d886"] },
+  peach:    { typ:"peachlob", sk:"仙桃弹弹", skd:"扔出会弹跳的仙桃；桃光让附近伙伴攻速变快。", up:"3 阶起仙桃多弹一次", buff:0, haste:0.25, aura:220, fx:["#ffaa9a","#ffd25a"] },
+  blueberry:{ typ:"snipe", sk:"穿云羽箭", skd:"超远射出羽毛箭，穿透一整排敌人，还可能暴击。", up:"3 阶起一次射两支", fx:["#7a9aff","#c89aff"] },
+  pitaya:   { typ:"meteor", sk:"火龙流星", skd:"召唤火龙果流星砸下，炸开后留下一圈火持续灼烧。", up:"4 阶一次砸两颗", fx:["#ff4f9a","#ffd23a"] },
+  mango:    { typ:"roar", sk:"芒光狮吼", skd:"光爪一抓，把敌人打晕。", up:"3 阶起狮吼会震晕目标周围的敌人", fx:["#ffd23a","#ffc0e0"] }
+};
+for (const p of PETS) { Object.assign(p, SKILL[p.id]); p.desc = p.skd; }
+const PET = Object.fromEntries(PETS.map(p => [p.id, p]));
+// old v1 ids -> new creatures (save migration)
+const OLD_MAP = { lawyer:"chili", hamster:"berry", koala:"lychee", pig:"chestnut", penguin:"coco", parrot:"melon",
+  volt:"lemon", seal:"melon", panda:"taro", owl:"blueberry", sheep:"peach", judge:"mango" };
+
+const ENEMY = {
+  sprout: { name:"嫩芽史莱姆", col:"#7cc35a", el:"草", hp:55,  spd:30, atk:10, reward:5,  size:78,  img:"z-1" },
+  jelly:  { name:"果冻史莱姆", col:"#7cc6f2", el:"水", hp:46,  spd:34, atk:8,  reward:5,  size:74,  img:"z-2" },
+  ember:  { name:"火焰史莱姆", col:"#f0502e", el:"火", hp:34,  spd:52, atk:8,  reward:6,  size:80,  img:"z-3" },
+  zap:    { name:"电池史莱姆", col:"#ffd83a", el:"雷", hp:52,  spd:44, atk:10, reward:6,  size:80,  img:"z-4" },
+  pebble: { name:"岩石史莱姆", col:"#9a9a9a", el:"土", hp:150, spd:20, atk:18, reward:10, size:92,  img:"z-5" },
+  puff:   { name:"气球史莱姆", col:"#ff8ab8", el:"光", hp:48,  spd:38, atk:0,  reward:7,  size:88,  img:"z-6", fly:true },
+  boss1:  { name:"果冻史莱姆王", col:"#ff7ab8", el:"水", hp:950,  spd:16, atk:40, reward:60,  size:150, img:"b-1", boss:true },
+  boss2:  { name:"岩甲史莱姆王", col:"#8faa8f",   el:"土", hp:1800, spd:15, atk:60, reward:90,  size:156, img:"b-2", boss:true },
+  boss3:  { name:"熔岩史莱姆王", col:"#e03a2a", el:"火", hp:3000, spd:16, atk:70, reward:130, size:156, img:"b-3", boss:true },
+  bossX:  { name:"混沌史莱姆王", col:"#8a4ad0", el:"光", hp:1400, spd:17, atk:50, reward:80,  size:150, img:"b-4", boss:true }
+};
+
+/* Only one mode: endless. Map zone changes every 10 waves. */
+const ENDLESS = { id:"endless", name:"无尽冒险", lives:15, endless:true };
+const LEVELS = [ENDLESS];
+const ZONES = [
+  { theme:"orchard", name:"果园" }, { theme:"beach", name:"海滩" },
+  { theme:"volcano", name:"火山" }, { theme:"endless", name:"梦境" }
+];
+function zoneOf(wave) { return ZONES[Math.floor(Math.max(0, wave - 1) / 10) % ZONES.length]; }
+
+/* endless: difficulty and loot both scale forever */
+function endlessSpec(n) {
+  const hpMul = Math.pow(1.11, n - 1) * (1 + 0.015 * (n - 1));
+  const spdMul = 1 + 0.25 * Math.log(1 + (n - 1) / 4);
+  const count = 6 + Math.floor((n - 1) * 1.15);
+  const pool = ["sprout","jelly","ember","zap","pebble","puff"];
+  const unlocked = Math.min(pool.length, 2 + Math.floor(n / 2));
+  const list = [];
+  let seed = n * 9301 + 49297;
+  const rnd = () => { seed = (seed * 9301 + 49297) % 233280; return seed / 233280; };
+  for (let i = 0; i < count; i++) list.push({ id: pool[Math.floor(rnd() * unlocked)], n: 1 });
+  if (n % 5 === 0) {
+    const bosses = ["boss1","boss2","boss3","bossX"];
+    const bn = 1 + Math.floor(n / 20);
+    for (let i = 0; i < bn; i++) list.splice(Math.floor(list.length / 2), 0, { id: bosses[(n / 5 + i - 1) % 4], n: 1, bossMul: n <= 5 ? 0.45 : 0.6 });
+  }
+  return { list, hpMul, spdMul, gap: Math.max(0.26, 1.0 - n * 0.022) };
+}
+function lootLevel(level, wave) {
+  if (level.endless) return 1 + Math.floor(Math.max(0, wave - 1) / 5);
+  return level.loot;
+}
+function lootLabel(lv) {
+  const i = Math.min(LOOT_NAME.length - 1, lv - 1);
+  return LOOT_NAME[i] + (lv > LOOT_NAME.length ? "+" + (lv - LOOT_NAME.length) : "");
+}
+function eggWeights(lv) {
+  const k = lv - 1;
+  return [0, Math.max(3, 72 - 9 * k), Math.min(44, 24 + 3 * k), 4 + 4.5 * k, Math.max(0, 3 * (k - 1) + 0.5)];
+}
+function dropChance(level, wave) {
+  const lv = lootLevel(level, wave);
+  if (level.endless) return Math.min(0.45, 0.07 + 0.012 * (lv - 1) + 0.003 * wave);
+  return 0.05 + 0.01 * lv;
+}
+function shinyChance(lv) { return Math.min(0.3, 0.03 + 0.013 * (lv - 1)); }
+function rollEggQ(lv, minQ) {
+  const w = eggWeights(lv);
+  let tot = 0; for (let q = 1; q <= 4; q++) if (q >= (minQ || 1)) tot += w[q];
+  let r = Math.random() * tot;
+  for (let q = 1; q <= 4; q++) { if (q < (minQ || 1)) continue; r -= w[q]; if (r <= 0) return q; }
+  return 4;
+}
+const HATCH_W = { 1:[0,85,15,0,0], 2:[0,40,48,11,1], 3:[0,0,45,45,10], 4:[0,0,0,55,45] };
+
+function stageOf(star) { return Math.min(4, Math.max(1, star | 0)); }
+function stageName(id, star) { return PET[id].names[stageOf(star) - 1]; }
+
+/* ================= i18n (中文 / English) ================= */
+const LANG_KEY = "mengchong-td-lang";
+let LANG = (() => { try { return localStorage.getItem(LANG_KEY) || ""; } catch (e) { return ""; } })();
+const STR = {
+  zh: {
+    game_title:"萌宠防线", short_title:"萌宠防线", doc_title:"萌宠防线 — 抓宠·孵蛋·进化塔防", tagline:"抓萌宠 · 孵蛋进化 · 无尽打史莱姆",
+    btn_start:"开始冒险", btn_continue:"继续冒险", title_hint:"史莱姆从上面来，把萌宠摆在下面挡住它们",
+    pick_starter:"选一只初始萌宠", starter_sub:"它会陪你打第一场仗。别担心，打史莱姆会掉蛋，其他的都能孵出来！",
+    help:"说明", tab_play:"冒险", tab_book:"图鉴", tab_hatch:"孵蛋", tab_evo:"进化", back:"返回", how:"怎么玩",
+    help_1:"只有一个模式：无尽冒险。史莱姆从上方沿 5 条小路走下来。点下面的萌宠卡片，再点底部的空位，把它放上去。",
+    help_2:"前排萌宠会挡住同一条路的史莱姆，坦克最适合站前排。飞在天上的气球史莱姆挡不住！",
+    help_3:"所有萌宠都从无尽冒险里来：打死史莱姆有机会掉蛋，首领必掉。蛋越稀有，越容易孵出稀有萌宠，还可能孵出闪闪发光的「异色」。",
+    help_4:"两只同名同星的萌宠可以进化：1→2→3→4 星都会变样，4 星是最终形态，5 星满级。",
+    help_5:"属性克制：火克草、草克水、水克火、雷克水、土克雷、光克土，克制伤害 ×1.5。",
+    help_6:"越打越难：史莱姆血更厚、跑更快、数量更多，每 10 波换一张地图；但掉落等级也越来越高，好蛋和异色更多。随时可以点「结束」，收获全部保留。",
+    got_it:"知道了", pause:"暂停", pause_btn:"暂停", resume:"继续", quit:"结束本局", pause_note:"结束后，已经掉落的蛋和宝石都会保留。", home:"回家",
+    lang_pick:"选择语言", lang_toggle:"语言 Language",
+    mute_on:"声音开", mute_off:"声音关", end:"结束",
+    deploy_hint:"点萌宠卡片再点空位来布阵，准备好就点「开战！」", deploy_empty:"先把萌宠放到下面的空位上！",
+    gold:"金币 {0}", deployed:"上阵 {0}/{1}", eggs_run:"蛋 +{0}", wave_hud:"{0} · 第 {1} 波", loot_hud:"掉落 Lv.{0} {1} · 异色 {2}%",
+    fight:"开战！", next_wave:"下一波 {0}", all_out:"全部萌宠都上场啦！<br>点场上的萌宠可以升级或撤下。", no_pets:"还没有萌宠",
+    shiny_pre:"✦异色 ", el_type:"{0}属性", field_lv:"场上 {0} 级", skill_line:"技能「{0}」", skill_up:"进阶：{0}",
+    dmg:"伤害 {0} · ", range_hp:"射程 {0} · 体力 {1}/{2}", upgrade:"升级 {0}金", maxed:"场上满级", recall:"撤下",
+    no_gold:"金币不够，打史莱姆赚金币吧", boss_wave:"第 {0} 波 · 首领来袭！", wave_come:"第 {0} 波来了！",
+    egg_drop:"掉落了一颗{0}！", lucky:"好运气！", fainted:"{0} 累倒了，这波结束会恢复",
+    wave_clear_zone:"第 {0} 波清空！宝石 +{1} · 前方进入{2}，史莱姆更强、掉落更好！", wave_clear:"第 {0} 波清空！宝石 +{1}",
+    res_lost:"防线被突破了", res_title:"本局战报", no_eggs_run:"这局没有掉蛋",
+    sum_reached:"坚持到：<b>第 {0} 波</b>（{1}，最高纪录 {2} 波）", sum_loot:"最终掉落等级：<b>Lv.{0} {1}</b>",
+    sum_kills:"击败史莱姆：<b>{0}</b> 只", sum_gems:"获得宝石：<b>+{0}</b>", sum_eggs:"获得的蛋：<b>{0}</b> 颗",
+    sum_saved:"收获已经全部存好，回家去孵蛋吧！", place_then:"布好阵就点下方「开战！」", rest:"休息一下 · {0} 秒后下一波",
+    next_loot:"下一波掉落 Lv.{0} {1}", gems:"宝石 {0}",
+    update_note:"大更新！现在只有无尽冒险一个模式。你原来的萌宠、星级和宝石都保留了，还送你一颗稀有蛋。",
+    endless_desc:"史莱姆一波比一波强，越往后掉的蛋越好、异色越多。随时可以点「结束」带走战利品。",
+    best_wave:"最高 第 {0} 波", pets_n:"萌宠 {0} 只", eggs_n:"蛋 {0} 颗", start_adv:"开始冒险！", hatch_first:"先去孵一只萌宠吧",
+    route:"冒险路线（每 10 波换一张地图）", wave_plus:"第 {0}+ 波", shiny_tag:"✦ 异色", not_met:"还没遇到",
+    collected:"已收集 {0}/{1} · 异色 {2}/{3} · 点卡片看进化路线", family:"{0} 家族", shiny_sec:"✦ 异色 ", not_hatched:"（还没孵到过）", normal_sec:"原色",
+    egg_info:"打史莱姆会掉蛋，越往后掉的蛋越好。也可以用宝石买一颗普通蛋（{0} 宝石，有 15% 几率变成稀有蛋）。", buy_egg:"买蛋 {0}",
+    my_eggs:"我的蛋（{0}）· 点一颗开始孵化", no_eggs:"还没有蛋。去无尽冒险里打史莱姆吧！", shiny_rate:"异色率 {0}%",
+    evo_info:"两只<b>同名同星</b>的萌宠合在一起就会进化：每升一星都会变样，4 星是最终形态，5 星满级。合成时只要有一只是异色，进化后就是异色！",
+    evo_none:"现在还没有可以进化的萌宠。多孵几颗蛋，凑齐两只一样的吧！", evolve_btn:"进化", my_pets:"我的萌宠（{0}）",
+    evo_ok:"进化成功！", evo_msg:"{0} 进化成了 {1}{2}！", max_star:"<br>满星啦，属性超强！",
+    hatching:"孵化中…", egg_moving:"{0}在动了…", shiny_appear:"✦ 异色出现！✦", hatched:"孵出来啦！", super_shiny:"超稀有的异色",
+    hatch_skill:"技能「{0}」：{1}", hatch_again:"再孵一颗（剩 {0}）", yay:"好耶！",
+    got_pet:"你得到了 {0}！还送你一颗蛋，去「孵蛋」看看吧", loading:"正在加载萌宠… {0}%", wave_init:"第 1 波", eggs_init:"蛋 0", loot_init:"掉落 Lv.1",
+    gold_init:"金币 0", deploy_init:"上阵 0/10",
+    tab_train:"培养", apt:"资质", apt_note:"资质在孵化时决定，以后永远不能改变。它决定每级成长和培养上限。", grade:"评级", birth:"出生评级",
+    lv:"Lv.{0}", xp:"经验 {0}/{1}", st_atk:"攻击", st_hp:"生命", st_spd:"攻速", tr_line:"{0} +{1}%", tr_cnt:"{0}/{1}", feed:"喂",
+    food_none:"还没有零食。去无尽冒险打史莱姆，会掉零食！", train_info:"选一只萌宠喂零食：涨经验升级，还能永久提升攻击、生命、攻速（后天培养）。培养上限由资质决定。",
+    pick_pet:"选一只萌宠", maxlv:"满级", my_snacks:"我的零食", stat_cap:"满了", hatch_all:"一键孵化（{0}）", hatch_all_title:"孵化结果",
+    hatch_all_sum:"孵出 {0} 只萌宠 · 异色 {1} 只 · S 级以上 {2} 只", lvup:"{0} 升到 Lv.{1}！", fed:"{0} 吃掉了{1}！", ultra:"✦异色极致",
+    my_family:"我的{0}（{1}）", sum_food:"获得零食：<b>{0}</b> 份", food_float:"+{0}", apt_tiers:"平平,不错,优秀,卓越,天才", ok:"好的",
+    food_candy:"莓果糖", food_candy_d:"经验 +40", food_chili:"辣椒脆", food_chili_d:"经验 +25 · 攻击 +1", food_cookie:"坚果饼", food_cookie_d:"经验 +25 · 生命 +1",
+    food_jelly:"跳跳果冻", food_jelly_d:"经验 +25 · 攻速 +1", food_cake:"彩虹蛋糕", food_cake_d:"经验 +150 · 全属性 +1", food_apple:"金苹果", food_apple_d:"经验 +500 · 全属性 +2"
+  },
+  en: {
+    game_title:"Pet Pals Defense", short_title:"Pet Pals", doc_title:"Pet Pals Defense — Catch · Hatch · Evolve", tagline:"Catch pets · Hatch & evolve · Battle endless slimes",
+    btn_start:"Start", btn_continue:"Continue", title_hint:"Slimes come from the top — line up your pets at the bottom to stop them!",
+    pick_starter:"Pick Your First Pet", starter_sub:"It will fight your first battle with you. Don't worry — slimes drop eggs, so you can hatch all the others!",
+    help:"Help", tab_play:"Play", tab_book:"Pets", tab_hatch:"Hatch", tab_evo:"Evolve", back:"Back", how:"How to Play",
+    help_1:"There is just one mode: Endless Adventure. Slimes march down 5 lanes from the top. Tap a pet card below, then tap an empty spot at the bottom to place it.",
+    help_2:"Front-row pets block slimes in the same lane, so tanks are best up front. Flying Balloon Slimes can't be blocked!",
+    help_3:"All pets come from Endless Adventure: beaten slimes may drop eggs, and bosses always do. Rarer eggs hatch rarer pets, and you might even get a sparkly Shiny!",
+    help_4:"Two pets with the same name and stars can evolve. They change looks at 1→2→3→4★. 4★ is the final form and 5★ is the max.",
+    help_5:"Type matchups: Fire beats Grass, Grass beats Water, Water beats Fire, Thunder beats Water, Earth beats Thunder, Light beats Earth. Super-effective hits deal ×1.5.",
+    help_6:"It keeps getting harder: slimes get tougher, faster and more numerous, with a new map every 10 waves. But the loot gets better too, with more good eggs and shinies. Tap “End” anytime and keep everything.",
+    got_it:"Got it!", pause:"Paused", pause_btn:"Pause", resume:"Resume", quit:"End Run", pause_note:"If you end now, the eggs and gems you found are kept.", home:"Home",
+    lang_pick:"Choose Language", lang_toggle:"Language",
+    mute_on:"Sound", mute_off:"Muted", end:"End",
+    deploy_hint:"Tap a pet card, then an empty spot to place it. Tap “Fight!” when ready.", deploy_empty:"Put your pets on the empty spots below first!",
+    gold:"Gold {0}", deployed:"Team {0}/{1}", eggs_run:"Eggs +{0}", wave_hud:"{0} · Wave {1}", loot_hud:"Loot Lv.{0} {1} · Shiny {2}%",
+    fight:"Fight!", next_wave:"Next {0}", all_out:"All your pets are out!<br>Tap a pet on the field to upgrade or recall it.", no_pets:"No pets yet",
+    shiny_pre:"✦Shiny ", el_type:"{0} type", field_lv:"Field Lv.{0}", skill_line:"Skill: {0}", skill_up:"Upgrade: {0}",
+    dmg:"Damage {0} · ", range_hp:"Range {0} · HP {1}/{2}", upgrade:"Upgrade {0}g", maxed:"Max level", recall:"Recall",
+    no_gold:"Not enough gold — beat slimes to earn more!", boss_wave:"Wave {0} · Boss incoming!", wave_come:"Wave {0} is coming!",
+    egg_drop:"Dropped a {0}!", lucky:" Lucky!", fainted:"{0} is worn out — back after this wave",
+    wave_clear_zone:"Wave {0} cleared! Gems +{1} · Next stop: {2}. Tougher slimes, better loot!", wave_clear:"Wave {0} cleared! Gems +{1}",
+    res_lost:"The slimes broke through!", res_title:"Run Report", no_eggs_run:"No eggs this run",
+    sum_reached:"Reached: <b>Wave {0}</b> ({1}, best {2})", sum_loot:"Final loot level: <b>Lv.{0} {1}</b>",
+    sum_kills:"Slimes beaten: <b>{0}</b>", sum_gems:"Gems earned: <b>+{0}</b>", sum_eggs:"Eggs found: <b>{0}</b>",
+    sum_saved:"Everything is saved. Head home and hatch your eggs!", place_then:"Set up your team, then tap “Fight!”", rest:"Take a break · next wave in {0}s",
+    next_loot:"Next wave loot Lv.{0} {1}", gems:"Gems {0}",
+    update_note:"Big update! There's now just one mode: Endless Adventure. Your pets, stars and gems are all kept, plus a free Rare Egg.",
+    endless_desc:"Every wave of slimes is tougher, but the eggs get better and shinies more common. Tap “End” anytime to keep your loot.",
+    best_wave:"Best: Wave {0}", pets_n:"Pets: {0}", eggs_n:"Eggs: {0}", start_adv:"Start Adventure!", hatch_first:"Hatch a pet first!",
+    route:"Adventure route (new map every 10 waves)", wave_plus:"Wave {0}+", shiny_tag:"✦ Shiny", not_met:"Not found yet",
+    collected:"Collected {0}/{1} · Shiny {2}/{3} · Tap a card to see its evolutions", family:"{0} Family", shiny_sec:"✦ Shiny ", not_hatched:"(not hatched yet)", normal_sec:"Normal",
+    egg_info:"Slimes drop eggs, and later waves drop better ones. You can also buy a Common Egg for {0} gems (15% chance it's Rare).", buy_egg:"Buy Egg {0}",
+    my_eggs:"My Eggs ({0}) · tap one to hatch", no_eggs:"No eggs yet. Go beat some slimes in Endless Adventure!", shiny_rate:"Shiny {0}%",
+    evo_info:"Merge two pets with the <b>same name and stars</b> to evolve! They change looks at every star up to 4★ (final form); 5★ is the max. If either one is shiny, the result is shiny!",
+    evo_none:"No pets can evolve yet. Hatch more eggs to get two of the same!", evolve_btn:"Evolve", my_pets:"My Pets ({0})",
+    evo_ok:"Evolved!", evo_msg:"{0} evolved into {1}{2}!", max_star:"<br>Max stars — super strong!",
+    hatching:"Hatching…", egg_moving:"The {0} is wiggling…", shiny_appear:"✦ A Shiny! ✦", hatched:"It hatched!", super_shiny:"Super-rare Shiny",
+    hatch_skill:"Skill: {0} — {1}", hatch_again:"Hatch another ({0} left)", yay:"Yay!",
+    got_pet:"You got {0}! Here's a free egg too — check the “Hatch” tab.", loading:"Loading pets… {0}%", wave_init:"Wave 1", eggs_init:"Eggs 0", loot_init:"Loot Lv.1",
+    gold_init:"Gold 0", deploy_init:"Team 0/10",
+    tab_train:"Train", apt:"Aptitude", apt_note:"Aptitude is set when a pet hatches and can never change. It decides how much the pet grows per level and its training cap.", grade:"Grade", birth:"Birth grade",
+    lv:"Lv.{0}", xp:"XP {0}/{1}", st_atk:"Attack", st_hp:"HP", st_spd:"Speed", tr_line:"{0} +{1}%", tr_cnt:"{0}/{1}", feed:"Feed",
+    food_none:"No snacks yet. Beat slimes in Endless Adventure — they drop snacks!", train_info:"Pick a pet and feed it snacks: it gains XP to level up and permanently raises Attack, HP and Speed (training). The training cap depends on Aptitude.",
+    pick_pet:"Pick a pet", maxlv:"Max", my_snacks:"My Snacks", stat_cap:"Full", hatch_all:"Hatch All ({0})", hatch_all_title:"Hatch Results",
+    hatch_all_sum:"Hatched {0} pets · {1} shiny · {2} S-grade or better", lvup:"{0} reached Lv.{1}!", fed:"{0} ate the {1}!", ultra:"✦Ultra Shiny",
+    my_family:"My {0} ({1})", sum_food:"Snacks found: <b>{0}</b>", food_float:"+{0}", apt_tiers:"Plain,Good,Great,Superb,Genius", ok:"OK",
+    food_candy:"Berry Candy", food_candy_d:"XP +40", food_chili:"Spicy Crisp", food_chili_d:"XP +25 · Attack +1", food_cookie:"Nut Cookie", food_cookie_d:"XP +25 · HP +1",
+    food_jelly:"Zippy Jelly", food_jelly_d:"XP +25 · Speed +1", food_cake:"Rainbow Cake", food_cake_d:"XP +150 · All stats +1", food_apple:"Golden Apple", food_apple_d:"XP +500 · All stats +2"
+  }
+};
+function tr(key, ...a) { const s = (STR[LANG] && STR[LANG][key]) ?? STR.zh[key] ?? key; return s.replace(/\{(\d)\}/g, (_, i) => a[+i]); }
+const EL_EN = { 火:"Fire", 水:"Water", 草:"Grass", 雷:"Thunder", 土:"Earth", 光:"Light" };
+const EL_SHORT_EN = { 火:"F", 水:"W", 草:"G", 雷:"T", 土:"E", 光:"L" };
+function elName(e) { return LANG === "en" ? EL_EN[e] : e; }
+function elShort(e) { return LANG === "en" ? EL_SHORT_EN[e] : e; }
+const EN = {
+  role: { tank:"Tank", dps:"Attacker", aoe:"Splash", sup:"Support" },
+  rar: ["", "Common", "Rare", "Epic", "Legendary"],
+  egg: ["", "Common Egg", "Rare Egg", "Epic Egg", "Legendary Egg"],
+  loot: ["Common", "Good", "Rare", "Epic", "Legendary", "Mythic"],
+  zones: ["Orchard", "Beach", "Volcano", "Dreamland"],
+  endless: "Endless Adventure",
+  enemy: { sprout:"Sprout Slime", jelly:"Jelly Slime", ember:"Flame Slime", zap:"Battery Slime", pebble:"Rock Slime", puff:"Balloon Slime",
+    boss1:"Jelly Slime King", boss2:"Stone Slime King", boss3:"Lava Slime King", bossX:"Chaos Slime King" },
+  pets: {
+    chili:    { names:["Chili Mouse","Pepper Mouse","Blaze Pepper Mouse","Inferno Pepper King"], sk:"Chili Seeds", skd:"Spits a fiery seed at one slime and keeps it burning.", up:"Stage 3+: two seeds at once, longer burn" },
+    chestnut: { names:["Chestnut Hog","Spiky Chestnut Hog","Armored Chestnut Hog","Chestnut Fortress"], sk:"Spiky Roll", skd:"Rolls a spiky chestnut up its lane, poking a whole row and knocking slimes back. Biting it hurts, too!", up:"Stage 3+: knocks back further. Stage 4: rolls two" },
+    berry:    { names:["Berry Bunny","Berry Bun","Berry Crown Bunny","Berry Queen Bunny"], sk:"Berry Pop", skd:"Tosses berries to nearby friends to heal them and boost their attack.", up:"Stage 3+: heals more. Stage 4: bigger range" },
+    lychee:   { names:["Lychee Jelly","Bubble Lychee Jelly","Lychee Crown Jelly","Lychee Sea Queen"], sk:"Lychee Bubble", skd:"Blows a big bubble that pops and slows a whole area.", up:"Stage 3+: bigger bubbles. Stage 4: traps slimes for a moment" },
+    melon:    { names:["Melon Turtle","Watermelon Turtle","Melon Shell Turtle","Melon Fortress Turtle"], sk:"Melon Shield", skd:"Wraps itself and its side buddies in melon-rind shields, then spits three seeds.", up:"Stage 3+: thicker shields. Stage 4: also shields the buddy behind" },
+    lemon:    { names:["Lemon Chick","Zappy Lemon Chick","Thunder Lemon Bird","Storm Lemon Phoenix"], sk:"Lemon Zap Chain", skd:"Lightning hops from slime to slime, getting weaker with each hop.", up:"Stage 3: +1 hop. Stage 4: +1 more" },
+    coco:     { names:["Coco Otter","Coco Shell Otter","Coco Wave Otter","Coco Tide King"], sk:"Coconut Squirt", skd:"Super-fast coconut-water squirts. Keep hitting the same slime to stack more damage.", up:"Stage 3+: two streams at once" },
+    taro:     { names:["Taro Bear","Taro Mash Bear","Taro Rock Bear","Taro Mountain King"], sk:"Taro Stomp", skd:"Jumps up and lands with a thump, sending a shockwave through nearby slimes.", up:"Stage 3+: bigger shockwave that stuns" },
+    peach:    { names:["Peach Monkey","Fairy Peach Monkey","Peachglow Monkey","Holy Peach Monkey"], sk:"Bouncy Peach", skd:"Throws a bouncing peach. Its peachy glow makes nearby friends attack faster.", up:"Stage 3+: one extra bounce" },
+    blueberry:{ names:["Berry Owl","Blueberry Owl","Star Berry Owl","Thunder Night Owl"], sk:"Sky Feather", skd:"Shoots a long-range feather that pierces a whole row and can land critical hits.", up:"Stage 3+: two feathers at once" },
+    pitaya:   { names:["Dragonfruit Pup","Dragonfruit Drake","Ruby Scale Drake","Blaze Emperor Drake"], sk:"Dragonfruit Meteor", skd:"Calls down a dragonfruit meteor that explodes and leaves a ring of fire.", up:"Stage 4: two meteors at once" },
+    mango:    { names:["Mango Cub","Mango Mane Lion","Golden Mango Lion","Sunburst Lion King"], sk:"Mango Roar", skd:"A glowing claw swipe that stuns a slime.", up:"Stage 3+: the roar also stuns slimes nearby" }
+  }
+};
+const ZH = { role: { ...ROLE_NAME }, rar: RAR_NAME.slice(), egg: EGG_NAME.slice(), loot: LOOT_NAME.slice(), zones: ZONES.map(z => z.name), endless: ENDLESS.name,
+  enemy: Object.fromEntries(Object.entries(ENEMY).map(([k, v]) => [k, v.name])),
+  pets: Object.fromEntries(PETS.map(p => [p.id, { names: p.names.slice(), sk: p.sk, skd: p.skd, up: p.up }])) };
+function applyLangData(l) {
+  const S = l === "en" ? EN : ZH;
+  Object.assign(ROLE_NAME, S.role);
+  S.rar.forEach((v, i) => RAR_NAME[i] = v); S.egg.forEach((v, i) => EGG_NAME[i] = v); S.loot.forEach((v, i) => LOOT_NAME[i] = v);
+  ZONES.forEach((z, i) => z.name = S.zones[i]); ENDLESS.name = S.endless;
+  for (const k in ENEMY) ENEMY[k].name = S.enemy[k];
+  for (const p of PETS) { const q = S.pets[p.id]; p.names = q.names.slice(); p.sk = q.sk; p.skd = q.skd; p.up = q.up; p.desc = q.skd; }
+}
+
+/* ================= growth: level, aptitude (innate, fixed at hatch), birth grade, training (food) ================= */
+const MAX_LV = 50;
+function xpNeed(lv) { return 20 + 10 * lv + lv * lv; }
+const GRADES = ["C", "B", "A", "S", "SS"];
+function tierOf(v) { return v >= 88 ? 4 : v >= 72 ? 3 : v >= 55 ? 2 : v >= 35 ? 1 : 0; }
+function aptTierName(apt) { return tr("apt_tiers").split(",")[tierOf(apt)]; }
+function rollApt(rar, minApt) {
+  const v = 12 + 70 * Math.pow(Math.random(), 1.35) + Math.random() * 18 + 3 * ((rar || 1) - 1);
+  return clampN(Math.round(v), minApt || 1, 100);
+}
+function clampN(v, a, b) { return Math.max(a, Math.min(b, v)); }
+function birthGrade(apt, rar, shiny) { return GRADES[tierOf(apt + 4 * ((rar || 1) - 1) + (shiny ? 5 : 0))]; }
+function trainCap(apt) { return 5 + Math.floor(apt / 4); }          // 5 .. 30 points per stat
+function growthPerLv(apt) { return 0.015 + 0.035 * apt / 100; }    // +1.5% .. +5% per level
+function indivMul(p) {
+  const apt = p.apt || 50, lv = p.lv || 1, t = p.tr || {};
+  const base = (0.8 + 0.4 * apt / 100) * (1 + (lv - 1) * growthPerLv(apt));
+  return { atk: base * (1 + 0.03 * (t.a || 0)), hp: base * (1 + 0.04 * (t.h || 0)), spd: 1 + 0.015 * (t.s || 0), base };
+}
+function isUltra(p) { return !!p.shiny && (p.apt || 0) >= 95; }
+const FOODS = [
+  { id:"candy",  xp:40,  a:0, h:0, s:0, col:"#ff6aa0" },
+  { id:"chili",  xp:25,  a:1, h:0, s:0, col:"#f2483c" },
+  { id:"cookie", xp:25,  a:0, h:1, s:0, col:"#c08a5a" },
+  { id:"jelly",  xp:25,  a:0, h:0, s:1, col:"#ffd23a" },
+  { id:"cake",   xp:150, a:1, h:1, s:1, col:"#b07aff" },
+  { id:"apple",  xp:500, a:2, h:2, s:2, col:"#ffc21a" }
+];
+const FOOD = Object.fromEntries(FOODS.map(f => [f.id, f]));
+function foodName(id) { return tr("food_" + id); }
+function foodChance(lv, boss) { return boss ? 1 : Math.min(0.35, 0.08 + 0.01 * (lv - 1)); }
+function rollFood(lv) {
+  const w = { candy: Math.max(8, 40 - 4 * lv), chili: Math.max(6, 20 - lv), cookie: Math.max(6, 20 - lv), jelly: Math.max(6, 20 - lv), cake: 3 + 4 * lv, apple: Math.max(0, 2.5 * (lv - 2)) };
+  let tot = 0; for (const k in w) tot += w[k];
+  let r = Math.random() * tot;
+  for (const k in w) { r -= w[k]; if (r <= 0) return k; }
+  return "candy";
+}
+
+/* ================= art helpers (chibi, thick outline, flat + soft cel shade) ================= */
+const OL = "#2b1b22";
+function shade(hex, amt) {
+  const n = parseInt(String(hex).replace("#", ""), 16);
+  const r = (n >> 16) + amt, g = ((n >> 8) & 255) + amt, b = (n & 255) + amt;
+  return "rgb(" + [r, g, b].map(v => Math.max(0, Math.min(255, v))).join(",") + ")";
+}
+function shape(c, build, col, box, o) {
+  o = o || {};
+  const [x, y, rx, ry] = box;
+  c.save();
+  c.beginPath(); build(c); c.clip();
+  c.fillStyle = o.shadeCol || shade(col, -42); c.fillRect(-400, -400, 800, 800);
+  c.fillStyle = col; c.beginPath(); c.ellipse(x - rx * 0.13, y - ry * 0.17, rx * 0.99, ry * 0.9, 0, 0, TAU); c.fill();
+  if (o.hl !== false) {
+    c.fillStyle = "rgba(255,255,255,.42)";
+    c.beginPath(); c.ellipse(x - rx * 0.42, y - ry * 0.5, Math.max(1, rx * 0.25), Math.max(1, ry * 0.15), -0.6, 0, TAU); c.fill();
+  }
+  c.restore();
+  if (o.lw !== 0) {
+    c.beginPath(); build(c);
+    c.lineWidth = o.lw || 4; c.strokeStyle = OL; c.lineJoin = "round"; c.stroke();
+  }
+}
+function E(c, x, y, rx, ry, col, o) {
+  const rot = (o && o.rot) || 0;
+  shape(c, cc => cc.ellipse(x, y, rx, ry, rot, 0, TAU), col, [x, y, rx, ry], o);
+}
+function F(c, build, col, lw) { // flat fill + outline
+  c.beginPath(); build(c); c.fillStyle = col; c.fill();
+  if (lw !== 0) { c.lineWidth = lw || 3.5; c.strokeStyle = OL; c.lineJoin = "round"; c.stroke(); }
+}
+function dot(c, x, y, r, col) { c.fillStyle = col; c.beginPath(); c.arc(x, y, r, 0, TAU); c.fill(); }
+function ell(c, x, y, rx, ry, col, rot) { c.fillStyle = col; c.beginPath(); c.ellipse(x, y, rx, ry, rot || 0, 0, TAU); c.fill(); }
+function flame(c, x, y, s, c1, c2) {
+  const b = cc => {
+    cc.moveTo(x, y - s * 1.7);
+    cc.bezierCurveTo(x + s * 0.4, y - s * 0.9, x + s * 1.05, y - s * 0.55, x + s * 0.92, y + s * 0.25);
+    cc.bezierCurveTo(x + s * 0.8, y + s * 0.95, x - s * 0.8, y + s * 0.95, x - s * 0.92, y + s * 0.25);
+    cc.bezierCurveTo(x - s * 1.05, y - s * 0.55, x - s * 0.4, y - s * 0.9, x, y - s * 1.7);
+    cc.closePath();
+  };
+  shape(c, b, c1, [x, y, s, s * 1.2], { lw: 3 });
+  if (c2) ell(c, x, y + s * 0.3, s * 0.45, s * 0.52, c2);
+}
+function leaf(c, x, y, L, a, col) {
+  c.save(); c.translate(x, y); c.rotate(a);
+  shape(c, cc => { cc.moveTo(0, 0); cc.quadraticCurveTo(L * 0.5, -L * 0.45, L, 0); cc.quadraticCurveTo(L * 0.5, L * 0.45, 0, 0); cc.closePath(); },
+    col, [L / 2, 0, L / 2, L * 0.25], { lw: 3 });
+  c.strokeStyle = shade(col, -55); c.lineWidth = 1.6;
+  c.beginPath(); c.moveTo(L * 0.12, 0); c.lineTo(L * 0.78, 0); c.stroke();
+  c.restore();
+}
+function starPath(cc, x, y, r, n, inner, rot) {
+  n = n || 5; inner = inner || 0.45; rot = rot == null ? -Math.PI / 2 : rot;
+  for (let i = 0; i < n * 2; i++) {
+    const rr = i % 2 ? r * inner : r, a = rot + i * Math.PI / n;
+    if (i === 0) cc.moveTo(x + Math.cos(a) * rr, y + Math.sin(a) * rr); else cc.lineTo(x + Math.cos(a) * rr, y + Math.sin(a) * rr);
+  }
+  cc.closePath();
+}
+function star(c, x, y, r, col, lw) { F(c, cc => starPath(cc, x, y, r, 5, 0.48), col, lw == null ? 2.5 : lw); }
+function spark(c, x, y, r, col) { F(c, cc => starPath(cc, x, y, r, 4, 0.3), col || "#fff", 2); }
+function bolt(c, x, y, s, col, rot) {
+  c.save(); c.translate(x, y); c.rotate(rot || 0);
+  F(c, cc => { cc.moveTo(-s * 0.2, -s); cc.lineTo(s * 0.55, -s); cc.lineTo(s * 0.1, -s * 0.15); cc.lineTo(s * 0.6, -s * 0.15);
+    cc.lineTo(-s * 0.35, s * 1.05); cc.lineTo(-s * 0.05, s * 0.15); cc.lineTo(-s * 0.55, s * 0.15); cc.closePath(); }, col, 3);
+  c.restore();
+}
+function crown(c, x, y, w, col, gem) {
+  F(c, cc => { cc.moveTo(x - w, y + w * 0.5); cc.lineTo(x - w, y - w * 0.4); cc.lineTo(x - w * 0.5, y); cc.lineTo(x, y - w * 0.7);
+    cc.lineTo(x + w * 0.5, y); cc.lineTo(x + w, y - w * 0.4); cc.lineTo(x + w, y + w * 0.5); cc.closePath(); }, col, 3);
+  dot(c, x, y + w * 0.15, w * 0.2, gem || "#ff5a8a");
+}
+/* ================= image assets (hand-painted sprites in assets/) ================= */
+const IMG = {};
+const ASSET_LIST = [];
+for (const p of PETS) for (let s = 1; s <= 4; s++) ASSET_LIST.push("pets/" + p.id + "-" + s, "pets/" + p.id + "-" + s + "-s");
+for (const k of Object.keys(ENEMY)) ASSET_LIST.push("enemies/" + ENEMY[k].img);
+for (let q = 1; q <= 4; q++) ASSET_LIST.push("eggs/egg-" + q);
+for (const z of ZONES) ASSET_LIST.push("bg/" + z.theme);
+ASSET_LIST.push("ui/grain.png");
+function loadAssets(onProgress) {
+  let done = 0;
+  return Promise.all(ASSET_LIST.map(k => new Promise(res => {
+    const im = new Image();
+    im.onload = () => { IMG[k] = im; done++; onProgress && onProgress(done, ASSET_LIST.length); res(); };
+    im.onerror = () => { console.warn("missing asset " + k); done++; res(); };
+    im.src = "assets/" + k + (k.includes(".") ? "" : ".webp");
+  })));
+}
+/* ---------- crayon helpers: jittered hand-drawn strokes + wax grain ---------- */
+function jit(i, s) { return hash(i * 7 + 3, s * 13 + 1) - 0.5; }
+function roughRectPath(c, x, y, w, h, r, seed, amp) {
+  amp = amp == null ? 1.4 : amp; r = Math.min(r, w / 2, h / 2);
+  const pts = [], seg = (x0, y0, x1, y1, n) => { for (let i = 0; i < n; i++) { const t = i / n; pts.push([x0 + (x1 - x0) * t, y0 + (y1 - y0) * t]); } };
+  const arc = (cx, cy, a0) => { for (let i = 0; i < 4; i++) { const a = a0 + i * Math.PI / 8; pts.push([cx + Math.cos(a) * r, cy + Math.sin(a) * r]); } };
+  const nx = Math.max(2, Math.round(w / 14)), ny = Math.max(2, Math.round(h / 14));
+  seg(x + r, y, x + w - r, y, nx); arc(x + w - r, y + r, -Math.PI / 2);
+  seg(x + w, y + r, x + w, y + h - r, ny); arc(x + w - r, y + h - r, 0);
+  seg(x + w - r, y + h, x + r, y + h, nx); arc(x + r, y + h - r, Math.PI / 2);
+  seg(x, y + h - r, x, y + r, ny); arc(x + r, y + r, Math.PI);
+  c.beginPath(); pts.forEach(([px, py], i) => { const X = px + jit(i, seed) * amp, Y = py + jit(i + 99, seed) * amp; i ? c.lineTo(X, Y) : c.moveTo(X, Y); }); c.closePath();
+}
+let grainPat = null;
+function grain(c, alpha) {
+  if (!IMG["ui/grain.png"]) return;
+  if (!grainPat) grainPat = c.createPattern(IMG["ui/grain.png"], "repeat");
+  c.save(); c.globalAlpha = alpha == null ? 0.55 : alpha; c.fillStyle = grainPat; c.fill(); c.restore();
+}
+// filled crayon box with uneven dark outline (2 offset passes)
+function crayonBox(c, x, y, w, h, r, fill, seed, o) {
+  o = o || {};
+  roughRectPath(c, x, y, w, h, r, seed, o.amp);
+  if (fill) { c.fillStyle = fill; c.fill(); grain(c, o.grain); }
+  if (o.lw !== 0) {
+    c.lineJoin = "round"; c.strokeStyle = o.ol || "#24183a";
+    c.lineWidth = o.lw || 2.6; c.stroke();
+    roughRectPath(c, x + 0.6, y + 0.4, w - 0.8, h - 0.6, r, seed + 5, o.amp); c.lineWidth = (o.lw || 2.6) * 0.55; c.stroke();
+  }
+}
+// crayon hp bar: dark wobbly frame + flat colour fill
+function crayonBar(c, x, y, w, h, frac, col, seed) {
+  crayonBox(c, x - 2, y - 2, w + 4, h + 4, (h + 4) / 2, "#2a1c3c", seed, { lw: 0, amp: 0.8, grain: 0.3 });
+  if (frac > 0) crayonBox(c, x, y, Math.max(h, w * frac), h, h / 2, col, seed + 3, { lw: 0, amp: 0.5, grain: 0.6 });
+  c.fillStyle = "rgba(255,255,255,.35)"; c.fillRect(x + 2, y + 1, Math.max(0, w * frac - 4), Math.max(1, h * 0.3));
+}
+// wobbly ellipse ring (ground marker)
+function crayonRing(c, x, y, rx, ry, col, seed) {
+  c.save();
+  for (let pass = 0; pass < 2; pass++) {
+    c.beginPath();
+    for (let i = 0; i <= 24; i++) { const a = i / 24 * TAU, j = 1 + jit(i % 24, seed + pass) * 0.06; const X = x + Math.cos(a) * rx * j, Y = y + Math.sin(a) * ry * j; i ? c.lineTo(X, Y) : c.moveTo(X, Y); }
+    if (pass === 0) { c.globalAlpha = 0.32; c.fillStyle = col; c.fill(); grain(c, 0.5); }
+    c.globalAlpha = pass ? 0.55 : 0.95; c.lineWidth = pass ? 1.5 : 3; c.strokeStyle = col; c.stroke();
+  }
+  c.restore();
+}
+function petImg(id, star, shiny) { return IMG["pets/" + id + "-" + stageOf(star) + (shiny ? "-s" : "")]; }
+function fitBox(im, box) { const k = box / Math.max(im.width, im.height); return [im.width * k, im.height * k]; }
+// feet at (x, y); size = bounding box in px
+function drawPet(c, id, star, shiny, x, y, size, o) {
+  o = o || {};
+  const im = petImg(id, star, shiny); if (!im) return;
+  const [w, h] = fitBox(im, size);
+  if (o.shadow !== false) ell(c, x, y - 2, w * 0.36, Math.max(4, w * 0.08), "rgba(30,20,30,.28)");
+  c.save(); c.translate(x, y);
+  if (o.squash) c.scale(1 + o.squash * 0.12, 1 - o.squash * 0.12);
+  if (o.alpha != null) c.globalAlpha = o.alpha;
+  c.drawImage(im, -w / 2, -h, w, h);
+  c.restore();
+}
+function drawPetCentered(c, id, star, shiny, cx, cy, size) {
+  const im = petImg(id, star, shiny); if (!im) return;
+  const [w, h] = fitBox(im, size);
+  c.drawImage(im, cx - w / 2, cy - h / 2, w, h);
+}
+function drawEnemyImg(c, typ, x, y, size, o) {
+  const im = IMG["enemies/" + ENEMY[typ].img]; if (!im) return;
+  const [w, h] = fitBox(im, size);
+  c.save(); c.translate(x, y);
+  if (o && o.rot) c.rotate(o.rot);
+  c.drawImage(im, -w / 2, -h, w, h);
+  if (o && o.flash) { c.globalCompositeOperation = "lighter"; c.globalAlpha = 0.45; c.drawImage(im, -w / 2, -h, w, h); }
+  c.restore();
+}
+function drawEgg(c, x, y, s, q, t, sh) {
+  const im = IMG["eggs/egg-" + q]; if (!im) return;
+  const [w, h] = fitBox(im, s * 1.2);
+  ell(c, x, y + h * 0.46, w * 0.42, h * 0.08, "rgba(30,20,30,.25)");
+  c.save(); c.translate(x, y + h / 2); c.rotate(Math.sin((t || 0) * 6) * 0.06 * (sh || 0));
+  c.drawImage(im, -w / 2, -h, w, h);
+  c.restore();
+  if (q >= 3) spark(c, x + w * 0.35, y - h * 0.4, 4 + q, "#fff8c0");
+}
+
+/* ================= setup ================= */
+const app = document.getElementById("app");
+const canvas = document.getElementById("cv");
+const ctx = canvas.getContext("2d");
+const el = (id) => document.getElementById(id);
+let pxk = 1;
+function fit() {
+  const s = Math.min(window.innerWidth / W, window.innerHeight / H);
+  app.style.setProperty("--s", s);
+  pxk = Math.min(3, Math.max(1, (window.devicePixelRatio || 1) * s));
+  canvas.width = Math.round(W * pxk); canvas.height = Math.round(H * pxk);
+  ctx.setTransform(pxk, 0, 0, pxk, 0, 0);
+  BG.clear();
+}
+window.addEventListener("resize", fit);
+function lerp(a, b, t) { return a + (b - a) * t; }
+function dist(ax, ay, bx, by) { return Math.hypot(ax - bx, ay - by); }
+function clamp(v, a, b) { return Math.max(a, Math.min(b, v)); }
+function hash(x, y) { let n = x * 374761393 + y * 668265263; n = (n ^ (n >> 13)) * 1274126177; return ((n ^ (n >> 16)) >>> 0) / 4294967296; }
+function pick(arr) { return arr[Math.floor(Math.random() * arr.length)]; }
+function starsHTML(n) { let s = ""; for (let i = 1; i <= MAX_STAR; i++) s += i <= n ? "★" : "<span class='off'>★</span>"; return "<span class='stars'>" + s + "</span>"; }
+function petCanvas(id, star, shiny, px, opts) {
+  const cv = document.createElement("canvas");
+  cv.width = cv.height = px * 2;
+  const c = cv.getContext("2d"); c.scale(2, 2);
+  if (opts && opts.silhouette) { c.filter = "brightness(0) opacity(.35)"; }
+  const k = (opts && opts.k) || 1.0;
+  drawPetCentered(c, id, star, shiny, px / 2, px / 2 + 4 * k, px * k);
+  return cv;
+}
+
+/* ================= audio ================= */
+let audioCtx = null, masterGain = null;
+function unlockAudio() {
+  try {
+    if (!audioCtx) {
+      audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+      masterGain = audioCtx.createGain(); masterGain.connect(audioCtx.destination);
+      masterGain.gain.value = save.muted ? 0 : 0.32;
+    }
+    if (audioCtx.state === "suspended") audioCtx.resume();
+  } catch (e) {}
+}
+function tone(freq, dur, type, vol, slide, delay) {
+  if (!audioCtx || save.muted) return;
+  const t0 = audioCtx.currentTime + (delay || 0);
+  const o = audioCtx.createOscillator(), g = audioCtx.createGain();
+  o.type = type || "sine"; o.frequency.setValueAtTime(freq, t0);
+  if (slide) o.frequency.exponentialRampToValueAtTime(Math.max(40, slide), t0 + dur);
+  g.gain.setValueAtTime(0.0001, t0); g.gain.exponentialRampToValueAtTime(vol || 0.1, t0 + 0.02);
+  g.gain.exponentialRampToValueAtTime(0.0001, t0 + dur);
+  o.connect(g); g.connect(masterGain); o.start(t0); o.stop(t0 + dur + 0.02);
+}
+let lastShootSfx = 0;
+const sfx = {
+  click() { unlockAudio(); tone(560, .06, "sine", .08); },
+  place() { unlockAudio(); tone(380, .08, "triangle", .1); tone(620, .1, "sine", .08, 0, .06); },
+  shoot() { if (performance.now() - lastShootSfx < 70) return; lastShootSfx = performance.now(); unlockAudio(); tone(460 + Math.random() * 90, .05, "square", .025); },
+  coin() { unlockAudio(); tone(900, .06, "sine", .06); tone(1250, .08, "sine", .05, 0, .05); },
+  egg() { unlockAudio(); [660, 880, 1100].forEach((f, i) => tone(f, .12, "sine", .09, 0, i * .06)); },
+  hatch() { unlockAudio(); [523, 659, 784, 1046].forEach((f, i) => tone(f, .2, "sine", .1, 0, i * .08)); },
+  shiny() { unlockAudio(); [784, 988, 1175, 1568, 1976].forEach((f, i) => tone(f, .22, "triangle", .09, 0, i * .07)); },
+  win() { unlockAudio(); [523, 659, 784, 1046, 1318].forEach((f, i) => tone(f, .25, "sine", .1, 0, i * .09)); },
+  lose() { unlockAudio(); tone(300, .2, "sine", .1, 120); tone(200, .3, "sine", .1, 80, .15); },
+  leak() { unlockAudio(); tone(180, .15, "square", .05, 90); },
+  bite() { unlockAudio(); tone(140, .06, "square", .03); }
+};
+function setMuted(m) {
+  save.muted = m;
+  if (masterGain) masterGain.gain.value = m ? 0 : 0.32;
+  el("btn-mute2").textContent = m ? tr("mute_off") : tr("mute_on");
+  persist();
+}
+
+/* ================= save ================= */
+let uidSeq = 1;
+const save = {
+  started: false, muted: false, gems: 60, pets: [], eggs: [], beaten: 0, endlessBest: 0,
+  seen: {}, seenShiny: {}, firstEgg: false, hatched: 0, food: {}
+};
+function persist() {
+  try {
+    localStorage.setItem(SAVE_KEY, JSON.stringify({
+      v: 2, started: save.started, muted: save.muted, gems: save.gems, pets: save.pets, eggs: save.eggs,
+      beaten: save.beaten, endlessBest: save.endlessBest, seen: save.seen, seenShiny: save.seenShiny,
+      firstEgg: save.firstEgg, hatched: save.hatched, food: save.food, uidSeq
+    }));
+  } catch (e) {}
+}
+function applySave(d) {
+  save.started = true;
+  save.muted = !!d.muted;
+  save.gems = Math.max(0, d.gems | 0);
+  save.pets = (Array.isArray(d.pets) ? d.pets : []).filter(p => p && PET[p.id])
+    .map(p => normPet(p));
+  save.eggs = (Array.isArray(d.eggs) ? d.eggs : []).filter(e => e && e.q >= 1 && e.q <= 4).map(e => ({ q: e.q | 0, sh: +e.sh || 0.03 }));
+  save.beaten = d.beaten | 0;
+  save.endlessBest = d.endlessBest | 0;
+  save.seen = d.seen || {}; save.seenShiny = d.seenShiny || {};
+  save.firstEgg = !!d.firstEgg; save.hatched = d.hatched | 0;
+  save.food = {}; for (const f of FOODS) { const n = d.food && d.food[f.id] | 0; if (n > 0) save.food[f.id] = n; }
+  for (const p of save.pets) { save.seen[p.id] = true; if (p.shiny) save.seenShiny[p.id] = true; }
+  uidSeq = Math.max(1, d.uidSeq | 0, ...save.pets.map(p => p.uid + 1));
+  for (const p of save.pets) if (!p.uid) p.uid = uidSeq++;
+}
+// older saves have no aptitude: roll one ONCE (then it is fixed forever)
+function normPet(p) {
+  const d = PET[p.id], shiny = !!p.shiny;
+  const apt = p.apt >= 1 && p.apt <= 100 ? p.apt | 0 : rollApt(d.rar, 20);
+  const tr0 = p.tr || {}, cap = trainCap(apt);
+  return { uid: p.uid | 0, id: p.id, star: clamp(p.star | 0 || 1, 1, MAX_STAR), shiny, apt,
+    grade: GRADES.includes(p.grade) ? p.grade : birthGrade(apt, d.rar, shiny),
+    lv: clamp(p.lv | 0 || 1, 1, MAX_LV), xp: Math.max(0, p.xp | 0),
+    tr: { a: clamp(tr0.a | 0, 0, cap), h: clamp(tr0.h | 0, 0, cap), s: clamp(tr0.s | 0, 0, cap) } };
+}
+function loadSave() {
+  try {
+    const raw = localStorage.getItem(SAVE_KEY);
+    if (raw) { const d = JSON.parse(raw); if (d && d.started) { applySave(d); return true; } }
+    // migrate v1 (old office-pet version): same progress, pets become their new fruit/element counterparts
+    const old = localStorage.getItem(OLD_SAVE_KEY);
+    if (old) {
+      const d = JSON.parse(old);
+      if (d && d.started) {
+        applySave({
+          muted: d.muted, gems: d.gems, beaten: Math.min(3, d.beaten | 0), endlessBest: d.endlessBest | 0,
+          pets: (d.pets || []).map(p => ({ uid: p.uid, id: OLD_MAP[p.id] || "chili", star: p.star, shiny: false })),
+          eggs: [{ q: 2, sh: 0.1 }], uidSeq: d.uidSeq, firstEgg: true
+        });
+        persist();
+        migratedNote = true;
+        return true;
+      }
+    }
+  } catch (e) {}
+  return false;
+}
+let migratedNote = false;
+function newGame(starterId) {
+  uidSeq = 1;
+  Object.assign(save, { started: true, gems: 60, pets: [], eggs: [{ q: 1, sh: 0.05 }], beaten: 0, endlessBest: 0,
+    seen: {}, seenShiny: {}, firstEgg: false, hatched: 0, food: { candy: 2 } });
+  addPet(starterId || "chili", 1, false, { minApt: 45 });
+  persist();
+}
+function addPet(id, star, shiny, o) {
+  o = o || {};
+  const rar = PET[id].rar, apt = o.apt != null ? clampN(o.apt | 0, 1, 100) : rollApt(rar, o.minApt);
+  const p = { uid: uidSeq++, id, star: star || 1, shiny: !!shiny, apt, grade: birthGrade(apt, rar, !!shiny), lv: 1, xp: 0, tr: { a: 0, h: 0, s: 0 } };
+  save.pets.push(p); save.seen[id] = true; if (shiny) save.seenShiny[id] = true;
+  return p;
+}
+
+/* ================= toast ================= */
+let toastT = 0;
+function showToast(msg, dur) { const t = el("toast"); t.textContent = msg; t.classList.remove("hidden"); toastT = dur || 2.2; }
+
+/* ================= backgrounds (painted maps + light overlays) ================= */
+const BG = {
+  cache: new Map(),
+  clear() { this.cache.clear(); },
+  get(theme, plain) {
+    const key = theme + (plain ? "-p" : "");
+    let cv = this.cache.get(key); if (cv) return cv;
+    cv = document.createElement("canvas"); cv.width = Math.round(W * pxk); cv.height = Math.round(H * pxk);
+    const c = cv.getContext("2d"); c.scale(pxk, pxk);
+    const im = IMG["bg/" + theme];
+    if (im) c.drawImage(im, 0, 0, W, H); else { c.fillStyle = "#8fd46a"; c.fillRect(0, 0, W, H); }
+    if (!plain) drawLanes(c, theme);
+    this.cache.set(key, cv); return cv;
+  }
+};
+function drawLanes(c, theme) {
+  const dark = theme === "volcano" || theme === "endless";
+  for (const lx of LANE_X) {
+    // spawn portal
+    // crayon-drawn dirt hole
+    c.beginPath(); for (let i = 0; i <= 20; i++) { const an = i / 20 * TAU, j = 1 + jit(i % 20, lx) * 0.12; const X = lx + Math.cos(an) * 26 * j, Y = 104 + Math.sin(an) * 11 * j; i ? c.lineTo(X, Y) : c.moveTo(X, Y); }
+    c.fillStyle = "#3a2630"; c.fill(); grain(c, 0.6); c.lineWidth = 2.6; c.strokeStyle = "#24183a"; c.stroke();
+    c.beginPath(); c.ellipse(lx + 2, 107, 15, 5, 0, 0, TAU); c.fillStyle = "#1e1220"; c.fill();
+  }
+  // placement tiles: a soft 5x2 grid where pets stand
+  for (let i = 0; i < SLOTS; i++) {
+    const { x, y } = slotPos(i);
+    roughRectPath(c, x - 38, y - 64, 76, 74, 10, i + 1, 1.6);
+    c.fillStyle = dark ? "rgba(255,255,255,.08)" : "rgba(255,255,255,.16)"; c.fill();
+    c.setLineDash([9, 7]); c.lineWidth = 2.6; c.strokeStyle = dark ? "rgba(255,255,255,.4)" : "rgba(255,255,240,.75)"; c.stroke(); c.setLineDash([]);
+  }
+  // defence line: yellow/black hazard tape
+  const hy = FENCE_Y - 5;
+  crayonBox(c, -6, hy - 7, W + 12, 14, 4, "#2a1c2c", 77, { lw: 0, amp: 1.2, grain: 0.4 });
+  c.save(); roughRectPath(c, -6, hy - 4.5, W + 12, 9, 3, 78, 0.8); c.clip(); c.fillStyle = "#f4c83a";
+  for (let x = -20, k = 0; x < W + 20; x += 24, k++) { const j = jit(k, 5) * 2; c.beginPath(); c.moveTo(x + j, hy + 5); c.lineTo(x + 12 + j, hy + 5); c.lineTo(x + 20 + j, hy - 5); c.lineTo(x + 8 + j, hy - 5); c.closePath(); c.fill(); }
+  c.beginPath(); c.rect(0, hy - 6, W, 12); grain(c, 0.7); c.restore();
+}
+function groundRing(c, x, y, r, col, seed) { crayonRing(c, x, y, r, r * 0.34, col, seed || 1); }
+function curTheme() { return zoneOf(Math.max(1, B.wave)).theme; }
+function slotPos(i) { return { x: LANE_X[i % LANES], y: i < LANES ? FRONT_Y : BACK_Y }; }
+
+/* ================= battle ================= */
+let screen = "title";
+let homeTab = "play";
+let time = 0;
+const B = {
+  level: null, lives: 10, gold: 0, wave: 0, waveTotal: 0, running: false, paused: false, speed: 1, over: false, won: false,
+  enemies: [], towers: [], shots: [], fx: [], zones: [], floaters: [], flyEggs: [],
+  spawnQ: [], spawnT: 0, spawnGap: 1, waveActive: false, countdown: 0, t: 0,
+  selPet: null, selTower: null, kills: 0, gemsGot: 0, eggsGot: [], foodGot: 0, bestWave: 0
+};
+function deployedUids() { return new Set(B.towers.map(t => t.uid)); }
+function petStats(t) {
+  const d = PET[t.id];
+  const sm = 1 + 0.4 * (t.star - 1), tm = [1, 1.35, 1.8][t.tier - 1], sh = t.shiny ? 1.08 : 1;
+  const base = sm * tm * sh;
+  return {
+    dmg: d.dmg * base * (t.ind ? t.ind.atk : 1) * (1 + (t._dmgB || 0)),
+    rate: d.rate / (t.ind ? t.ind.spd : 1) / (1 + (t._haste || 0)) / (t.tier === 3 ? 1.12 : t.tier === 2 ? 1.06 : 1),
+    range: d.range * (1 + 0.04 * (t.star - 1)) * (t.tier === 3 ? 1.08 : 1),
+    maxHp: d.hp * base * (t.ind ? t.ind.hp : 1),
+    splash: (d.splash || 0) * (1 + 0.05 * (t.star - 1)),
+    heal: (d.heal || 0) * (1 + 0.15 * (t.star - 1)) * (t.tier === 3 ? 1.3 : t.tier === 2 ? 1.15 : 1),
+    haste: (d.haste || 0) * (1 + 0.12 * (t.star - 1)),
+    buff: (d.buff || 0) * (1 + 0.12 * (t.star - 1)),
+    slow: d.slow || 0, slowT: d.slowT || 0, chain: (d.chain || 0) + (t.star >= 4 ? 1 : 0), fall: d.fall || 0.7,
+    crit: d.crit || 0, critM: d.critM || 2, stun: (d.stun || 0) * (t.tier === 3 ? 1.25 : 1), burn: (d.burn || 0) * base,
+    thorns: d.thorns || 0, regen: d.regen || 0
+  };
+}
+function upgradeCost(t) { const r = PET[t.id].rar; return t.tier === 1 ? 40 + 12 * r : t.tier === 2 ? 90 + 25 * r : 0; }
+
+function startRun() {
+  const level = ENDLESS;
+  Object.assign(B, {
+    level, lives: level.lives, gold: 60, wave: 0, waveTotal: 0,
+    running: true, paused: false, speed: 1, over: false, won: false,
+    enemies: [], towers: [], shots: [], fx: [], zones: [], floaters: [], flyEggs: [],
+    spawnQ: [], spawnT: 0, spawnGap: 1, waveActive: false, countdown: 12, t: 0,
+    selPet: null, selTower: null, kills: 0, gemsGot: 0, eggsGot: [], foodGot: 0, bestWave: 0
+  });
+  screen = "battle";
+  hideAll();
+  el("hud").classList.remove("hidden");
+  el("dock").classList.remove("hidden");
+  el("btn-speed").textContent = "×1";
+  el("btn-end").textContent = tr("end");
+  el("loot-pill").classList.remove("hidden");
+  // auto-deploy strongest pets (player can rearrange)
+  autoDeploy();
+  renderTray(); refreshHUD();
+  showToast(B.towers.length ? tr("deploy_hint") : tr("deploy_empty"), 3.2);
+}
+function petPower(p) { const d = PET[p.id], m = indivMul(p); return (1 + 0.4 * (p.star - 1)) * (d.rar + 1) * (p.shiny ? 1.08 : 1) * m.base * (1 + 0.02 * ((p.tr && (p.tr.a + p.tr.h + p.tr.s)) || 0)); }
+function gainXp(p, n) {
+  let ups = 0;
+  if (p.lv >= MAX_LV) return 0;
+  p.xp += Math.round(n);
+  while (p.lv < MAX_LV && p.xp >= xpNeed(p.lv)) { p.xp -= xpNeed(p.lv); p.lv++; ups++; }
+  if (p.lv >= MAX_LV) p.xp = 0;
+  return ups;
+}
+function feedPet(uid, fid) {
+  const p = save.pets.find(q => q.uid === uid), f = FOOD[fid];
+  if (!p || !f || !(save.food[fid] > 0)) return false;
+  save.food[fid]--; if (!save.food[fid]) delete save.food[fid];
+  const cap = trainCap(p.apt);
+  p.tr.a = Math.min(cap, p.tr.a + f.a); p.tr.h = Math.min(cap, p.tr.h + f.h); p.tr.s = Math.min(cap, p.tr.s + f.s);
+  const ups = gainXp(p, f.xp);
+  persist();
+  return { ups, lv: p.lv };
+}
+function autoDeploy() {
+  const pets = save.pets.slice().sort((a, b) => petPower(b) - petPower(a)).slice(0, SLOTS);
+  const tanks = pets.filter(p => PET[p.id].role === "tank");
+  const others = pets.filter(p => PET[p.id].role !== "tank");
+  const order = [2, 1, 3, 0, 4];
+  const front = [], back = [];
+  for (const p of tanks) (front.length < 5 ? front : back).push(p);
+  for (const p of others.filter(p => PET[p.id].role !== "sup")) (front.length < 5 ? front : back).push(p);
+  for (const p of others.filter(p => PET[p.id].role === "sup")) (back.length < 5 ? back : front).push(p);
+  front.slice(0, 5).forEach((p, i) => deploy(p.uid, order[i], true));
+  back.slice(0, 5).forEach((p, i) => deploy(p.uid, 5 + order[i], true));
+}
+function deploy(uid, slot, quiet) {
+  const p = save.pets.find(q => q.uid === uid);
+  if (!p || slot < 0 || slot >= SLOTS) return false;
+  if (B.towers.some(t => t.uid === uid)) return false;
+  const old = B.towers.find(t => t.slot === slot);
+  if (old) B.towers = B.towers.filter(t => t !== old);
+  const { x, y } = slotPos(slot);
+  const t = { uid, id: p.id, star: p.star, shiny: p.shiny, ind: indivMul(p), lv: p.lv, slot, x, y, tier: 1, cd: 0.5, bounce: 0, hp: 0, fainted: false, ph: Math.random() * 6 };
+  t.hp = petStats(t).maxHp;
+  B.towers.push(t);
+  if (!quiet) { sfx.place(); burst(x, y - 30, "#fff6a0", 10); renderTray(); }
+  return true;
+}
+function recall(t) {
+  B.towers = B.towers.filter(q => q !== t);
+  B.selTower = null; el("inspect").classList.add("hidden");
+  renderTray();
+}
+function refreshHUD() {
+  el("st-lives").textContent = "❤ " + B.lives;
+  el("st-gold").textContent = tr("gold", B.gold);
+  el("st-deploy").textContent = tr("deployed", B.towers.length, SLOTS);
+  el("st-eggs").textContent = tr("eggs_run", B.eggsGot.length);
+  const lv = B.level;
+  if (!lv) return;
+  el("st-wave").textContent = tr("wave_hud", zoneOf(Math.max(1, B.wave)).name, Math.max(1, B.wave));
+  if (lv.endless) {
+    const L = lootLevel(lv, Math.max(1, B.wave));
+    el("loot-pill").textContent = tr("loot_hud", L, lootLabel(L), Math.round(shinyChance(L) * 100));
+  }
+  const nb = el("btn-next");
+  if (!B.waveActive && !B.over) { nb.classList.remove("hidden"); nb.textContent = B.wave === 0 ? tr("fight") : tr("next_wave", Math.ceil(B.countdown)); }
+  else nb.classList.add("hidden");
+}
+function renderTray() {
+  const box = el("tray"); box.innerHTML = "";
+  const used = deployedUids();
+  const list = save.pets.filter(p => !used.has(p.uid)).sort((a, b) => petPower(b) - petPower(a));
+  if (!list.length) { box.innerHTML = "<div class='empty'>" + (save.pets.length ? tr("all_out") : tr("no_pets")) + "</div>"; return; }
+  for (const p of list) {
+    const d = PET[p.id];
+    const div = document.createElement("div");
+    div.className = "tcard r" + d.rar + (B.selPet === p.uid ? " on" : "");
+    div.innerHTML = "<span class='el el-" + d.el + "'>" + elShort(d.el) + "</span>";
+    div.insertAdjacentHTML("beforeend", "<span class='tg'>" + RAR_NAME[d.rar] + "</span>");
+    div.appendChild(petCanvas(p.id, p.star, p.shiny, 84));
+    const nm = document.createElement("div"); nm.className = "nm";
+    nm.innerHTML = (p.shiny ? "✦" : "") + stageName(p.id, p.star) + "<br><span class='st'>" + "★".repeat(p.star) + "</span>";
+    div.appendChild(nm);
+    div.addEventListener("click", (e) => { e.stopPropagation(); sfx.click(); B.selPet = B.selPet === p.uid ? null : p.uid; B.selTower = null; el("inspect").classList.add("hidden"); renderTray(); });
+    box.appendChild(div);
+  }
+}
+function showInspect(t) {
+  B.selTower = t; B.selPet = null;
+  const d = PET[t.id], st = petStats(t);
+  const box = el("inspect");
+  const next = t.tier < 3 ? upgradeCost(t) : 0;
+  box.innerHTML = "<h3>" + (t.shiny ? tr("shiny_pre") : "") + stageName(t.id, t.star) + " " + starsHTML(t.star) + "</h3>"
+    + "<div><span class='role role-" + d.role + "'>" + ROLE_NAME[d.role] + "</span> <span class='role'>" + tr("el_type", elName(d.el)) + "</span> · " + tr("field_lv", t.tier) + "</div>"
+    + (save.pets.find(q => q.uid === t.uid) ? (() => { const q = save.pets.find(q => q.uid === t.uid); return "<div style='margin:3px 0'>" + lvHTML(q) + " " + gradeHTML(q.grade) + "</div>" + aptBarHTML(q, true); })() : "")
+    + "<div class='skill'><b>" + tr("skill_line", d.sk) + "</b>" + d.skd + "<br><span style='opacity:.8'>" + tr("skill_up", d.up) + "</span></div>"
+    + "<div>" + (d.dmg ? tr("dmg", Math.round(st.dmg)) : "") + tr("range_hp", Math.round(st.range), Math.ceil(t.hp), Math.round(st.maxHp)) + "</div>"
+    + "<div class='btn-row' style='margin-top:8px'>"
+    + (t.tier < 3 ? "<button type='button' class='b-gold' id='btn-up'>" + tr("upgrade", next) + "</button>" : "<span style='font-weight:900'>" + tr("maxed") + "</span>")
+    + "<button type='button' id='btn-recall'>" + tr("recall") + "</button></div>";
+  box.classList.remove("hidden");
+  const up = el("btn-up");
+  if (up) up.addEventListener("click", (e) => { e.stopPropagation(); upgradeTower(t); });
+  el("btn-recall").addEventListener("click", (e) => { e.stopPropagation(); recall(t); });
+}
+function upgradeTower(t) {
+  if (t.tier >= 3) return;
+  const cost = upgradeCost(t);
+  if (B.gold < cost) { showToast(tr("no_gold")); return; }
+  B.gold -= cost; const before = petStats(t).maxHp; t.tier++; t.hp += petStats(t).maxHp - before;
+  sfx.place(); burst(t.x, t.y - 30, "#ffd23a", 14); refreshHUD(); showInspect(t);
+}
+
+function startNextWave() {
+  const lv = B.level;
+  const n = B.wave + 1, es = endlessSpec(n);
+  const spec = es.list.map(g => ({ id: g.id, hpMul: es.hpMul * (g.bossMul || 1), spdMul: es.spdMul }));
+  B.spawnGap = es.gap;
+  B.wave++; B.waveActive = true; B.spawnQ = spec; B.spawnT = 0.2;
+  refreshHUD();
+  if (B.wave > 1) showToast(B.wave % 5 === 0 ? tr("boss_wave", B.wave) : tr("wave_come", B.wave));
+  return true;
+}
+let laneBag = [];
+function spawnEnemy(g) {
+  const def = ENEMY[g.id]; if (!def) return;
+  if (!laneBag.length) laneBag = [0, 1, 2, 3, 4].sort(() => Math.random() - 0.5);
+  const lane = def.boss ? 2 : laneBag.pop();
+  B.enemies.push({
+    typ: g.id, lane, x: LANE_X[lane], y: 86, hp: def.hp * g.hpMul, max: def.hp * g.hpMul,
+    spd: def.spd * g.spdMul, atk: def.atk * Math.sqrt(g.hpMul), el: def.el, fly: !!def.fly, boss: !!def.boss,
+    reward: def.reward, slowT: 0, slowV: 1, stunT: 0, burnT: 0, burnD: 0, atkCd: 0.6, ph: Math.random() * 6, biting: false, hitT: 0
+  });
+}
+function blockerFor(e) {
+  const f = B.towers.find(t => t.slot === e.lane && !t.fainted);
+  if (f) return f;
+  return B.towers.find(t => t.slot === e.lane + LANES && !t.fainted) || null;
+}
+function enemiesIn(x, y, r) { return B.enemies.filter(e => e.hp > 0 && dist(x, y, e.x, e.y) <= r); }
+function targetFor(t, range) {
+  let best = null, by = -1;
+  for (const e of B.enemies) { if (e.hp <= 0) continue; if (dist(t.x, t.y - 30, e.x, e.y) <= range && e.y > by) { best = e; by = e.y; } }
+  return best;
+}
+function hitEnemy(e, dmg, elem, o) {
+  o = o || {};
+  if (e.hp <= 0) return;
+  const m = elemMul(elem, e.el);
+  const d = dmg * m;
+  e.hp -= d; e.hitT = 0.12;
+  B.floaters.push({ x: e.x + (Math.random() - 0.5) * 10, y: e.y - 30, text: Math.round(d) + (o.crit ? "!" : ""), color: o.crit ? "#ffd23a" : m > 1 ? "#ff8a5a" : "#ffffff", life: 0.75, max: 0.75, big: o.crit || m > 1 });
+  if (o.slow) { e.slowT = Math.max(e.slowT, o.slowT || 1.5); e.slowV = Math.min(e.slowV, 1 - o.slow); }
+  if (o.stun) e.stunT = Math.max(e.stunT, e.boss ? o.stun * 0.4 : o.stun);
+  if (o.burn) { e.burnT = Math.max(e.burnT, o.burnT || 2); e.burnD = Math.max(e.burnD, o.burn); }
+  if (e.hp <= 0) killEnemy(e);
+}
+function killEnemy(e) {
+  e.hp = 0;
+  B.gold += e.reward; B.kills++;
+  const ec = ENEMY[e.typ].col || ELEM_COL[e.el], esz = ENEMY[e.typ].size;
+  B.fx.push({ typ: "splat", x: e.x, y: e.y + esz * 0.38, r: esz * 0.45, color: ec, life: 0.9, max: 0.9, seed: Math.random() * 99 });
+  burst(e.x, e.y, ec, e.boss ? 22 : 12);
+  B.floaters.push({ x: e.x, y: e.y - 10, text: "+" + e.reward, color: "#ffd23a", life: 0.8, max: 0.8 });
+  // egg drops: deeper = more & better
+  const lv = B.level, L = lootLevel(lv, Math.max(1, B.wave));
+  let p = dropChance(lv, B.wave);
+  let minQ = 1;
+  if (e.boss) { p = 1; minQ = lv.endless ? Math.min(4, 2 + Math.floor(B.wave / 15)) : 2; }
+  if (!save.firstEgg && B.kills >= 3) { p = 1; save.firstEgg = true; }
+  if (Math.random() < p) dropEgg(e.x, e.y, rollEggQ(L, minQ), shinyChance(L) * (e.boss ? 1.5 : 1));
+  for (let k = 0; k < (e.boss ? 2 : 1); k++) if (Math.random() < foodChance(L, e.boss)) {
+    const fid = rollFood(L); save.food[fid] = (save.food[fid] | 0) + 1; B.foodGot++;
+    B.floaters.push({ x: e.x + 14, y: e.y - 34 - k * 16, text: tr("food_float", foodName(fid)), color: FOOD[fid].col, life: 1.1, max: 1.1 });
+  }
+  refreshHUD();
+}
+function dropEgg(x, y, q, sh) {
+  const egg = { q, sh: Math.min(0.5, +sh.toFixed(3)) };
+  save.eggs.push(egg); B.eggsGot.push(egg); persist();
+  B.flyEggs.push({ x, y, sx: x, sy: y, q, t: 0 });
+  sfx.egg();
+  showToast(tr("egg_drop", EGG_NAME[q]) + (q >= 3 ? tr("lucky") : ""));
+}
+function hitPet(t, dmg, e) {
+  if (t.fainted) return;
+  if (t.shield > 0) { const ab = Math.min(t.shield, dmg); t.shield -= ab; dmg -= ab; }
+  t.hp -= dmg; t.hurtT = 0.15;
+  const st = petStats(t);
+  if (st.thorns && e) hitEnemy(e, dmg * st.thorns * (1 + 0.4 * (t.star - 1)), PET[t.id].el, {});
+  if (t.hp <= 0) { t.hp = 0; t.fainted = true; burst(t.x, t.y - 30, "#ffffff", 10); showToast(tr("fainted", stageName(t.id, t.star))); }
+}
+function leak(e) {
+  e.hp = 0; e.leaked = true;
+  B.lives -= e.boss ? 5 : 1;
+  sfx.leak();
+  B.fx.push({ typ: "flash", life: 0.3, max: 0.3 });
+  if (B.lives <= 0) { B.lives = 0; endRun(false); }
+  refreshHUD();
+}
+function waveCleared() {
+  B.waveActive = false;
+  B.bestWave = Math.max(B.bestWave, B.wave);
+  const lv = B.level;
+  const g = 2 + Math.floor(B.wave * 1.5);
+  B.gemsGot += g; save.gems += g;
+  const xpG = 6 + 2 * B.wave; let upMsg = "";
+  for (const t of B.towers) {
+    const p = save.pets.find(q => q.uid === t.uid);
+    if (p && gainXp(p, xpG)) { upMsg = tr("lvup", stageName(p.id, p.star), p.lv); t.ind = indivMul(p); t.lv = p.lv; }
+  }
+  for (const t of B.towers) { t.fainted = false; t.hp = petStats(t).maxHp; }
+  save.endlessBest = Math.max(save.endlessBest, B.wave);
+  persist();
+  B.countdown = 4;
+  if (B.wave % 10 === 0) showToast(tr("wave_clear_zone", B.wave, g, zoneOf(B.wave + 1).name), 3.2);
+  else showToast(tr("wave_clear", B.wave, g) + (upMsg ? " · " + upMsg : ""));
+  refreshHUD();
+}
+function endRun(won) {
+  if (B.over) return;
+  B.over = true; B.won = won; B.running = false;
+  const lv = B.level;
+  let bonus = "";
+  if (B.lives <= 0) sfx.lose(); else sfx.win();
+  save.endlessBest = Math.max(save.endlessBest, B.wave);
+  persist();
+  setTimeout(() => showSummary(won, bonus), 450);
+}
+function showSummary(won, bonus) {
+  const lv = B.level;
+  el("result-title").textContent = B.lives <= 0 ? tr("res_lost") : tr("res_title");
+  const counts = [0, 0, 0, 0, 0]; for (const e of B.eggsGot) counts[e.q]++;
+  const chips = counts.map((n, q) => n ? "<span class='chip q" + q + "'>" + EGG_NAME[q] + " ×" + n + "</span>" : "").join("") || "<span class='chip'>" + tr("no_eggs_run") + "</span>";
+  const reached = Math.max(B.bestWave, B.wave);
+  const L = lootLevel(lv, Math.max(1, reached));
+  el("result-body").innerHTML =
+    "<ul class='sum-list'>"
+    + "<li>" + tr("sum_reached", reached, zoneOf(Math.max(1, reached)).name, save.endlessBest) + "</li><li>" + tr("sum_loot", L, lootLabel(L)) + "</li>"
+    + "<li>" + tr("sum_kills", B.kills) + "</li>"
+    + "<li>" + tr("sum_gems", B.gemsGot) + "</li>"
+    + "<li>" + tr("sum_eggs", B.eggsGot.length) + "</li><li>" + tr("sum_food", B.foodGot) + "</li>"
+    + "</ul><div class='chips'>" + chips + "</div>"
+    + (bonus ? "<p style='font-weight:900;color:#e0507a;margin:0 0 10px'>" + bonus + "</p>" : "")
+    + "<p class='subtitle' style='margin:0 0 12px'>" + tr("sum_saved") + "</p>";
+  el("result").classList.remove("hidden");
+  screen = "result";
+}
+
+/* fx */
+function burst(x, y, color, n) {
+  for (let i = 0; i < (n || 8); i++) {
+    const a = Math.random() * TAU, s = 40 + Math.random() * 110;
+    B.fx.push({ typ: "bit", x, y, vx: Math.cos(a) * s, vy: Math.sin(a) * s - 30, life: 0.35 + Math.random() * 0.3, max: 0.65, color, r: 2.5 + Math.random() * 2.5 });
+  }
+}
+
+function fxCol(t) { const d = PET[t.id]; return d.fx[t.shiny ? 1 : 0]; }
+function nearestOther(x, y, r, used) {
+  return enemiesIn(x, y, r).filter(e => !used.has(e)).sort((a, b) => dist(x, y, a.x, a.y) - dist(x, y, b.x, b.y))[0] || null;
+}
+function shoot(o) { B.shots.push(Object.assign({ age: 0, hit: new Set() }, o)); }
+function fireTower(t, st) {
+  const d = PET[t.id], stg = stageOf(t.star), col = fxCol(t);
+  const ox = t.x, oy = t.y - 40;
+  if (d.typ === "berrypop") {               // heal + attack buff, berries lobbed to friends
+    const r = st.range * (stg >= 4 ? 1.25 : 1);
+    for (const o of B.towers) {
+      if (o.fainted || dist(o.x, o.y, t.x, t.y) > r) continue;
+      const mx = petStats(o).maxHp, hl = mx * st.heal * (stg >= 3 ? 1.3 : 1);
+      if (o.hp < mx) B.floaters.push({ x: o.x, y: o.y - 60, text: "+" + Math.round(Math.min(hl, mx - o.hp)), color: "#7fe07a", life: 0.6, max: 0.6 });
+      o.hp = Math.min(mx, o.hp + hl);
+      o.berryT = 3;
+      if (o !== t) B.fx.push({ typ: "lob", kind: "berry", x1: ox, y1: oy, x2: o.x, y2: o.y - 40, h: 50, color: col, life: 0.4, max: 0.4 });
+    }
+    B.fx.push({ typ: "ring", x: t.x, y: t.y - 24, r0: 10, r1: 60, color: "rgba(255,110,140,.8)", life: 0.4, max: 0.4 });
+    t.bounce = 1; return true;
+  }
+  if (d.typ === "shell") {                  // shields self + side neighbours (+ back row at stage 4), then 3 seeds
+    const mates = B.towers.filter(o => !o.fainted && (o === t || (Math.abs(o.x - t.x) < 90 && Math.abs(o.y - t.y) < 10) || (stg >= 4 && Math.abs(o.x - t.x) < 10)));
+    for (const o of mates) { const cap = petStats(o).maxHp * d.shield * (stg >= 3 ? 1.5 : 1); if ((o.shield || 0) < cap) { o.shield = cap; o.shieldMax = cap; o.shieldCol = col; } }
+    const tgt = targetFor(t, st.range);
+    if (tgt) for (let k = -1; k <= 1; k++) shoot({ kind: "pip", x: ox + k * 8, y: oy, tgt, tx: tgt.x, ty: tgt.y, spd: 480, dmg: st.dmg * 0.5, el: d.el, color: col, wob: k });
+    t.bounce = 1; return true;
+  }
+  const tgt = targetFor(t, st.range);
+  if (!tgt) return false;
+  t.bounce = 1; sfx.shoot();
+  switch (d.typ) {
+    case "fireseed": {
+      const n = stg >= 3 ? 2 : 1, used = new Set();
+      for (let k = 0; k < n; k++) { const e = k ? (nearestOther(tgt.x, tgt.y, 160, used) || tgt) : tgt; used.add(e);
+        shoot({ kind: "seed", x: ox + k * 10, y: oy, tgt: e, tx: e.x, ty: e.y, spd: 520, dmg: st.dmg, el: d.el, color: col, burn: st.burn, burnT: stg >= 3 ? 3 : 2 }); }
+      return true;
+    }
+    case "spikeroll": {
+      const n = stg >= 4 ? 2 : 1;
+      for (let k = 0; k < n; k++) shoot({ kind: "roll", x: t.x, y: oy - k * 40, vx: (tgt.x - t.x) / Math.max(60, oy - tgt.y) * 300, vy: -300, life: st.range / 300 + 0.3,
+        dmg: st.dmg, el: d.el, color: col, knock: d.knock * (stg >= 3 ? 1.6 : 1) });
+      return true;
+    }
+    case "bubble":
+      shoot({ kind: "bubble", x: ox, y: oy, tgt, tx: tgt.x, ty: tgt.y, spd: 360, dmg: st.dmg, el: d.el, color: col, splash: st.splash * (stg >= 3 ? 1.3 : 1), slow: st.slow, slowT: st.slowT, trap: stg >= 4 ? 0.45 : 0 });
+      return true;
+    case "chain": {
+      let from = { x: ox, y: oy }, cur = tgt, used = new Set(), dmg = st.dmg;
+      const hops = (d.chain || 3) + (stg >= 3 ? 1 : 0) + (stg >= 4 ? 1 : 0);
+      for (let k = 0; k < hops && cur; k++) {
+        used.add(cur);
+        B.fx.push({ typ: "bolt", x1: from.x, y1: from.y, x2: cur.x, y2: cur.y, life: 0.22, max: 0.22, seed: Math.random() * 99, color: col });
+        hitEnemy(cur, dmg, d.el); dmg *= st.fall; from = { x: cur.x, y: cur.y };
+        cur = nearestOther(cur.x, cur.y, 130, used);
+      }
+      return true;
+    }
+    case "squirt": {
+      const n = stg >= 3 ? 2 : 1;
+      for (let k = 0; k < n; k++) shoot({ kind: "drop", x: ox + (k ? 9 : -3), y: oy, tgt, tx: tgt.x, ty: tgt.y, spd: 640, dmg: st.dmg, el: d.el, color: col, owner: t.uid });
+      return true;
+    }
+    case "slam": {
+      const r = st.splash * (stg >= 3 ? 1.3 : 1);
+      B.fx.push({ typ: "wave", x: tgt.x, y: tgt.y, r, color: col, life: 0.45, max: 0.45 });
+      B.fx.push({ typ: "rock", x: tgt.x, y: tgt.y - 120, ty: tgt.y, color: col, life: 0.2, max: 0.2 });
+      for (const e of enemiesIn(tgt.x, tgt.y, r)) hitEnemy(e, st.dmg, d.el, stg >= 3 ? { stun: 0.35 } : {});
+      return true;
+    }
+    case "peachlob":
+      shoot({ kind: "peach", x: ox, y: oy, tgt, tx: tgt.x, ty: tgt.y, spd: 430, dmg: st.dmg, el: d.el, color: col, bounces: stg >= 3 ? 2 : 1, sx: ox, sy: oy });
+      return true;
+    case "snipe": {
+      const n = stg >= 3 ? 2 : 1;
+      for (let k = 0; k < n; k++) {
+        const ang = Math.atan2(tgt.y - oy, tgt.x - ox) + (n > 1 ? (k - 0.5) * 0.08 : 0);
+        shoot({ kind: "feather", x: ox, y: oy, vx: Math.cos(ang) * 950, vy: Math.sin(ang) * 950, life: st.range / 950, dmg: st.dmg, el: d.el, color: col, crit: st.crit, critM: st.critM });
+      }
+      return true;
+    }
+    case "meteor": {
+      const n = stg >= 4 ? 2 : 1, used = new Set();
+      for (let k = 0; k < n; k++) { const e = k ? (nearestOther(tgt.x, tgt.y, 220, used) || tgt) : tgt; used.add(e);
+        const tx = e.x + (k && e === tgt ? 40 : 0), ty = e.y + e.spd * 0.5;
+        shoot({ kind: "meteor", x: tx + 70, y: ty - 300, tx, ty, spd: 620, dmg: st.dmg, el: d.el, color: col, splash: st.splash, burn: st.burn }); }
+      return true;
+    }
+    case "roar": {
+      B.fx.push({ typ: "claw", x: tgt.x, y: tgt.y, color: col, life: 0.3, max: 0.3 });
+      hitEnemy(tgt, st.dmg, d.el, { stun: st.stun });
+      if (stg >= 3) { B.fx.push({ typ: "ring", x: tgt.x, y: tgt.y, r0: 10, r1: 80, color: col, life: 0.35, max: 0.35 });
+        for (const e of enemiesIn(tgt.x, tgt.y, 80)) if (e !== tgt) hitEnemy(e, st.dmg * 0.4, d.el, { stun: st.stun * 0.6 }); }
+      return true;
+    }
+  }
+  return false;
+}
+function shotLand(s) {
+  if (s.kind === "bubble") {
+    B.fx.push({ typ: "ring", x: s.tx, y: s.ty, r0: 6, r1: s.splash, color: s.color, life: 0.3, max: 0.3 });
+    for (const e of enemiesIn(s.tx, s.ty, s.splash)) hitEnemy(e, s.dmg, s.el, { slow: s.slow, slowT: s.slowT, stun: s.trap });
+  } else if (s.kind === "meteor") {
+    B.fx.push({ typ: "ring", x: s.tx, y: s.ty, r0: 6, r1: s.splash, color: "rgba(255,120,40,.95)", life: 0.35, max: 0.35 });
+    burst(s.tx, s.ty, s.color, 12);
+    for (const e of enemiesIn(s.tx, s.ty, s.splash)) hitEnemy(e, s.dmg, s.el, { burn: s.burn });
+    B.zones.push({ x: s.tx, y: s.ty, r: s.splash * 0.75, life: 2.5, max: 2.5, burn: s.burn, el: s.el, color: s.color });
+  } else if (s.tgt && s.tgt.hp > 0) {
+    const e = s.tgt;
+    if (s.kind === "seed") hitEnemy(e, s.dmg, s.el, { burn: s.burn, burnT: s.burnT });
+    else if (s.kind === "drop") {
+      if (e.cocoBy === s.owner) e.cocoStk = Math.min(6, (e.cocoStk || 0) + 1); else { e.cocoBy = s.owner; e.cocoStk = 0; }
+      hitEnemy(e, s.dmg * (1 + 0.12 * e.cocoStk), s.el);
+    } else if (s.kind === "peach") {
+      hitEnemy(e, s.dmg, s.el);
+      s.hit.add(e);
+      if (s.bounces > 0) { const n = nearestOther(e.x, e.y, 140, s.hit);
+        if (n) { shoot({ kind: "peach", x: e.x, y: e.y, tgt: n, tx: n.x, ty: n.y, spd: 430, dmg: s.dmg * 0.8, el: s.el, color: s.color, bounces: s.bounces - 1, sx: e.x, sy: e.y, hit: s.hit }); } }
+    } else hitEnemy(e, s.dmg, s.el);
+  }
+}
+function step(dt) {
+  B.t += dt;
+  if (!B.waveActive) {
+    if (B.wave > 0 || B.countdown < 12) { B.countdown -= dt; }
+    if (B.countdown <= 0) startNextWave();
+  } else {
+    if (B.spawnQ.length) { B.spawnT -= dt; if (B.spawnT <= 0) { spawnEnemy(B.spawnQ.shift()); B.spawnT = B.spawnGap; } }
+    else if (!B.enemies.some(e => e.hp > 0)) waveCleared();
+  }
+  // auras
+  for (const t of B.towers) { t._haste = 0; t._dmgB = 0; }
+  for (const s of B.towers) {
+    if (s.fainted) continue;
+    const d = PET[s.id]; if (!d.haste && !d.buff) continue;
+    const st = petStats(s);
+    for (const t of B.towers) {
+      if (t === s) continue;
+      const r = d.aura || st.range;
+      if (dist(s.x, s.y, t.x, t.y) > r) continue;
+      if (d.haste) t._haste = Math.max(t._haste, st.haste);
+      if (d.buff) t._dmgB = Math.max(t._dmgB, st.buff);
+    }
+  }
+  // enemies
+  for (const e of B.enemies) {
+    if (e.hp <= 0) continue;
+    e.hitT = Math.max(0, e.hitT - dt);
+    if (e.burnT > 0) { e.burnT -= dt; e.hp -= e.burnD * dt; if (e.hp <= 0) { killEnemy(e); continue; } }
+    if (e.slowT > 0) { e.slowT -= dt; if (e.slowT <= 0) e.slowV = 1; }
+    if (e.stunT > 0) { e.stunT -= dt; continue; }
+    const bl = e.fly ? null : blockerFor(e);
+    const stopY = bl ? bl.y - (e.boss ? 66 : 52) : 1e9;
+    if (bl && e.y >= stopY) {
+      e.y = stopY; e.biting = true;
+      e.atkCd -= dt;
+      if (e.atkCd <= 0) { e.atkCd = 1; hitPet(bl, e.atk, e); sfx.bite(); burst(bl.x, bl.y - 50, "#ffffff", 3); }
+    } else {
+      e.biting = false;
+      e.y += e.spd * e.slowV * dt;
+    }
+    e.x = LANE_X[e.lane] + Math.sin(B.t * 2 + e.ph) * (e.boss ? 3 : 7);
+    if (e.y >= LEAK_Y) leak(e);
+    if (B.over) return;
+  }
+  B.enemies = B.enemies.filter(e => e.hp > 0);
+  // towers
+  for (const t of B.towers) {
+    t.bounce = Math.max(0, t.bounce - dt * 5);
+    t.hurtT = Math.max(0, (t.hurtT || 0) - dt);
+    if (t.fainted) continue;
+    const st = petStats(t);
+    if (st.regen) t.hp = Math.min(st.maxHp, t.hp + st.maxHp * st.regen * dt);
+    t.cd -= dt;
+    if (t.cd <= 0) t.cd = fireTower(t, st) ? st.rate : 0.12;
+  }
+  // shots
+  for (const s of B.shots) {
+    s.age += dt;
+    if (s.kind === "roll" || s.kind === "feather") {       // straight, piercing
+      s.x += s.vx * dt; s.y += s.vy * dt; s.life -= dt;
+      for (const e of B.enemies) {
+        if (e.hp <= 0 || s.hit.has(e) || (s.kind === "roll" && e.fly)) continue;
+        if (dist(s.x, s.y, e.x, e.y) < (s.kind === "roll" ? 30 : 26)) {
+          s.hit.add(e);
+          if (s.kind === "roll") { hitEnemy(e, s.dmg, s.el); if (e.hp > 0) e.y = Math.max(FIELD_TOP - 20, e.y - s.knock * (e.boss ? 0.3 : 1)); burst(e.x, e.y, s.color, 4); }
+          else { const c = Math.random() < s.crit; hitEnemy(e, c ? s.dmg * s.critM : s.dmg, s.el, { crit: c }); }
+        }
+      }
+      if (s.life <= 0 || s.y < FIELD_TOP - 40) s.dead = true;
+      continue;
+    }
+    if (s.tgt && s.tgt.hp > 0) { s.tx = s.tgt.x; s.ty = s.tgt.y; }
+    const dx = s.tx - s.x, dy = s.ty - s.y, L = Math.hypot(dx, dy), mv = s.spd * dt;
+    if (L <= mv + 4) { s.dead = true; shotLand(s); }
+    else { s.x += dx / L * mv; s.y += dy / L * mv; }
+  }
+  // fire fields
+  for (const z of B.zones) { z.life -= dt; for (const e of enemiesIn(z.x, z.y, z.r)) { e.burnT = Math.max(e.burnT, 0.4); e.burnD = Math.max(e.burnD, z.burn); } }
+  B.zones = B.zones.filter(z => z.life > 0);
+  B.shots = B.shots.filter(s => !s.dead);
+}
+function updateBattle(dt) {
+  for (const f of B.fx) { f.life -= dt; if (f.typ === "bit") { f.x += f.vx * dt; f.y += f.vy * dt; f.vy += 260 * dt; } }
+  B.fx = B.fx.filter(f => f.life > 0);
+  for (const f of B.floaters) { f.life -= dt; f.y -= 38 * dt; }
+  B.floaters = B.floaters.filter(f => f.life > 0);
+  for (const g of B.flyEggs) g.t += dt;
+  B.flyEggs = B.flyEggs.filter(g => g.t < 1.3);
+  if (!B.running || B.paused || B.over) return;
+  for (let k = 0; k < B.speed; k++) { step(dt); if (B.over) break; }
+  hudTimer -= dt;
+  if (hudTimer <= 0) { hudTimer = 0.25; refreshHUD(); if (B.selTower && !el("inspect").classList.contains("hidden")) updateInspectHp(); }
+}
+let hudTimer = 0;
+function updateInspectHp() { /* cheap refresh of numbers */ const t = B.selTower; if (!t || !B.towers.includes(t)) { el("inspect").classList.add("hidden"); return; } }
+
+/* ================= battle render ================= */
+function drawSplat(c, f) {
+  const a = f.life / f.max; const p = 1 - a, r = f.r * (0.6 + 0.4 * Math.min(1, p * 4)); c.globalAlpha = Math.min(1, a * 1.6);
+      c.fillStyle = f.color; c.strokeStyle = OL; c.lineWidth = 3; c.beginPath();
+      for (let i = 0; i <= 12; i++) { const ang = i / 12 * TAU, rr = r * (0.75 + 0.35 * hash(i % 12, f.seed | 0)); const x = f.x + Math.cos(ang) * rr, y = f.y + Math.sin(ang) * rr * 0.38; i ? c.lineTo(x, y) : c.moveTo(x, y); }
+      c.closePath(); c.fill(); c.stroke(); c.globalAlpha = 1; }
+
+function renderBattle() {
+  const c = ctx;
+  c.drawImage(BG.get(curTheme()), 0, 0, W, H);
+  // placement hints
+  if (B.selPet != null) {
+    for (let i = 0; i < SLOTS; i++) { const { x, y } = slotPos(i); const occ = B.towers.some(t => t.slot === i);
+      c.lineWidth = 3; c.setLineDash([8, 6]); c.strokeStyle = occ ? "rgba(255,255,255,.5)" : "rgba(255,255,255,.95)";
+      c.beginPath(); c.roundRect(x - 38, y - 64, 76, 74, 12); c.stroke(); c.setLineDash([]); }
+  }
+  if (B.selTower) { const st = petStats(B.selTower);
+    c.fillStyle = "rgba(255,255,255,.12)"; c.strokeStyle = "rgba(255,255,255,.7)"; c.lineWidth = 2;
+    c.beginPath(); c.arc(B.selTower.x, B.selTower.y - 30, st.range, 0, TAU); c.fill(); c.stroke(); }
+  for (const f of B.fx) if (f.typ === "splat") drawSplat(c, f);
+  // fire fields
+  for (const z of B.zones) { const a = Math.min(1, z.life / 0.5);
+    c.globalAlpha = 0.55 * a; c.fillStyle = "#ff6a2e"; c.beginPath(); c.ellipse(z.x, z.y + 20, z.r, z.r * 0.45, 0, 0, TAU); c.fill();
+    c.globalAlpha = a; c.strokeStyle = OL; c.lineWidth = 3; c.stroke();
+    for (let i = 0; i < 5; i++) { const ang = i * 1.26 + z.x; flame(c, z.x + Math.cos(ang) * z.r * 0.6, z.y + 18 + Math.sin(ang) * z.r * 0.25 - Math.abs(Math.sin(B.t * 8 + i)) * 4, 5, z.color, "#ffe14a"); }
+    c.globalAlpha = 1; }
+  // enemies (sorted by y)
+  const ens = B.enemies.slice().sort((a, b) => a.y - b.y);
+  for (const e of ens) {
+    const def = ENEMY[e.typ], sz = def.size;
+    const ph2 = B.t * (e.biting ? 9 : (e.boss ? 4 : 6)) + e.ph, sn = Math.sin(ph2);
+    const hop = e.stunT > 0 ? 0 : Math.max(0, sn) * (e.boss ? 5 : 8);
+    const sq = e.stunT > 0 ? 0.04 : (sn < 0 ? -sn * 0.16 : -sn * 0.05);   // squash on landing, stretch in the air
+    const fy = e.fly ? 16 + Math.sin(B.t * 3 + e.ph) * 4 : 0;
+    groundRing(c, e.x, e.y + sz * 0.42, sz * 0.34 * (1 + sq), e.boss ? "#ff3a5a" : "#ff5a4a", (e.ph * 10) | 0);
+    c.save(); c.translate(e.x, e.y + sz * 0.42 - hop - fy);
+    if (e.stunT > 0) c.rotate(Math.sin(B.t * 20) * 0.1);
+    c.scale(1 + sq, 1 - sq);
+    drawEnemyImg(c, e.typ, 0, 0, sz, { rot: e.biting ? Math.sin(B.t * 10 + e.ph) * 0.08 : 0, flash: e.hitT > 0 });
+    c.restore();
+    if (e.slowT > 0) { E(c, e.x + sz * 0.35, e.y - sz * 0.45, 5, 5, "#9ad8ff", { lw: 2, hl: false }); }
+    if (e.burnT > 0) flame(c, e.x - sz * 0.35, e.y - sz * 0.4, 4, "#ff7a2e", null);
+    if (e.stunT > 0) for (let i = 0; i < 3; i++) { const a = B.t * 5 + i * 2.1; spark(c, e.x + Math.cos(a) * 14, e.y - sz * 0.6 + Math.sin(a) * 4, 4, "#ffe14a"); }
+    // hp
+    const w = e.boss ? 70 : 38, y0 = e.y - sz * 0.62 - fy;
+    crayonBar(c, e.x - w / 2, y0, w, 5, Math.max(0, e.hp / e.max), e.boss ? "#ff5a8a" : "#f0a030", (e.ph * 10) | 0);
+    if (e.boss) { c.font = "900 13px sans-serif"; c.textAlign = "center"; c.lineWidth = 4; c.strokeStyle = OL; c.strokeText(ENEMY[e.typ].name, e.x, y0 - 6); c.fillStyle = "#fff"; c.fillText(ENEMY[e.typ].name, e.x, y0 - 6); }
+  }
+  // pets (back row first)
+  const ts = B.towers.slice().sort((a, b) => a.y - b.y);
+  for (const t of ts) {
+    const st = stageOf(t.star);
+    const size = [0, 74, 82, 90, 98][st];
+    const breathe = Math.sin(time * 3 + t.ph) * 0.03;
+    groundRing(c, t.x, t.y + 4, size * 0.34, t.fainted ? "#9a8a90" : "#3ac8ff", t.slot + 3);
+    c.save();
+    if (t.fainted) c.globalAlpha = 0.45;
+    drawPet(c, t.id, t.star, t.shiny, t.x, t.y + 6 - t.bounce * 6, size, { squash: t.bounce * 0.6 - breathe * 3 });
+    c.restore();
+    if (t.shield > 0) { const k = 0.5 + 0.5 * t.shield / (t.shieldMax || 1); c.globalAlpha = 0.35 * k; c.fillStyle = t.shieldCol || "#3fa84d"; c.beginPath(); c.ellipse(t.x, t.y - 30, 42, 46, 0, 0, TAU); c.fill(); c.globalAlpha = 0.9 * k; c.strokeStyle = t.shieldCol || "#3fa84d"; c.lineWidth = 4; c.setLineDash([10, 6]); c.stroke(); c.setLineDash([]); c.globalAlpha = 1; }
+    if (t.hurtT > 0) { c.fillStyle = "rgba(255,80,80,.35)"; c.beginPath(); c.arc(t.x, t.y - 30, 30, 0, TAU); c.fill(); }
+    if (t.shiny && !t.fainted) for (let i = 0; i < 2; i++) { const a = time * 2 + i * 3 + t.ph; const s = (Math.sin(time * 4 + i * 2) + 1) * 2.5 + 1; spark(c, t.x + Math.cos(a) * 30, t.y - 40 + Math.sin(a) * 22, s, "#fff6a0"); }
+    if (t.fainted) { c.font = "900 18px sans-serif"; c.textAlign = "center"; c.fillStyle = "#fff"; c.strokeStyle = OL; c.lineWidth = 4; c.strokeText("Zzz", t.x + 20, t.y - 60); c.fillText("Zzz", t.x + 20, t.y - 60); }
+    // hp bar
+    const mx = petStats(t).maxHp, w = 44, hy = t.y - size * 0.92;
+    crayonBar(c, t.x - w / 2, hy, w, 5, clamp(t.hp / mx, 0, 1), PET[t.id].role === "tank" ? "#5ab8ff" : "#7ad84a", t.slot + 11);
+    // field tier pips
+    for (let i = 1; i < t.tier; i++) F(c, cc => { const x = t.x + 26 + (i - 1) * 9, y = t.y - 4; cc.moveTo(x - 5, y + 3); cc.lineTo(x, y - 3); cc.lineTo(x + 5, y + 3); cc.closePath(); }, "#ffd23a", 2);
+    // element badge
+    E(c, t.x - 30, t.y - 2, 9, 9, ELEM_COL[PET[t.id].el], { lw: 2.5, hl: false });
+    c.font = "900 11px sans-serif"; c.textAlign = "center"; c.fillStyle = OL; c.fillText(elShort(PET[t.id].el), t.x - 30, t.y + 2);
+  }
+  // shots
+  for (const s of B.shots) {
+    const col = s.color;
+    switch (s.kind) {
+      case "seed": flame(c, s.x, s.y, 7, col, "#ffe14a"); break;
+      case "roll": c.save(); c.translate(s.x, s.y); c.rotate(-s.age * 14); F(c, cc => starPath(cc, 0, 0, 15, 9, 0.68), col, 3); E(c, 0, 0, 7, 7, "#f2c879", { lw: 2, hl: false }); c.restore(); break;
+      case "bubble": E(c, s.x, s.y, 11, 11, col, { lw: 3, hl: false }); dot(c, s.x - 3, s.y - 3, 2.5, "#fff"); break;
+      case "pip": E(c, s.x + Math.sin(s.age * 20) * 3 * s.wob, s.y, 3.5, 5, "#2a1c20", { lw: 1.5, hl: false }); break;
+      case "drop": E(c, s.x, s.y, 4.5, 6.5, col, { lw: 2, hl: false }); break;
+      case "peach": { const yy = s.y - Math.sin(Math.min(1, s.age * 2.5) * Math.PI) * 26; E(c, s.x, yy, 8, 8, col, { lw: 2.5, hl: false }); dot(c, s.x + 3, yy - 8, 3, "#5cbf5a"); break; }
+      case "feather": c.save(); c.translate(s.x, s.y); c.rotate(Math.atan2(s.vy, s.vx)); E(c, 0, 0, 16, 4.5, col, { lw: 2.5, hl: false }); c.strokeStyle = "#fff"; c.lineWidth = 1.5; c.beginPath(); c.moveTo(-12, 0); c.lineTo(10, 0); c.stroke(); c.restore(); break;
+      case "meteor": { const ang = Math.atan2(s.ty - s.y, s.tx - s.x); for (let i = 3; i >= 1; i--) { c.globalAlpha = 0.25 * (4 - i); dot(c, s.x - Math.cos(ang) * i * 12, s.y - Math.sin(ang) * i * 12, 9 - i, "#ffb02e"); } c.globalAlpha = 1;
+        E(c, s.x, s.y, 13, 13, col, { lw: 3, hl: false }); dot(c, s.x - 4, s.y + 2, 2, "#2a1c20"); dot(c, s.x + 4, s.y - 3, 2, "#2a1c20"); flame(c, s.x - 2, s.y - 12, 6, "#ffb02e", "#ffe14a"); break; }
+      default: E(c, s.x, s.y, 5, 5, col, { lw: 2.5, hl: false });
+    }
+  }
+  // fx
+  for (const f of B.fx) {
+    const a = f.life / f.max;
+    if (f.typ === "bit") { c.globalAlpha = a; dot(c, f.x, f.y, f.r, f.color); c.globalAlpha = 1; }
+    else if (f.typ === "ring") { c.globalAlpha = a; c.strokeStyle = f.color; c.lineWidth = 5; c.beginPath(); c.ellipse(f.x, f.y, lerp(f.r1, f.r0, a), lerp(f.r1, f.r0, a) * 0.6, 0, 0, TAU); c.stroke(); c.globalAlpha = 1; }
+    else if (f.typ === "bolt" || f.typ === "beam") {
+      c.globalAlpha = a; c.lineCap = "round";
+      const pts = [[f.x1, f.y1]];
+      if (f.typ === "bolt") for (let i = 1; i < 6; i++) { const t = i / 6; pts.push([lerp(f.x1, f.x2, t) + (hash(i, Math.floor(f.seed + B.t * 30)) - 0.5) * 22, lerp(f.y1, f.y2, t)]); }
+      pts.push([f.x2, f.y2]);
+      for (const [lw, col] of [[9, OL], [4.5, f.color || "#ffe14a"], [1.5, "#fff"]]) { c.lineWidth = lw; c.strokeStyle = col; c.beginPath(); pts.forEach(([x, y], i) => i ? c.lineTo(x, y) : c.moveTo(x, y)); c.stroke(); }
+      c.globalAlpha = 1;
+    }
+    else if (f.typ === "rock") { E(c, f.x, lerp(f.ty, f.y, a), 13, 11, f.color || "#b88ae0", { lw: 3, hl: false }); }
+    else if (f.typ === "lob") { const p = 1 - a; const x = lerp(f.x1, f.x2, p), y = lerp(f.y1, f.y2, p) - Math.sin(p * Math.PI) * f.h; E(c, x, y, 6, 6, f.color, { lw: 2, hl: false }); dot(c, x, y - 6, 2.5, "#4fbf5a"); }
+    else if (f.typ === "wave") { const p = 1 - a; for (let i = 0; i < 2; i++) { const r = f.r * Math.min(1, p * 1.4 - i * 0.25); if (r <= 0) continue; c.globalAlpha = a; c.lineWidth = 7 - i * 3; c.strokeStyle = i ? f.color : OL; c.beginPath(); c.ellipse(f.x, f.y + 20, r, r * 0.45, 0, 0, TAU); c.stroke(); c.lineWidth = 4; c.strokeStyle = f.color; c.stroke(); } c.globalAlpha = 1;
+      if (p < 0.5) for (let i = 0; i < 6; i++) { const ang = i * 1.05; E(c, f.x + Math.cos(ang) * f.r * p * 1.6, f.y + 20 + Math.sin(ang) * f.r * 0.45 * p * 1.6 - 10, 4, 3, "#8c7a72", { lw: 1.5, hl: false }); } }
+    else if (f.typ === "claw") { c.globalAlpha = a; c.lineCap = "round"; for (let i = -1; i <= 1; i++) for (const [lw, cl] of [[8, OL], [4, f.color]]) { c.lineWidth = lw; c.strokeStyle = cl; c.beginPath(); c.moveTo(f.x - 22 + i * 12, f.y - 34); c.quadraticCurveTo(f.x + i * 12, f.y - 10, f.x + 14 + i * 12, f.y + 14); c.stroke(); } c.globalAlpha = 1; }
+
+    else if (f.typ === "flash") { c.fillStyle = "rgba(255,60,60," + (0.25 * a) + ")"; c.fillRect(0, 0, W, H); }
+  }
+  // flying eggs to HUD
+  for (const g of B.flyEggs) {
+    const t = Math.min(1, g.t / 1.0), ease = t * t;
+    const x = lerp(g.sx, 236, ease), y = lerp(g.sy, 22, ease) - Math.sin(t * Math.PI) * 60;
+    drawEgg(c, x, y, 34 - ease * 14, g.q, time, 1);
+  }
+  // floaters
+  c.textAlign = "center";
+  for (const f of B.floaters) {
+    c.globalAlpha = Math.min(1, f.life / f.max * 1.6);
+    c.font = "900 " + (f.big ? 20 : 15) + "px sans-serif"; c.lineWidth = 4; c.strokeStyle = OL;
+    c.strokeText(f.text, f.x, f.y); c.fillStyle = f.color; c.fillText(f.text, f.x, f.y);
+  }
+  c.globalAlpha = 1;
+  // pre-wave hint
+  if (!B.waveActive && !B.over) {
+    const msg = B.wave === 0 ? tr("place_then") : tr("rest", Math.ceil(B.countdown));
+    c.font = "900 20px sans-serif"; c.lineWidth = 6; c.strokeStyle = OL; c.strokeText(msg, W / 2, 400); c.fillStyle = "#fff"; c.fillText(msg, W / 2, 400);
+    if (B.level.endless && B.wave > 0) {
+      const L = lootLevel(B.level, B.wave + 1);
+      const m2 = tr("next_loot", L, lootLabel(L));
+      c.font = "900 16px sans-serif"; c.strokeText(m2, W / 2, 428); c.fillStyle = "#ffe14a"; c.fillText(m2, W / 2, 428);
+    }
+  }
+}
+
+/* ================= title / home background ================= */
+const walkers = [];
+function renderMenuBG() {
+  const c = ctx;
+  c.drawImage(BG.get("orchard", true), 0, 0, W, H);
+  c.fillStyle = "rgba(255,240,200,.12)"; c.fillRect(0, 0, W, H);
+  if (!walkers.length) {
+    const ids = ["chili", "berry", "melon", "lemon", "taro", "peach", "pitaya"];
+    ids.forEach((id, i) => walkers.push({ id, x: 50 + i * 73, y: 800 + (i % 2) * 90, star: 1 + (i % 4), shiny: i === 3, ph: i }));
+  }
+  for (const w of walkers) {
+    const hop = Math.abs(Math.sin(time * 3 + w.ph)) * 8;
+    drawPet(c, w.id, w.star, w.shiny, w.x, w.y - hop, 92 + w.star * 8, { squash: hop < 1 ? 0.3 : 0 });
+  }
+}
+
+/* ================= screens ================= */
+function hideAll() {
+  for (const id of ["lang-screen", "title-screen", "starter", "home", "detail", "hatch", "help", "pause", "result", "hud", "dock", "inspect"]) el(id).classList.add("hidden");
+}
+function openHome(tab) {
+  if (tab) homeTab = tab;
+  screen = "home"; hideAll();
+  B.running = false;
+  el("home").classList.remove("hidden");
+  renderHome();
+}
+function renderHome() {
+  el("home-gems").textContent = tr("gems", save.gems);
+  document.querySelectorAll(".tabs button").forEach(b => b.classList.toggle("on", b.dataset.tab === homeTab));
+  const body = el("home-body"); body.innerHTML = "";
+  if (homeTab === "play") renderPlay(body);
+  else if (homeTab === "book") renderBook(body);
+  else if (homeTab === "hatch") renderHatchTab(body);
+  else if (homeTab === "train") renderTrain(body);
+  else renderEvo(body);
+}
+function renderPlay(body) {
+  if (migratedNote) { const n = document.createElement("div"); n.className = "box"; n.style.fontWeight = "800";
+    n.textContent = tr("update_note"); body.appendChild(n); migratedNote = false; }
+  const hero = document.createElement("div"); hero.className = "play-hero";
+  const cv = document.createElement("canvas"); cv.width = 480; cv.height = 300;
+  const c = cv.getContext("2d"); c.scale(2, 2);
+  const bgI = IMG["bg/" + zoneOf(Math.max(1, save.endlessBest)).theme];
+  if (bgI) c.drawImage(bgI, 0, bgI.height * 0.25, bgI.width, bgI.width * 150 / 240, 0, 0, 240, 150);
+  const zi = IMG["enemies/z-1"], bi = IMG["enemies/b-4"];
+  if (bi) { const [w, h] = fitBox(bi, 104); c.drawImage(bi, 150 - w / 2, 126 - h, w, h); }
+  if (zi) { const [w, h] = fitBox(zi, 64); c.drawImage(zi, 70 - w / 2, 132 - h, w, h); }
+  const top = save.pets.slice().sort((a, b) => petPower(b) - petPower(a))[0];
+  if (top) { const im = petImg(top.id, top.star, top.shiny); if (im) { const [w, h] = fitBox(im, 78); c.drawImage(im, 210 - w / 2, 146 - h, w, h); } }
+  hero.appendChild(cv);
+  hero.insertAdjacentHTML("beforeend", "<div class='ph-txt'><h3>" + ENDLESS.name + "</h3><p>" + tr("endless_desc") + "</p>"
+    + "<div class='ph-stats'><span class='chip'>" + tr("best_wave", save.endlessBest) + "</span><span class='chip'>" + tr("pets_n", save.pets.length) + "</span><span class='chip'>" + tr("eggs_n", save.eggs.length) + "</span></div></div>");
+  body.appendChild(hero);
+  const go = document.createElement("button"); go.type = "button"; go.className = "big b-go"; go.id = "btn-play"; go.textContent = tr("start_adv");
+  go.addEventListener("click", () => { sfx.click(); if (!save.pets.length) { showToast(tr("hatch_first")); return; } startRun(); });
+  body.appendChild(go);
+  const zl = document.createElement("div"); zl.className = "sec-title"; zl.textContent = tr("route"); body.appendChild(zl);
+  const zr = document.createElement("div"); zr.className = "zone-row";
+  ZONES.forEach((z, i) => {
+    const d = document.createElement("div"); d.className = "zone" + (i === 0 || save.endlessBest >= i * 10 ? "" : " locked");
+    const zc = document.createElement("canvas"); zc.width = 140; zc.height = 180; const x = zc.getContext("2d");
+    const im = IMG["bg/" + z.theme]; if (im) x.drawImage(im, im.width * 0.08, im.height * 0.06, im.width * 0.84, im.height * 0.6, 0, 0, 140, 180);
+    d.appendChild(zc);
+    d.insertAdjacentHTML("beforeend", "<b>" + z.name + "</b><small>" + tr("wave_plus", i * 10 + 1) + "</small>");
+    zr.appendChild(d);
+  });
+  body.appendChild(zr);
+}
+/* ================= growth UI ================= */
+function resetScroll(id) { const o = el(id); o.scrollTop = 0; o.querySelectorAll("*").forEach(n => { if (n.scrollTop) n.scrollTop = 0; }); }
+function aptBarHTML(p, big) {
+  const t = tierOf(p.apt);
+  return "<div class='apt t" + t + (big ? " big" : "") + "'><span class='apt-l'>" + tr("apt") + "</span><span class='apt-bar'><i style='width:" + p.apt + "%'></i></span>"
+    + "<b>" + p.apt + (big ? " · " + aptTierName(p.apt) : "") + "</b>" + (t === 4 ? "<span class='apt-spark'>✦</span>" : "") + "</div>";
+}
+function gradeHTML(g) { return "<span class='grade g-" + g + "'>" + g + "</span>"; }
+function lvHTML(p) { return "<span class='lvtag'>" + tr("lv", p.lv) + "</span>"; }
+function foodCanvas(fid, px) {
+  const cv = document.createElement("canvas"); cv.width = cv.height = px * 2; cv.style.width = cv.style.height = px + "px";
+  const c = cv.getContext("2d"); c.scale(px / 25, px / 25); const f = FOOD[fid];
+  if (fid === "candy") { E(c, 25, 26, 13, 13, f.col, { lw: 3, hl: false }); dot(c, 21, 22, 3, "#fff"); F(c, cc => { cc.moveTo(25, 13); cc.lineTo(31, 6); cc.lineTo(33, 12); cc.closePath(); }, "#5cbf5a", 2); }
+  else if (fid === "chili") { flame(c, 25, 30, 14, f.col, "#ff9a5a"); F(c, cc => { cc.rect(22, 9, 6, 7); }, "#4cba52", 2); }
+  else if (fid === "cookie") { E(c, 25, 26, 15, 13, f.col, { lw: 3, hl: false }); [[19, 22], [29, 21], [25, 30], [32, 29]].forEach(([x, y]) => dot(c, x, y, 2.5, "#5e3a24")); }
+  else if (fid === "jelly") { F(c, cc => { cc.roundRect(12, 14, 26, 24, 8); }, f.col, 3); dot(c, 19, 20, 3, "#fff6c0"); }
+  else if (fid === "cake") { F(c, cc => { cc.rect(10, 26, 30, 12); }, "#ff8ab8", 3); F(c, cc => { cc.rect(13, 16, 24, 11); }, "#7ad0ff", 3); F(c, cc => { cc.rect(16, 8, 18, 9); }, "#ffe14a", 3); dot(c, 25, 6, 3, "#ff4f6d"); }
+  else { E(c, 25, 27, 14, 13, f.col, { lw: 3, hl: false }); F(c, cc => { cc.ellipse(31, 12, 7, 4, -0.5, 0, TAU); }, "#5cbf5a", 2); spark(c, 18, 21, 4, "#fff6a0"); }
+  return cv;
+}
+let trainSel = null;
+function renderTrain(body) {
+  body.insertAdjacentHTML("beforeend", "<div class='box' style='font-weight:800;font-size:13px'>" + tr("train_info") + "</div>");
+  if (!save.pets.length) return;
+  if (!save.pets.some(p => p.uid === trainSel)) trainSel = save.pets.slice().sort((a, b) => petPower(b) - petPower(a))[0].uid;
+  const p = save.pets.find(q => q.uid === trainSel), cap = trainCap(p.apt), m = indivMul(p);
+  const box = document.createElement("div"); box.className = "box train-panel" + (p.shiny ? " shiny" : "");
+  const left = document.createElement("div"); left.className = "tp-art"; left.appendChild(petCanvas(p.id, p.star, p.shiny, 96));
+  left.insertAdjacentHTML("beforeend", gradeHTML(p.grade));
+  box.appendChild(left);
+  const need = xpNeed(p.lv);
+  const stat = (k, lab, pct) => "<div class='trs'><span class='trs-l'>" + lab + "</span><span class='trs-bar'><i style='width:" + (p.tr[k] / cap * 100) + "%'></i></span><span class='trs-v'>"
+    + tr("tr_line", "", pct) + " <small>" + (p.tr[k] >= cap ? tr("stat_cap") : tr("tr_cnt", p.tr[k], cap)) + "</small></span></div>";
+  box.insertAdjacentHTML("beforeend", "<div class='tp-info'><div class='tp-name'>" + (isUltra(p) ? "<span class='ultra'>" + tr("ultra") + "</span> " : p.shiny ? tr("shiny_pre") : "") + stageName(p.id, p.star) + " " + starsHTML(p.star) + "</div>"
+    + "<div class='tp-lv'>" + lvHTML(p) + "<span class='xpbar'><i style='width:" + (p.lv >= MAX_LV ? 100 : p.xp / need * 100) + "%'></i></span><small>" + (p.lv >= MAX_LV ? tr("maxlv") : tr("xp", p.xp, need)) + "</small></div>"
+    + aptBarHTML(p, true) + "<div class='apt-note'>" + tr("apt_note") + "</div>"
+    + stat("a", tr("st_atk"), Math.round(p.tr.a * 3)) + stat("h", tr("st_hp"), Math.round(p.tr.h * 4)) + stat("s", tr("st_spd"), Math.round(p.tr.s * 1.5 * 10) / 10)
+    + "</div>");
+  body.appendChild(box);
+  body.insertAdjacentHTML("beforeend", "<div class='sec-title'>" + tr("my_snacks") + "</div>");
+  const fr = document.createElement("div"); fr.className = "food-row";
+  const have = FOODS.filter(f => save.food[f.id] > 0);
+  if (!have.length) fr.insertAdjacentHTML("beforeend", "<div class='box' style='font-weight:800;width:100%'>" + tr("food_none") + "</div>");
+  for (const f of have) {
+    const it = document.createElement("div"); it.className = "food-item";
+    it.appendChild(foodCanvas(f.id, 40));
+    it.insertAdjacentHTML("beforeend", "<div class='fn'>" + foodName(f.id) + " ×" + save.food[f.id] + "</div><div class='fd'>" + tr("food_" + f.id + "_d") + "</div>");
+    const b = document.createElement("button"); b.type = "button"; b.className = "b-mint feed-btn"; b.dataset.food = f.id; b.textContent = tr("feed");
+    b.addEventListener("click", () => { const r = feedPet(p.uid, f.id); if (!r) return; sfx.coin(); showToast(r.ups ? tr("lvup", stageName(p.id, p.star), r.lv) : tr("fed", stageName(p.id, p.star), foodName(f.id))); renderHome(); });
+    it.appendChild(b); fr.appendChild(it);
+  }
+  body.appendChild(fr);
+  body.insertAdjacentHTML("beforeend", "<div class='sec-title'>" + tr("pick_pet") + "</div>");
+  const grid = document.createElement("div"); grid.className = "grid3";
+  save.pets.slice().sort((a, b) => petPower(b) - petPower(a)).forEach(q => {
+    const c = petCard(q.id, q.star, q.shiny, { pet: q }); if (q.uid === trainSel) c.classList.add("sel");
+    c.addEventListener("click", () => { sfx.click(); trainSel = q.uid; renderHome(); el("home-body").scrollTop = 0; });
+    grid.appendChild(c);
+  });
+  body.appendChild(grid);
+}
+let lastHatchAll = [];
+function hatchAll() {
+  if (!save.eggs.length) return [];
+  const eggs = save.eggs.slice().sort((a, b) => b.q - a.q); save.eggs = [];
+  const got = eggs.map(egg => { const r = rollHatch(egg); save.hatched++; return addPet(r.id, 1, r.shiny); });
+  persist();
+  lastHatchAll = got;
+  const shiny = got.filter(p => p.shiny).length, hi = got.filter(p => p.grade === "S" || p.grade === "SS").length;
+  el("detail-title").textContent = tr("hatch_all_title");
+  const box = el("detail-body"); box.innerHTML = "<div class='box hatch-sum' style='font-weight:900;text-align:center'>" + tr("hatch_all_sum", got.length, shiny, hi) + "</div>";
+  const grid = document.createElement("div"); grid.className = "grid3";
+  got.slice().sort((a, b) => (b.shiny - a.shiny) || (b.apt - a.apt)).forEach(p => {
+    const c = petCard(p.id, 1, p.shiny, { pet: p });
+    if (p.shiny || p.grade === "S" || p.grade === "SS") c.classList.add("hl");
+    grid.appendChild(c);
+  });
+  box.appendChild(grid);
+  el("detail").classList.remove("hidden");
+  resetScroll("detail");
+  if (shiny) sfx.shiny(); else sfx.hatch();
+  return got;
+}
+function bestOf(id) { return save.pets.filter(p => p.id === id).sort((a, b) => (b.star - a.star) || (b.shiny - a.shiny) || (b.apt - a.apt))[0] || null; }
+function petCard(id, star, shiny, opts) {
+  opts = opts || {};
+  const d = PET[id];
+  const div = document.createElement("div");
+  div.className = "card r" + d.rar + (shiny ? " shiny" : "") + (opts.locked ? " locked" : "");
+  const art = document.createElement("div"); art.className = "art";
+  art.innerHTML = (opts.locked ? "" : "<span class='el el-" + d.el + "'>" + elShort(d.el) + "</span><span class='rtag'>" + RAR_NAME[d.rar] + "</span>") + (shiny ? "<span class='stag'>" + tr("shiny_tag") + "</span>" : "");
+  art.appendChild(petCanvas(id, star, shiny, 104, { silhouette: opts.locked }));
+  if (opts.pet) { art.insertAdjacentHTML("beforeend", gradeHTML(opts.pet.grade) + lvHTML(opts.pet)); if (isUltra(opts.pet)) { div.classList.add("ultra-card"); art.insertAdjacentHTML("beforeend", "<span class='stag ultra'>" + tr("ultra") + "</span>"); } }
+  div.appendChild(art);
+  div.insertAdjacentHTML("beforeend", "<div class='nm'>" + (opts.locked ? "???" : stageName(id, star)) + "</div>"
+    + (opts.locked ? "<div class='meta'>" + tr("not_met") + "</div>" : "<div>" + starsHTML(star) + "</div>" + (opts.pet ? aptBarHTML(opts.pet) : "") + "<div class='meta'><span class='role role-" + d.role + "'>" + ROLE_NAME[d.role] + "</span>" + (opts.extra || "") + "</div>"));
+  return div;
+}
+function renderBook(body) {
+  const have = PETS.filter(p => save.seen[p.id]).length;
+  const shinyN = PETS.filter(p => save.seenShiny[p.id]).length;
+  body.insertAdjacentHTML("beforeend", "<div class='sec-title'>" + tr("collected", have, PETS.length, shinyN, PETS.length) + "</div>");
+  const grid = document.createElement("div"); grid.className = "grid3";
+  for (const d of PETS) {
+    const b = bestOf(d.id);
+    const owned = save.pets.filter(p => p.id === d.id).length;
+    const card = b ? petCard(d.id, b.star, b.shiny, { extra: " ×" + owned, pet: b }) : save.seen[d.id] ? petCard(d.id, 1, false, { extra: " ×0" }) : petCard(d.id, 1, false, { locked: true });
+    if (save.seen[d.id]) card.addEventListener("click", () => { sfx.click(); openDetail(d.id); });
+    grid.appendChild(card);
+  }
+  body.appendChild(grid);
+}
+function openDetail(id) {
+  const d = PET[id];
+  el("detail-title").textContent = tr("family", d.names[0]);
+  const box = el("detail-body"); box.innerHTML = "";
+  box.insertAdjacentHTML("beforeend", "<div style='font-weight:800;margin-bottom:8px'><span class='el el-" + d.el + "' style='position:static;display:inline-block'>" + elShort(d.el) + "</span> "
+    + "<span class='role role-" + d.role + "'>" + ROLE_NAME[d.role] + "</span> <span class='role'>" + RAR_NAME[d.rar] + "</span></div>" + "<div class='skill'><b>" + tr("skill_line", d.sk) + "</b>" + d.skd + "<br><span style='opacity:.8'>" + tr("skill_up", d.up) + "</span></div>");
+  for (const sh of [false, true]) {
+    const known = sh ? save.seenShiny[id] : true;
+    box.insertAdjacentHTML("beforeend", "<div class='sec-title'>" + (sh ? tr("shiny_sec") + (known ? "" : tr("not_hatched")) : tr("normal_sec")) + "</div>");
+    const ch = document.createElement("div"); ch.className = "chain" + (sh ? " sh" : "");
+    for (let s = 1; s <= 4; s++) {
+      const w = document.createElement("div"); w.className = "st";
+      const cv = petCanvas(id, s, sh, 110, { silhouette: !known, k: 0.9 });
+      cv.style.background = sh ? "radial-gradient(circle,#fff,#ead8ff)" : "radial-gradient(circle,#fff,#e4f6d0)";
+      w.appendChild(cv);
+      w.insertAdjacentHTML("beforeend", "<div class='lab'>" + (known ? d.names[s - 1] : "???") + "</div><div class='stars' style='font-size:12px'>" + "★".repeat(s) + (s === 4 ? "+" : "") + "</div>");
+      ch.appendChild(w);
+    }
+    box.appendChild(ch);
+  }
+  setTimeout(() => resetScroll("detail"), 0);
+  const mine = save.pets.filter(p => p.id === id).sort((a, b) => (b.apt - a.apt) || (b.star - a.star));
+  if (mine.length) {
+    box.insertAdjacentHTML("beforeend", "<div class='sec-title'>" + tr("my_family", d.names[0], mine.length) + "</div><div class='apt-note' style='margin:-2px 0 6px'>" + tr("apt_note") + "</div>");
+    for (const p of mine) {
+      const row = document.createElement("div"); row.className = "own-row" + (p.shiny ? " shiny" : "") + (isUltra(p) ? " ultra-card" : "");
+      row.appendChild(petCanvas(p.id, p.star, p.shiny, 62));
+      row.insertAdjacentHTML("beforeend", "<div class='own-info'><div><b>" + (isUltra(p) ? "<span class='ultra'>" + tr("ultra") + "</span> " : p.shiny ? tr("shiny_pre") : "") + stageName(p.id, p.star) + "</b> " + lvHTML(p) + " " + gradeHTML(p.grade) + "</div>"
+        + aptBarHTML(p, true) + "<div class='own-tr'>" + tr("st_atk") + " +" + p.tr.a * 3 + "% · " + tr("st_hp") + " +" + p.tr.h * 4 + "% · " + tr("st_spd") + " +" + Math.round(p.tr.s * 15) / 10 + "%</div></div>");
+      box.appendChild(row);
+    }
+  }
+  el("detail").classList.remove("hidden");
+}
+function eggCanvas(q) {
+  const cv = document.createElement("canvas"); cv.width = 128; cv.height = 144;
+  const c = cv.getContext("2d"); c.scale(2, 2); drawEgg(c, 32, 38, 44, q, 0, 0); return cv;
+}
+function renderHatchTab(body) {
+  body.insertAdjacentHTML("beforeend", "<div class='box' style='display:flex;align-items:center;gap:10px'>"
+    + "<div style='flex:1;font-weight:800;font-size:14px'>" + tr("egg_info", EGG_COST) + "</div>"
+    + "<button type='button' class='b-gold' id='btn-buy'>" + tr("buy_egg", EGG_COST) + "</button></div>");
+  el("btn-buy").disabled = save.gems < EGG_COST;
+  el("btn-buy").addEventListener("click", () => {
+    if (save.gems < EGG_COST) return;
+    save.gems -= EGG_COST; save.eggs.push({ q: Math.random() < 0.15 ? 2 : 1, sh: 0.04 }); persist(); sfx.coin(); renderHome();
+  });
+  body.insertAdjacentHTML("beforeend", "<div class='sec-title'>" + tr("my_eggs", save.eggs.length) + "</div>");
+  if (!save.eggs.length) { body.insertAdjacentHTML("beforeend", "<div class='box' style='font-weight:800'>" + tr("no_eggs") + "</div>"); return; }
+  const ha = document.createElement("button"); ha.type = "button"; ha.className = "b-pink b-big"; ha.id = "btn-hatch-all"; ha.style.cssText = "display:block;margin:0 auto 10px";
+  ha.textContent = tr("hatch_all", save.eggs.length);
+  ha.addEventListener("click", () => { sfx.click(); hatchAll(); renderHome(); });
+  body.appendChild(ha);
+  const grid = document.createElement("div"); grid.className = "egg-grid";
+  save.eggs.map((e, i) => ({ e, i })).sort((a, b) => b.e.q - a.e.q || b.e.sh - a.e.sh).forEach(({ e, i }) => {
+    const d = document.createElement("div"); d.className = "egg-card q" + e.q;
+    d.appendChild(eggCanvas(e.q));
+    d.insertAdjacentHTML("beforeend", "<div class='nm'>" + EGG_NAME[e.q] + "</div><div class='meta'>" + tr("shiny_rate", Math.round(e.sh * 100)) + "</div>");
+    d.addEventListener("click", () => { sfx.click(); openHatch(i); });
+    grid.appendChild(d);
+  });
+  body.appendChild(grid);
+}
+function evoGroups() {
+  const m = new Map();
+  for (const p of save.pets) { if (p.star >= MAX_STAR) continue; const k = p.id + "|" + p.star; if (!m.has(k)) m.set(k, []); m.get(k).push(p); }
+  return [...m.values()].filter(g => g.length >= 2);
+}
+function renderEvo(body) {
+  body.insertAdjacentHTML("beforeend", "<div class='box' style='font-weight:800;font-size:14px'>" + tr("evo_info") + "</div>");
+  const gs = evoGroups();
+  if (!gs.length) { body.insertAdjacentHTML("beforeend", "<div class='box' style='font-weight:800'>" + tr("evo_none") + "</div>"); }
+  for (const g of gs) {
+    g.sort((a, b) => (b.apt - a.apt) || (b.shiny - a.shiny));
+    const p = g[0], d = PET[p.id];
+    const row = document.createElement("div"); row.className = "evo-row";
+    const sh = g[0].shiny || g[1].shiny;
+    row.appendChild(petCanvas(p.id, p.star, p.shiny, 70));
+    row.insertAdjacentHTML("beforeend", "<span class='arrow'>➜</span>");
+    row.appendChild(petCanvas(p.id, p.star + 1, sh, 70));
+    row.insertAdjacentHTML("beforeend", "<div class='info'>" + stageName(p.id, p.star) + " ×" + g.length + "<br>→ " + (sh ? "✦" : "") + stageName(p.id, p.star + 1) + " " + starsHTML(p.star + 1) + "</div>");
+    const btn = document.createElement("button"); btn.type = "button"; btn.className = "b-mint"; btn.textContent = tr("evolve_btn");
+    btn.addEventListener("click", () => evolve(g[0].uid, g[1].uid));
+    row.appendChild(btn);
+    body.appendChild(row);
+  }
+  body.insertAdjacentHTML("beforeend", "<div class='sec-title' style='margin-top:12px'>" + tr("my_pets", save.pets.length) + "</div>");
+  const grid = document.createElement("div"); grid.className = "grid3";
+  save.pets.slice().sort((a, b) => petPower(b) - petPower(a)).forEach(p => grid.appendChild(petCard(p.id, p.star, p.shiny, { pet: p })));
+  body.appendChild(grid);
+}
+function evolve(uidA, uidB) {
+  let a = save.pets.find(p => p.uid === uidA);
+  let b = save.pets.find(p => p.uid === uidB);
+  if (!a || !b || a === b || a.id !== b.id || a.star !== b.star || a.star >= MAX_STAR) return false;
+  if ((b.apt || 0) > (a.apt || 0)) { const t = a; a = b; b = t; }   // the higher-aptitude pet survives; its aptitude never changes
+  const oldName = stageName(a.id, a.star);
+  const cap = trainCap(a.apt);
+  if (b.lv > a.lv) { a.lv = b.lv; a.xp = b.xp; }
+  a.tr = { a: Math.min(cap, Math.max(a.tr.a, b.tr.a)), h: Math.min(cap, Math.max(a.tr.h, b.tr.h)), s: Math.min(cap, Math.max(a.tr.s, b.tr.s)) };
+  a.star++; a.shiny = a.shiny || b.shiny;
+  if (a.shiny) save.seenShiny[a.id] = true;
+  save.pets = save.pets.filter(p => p !== b);
+  persist();
+  reveal(a, tr("evo_ok"), tr("evo_msg", oldName, a.shiny ? tr("shiny_pre") : "", stageName(a.id, a.star)) + (a.star === 5 ? tr("max_star") : ""), true);
+  return true;
+}
+
+/* ================= hatching ================= */
+const H8 = { egg: null, pet: null, t: 0, phase: "idle", evolve: false };
+let forceShinyNext = false;
+function rollHatch(egg) {
+  const w = HATCH_W[egg.q];
+  let r = Math.random() * w.reduce((a, b) => a + b, 0), rar = 1;
+  for (let i = 1; i <= 4; i++) { r -= w[i]; if (r <= 0) { rar = i; break; } }
+  const pool = PETS.filter(p => p.rar === rar);
+  const id = pick(pool).id;
+  const shiny = forceShinyNext || Math.random() < egg.sh;
+  forceShinyNext = false;
+  return { id, shiny };
+}
+function openHatch(idx) {
+  const egg = save.eggs[idx]; if (!egg) return false;
+  save.eggs.splice(idx, 1);
+  const r = rollHatch(egg);
+  const p = addPet(r.id, 1, r.shiny);
+  save.hatched++;
+  persist();
+  Object.assign(H8, { egg, pet: p, t: 0, phase: "shake", evolve: false });
+  screen = "hatch";
+  el("hatch").classList.remove("hidden");
+  el("hatch-title").textContent = tr("hatching");
+  el("hatch-msg").innerHTML = tr("egg_moving", EGG_NAME[egg.q]);
+  el("hatch-btns").innerHTML = "";
+  sfx.click();
+  return true;
+}
+function reveal(p, title, msg, evolve) {
+  Object.assign(H8, { egg: null, pet: p, t: 1.8, phase: "done", evolve: !!evolve });
+  screen = "hatch";
+  el("hatch").classList.remove("hidden");
+  finishHatchUI(title, msg);
+}
+function finishHatchUI(title, msg) {
+  const p = H8.pet, d = PET[p.id];
+  el("hatch-title").textContent = title || (p.shiny ? tr("shiny_appear") : tr("hatched"));
+  el("hatch-msg").innerHTML = msg || ((p.shiny ? "<span style='color:#ffb0f0'>" + tr("super_shiny") + "</span> " : "") + "<b>" + stageName(p.id, p.star) + "</b>"
+    + " · " + RAR_NAME[d.rar] + " · " + tr("el_type", elName(d.el)) + " · " + ROLE_NAME[d.role] + "<br><span style='font-size:13px;color:#e8dcff'>" + tr("hatch_skill", d.sk, d.skd) + "</span>"
+    + "<div class='hatch-apt'>" + tr("birth") + " " + gradeHTML(p.grade) + (isUltra(p) ? " <span class='ultra'>" + tr("ultra") + "</span>" : "") + aptBarHTML(p, true) + "</div>");
+  const btns = el("hatch-btns"); btns.innerHTML = "";
+  if (!H8.evolve && save.eggs.length) {
+    const again = document.createElement("button"); again.type = "button"; again.className = "b-gold"; again.textContent = tr("hatch_again", save.eggs.length);
+    again.addEventListener("click", () => { const i = save.eggs.reduce((bi, e, i, a) => e.q > a[bi].q ? i : bi, 0); openHatch(i); });
+    btns.appendChild(again);
+  }
+  const ok = document.createElement("button"); ok.type = "button"; ok.className = "b-pink"; ok.textContent = tr("yay");
+  ok.addEventListener("click", () => { el("hatch").classList.add("hidden"); openHome(); });
+  btns.appendChild(ok);
+  if (p.shiny) sfx.shiny(); else sfx.hatch();
+}
+function skipHatch() { if (H8.phase === "shake") { H8.t = 1.8; H8.phase = "done"; finishHatchUI(); } }
+function renderHatch(dt) {
+  const cv = el("hatch-cv"); const c = cv.getContext("2d");
+  if (cv.width !== 600) { cv.width = 600; cv.height = 560; }
+  c.setTransform(2, 0, 0, 2, 0, 0); c.clearRect(0, 0, 300, 280);
+  H8.t += dt;
+  const p = H8.pet; if (!p) return;
+  // rays
+  const shiny = p.shiny && H8.phase === "done";
+  c.save(); c.translate(150, 150); c.rotate(time * 0.4);
+  for (let i = 0; i < 12; i++) { c.rotate(TAU / 12); c.fillStyle = shiny ? (i % 2 ? "rgba(255,140,220,.35)" : "rgba(140,200,255,.35)") : "rgba(255,215,90,.32)";
+    c.beginPath(); c.moveTo(0, 0); c.lineTo(-18, -160); c.lineTo(18, -160); c.closePath(); c.fill(); }
+  c.restore();
+  if (H8.phase === "shake") {
+    const k = Math.min(1, H8.t / 1.6);
+    drawEgg(c, 150, 150, 120, H8.egg.q, H8.t * (1 + k * 3), 1 + k * 3);
+    if (k > 0.5) { c.strokeStyle = OL; c.lineWidth = 3; c.beginPath(); c.moveTo(138, 118); c.lineTo(146, 130); c.lineTo(140, 140); c.lineTo(152, 150); c.stroke(); }
+    if (H8.t >= 1.8) { H8.phase = "done"; finishHatchUI(); }
+  } else {
+    const pop = Math.min(1, (H8.t - 1.8) / 0.35 + 0.0001);
+    const sc = 0.4 + 0.6 * (1 - Math.pow(1 - Math.max(0, pop), 3));
+    c.save(); c.translate(150, 236); c.scale(sc, sc);
+    drawPet(c, p.id, p.star, p.shiny, 0, 0, 230, { squash: Math.sin(time * 4) * 0.15 });
+    c.restore();
+    if (pop < 1) { c.fillStyle = "rgba(255,255,255," + (1 - pop) + ")"; c.beginPath(); c.arc(150, 150, 60 + pop * 160, 0, TAU); c.fill(); }
+    for (let i = 0; i < 14; i++) { const a = i * 2.39, r = 40 + ((H8.t - 1.8) * 140 + i * 13) % 150; c.globalAlpha = Math.max(0, 1 - r / 150);
+      dot(c, 150 + Math.cos(a) * r, 150 + Math.sin(a) * r * 0.8, 3 + (i % 3), shiny ? ["#ff8ad8", "#8ad0ff", "#fff0a0"][i % 3] : ["#ffe14a", "#ff8a5a", "#ffffff"][i % 3]); }
+    c.globalAlpha = 1;
+    if (shiny || H8.evolve) for (let i = 0; i < 6; i++) { const a = time * 1.5 + i * TAU / 6; spark(c, 150 + Math.cos(a) * 110, 140 + Math.sin(a) * 90, 6 + Math.sin(time * 5 + i) * 3, shiny ? "#ffd6f4" : "#fff6a0"); }
+  }
+}
+
+/* ================= starter ================= */
+function openStarter() {
+  hideAll(); screen = "starter";
+  el("starter").classList.remove("hidden");
+  const g = el("starter-grid"); g.innerHTML = "";
+  for (const id of ["chili", "lychee", "chestnut"]) {
+    const d = PET[id];
+    const card = petCard(id, 1, false, {});
+    card.insertAdjacentHTML("beforeend", "<div class='meta' style='margin-top:4px'>" + d.desc + "</div>");
+    card.dataset.id = id;
+    card.addEventListener("click", () => { sfx.hatch(); newGame(id); openHome("play"); showToast(tr("got_pet", d.names[0])); });
+    g.appendChild(card);
+  }
+}
+
+/* ================= input ================= */
+function toWorld(ev) { const r = canvas.getBoundingClientRect(); return { x: (ev.clientX - r.left) / r.width * W, y: (ev.clientY - r.top) / r.height * H }; }
+canvas.addEventListener("pointerdown", (ev) => {
+  unlockAudio();
+  if (screen !== "battle" || B.over) return;
+  const { x, y } = toWorld(ev);
+  let slot = -1;
+  for (let i = 0; i < SLOTS; i++) { const p = slotPos(i); if (Math.abs(x - p.x) < 41 && y > p.y - 70 && y < p.y + 12) slot = i; }
+  if (slot < 0) { B.selTower = null; el("inspect").classList.add("hidden"); return; }
+  const occ = B.towers.find(t => t.slot === slot);
+  if (B.selPet != null) {
+    if (deploy(B.selPet, slot)) { B.selPet = null; renderTray(); }
+    return;
+  }
+  if (occ) { sfx.click(); showInspect(occ); }
+  else { B.selTower = null; el("inspect").classList.add("hidden"); }
+});
+el("btn-start").addEventListener("click", () => { unlockAudio(); sfx.click(); openStarter(); });
+el("btn-continue").addEventListener("click", () => { unlockAudio(); sfx.click(); openHome("play"); });
+document.querySelectorAll(".tabs button").forEach(b => b.addEventListener("click", () => { sfx.click(); homeTab = b.dataset.tab; renderHome(); }));
+el("btn-help").addEventListener("click", () => { el("help").classList.remove("hidden"); });
+el("btn-help-ok").addEventListener("click", () => { el("help").classList.add("hidden"); });
+el("btn-mute2").addEventListener("click", () => setMuted(!save.muted));
+el("btn-detail-ok").addEventListener("click", () => el("detail").classList.add("hidden"));
+el("btn-speed").addEventListener("click", () => { B.speed = B.speed === 1 ? 2 : B.speed === 2 ? 3 : 1; el("btn-speed").textContent = "×" + B.speed; });
+el("btn-pause").addEventListener("click", () => { B.paused = true; el("pause").classList.remove("hidden"); });
+el("btn-resume").addEventListener("click", () => { B.paused = false; el("pause").classList.add("hidden"); });
+el("btn-quit").addEventListener("click", () => { el("pause").classList.add("hidden"); B.paused = false; endRun(false); });
+el("btn-end").addEventListener("click", () => { sfx.click(); endRun(false); });
+el("btn-next").addEventListener("click", () => { sfx.click(); if (!B.waveActive) { B.countdown = 0; startNextWave(); } });
+el("btn-result-ok").addEventListener("click", () => { el("result").classList.add("hidden"); openHome(save.eggs.length ? "hatch" : "levels"); });
+document.addEventListener("visibilitychange", () => { if (document.hidden && screen === "battle" && !B.over) { B.paused = true; el("pause").classList.remove("hidden"); } });
+
+/* ================= loop ================= */
+let last = 0;
+function loop(ts) {
+  const dt = Math.min(0.05, ((ts - last) / 1000) || 0.016); last = ts; time += dt;
+  if (toastT > 0) { toastT -= dt; if (toastT <= 0) el("toast").classList.add("hidden"); }
+  if (screen === "battle" || (screen === "result" && B.level)) { updateBattle(dt); renderBattle(); }
+  else renderMenuBG();
+  if (screen === "hatch") renderHatch(dt);
+  requestAnimationFrame(loop);
+}
+
+/* ================= boot ================= */
+function applyLang(l, rerender) {
+  LANG = l === "en" ? "en" : "zh";
+  try { localStorage.setItem(LANG_KEY, LANG); } catch (e) {}
+  applyLangData(LANG);
+  document.documentElement.lang = LANG === "en" ? "en" : "zh-CN";
+  document.documentElement.classList.toggle("lang-en", LANG === "en");
+  document.title = tr("doc_title");
+  document.querySelectorAll("[data-i18n]").forEach(n => { n.innerHTML = tr(n.dataset.i18n); });
+  el("btn-mute2").textContent = save.muted ? tr("mute_off") : tr("mute_on");
+  if (rerender && screen === "home") renderHome();
+}
+let langFrom = "title";
+function openLang(from) {
+  langFrom = from || "title";
+  hideAll(); el("lang-screen").classList.remove("hidden"); screen = "lang";
+}
+function chooseLang(l) {
+  unlockAudio(); sfx.click();
+  applyLang(l, false);
+  el("lang-screen").classList.add("hidden");
+  if (langFrom === "home") openHome(homeTab);
+  else { screen = "title"; el("title-screen").classList.remove("hidden"); }
+}
+el("btn-lang-zh").addEventListener("click", () => chooseLang("zh"));
+el("btn-lang-en").addEventListener("click", () => chooseLang("en"));
+el("btn-lang-title").addEventListener("click", () => { sfx.click(); openLang("title"); });
+el("btn-lang-home").addEventListener("click", () => { sfx.click(); openLang("home"); });
+fit();
+if (loadSave()) el("btn-continue").classList.remove("hidden");
+const firstLaunch = !LANG;
+applyLang(LANG || "zh", false);
+if (firstLaunch) openLang("title");
+let assetsReady = false;
+loadAssets((d, n) => { el("load-bar").style.width = Math.round(d / n * 100) + "%"; el("load-txt").textContent = tr("loading", Math.round(d / n * 100)); })
+  .then(() => { assetsReady = true; BG.clear(); el("loading").classList.add("hidden"); requestAnimationFrame(loop); });
+
+/* ================= test / debug hooks ================= */
+window.__PETTD__ = {
+  STR, PETS, LEVELS, ENEMY, SAVE_KEY, OLD_SAVE_KEY, endlessSpec, lootLevel, eggWeights, dropChance, shinyChance,
+  getScreen: () => screen,
+  getLang: () => LANG, setLang(l) { applyLang(l, true); },
+  debugEnemies: () => B.enemies.map(e => ({ t: e.typ, x: Math.round(e.x), y: Math.round(e.y), hp: Math.round(e.hp), stun: e.stunT })),
+  ready: () => assetsReady,
+  getSave: () => JSON.parse(JSON.stringify({ food: save.food, gems: save.gems, pets: save.pets, eggs: save.eggs, beaten: save.beaten, endlessBest: save.endlessBest })),
+  getBattle: () => ({ running: B.running, over: B.over, won: B.won, lives: B.lives, gold: B.gold, wave: B.wave, waveActive: B.waveActive,
+    enemies: B.enemies.length, spawnQ: B.spawnQ.length, kills: B.kills, eggsGot: B.eggsGot.length, speed: B.speed,
+    towers: B.towers.map(t => ({ id: t.id, slot: t.slot, star: t.star, tier: t.tier, hp: t.hp, fainted: t.fainted })),
+    loot: B.level ? lootLevel(B.level, Math.max(1, B.wave)) : 0 }),
+  newGame, openHome, persist, openStarter,
+  startRun() { startRun(); },
+  startLevel() { startRun(); },
+  givePet(id, star, shiny, apt) { return addPet(id, star || 1, shiny, apt != null ? { apt } : {}).uid; },
+  feed: (uid, fid) => feedPet(uid, fid), giveFood(fid, n) { save.food[fid] = (save.food[fid] | 0) + (n || 1); persist(); },
+  getPet: (uid) => { const p = save.pets.find(q => q.uid === uid); return p ? JSON.parse(JSON.stringify(p)) : null; },
+  petPower: (uid) => petPower(save.pets.find(q => q.uid === uid)), gainXp: (uid, n) => gainXp(save.pets.find(q => q.uid === uid), n),
+  hatchAll: () => hatchAll().map(p => ({ uid: p.uid, id: p.id, apt: p.apt, grade: p.grade, shiny: p.shiny })), trainCap, indivMul: (uid) => indivMul(save.pets.find(q => q.uid === uid)),
+  addEgg(q, sh) { save.eggs.push({ q: q || 1, sh: sh == null ? 0.05 : sh }); persist(); },
+  deploy(uid, slot) { const ok = deploy(uid, slot); renderTray(); return ok; },
+  clearField() { B.towers = []; renderTray(); },
+  startWave() { if (!B.waveActive) { B.countdown = 0; startNextWave(); } },
+  setSpeed(n) { B.speed = n; el("btn-speed").textContent = "×" + n; },
+  setGold(n) { B.gold = n; refreshHUD(); },
+  setWave(n) { B.wave = n; refreshHUD(); },
+  endRun() { endRun(false); },
+  forceShiny(v) { forceShinyNext = v !== false; },
+  hatchFirst() { if (!save.eggs.length) save.eggs.push({ q: 1, sh: 0.05 }); return openHatch(save.eggs.reduce((bi, e, i, a) => e.q > a[bi].q ? i : bi, 0)); },
+  skipHatchAnim: skipHatch,
+  hatchedPet: () => H8.pet ? { ...H8.pet } : null,
+  evolve, evoGroups: () => evoGroups().map(g => g.map(p => p.uid)),
+  openBook() { openHome("book"); },
+  openDetail, selectTray(uid) { B.selPet = uid; renderTray(); },
+  fxKinds: () => [...new Set([...B.shots.map(s => "shot:" + s.kind), ...B.fx.map(f => "fx:" + f.typ), ...B.zones.map(() => "zone")])],
+  spawnDemo() {   // a field full of tough slimes so every skill is visible at once
+    B.enemies = []; B.spawnQ = []; B.waveActive = true;
+    const ty = ["sprout", "jelly", "ember", "zap", "pebble", "puff"];
+    for (let i = 0; i < 10; i++) { spawnEnemy({ id: ty[i % 6], hpMul: 60, spdMul: 0.15 }); const e = B.enemies[B.enemies.length - 1]; e.lane = i % 5; e.x = LANE_X[e.lane]; e.y = 330 + Math.floor(i / 5) * 110 + (i % 2) * 20; }
+    spawnEnemy({ id: "boss2", hpMul: 8, spdMul: 0.1 }); B.enemies[B.enemies.length - 1].y = 220;
+  },
+  enemyNames: () => B.enemies.map(e => ENEMY[e.typ].name),
+  // fire one pet once in a sandbox and report what its attack produced
+  probeAttack(id, star) {
+    const keep = { shots: B.shots, fx: B.fx, zones: B.zones, towers: B.towers, enemies: B.enemies, floaters: B.floaters };
+    B.shots = []; B.fx = []; B.zones = []; B.floaters = [];
+    const t = { uid: -1, id, star: star || 1, shiny: false, slot: 7, x: LANE_X[2], y: BACK_Y, tier: 1, cd: 0, bounce: 0, hp: 1, fainted: false, ph: 0 };
+    const mate = { uid: -2, id: "chili", star: 1, shiny: false, slot: 6, x: LANE_X[1], y: BACK_Y, tier: 1, cd: 9, bounce: 0, hp: 1, fainted: false, ph: 0 };
+    B.towers = [t, mate];
+    const mk = (lane, y) => ({ typ: "pebble", lane, x: LANE_X[lane], y, hp: 9999, max: 9999, spd: 20, atk: 0, el: "土", fly: false, boss: false, reward: 0, slowT: 0, slowV: 1, stunT: 0, burnT: 0, burnD: 0, atkCd: 9, ph: 0, biting: false, hitT: 0 });
+    B.enemies = [mk(2, 420), mk(2, 360), mk(1, 400), mk(3, 410)];
+    let fired = false; try { fired = fireTower(t, petStats(t)); } catch (err) { return "ERR " + err.message; }
+    const sig = [...new Set([...B.shots.map(s => "shot:" + s.kind), ...B.fx.map(f => "fx:" + f.typ)])].sort().join("+")
+      + (t.shield || mate.shield ? "+shield" : "") + (B.enemies.some(e => e.hp < 9999) ? "+dmg" : "") + (mate.berryT ? "+buff" : "");
+    Object.assign(B, keep);
+    return fired ? (PET[id].typ + "|" + sig) : "NOFIRE";
+  }
+};
+})();
+</script>
+</body>
+</html>
