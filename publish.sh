@@ -29,6 +29,9 @@ copy_game() {
       cp -a "$SRC/assets/$d/." "$DEST/assets/$d/"
     fi
   done
+  # sprite atlases live in assets/ (not a subfolder)
+  mkdir -p "$DEST/assets"
+  cp -a "$SRC"/assets/atlas-*.webp "$DEST/assets/" 2>/dev/null || true
   # Never publish raw source art or stray backups
   rm -rf "$DEST/assets"/raw*
   find "$DEST/assets" -maxdepth 1 -type d -name 'raw*' -exec rm -rf {} + 2>/dev/null || true
