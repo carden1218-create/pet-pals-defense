@@ -557,6 +557,117 @@
     html.land .banner { font-size: 11px; padding: 1px 8px; }
     html.land #toast { top: 78px; font-size: 12px; padding: 5px 10px; }
   }
+
+  /* ===== v12: evolution / charms / naming ===== */
+  .tabs { grid-template-columns: repeat(6, 1fr); }
+  .grade.g-SSS { background: linear-gradient(135deg, #ff6ad5, #ffe14a 45%, #6ae0ff); color: #4a0040; box-shadow: 0 0 8px #ffe14a; }
+  button.mini { font-size: 12px; padding: 2px 8px; border-radius: 10px; min-height: 0; line-height: 1.4; border-width: 3px; }
+  .nick { color: #d2357a; }
+  .charm-line { font-weight: 900; color: #b0306a; margin: 2px 0; font-size: 13px; }
+  #home-body.fit { display: flex; flex-direction: column; overflow: hidden; }
+  #home-body.fit > .box { flex-shrink: 0; margin-bottom: 6px; }
+  .evo-wrap, .charm-wrap { flex: 1; min-height: 0; display: grid; gap: 8px; }
+  .evo-wrap { grid-template-columns: 132px 1fr; }
+  .evo-side, .evo-pane, .charm-shop, .charm-pets { min-height: 0; overflow-y: auto; overflow-x: hidden; padding: 2px; }
+  .evo-side .sec-title, .evo-pane .sec-title, .charm-shop .sec-title, .charm-pets .sec-title { margin: 2px 0 4px; }
+  .evo-sp { display: flex; align-items: center; gap: 4px; width: 100%; padding: 2px 4px; margin-bottom: 4px; background: #fff8e6; color: var(--ink); text-shadow: none; border-radius: 12px; position: relative; text-align: left; font-size: 12px; }
+  .evo-sp.on { background: #ffe680; outline: 3px solid #ff7aa2; }
+  .evo-sp canvas { width: 40px; height: 40px; flex-shrink: 0; }
+  .es-n { display: flex; flex-direction: column; line-height: 1.15; font-weight: 900; overflow: hidden; }
+  .es-n small { color: #e0a000; font-size: 11px; }
+  .es-dot { position: absolute; right: 3px; top: 2px; background: #ff4f6d; color: #fff; border-radius: 9px; font-style: normal; font-size: 10px; padding: 0 5px; font-weight: 900; }
+  .evo-head { padding: 8px 10px; }
+  .eh-name { font-size: 15px; display: flex; flex-wrap: wrap; align-items: center; gap: 4px; }
+  .evo-rules { font-size: 12px; font-weight: 800; opacity: .8; margin: 2px 0; }
+  .evo-recipe { display: flex; align-items: center; justify-content: center; gap: 6px; margin: 4px 0; }
+  .er-slot { display: flex; flex-direction: column; align-items: center; border: 3px solid var(--ol); border-radius: 16px; padding: 2px 6px; background: radial-gradient(circle, #fff, #e4f6d0); }
+  .er-slot canvas { width: 96px; height: 96px; }
+  .er-copy canvas { width: 64px; height: 64px; }
+  .er-next { background: radial-gradient(circle, #fff, #ffe7a0); box-shadow: 0 0 12px #ffd23a; }
+  .er-lab { font-size: 12px; font-weight: 900; }
+  .er-op { font-size: 26px; font-weight: 900; color: #ff5a8c; }
+  .evo-prog { display: flex; align-items: center; gap: 8px; font-size: 13px; }
+  .ep-bar { flex: 1; height: 16px; border: 3px solid var(--ol); border-radius: 10px; background: #fff; overflow: hidden; }
+  .ep-bar i { display: block; height: 100%; background: repeating-linear-gradient(45deg, #7ad84a 0 10px, #9ae86a 10px 20px); }
+  .evo-stats { display: flex; flex-wrap: wrap; gap: 4px 12px; font-size: 12px; font-weight: 800; margin: 4px 0; }
+  .evo-btns { margin: 6px 0 2px; }
+  .evo-onekey { font-size: 18px; animation: pulse 1.4s infinite; }
+  .evo-onekey:disabled { animation: none; }
+  @keyframes pulse { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.05); } }
+  .evo-max { font-weight: 900; text-align: center; font-size: 16px; color: #b07000; margin: 6px 0; }
+  .evo-copies { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 6px; }
+  .evo-copy, .charm-row { color: var(--ink); display: flex; align-items: center; gap: 4px; background: #fff8e6; border: 3px solid var(--ol); border-radius: 12px; padding: 2px 4px; flex-wrap: wrap; }
+  .evo-copy.shiny, .charm-pet.shiny, .evo-sp.shiny { background: linear-gradient(135deg, #fff0fb, #e8dcff); }
+  .evo-copy canvas { width: 46px; height: 46px; }
+  .ec-i { display: flex; flex-direction: column; flex: 1; min-width: 60px; font-size: 11px; line-height: 1.2; }
+  .ec-i b { font-size: 12px; } .ec-i .grade { font-size: 10px; padding: 0 3px; }
+  .evo-more { align-self: center; font-weight: 900; text-align: center; }
+  .charm-info { font-weight: 800; font-size: 13px; }
+  .charm-wrap { grid-template-columns: 1fr; }
+  .charm-row { margin-bottom: 4px; flex-wrap: nowrap; }
+  .charm-row.on { outline: 3px solid #ff7aa2; }
+  .charm-row.r3 { background: linear-gradient(135deg, #fff6c8, #ffe0f0); }
+  .cr-i { flex: 1; display: flex; flex-direction: column; font-size: 12px; line-height: 1.2; }
+  .cr-i b { font-size: 13px; } .cr-i .chip { align-self: flex-start; font-size: 10px; padding: 0 5px; border-width: 2px; margin-top: 1px; }
+  .cr-b { display: flex; flex-direction: column; gap: 3px; }
+  .charm-sel { display: flex; gap: 8px; align-items: center; font-weight: 800; font-size: 13px; }
+  .charm-sel canvas { width: 104px; height: 104px; }
+  .charm-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(76px, 1fr)); gap: 5px; }
+  .charm-pet { display: flex; flex-direction: column; align-items: center; padding: 2px; background: #fff8e6; color: var(--ink); text-shadow: none; border-radius: 12px; font-size: 11px; font-weight: 900; }
+  .charm-pet.on { background: #ffe680; outline: 3px solid #ff7aa2; }
+  .charm-pet canvas { width: 52px; height: 52px; }
+  .charm-pet span { max-width: 100%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .rename-panel { text-align: center; max-width: 360px; }
+  .rn-art canvas { width: 96px; height: 96px; }
+  .rn-def { font-weight: 900; margin-bottom: 6px; }
+  #rename-input { width: 90%; font-size: 18px; font-weight: 800; padding: 6px 10px; border: 3px solid var(--ol); border-radius: 12px; text-align: center; font-family: inherit; }
+  #rename-modal { z-index: 60; }
+  @media (max-width: 560px) {
+    #home-body.fit { overflow-y: auto; display: block; }
+    .evo-wrap { grid-template-columns: 1fr; display: block; }
+    .evo-side { display: flex; overflow-x: auto; overflow-y: hidden; gap: 4px; padding-bottom: 4px; }
+    .evo-side .sec-title { display: none; }
+    .evo-sp { flex: 0 0 auto; width: auto; margin: 0; }
+    .er-slot canvas { width: 78px; height: 78px; } .er-copy canvas { width: 50px; height: 50px; }
+    .charm-wrap { display: block; }
+    .evo-side, .evo-pane, .charm-shop, .charm-pets { overflow: visible; }
+  }
+  html.land .charm-wrap { grid-template-columns: minmax(300px, 1fr) 1.2fr; }
+  html.land .evo-wrap { grid-template-columns: 170px 1fr; }
+  html.land .grid3 { grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); }
+  html.land .egg-grid { grid-template-columns: repeat(auto-fill, minmax(110px, 1fr)); }
+  html.land .chain { grid-template-columns: repeat(5, 1fr); }
+  .chain { grid-template-columns: repeat(5, 1fr); }
+  .chain .st canvas { width: 100%; height: auto; }
+  @media (min-width: 900px) and (orientation: landscape) {
+    html.land .evo-pane { display: grid; grid-template-columns: minmax(380px, 1.15fr) 1fr; grid-template-rows: auto 1fr; gap: 0 8px; align-content: start; }
+    html.land .evo-pane > .evo-head { grid-row: 1 / span 2; overflow-y: auto; }
+    html.land .evo-pane > .sec-title { grid-column: 2; }
+    html.land .evo-pane > .evo-copies { grid-column: 2; overflow-y: auto; min-height: 0; align-content: start; }
+    html.land .evo-pane { overflow: hidden; }
+  }
+
+  /* v12 desktop landscape: no page scroll, columns scroll inside */
+  .split { display: block; }
+  @media (max-width: 560px) { #home-body.fit[data-tab="play"], #home-body.fit[data-tab="train"] { display: block; overflow-y: auto; } }
+  #home-body.fit[data-tab="play"], #home-body.fit[data-tab="train"] { overflow-y: auto; display: block; }
+  html.land #home .panel { max-width: 1240px; display: grid; grid-template-columns: 1fr auto; grid-template-rows: auto auto minmax(0, 1fr); column-gap: 10px; }
+  html.land #home .topbar { grid-column: 1; grid-row: 1; margin-bottom: 4px; }
+  html.land #home .audio-bar { grid-column: 2; grid-row: 1; margin: 0 0 4px; align-self: center; }
+  html.land #home .tabs { grid-column: 1 / span 2; grid-row: 2; margin-bottom: 6px; }
+  html.land #home-body { grid-column: 1 / span 2; grid-row: 3; min-height: 0; }
+  html.land #home-body.fit[data-tab="play"], html.land #home-body.fit[data-tab="train"] { display: flex; flex-direction: column; overflow: hidden; }
+  html.land .split { flex: 1; min-height: 0; display: grid; grid-template-columns: 1.05fr 1fr; gap: 10px; }
+  html.land .sp-l, html.land .sp-r { min-height: 0; overflow-y: auto; overflow-x: hidden; padding: 2px; }
+  html.land [data-tab="play"] .sp-l { display: flex; flex-direction: column; justify-content: center; }
+  html.land [data-tab="play"] .play-hero { flex-direction: column; }
+  html.land [data-tab="play"] .play-hero canvas { width: 100%; max-height: 52vh; object-fit: cover; }
+  html.land [data-tab="play"] .sp-r { display: flex; flex-direction: column; justify-content: center; }
+  html.land [data-tab="play"] .zone-row { grid-template-columns: repeat(4, 1fr); }
+  html.land [data-tab="play"] .zone canvas { width: 100%; height: auto; max-height: 30vh; object-fit: cover; }
+  html.land [data-tab="train"] .split { grid-template-columns: minmax(420px, 1fr) 1fr; }
+  html.land [data-tab="train"] .grid3 { grid-template-columns: repeat(auto-fill, minmax(128px, 1fr)); }
+  html.land [data-tab="book"] .grid3, html.land #detail .grid3 { grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); }
 </style>
 </head>
 <body>
@@ -650,6 +761,7 @@
         <button type="button" data-tab="hatch" data-i18n="tab_hatch">孵蛋</button>
         <button type="button" data-tab="evo" data-i18n="tab_evo">进化</button>
         <button type="button" data-tab="train" data-i18n="tab_train">培养</button>
+        <button type="button" data-tab="charm" data-i18n="tab_charm">挂件</button>
       </div>
       <div id="home-body"></div>
     </div>
@@ -750,7 +862,7 @@ const LANES = 5;
 const LANE_X = [106, 188, 270, 352, 434];
 const FRONT_Y = 592, BACK_Y = 672;
 const FIELD_TOP = 112, FENCE_Y = 700, LEAK_Y = 716, DOCK_Y = 724;
-const EGG_COST = 60;
+const EGG_COST = 80;
 const MAX_STAR = 5;
 const SLOTS = 10;
 const TAU = Math.PI * 2;
@@ -813,7 +925,24 @@ const PETS = [
   { id:"mango", el:"光", role:"dps", rar:4, names:["芒仔狮","芒鬃狮","金芒狮","耀阳芒狮王"],
     desc:"芒果光束一击把史莱姆打晕，最强单体之一。", hp:280, dmg:80, rate:1.05, range:390, typ:"stun", stun:0.6,
     pal:{ fur:"#ffb42e", mane:"#ff7a1a", face:"#ffe7a0", leaf:"#4fbf5a", sun:"#ffe14a" },
-    spal:{ fur:"#a8e05a", mane:"#3faa5a", face:"#efffc8", leaf:"#ff8a3a", sun:"#ffc0e0" } }
+    spal:{ fur:"#a8e05a", mane:"#3faa5a", face:"#efffc8", leaf:"#ff8a3a", sun:"#ffc0e0" } },
+  /* ---- v12 (GB-8) new species ---- */
+  { id:"kiwi", el:"土", role:"sup", rar:1, names:["奇奇鸟","奇异啾","金果鸟","黄金奇异鸟王"],
+    desc:"", hp:120, dmg:11, rate:0.85, range:300, typ:"coinpeck", gold:2 },
+  { id:"grape", el:"草", role:"aoe", rar:2, names:["葡葡蜗","紫葡蜗","毒葡蜗","葡萄藤蜗王"],
+    desc:"", hp:150, dmg:9, rate:1.3, range:320, typ:"poison", splash:60, poison:7 },
+  { id:"banana", el:"雷", role:"dps", rar:2, names:["蕉蕉犬","香蕉犬","雷蕉犬","霹雳蕉王犬"],
+    desc:"", hp:150, dmg:15, rate:1.0, range:330, typ:"boomerang" },
+  { id:"chomp", el:"水", role:"tank", rar:2, stages:5, names:["西瓜蛙仔","背包瓜蛙","铠甲瓜蛙","金冠瓜蛙","瓜堡大嘴蛙王"],
+    desc:"", hp:560, dmg:30, rate:1.6, range:235, typ:"chomp", splash:70 },
+  { id:"durian", el:"土", role:"tank", rar:3, stages:5, names:["榴榴犀","皮带榴犀","刺甲榴犀","金冠榴犀","榴莲盾堡犀王"],
+    desc:"", hp:620, dmg:26, rate:2.0, range:150, typ:"spikequake", splash:95, knock:30, thorns:0.25 },
+  { id:"snowpear", el:"水", role:"sup", rar:3, names:["雪梨狐","冰梨狐","霜梨狐","冰晶梨狐王"],
+    desc:"", hp:150, dmg:14, rate:0.9, range:340, typ:"frost", chill:3, freeze:1.0 },
+  { id:"hen", el:"光", role:"tank", rar:3, stages:5, names:["草窝鸡宝","盾徽巢鸡","堡垒巢鸡","金冠翼盾鸡","圣光城堡母鸡"],
+    desc:"", hp:420, dmg:12, rate:4.2, range:260, typ:"layegg" },
+  { id:"pumpkin", el:"火", role:"dps", rar:4, names:["南瓜蝠","灯笼蝠","南瓜夜蝠","南瓜灯蝠王"],
+    desc:"", hp:240, dmg:46, rate:1.1, range:380, typ:"hex", hex:0.25 }
 ];
 
 /* Every pet has its OWN attack (typ is unique per pet). sk = skill name, skd = what it does, up = stage 3/4 upgrade. fx = [normal, shiny] effect colour */
@@ -829,7 +958,15 @@ const SKILL = {
   peach:    { typ:"peachlob", sk:"仙桃弹弹", skd:"扔出会弹跳的仙桃；桃光让附近伙伴攻速变快。", up:"3 阶起仙桃多弹一次", buff:0, haste:0.25, aura:220, fx:["#ffaa9a","#ffd25a"] },
   blueberry:{ typ:"snipe", sk:"穿云羽箭", skd:"超远射出羽毛箭，穿透一整排敌人，还可能暴击。", up:"3 阶起一次射两支", fx:["#7a9aff","#c89aff"] },
   pitaya:   { typ:"meteor", sk:"火龙流星", skd:"召唤火龙果流星砸下，炸开后留下一圈火持续灼烧。", up:"4 阶一次砸两颗", fx:["#ff4f9a","#ffd23a"] },
-  mango:    { typ:"roar", sk:"芒光狮吼", skd:"光爪一抓，把敌人打晕。", up:"3 阶起狮吼会震晕目标周围的敌人", fx:["#ffd23a","#ffc0e0"] }
+  mango:    { typ:"roar", sk:"芒光狮吼", skd:"光爪一抓，把敌人打晕。", up:"3 阶起狮吼会震晕目标周围的敌人", fx:["#ffd23a","#ffc0e0"] },
+  kiwi:     { typ:"coinpeck", sk:"金果啄啄", skd:"啄一下史莱姆并留下金果印记，被标记的史莱姆倒下时多掉金币。", up:"3 阶起一次啄两只，4 阶起额外金币翻倍", fx:["#8fd04a","#4ac8c0"] },
+  grape:    { typ:"poison", sk:"葡萄毒雾", skd:"抛出一颗葡萄，炸开变成毒雾水洼，站在里面的史莱姆会中毒，毒最多叠 5 层。", up:"3 阶起毒雾更大更久，4 阶毒雾还会让史莱姆变慢", fx:["#a05ae0","#8fd04a"] },
+  banana:   { typ:"boomerang", sk:"香蕉回旋镖", skd:"扔出香蕉回旋镖，飞出去再飞回来，路上的史莱姆会被打两次。", up:"3 阶起一次扔两只，4 阶回旋镖更大飞得更远", fx:["#ffe14a","#ff6aa8"] },
+  chomp:    { typ:"chomp", sk:"大嘴吞吞", skd:"一口咬住面前的史莱姆，血少的直接吞掉，再吐出一圈冲击波震伤周围。", up:"3 阶起吞噬线更高，4 阶冲击波更大并把史莱姆震退", fx:["#5cbf5a","#8a5ae0"] },
+  durian:   { typ:"spikequake", sk:"榴刺震荡", skd:"举起刺壳重重一砸，以自己为中心炸出一圈尖刺冲击波，把周围史莱姆震退、大幅减速；被咬还会反扎。", up:"3 阶起冲击波更大还会震晕，4 阶尖刺爆发额外伤害", fx:["#c8b43a","#e05ac0"] },
+  snowpear: { typ:"frost", sk:"冰梨霜息", skd:"吹出一口霜气，让史莱姆变冷；冷三次就会被冻成冰块，冻住时受到的伤害更高。", up:"3 阶起冻得更久，4 阶冰块碎裂时溅射伤害", fx:["#9ad8ff","#ffb0d0"] },
+  hen:      { typ:"layegg", sk:"橘巢下蛋", skd:"在本路下一颗橘子蛋，很快孵出戴头盔的冲锋小鸡，沿路冲上去撞史莱姆并挡住它们。", up:"星级越高下蛋越快、小鸡越壮；4 星一次孵两只，5 星孵出巨无霸小鸡", fx:["#ffb02e","#4a7aff"] },
+  pumpkin:  { typ:"hex", sk:"南瓜咒印", skd:"射出发光的南瓜籽给史莱姆打上咒印，被咒的史莱姆受到所有伙伴的伤害提高 25%。", up:"3 阶起咒印会传给附近 1 只，4 阶被咒的史莱姆倒下时会爆炸", fx:["#ff9a2e","#b07aff"] }
 };
 for (const p of PETS) { Object.assign(p, SKILL[p.id]); p.desc = p.skd; }
 const PET = Object.fromEntries(PETS.map(p => [p.id, p]));
@@ -847,6 +984,9 @@ const ENEMY = {
   boss1:  { name:"果冻史莱姆王", col:"#ff7ab8", el:"水", hp:950,  spd:16, atk:40, reward:60,  size:150, img:"b-1", boss:true },
   boss2:  { name:"岩甲史莱姆王", col:"#8faa8f",   el:"土", hp:1800, spd:15, atk:60, reward:90,  size:156, img:"b-2", boss:true },
   boss3:  { name:"熔岩史莱姆王", col:"#e03a2a", el:"火", hp:3000, spd:16, atk:70, reward:130, size:156, img:"b-3", boss:true },
+  split:  { name:"分裂史莱姆", col:"#4ac8a0", el:"草", hp:95,  spd:27, atk:12, reward:4,  size:92,  img:"mob-split-big", split:"splitling" },
+  splitling: { name:"分裂小史莱姆", col:"#6ad8c0", el:"草", hp:32, spd:40, atk:6, reward:2, size:58, img:"mob-split-small" },
+  thief:  { name:"偷蛋史莱姆", col:"#5a3a8a", el:"雷", hp:42,  spd:74, atk:6,  reward:12, size:86,  img:"mob-thief", thief:true },
   bossX:  { name:"混沌史莱姆王", col:"#8a4ad0", el:"光", hp:1400, spd:17, atk:50, reward:80,  size:150, img:"b-4", boss:true }
 };
 
@@ -864,7 +1004,7 @@ function endlessSpec(n) {
   const hpMul = Math.pow(1.11, n - 1) * (1 + 0.015 * (n - 1));
   const spdMul = 1 + 0.25 * Math.log(1 + (n - 1) / 4);
   const count = 6 + Math.floor((n - 1) * 1.15);
-  const pool = ["sprout","jelly","ember","zap","pebble","puff"];
+  const pool = ["sprout","jelly","ember","zap","pebble","puff","split","thief"];
   const unlocked = Math.min(pool.length, 2 + Math.floor(n / 2));
   const list = [];
   let seed = n * 9301 + 49297;
@@ -885,16 +1025,17 @@ function lootLabel(lv) {
   const i = Math.min(LOOT_NAME.length - 1, lv - 1);
   return LOOT_NAME[i] + (lv > LOOT_NAME.length ? "+" + (lv - LOOT_NAME.length) : "");
 }
-function eggWeights(lv) {
+function eggWeights(lv) {     // v12: good eggs are genuinely rarer, and ramp slower
   const k = lv - 1;
-  return [0, Math.max(3, 72 - 9 * k), Math.min(44, 24 + 3 * k), 4 + 4.5 * k, Math.max(0, 3 * (k - 1) + 0.5)];
+  return [0, Math.max(10, 82 - 6 * k), Math.min(40, 16 + 2.5 * k), 1.5 + 1.8 * k, Math.max(0, 1.1 * (k - 1) + 0.2)];
 }
 function dropChance(level, wave) {
   const lv = lootLevel(level, wave);
-  if (level.endless) return Math.min(0.45, 0.07 + 0.012 * (lv - 1) + 0.003 * wave);
+  if (level.endless) return Math.min(0.32, 0.06 + 0.009 * (lv - 1) + 0.0022 * wave);
   return 0.05 + 0.01 * lv;
 }
-function shinyChance(lv) { return Math.min(0.3, 0.03 + 0.013 * (lv - 1)); }
+const SHINY_BASE = 0.012, SHINY_CAP = 0.05;   // v12: ~1.2% base, never above 5% (bosses ×1.5)
+function shinyChance(lv) { return Math.min(SHINY_CAP, SHINY_BASE + 0.0025 * (lv - 1)); }
 function rollEggQ(lv, minQ) {
   const w = eggWeights(lv);
   let tot = 0; for (let q = 1; q <= 4; q++) if (q >= (minQ || 1)) tot += w[q];
@@ -902,10 +1043,41 @@ function rollEggQ(lv, minQ) {
   for (let q = 1; q <= 4; q++) { if (q < (minQ || 1)) continue; r -= w[q]; if (r <= 0) return q; }
   return 4;
 }
-const HATCH_W = { 1:[0,85,15,0,0], 2:[0,40,48,11,1], 3:[0,0,45,45,10], 4:[0,0,0,55,45] };
+const HATCH_W = { 1:[0,90,10,0,0], 2:[0,52,40,7.5,0.5], 3:[0,12,52,31,5], 4:[0,0,25,57,18] };
 
-function stageOf(star) { return Math.min(4, Math.max(1, star | 0)); }
-function stageName(id, star) { return PET[id].names[stageOf(star) - 1]; }
+function stageOf(star) { return Math.min(4, Math.max(1, star | 0)); }           // skill stage (1..4); 5★ keeps the 4-stage skill + 5★ bonuses
+function spriteStage(id, star) { return Math.min((PET[id] && PET[id].stages) || 4, Math.max(1, star | 0)); }
+function stageName(id, star) { const n = PET[id].names; return n[Math.min(n.length, Math.max(1, star | 0)) - 1]; }
+/* ---- v12 evolution: main pet + duplicate feed counter (5 / 10 / 50 / 100 copies) ---- */
+const EVO_REQ = [0, 5, 10, 50, 100];                 // EVO_REQ[s] = copies needed for s★ -> (s+1)★
+const STAR_MUL = [0, 1, 1.4, 1.95, 2.7, 3.7];        // stat multiplier per star (steeper, since stars are much harder now)
+function evoRequired(star) { return star >= MAX_STAR ? 0 : EVO_REQ[star]; }
+function copyValue(p) {   // how many 1★ copies a duplicate is worth when fed (a 2★ dupe = itself + the 5 it ate)
+  let v = 1; for (let s = 1; s < (p.star || 1); s++) v += EVO_REQ[s]; return v + (p.evo | 0);
+}
+
+/* ================= v12 charms (挂件): one per pet, real art-team sprites in the mobs atlas ================= */
+const CHARMS = [
+  { id:"bell",   rar:1, cost:45,  eff:{ spd:0.12 } },
+  { id:"shield", rar:1, cost:45,  eff:{ hp:0.35 } },
+  { id:"bolt",   rar:1, cost:50,  eff:{ range:0.15 } },
+  { id:"ribbon", rar:2, cost:80,  eff:{ slow:0.25 } },
+  { id:"scarf",  rar:2, cost:90,  eff:{ atk:0.15, burn:0.25 } },
+  { id:"shades", rar:2, cost:90,  eff:{ crit:0.15 } },
+  { id:"bow",    rar:2, cost:80,  eff:{ atk:0.08, hp:0.08, regen:0.015 } },
+  { id:"wings",  rar:3, cost:140, eff:{ splash:0.3 } },
+  { id:"clover", rar:3, cost:150, eff:{ gold:0.15 } },
+  { id:"crown",  rar:3, cost:160, eff:{ boss:0.35 } }
+];
+const CHARM = Object.fromEntries(CHARMS.map(c => [c.id, c]));
+function charmEff(p) { const c = p && p.charm && CHARM[p.charm]; return c ? c.eff : {}; }
+function rollCharm() { const w = CHARMS.map(c => c.rar === 1 ? 6 : c.rar === 2 ? 3 : 1); let r = Math.random() * w.reduce((a, b) => a + b, 0); for (let i = 0; i < CHARMS.length; i++) { r -= w[i]; if (r <= 0) return CHARMS[i].id; } return CHARMS[0].id; }
+const NICK_MAX = 12;
+function sanitizeNick(s) {
+  s = String(s == null ? "" : s).normalize("NFC").replace(/[\u0000-\u001f\u007f-\u009f<>&"'`\\]/g, "").replace(/\s+/g, " ").trim();
+  return Array.from(s).slice(0, NICK_MAX).join("");
+}
+function esc(s) { return String(s).replace(/[&<>"']/g, c => ({ "&":"&amp;", "<":"&lt;", ">":"&gt;", '"':"&quot;", "'":"&#39;" }[c])); }
 
 /* ================= i18n (中文 / English) ================= */
 const LANG_KEY = "mengchong-td-lang";
@@ -944,7 +1116,7 @@ const STR = {
     best_wave:"最高 第 {0} 波", pets_n:"萌宠 {0} 只", eggs_n:"蛋 {0} 颗", start_adv:"开始冒险！", hatch_first:"先去孵一只萌宠吧",
     route:"冒险路线（每 10 波换一张地图）", wave_plus:"第 {0}+ 波", shiny_tag:"✦ 异色", not_met:"还没遇到",
     collected:"已收集 {0}/{1} · 异色 {2}/{3} · 点卡片看进化路线", family:"{0} 家族", shiny_sec:"✦ 异色 ", not_hatched:"（还没孵到过）", normal_sec:"原色",
-    egg_info:"打史莱姆会掉蛋，越往后掉的蛋越好。也可以用宝石买一颗普通蛋（{0} 宝石，有 15% 几率变成稀有蛋）。", buy_egg:"买蛋 {0}",
+    egg_info:"打史莱姆会掉蛋，越往后掉的蛋越好。也可以用宝石买一颗普通蛋（{0} 宝石，有 10% 几率变成稀有蛋）。", buy_egg:"买蛋 {0}",
     my_eggs:"我的蛋（{0}）· 点一颗开始孵化", no_eggs:"还没有蛋。去无尽冒险里打史莱姆吧！", shiny_rate:"异色率 {0}%",
     evo_info:"两只<b>同名同星</b>的萌宠合在一起就会进化：每升一星都会变样，4 星是最终形态，5 星满级。合成时只要有一只是异色，进化后就是异色！",
     evo_none:"现在还没有可以进化的萌宠。多孵几颗蛋，凑齐两只一样的吧！", evolve_btn:"进化", my_pets:"我的萌宠（{0}）",
@@ -964,7 +1136,24 @@ const STR = {
     save_code:"存档码", save_export:"导出存档", save_import:"导入存档", save_copy:"复制", save_copied:"已复制！",
     save_hint:"把这段存档码复制到另一台手机或电脑上，再粘贴导入，就能接着玩。不用注册账号。",
     save_paste:"把存档码粘贴到这里", save_go:"导入", save_overwrite:"导入会覆盖这台设备上的当前进度，确定吗？",
-    save_yes:"覆盖并导入", save_no:"取消", save_ok:"存档已导入！", save_bad:"存档码无效或已损坏", save_empty:"还没有可以导出的存档"
+    save_yes:"覆盖并导入", save_no:"取消", save_ok:"存档已导入！", save_bad:"存档码无效或已损坏", save_empty:"还没有可以导出的存档",
+    help_4:"进化：给每种萌宠选一只主宠，把同种复制体喂给它攒进度。1→2★ 要 5 只，2→3★ 要 10 只，3→4★ 要 50 只，4→5★ 要 100 只，每升一星外观都会大变样！",
+    evo_info:"选一只<b>主宠</b>，把同种的复制体喂给它攒进度，攒满自动升星。主宠的资质、异色、培养、挂件和昵称都会保留；喂进来的是异色，主宠也会变异色！",
+    evo_rules:"1→2★ 要 5 只 · 2→3★ 要 10 只 · 3→4★ 要 50 只 · 4→5★ 要 100 只",
+    evo_none:"还没有萌宠，先去孵蛋吧！", evolve_btn:"进化",
+    evo_main:"主宠", evo_copies:"复制体", evo_next:"下一形态", evo_progress:"进度 {0}/{1}", evo_feed_one:"喂 1 只", evo_onekey:"一键进化", evo_onekey_n:"一键喂养/进化（{0}）",
+    evo_set_main:"设为主宠", evo_protected:"受保护", evo_avail:"可喂 {0} 只", evo_maxed:"满星啦！最终传说形态", evo_stats:"星级加成 ×{0} → ×{1}",
+    evo_fed:"喂了 {0} 只，进度 +{1}", evo_nothing:"没有可以一键喂的复制体", evo_species:"选择萌宠", evo_look:"外观变化", evo_feed_this:"喂掉",
+    evo_protect_note:"一键喂养会跳过：异色、改过名、戴着挂件、资质比主宠高的 S 级以上复制体（可以手动喂）。", evo_dupes:"同种复制体（{0}）", evo_value:"价值 {0}",
+    tab_charm:"挂件", charm_info:"每只萌宠可以戴 1 个挂件，战场上也看得见！打首领有机会掉挂件，也可以用宝石购买。",
+    charm_owned:"拥有 {0}", charm_buy:"买 {0}", charm_equip:"戴上", charm_unequip:"摘下", charm_none:"还没戴挂件", charm_drop:"掉落挂件：{0}！",
+    charm_got:"获得 {0}！", charm_equipped:"{0} 戴上了 {1}", charm_pick:"选一只萌宠", charm_on:"挂件：{0}", sum_charms:"获得挂件：<b>{0}</b> 个", charm_bag:"我的挂件",
+    charm_bell:"幸运铃铛", charm_bell_d:"攻速 +12%", charm_shield:"果园护盾", charm_shield_d:"生命 +35%", charm_bolt:"雷电徽章", charm_bolt_d:"射程 +15%",
+    charm_ribbon:"冰霜丝带", charm_ribbon_d:"命中减速 25%", charm_scarf:"火焰围巾", charm_scarf_d:"攻击 +15% · 命中灼烧", charm_shades:"星星墨镜", charm_shades_d:"暴击率 +15%（×2 伤害）",
+    charm_bow:"爱心蝴蝶结", charm_bow_d:"攻击/生命 +8% · 持续回血", charm_wings:"小天使翼", charm_wings_d:"溅射范围 +30%",
+    charm_clover:"金四叶草", charm_clover_d:"全队金币 +15%", charm_crown:"迷你王冠", charm_crown_d:"对首领伤害 +35%",
+    rename:"取名", rename_title:"给萌宠取名", rename_hint:"最多 12 个字，留空就用默认名字。", rename_save:"保存", rename_reset:"恢复默认", rename_cancel:"取消",
+    rename_ok:"改好啦：{0}", rename_ph:"输入昵称", nick_tag:"昵称", evo_legend:"传说光环形态（大翅膀 + 皇冠光芒）"
   },
   en: {
     game_title:"Pet Pals Defense", short_title:"Pet Pals", doc_title:"Pet Pals Defense — Catch · Hatch · Evolve", tagline:"Catch pets · Hatch & evolve · Battle endless slimes",
@@ -999,7 +1188,7 @@ const STR = {
     best_wave:"Best: Wave {0}", pets_n:"Pets: {0}", eggs_n:"Eggs: {0}", start_adv:"Start Adventure!", hatch_first:"Hatch a pet first!",
     route:"Adventure route (new map every 10 waves)", wave_plus:"Wave {0}+", shiny_tag:"✦ Shiny", not_met:"Not found yet",
     collected:"Collected {0}/{1} · Shiny {2}/{3} · Tap a card to see its evolutions", family:"{0} Family", shiny_sec:"✦ Shiny ", not_hatched:"(not hatched yet)", normal_sec:"Normal",
-    egg_info:"Slimes drop eggs, and later waves drop better ones. You can also buy a Common Egg for {0} gems (15% chance it's Rare).", buy_egg:"Buy Egg {0}",
+    egg_info:"Slimes drop eggs, and later waves drop better ones. You can also buy a Common Egg for {0} gems (10% chance it's Rare).", buy_egg:"Buy Egg {0}",
     my_eggs:"My Eggs ({0}) · tap one to hatch", no_eggs:"No eggs yet. Go beat some slimes in Endless Adventure!", shiny_rate:"Shiny {0}%",
     evo_info:"Merge two pets with the <b>same name and stars</b> to evolve! They change looks at every star up to 4★ (final form); 5★ is the max. If either one is shiny, the result is shiny!",
     evo_none:"No pets can evolve yet. Hatch more eggs to get two of the same!", evolve_btn:"Evolve", my_pets:"My Pets ({0})",
@@ -1019,7 +1208,24 @@ const STR = {
     save_code:"Save Code", save_export:"Export save", save_import:"Import save", save_copy:"Copy", save_copied:"Copied!",
     save_hint:"Copy this code, open the game on another phone or computer, and paste it to continue. No account needed.",
     save_paste:"Paste a save code here", save_go:"Import", save_overwrite:"Importing will replace the progress on this device. Continue?",
-    save_yes:"Replace and import", save_no:"Cancel", save_ok:"Save imported!", save_bad:"That save code is invalid or damaged", save_empty:"There's no save to export yet"
+    save_yes:"Replace and import", save_no:"Cancel", save_ok:"Save imported!", save_bad:"That save code is invalid or damaged", save_empty:"There's no save to export yet",
+    help_4:"Evolving: pick a main pet for each kind and feed it duplicate copies to fill its progress. 1→2★ needs 5, 2→3★ needs 10, 3→4★ needs 50, 4→5★ needs 100 — and every star changes its look a lot!",
+    evo_info:"Pick a <b>main pet</b> and feed it duplicates of the same kind. When the bar fills it evolves automatically. It keeps its aptitude, shiny, training, charm and nickname — feed it a shiny and it turns shiny too!",
+    evo_rules:"1→2★ ×5 · 2→3★ ×10 · 3→4★ ×50 · 4→5★ ×100",
+    evo_none:"No pets yet — go hatch some eggs!", evolve_btn:"Evolve",
+    evo_main:"Main", evo_copies:"Copies", evo_next:"Next form", evo_progress:"Progress {0}/{1}", evo_feed_one:"Feed 1", evo_onekey:"One-Click Evolve", evo_onekey_n:"One-Click Feed ({0})",
+    evo_set_main:"Make main", evo_protected:"Protected", evo_avail:"{0} ready to feed", evo_maxed:"Max stars! Ultimate legendary form", evo_stats:"Star bonus ×{0} → ×{1}",
+    evo_fed:"Fed {0} copies, progress +{1}", evo_nothing:"No copies to feed right now", evo_species:"Pick a pet", evo_look:"Look change", evo_feed_this:"Feed",
+    evo_protect_note:"One-click skips shiny, nicknamed, charm-wearing, and S-grade+ copies with higher aptitude than the main (you can still feed them by hand).", evo_dupes:"Copies ({0})", evo_value:"Worth {0}",
+    tab_charm:"Charms", charm_info:"Each pet can wear 1 charm — you can even see it in battle! Bosses may drop charms, or buy them with gems.",
+    charm_owned:"Owned {0}", charm_buy:"Buy {0}", charm_equip:"Equip", charm_unequip:"Remove", charm_none:"No charm yet", charm_drop:"Charm drop: {0}!",
+    charm_got:"Got {0}!", charm_equipped:"{0} is wearing {1}", charm_pick:"Pick a pet", charm_on:"Charm: {0}", sum_charms:"Charms found: <b>{0}</b>", charm_bag:"My Charms",
+    charm_bell:"Lucky Bell", charm_bell_d:"Atk speed +12%", charm_shield:"Orchard Shield", charm_shield_d:"HP +35%", charm_bolt:"Thunder Badge", charm_bolt_d:"Range +15%",
+    charm_ribbon:"Frost Ribbon", charm_ribbon_d:"Hits slow 25%", charm_scarf:"Flame Scarf", charm_scarf_d:"Atk +15% · hits burn", charm_shades:"Star Shades", charm_shades_d:"Crit +15% (×2 dmg)",
+    charm_bow:"Heart Bow", charm_bow_d:"Atk/HP +8% · regen", charm_wings:"Angel Wings", charm_wings_d:"Splash +30%",
+    charm_clover:"Gold Clover", charm_clover_d:"Team gold +15%", charm_crown:"Mini Crown", charm_crown_d:"Boss damage +35%",
+    rename:"Rename", rename_title:"Name Your Pet", rename_hint:"Up to 12 characters. Leave empty to use the default name.", rename_save:"Save", rename_reset:"Reset", rename_cancel:"Cancel",
+    rename_ok:"Renamed: {0}", rename_ph:"Type a nickname", nick_tag:"Nickname", evo_legend:"Legendary aura form (big wings + crown rays)"
   }
 };
 function tr(key, ...a) { const s = (STR[LANG] && STR[LANG][key]) ?? STR.zh[key] ?? key; return s.replace(/\{(\d)\}/g, (_, i) => a[+i]); }
@@ -1035,6 +1241,7 @@ const EN = {
   zones: ["Orchard", "Beach", "Volcano", "Dreamland"],
   endless: "Endless Adventure",
   enemy: { sprout:"Sprout Slime", jelly:"Jelly Slime", ember:"Flame Slime", zap:"Battery Slime", pebble:"Rock Slime", puff:"Balloon Slime",
+    split:"Split Slime", splitling:"Mini Split Slime", thief:"Egg Thief Slime",
     boss1:"Jelly Slime King", boss2:"Stone Slime King", boss3:"Lava Slime King", bossX:"Chaos Slime King" },
   pets: {
     chili:    { names:["Chili Mouse","Pepper Mouse","Blaze Pepper Mouse","Inferno Pepper King"], sk:"Chili Seeds", skd:"Spits a fiery seed at one slime and keeps it burning.", up:"Stage 3+: two seeds at once, longer burn" },
@@ -1048,6 +1255,14 @@ const EN = {
     peach:    { names:["Peach Monkey","Fairy Peach Monkey","Peachglow Monkey","Holy Peach Monkey"], sk:"Bouncy Peach", skd:"Throws a bouncing peach. Its peachy glow makes nearby friends attack faster.", up:"Stage 3+: one extra bounce" },
     blueberry:{ names:["Berry Owl","Blueberry Owl","Star Berry Owl","Thunder Night Owl"], sk:"Sky Feather", skd:"Shoots a long-range feather that pierces a whole row and can land critical hits.", up:"Stage 3+: two feathers at once" },
     pitaya:   { names:["Dragonfruit Pup","Dragonfruit Drake","Ruby Scale Drake","Blaze Emperor Drake"], sk:"Dragonfruit Meteor", skd:"Calls down a dragonfruit meteor that explodes and leaves a ring of fire.", up:"Stage 4: two meteors at once" },
+    kiwi:     { names:["Kiwi Chick","Kiwi Peeper","Gold Kiwi Bird","Golden Kiwi King"], sk:"Lucky Peck", skd:"Pecks a slime and leaves a golden mark. Marked slimes drop extra gold when beaten.", up:"Stage 3+: pecks two slimes. Stage 4: bonus gold doubled" },
+    grape:    { names:["Grape Snail","Purple Grape Snail","Venom Grape Snail","Vine King Snail"], sk:"Grape Gas", skd:"Lobs a grape that bursts into a poison puddle. Slimes inside get poisoned, stacking up to 5 times.", up:"Stage 3+: bigger, longer puddles. Stage 4: puddles also slow slimes" },
+    banana:   { names:["Banana Pup","Banana Hound","Thunder Banana Hound","Storm Banana King"], sk:"Banana Boomerang", skd:"Throws a banana boomerang that flies out and back, hitting slimes on the way twice.", up:"Stage 3+: two boomerangs. Stage 4: bigger, longer flights" },
+    chomp:    { names:["Melon Froglet","Backpack Melon Frog","Armored Melon Frog","Crowned Melon Frog","Melon Fortress Chomper"], sk:"Big Chomp", skd:"Chomps the slime in front of it (weak slimes get gulped whole), then spits out a shockwave.", up:"Stage 3+: gulps tougher slimes. Stage 4: bigger shockwave that knocks back" },
+    durian:   { names:["Durian Rhino","Belted Durian Rhino","Spiked Durian Rhino","Crowned Durian Rhino","Durian Fortress Rhino"], sk:"Spike Quake", skd:"Slams its spiky shell down, blasting a ring of spikes around itself that knocks slimes back and slows them a lot. Biting it hurts!", up:"Stage 3+: bigger quake that stuns. Stage 4: extra spike burst damage" },
+    snowpear: { names:["Snow Pear Fox","Ice Pear Fox","Frost Pear Fox","Crystal Pear Fox King"], sk:"Frost Breath", skd:"Breathes frost that chills slimes. Three chills freeze them solid, and frozen slimes take extra damage.", up:"Stage 3+: longer freeze. Stage 4: the ice shatters for splash damage" },
+    hen:      { names:["Nest Chick","Shield Nest Hen","Fortress Nest Hen","Crowned Wing Hen","Holy Castle Hen"], sk:"Nest Egg", skd:"Lays an orange egg on its lane that soon hatches a helmeted chick, which charges up the lane to ram and block slimes.", up:"Higher stars lay faster with tougher chicks. 4★: two chicks per egg. 5★: a giant chick" },
+    pumpkin:  { names:["Pumpkin Bat","Lantern Bat","Pumpkin Night Bat","Jack-o'-Bat King"], sk:"Pumpkin Hex", skd:"Fires a glowing seed that hexes a slime. Hexed slimes take 25% more damage from everyone.", up:"Stage 3+: the hex spreads to 1 more slime. Stage 4: hexed slimes explode when beaten" },
     mango:    { names:["Mango Cub","Mango Mane Lion","Golden Mango Lion","Sunburst Lion King"], sk:"Mango Roar", skd:"A glowing claw swipe that stuns a slime.", up:"Stage 3+: the roar also stuns slimes nearby" }
   }
 };
@@ -1066,15 +1281,18 @@ function applyLangData(l) {
 /* ================= growth: level, aptitude (innate, fixed at hatch), birth grade, training (food) ================= */
 const MAX_LV = 50;
 function xpNeed(lv) { return 20 + 10 * lv + lv * lv; }
-const GRADES = ["C", "B", "A", "S", "SS"];
+const GRADES = ["C", "B", "A", "S", "SS", "SSS"];
 function tierOf(v) { return v >= 88 ? 4 : v >= 72 ? 3 : v >= 55 ? 2 : v >= 35 ? 1 : 0; }
 function aptTierName(apt) { return tr("apt_tiers").split(",")[tierOf(apt)]; }
-function rollApt(rar, minApt) {
-  const v = 12 + 70 * Math.pow(Math.random(), 1.35) + Math.random() * 18 + 3 * ((rar || 1) - 1);
+function rollApt(rar, minApt) {   // v12: skewed low; 90+ is a real jackpot
+  const v = 10 + 64 * Math.pow(Math.random(), 1.9) + Math.random() * 20 + Math.pow(Math.random(), 6) * 14 + 2 * ((rar || 1) - 1);
   return clampN(Math.round(v), minApt || 1, 100);
 }
 function clampN(v, a, b) { return Math.max(a, Math.min(b, v)); }
-function birthGrade(apt, rar, shiny) { return GRADES[tierOf(apt + 4 * ((rar || 1) - 1) + (shiny ? 5 : 0))]; }
+function birthGrade(apt, rar, shiny) {
+  const v = apt + ((rar || 1) - 1) + (shiny ? 3 : 0);
+  return v >= 100 ? "SSS" : v >= 93 ? "SS" : v >= 84 ? "S" : v >= 64 ? "A" : v >= 42 ? "B" : "C";
+}
 function trainCap(apt) { return 5 + Math.floor(apt / 4); }          // 5 .. 30 points per stat
 function growthPerLv(apt) { return 0.015 + 0.035 * apt / 100; }    // +1.5% .. +5% per level
 function indivMul(p) {
@@ -1103,7 +1321,7 @@ function rollFood(lv) {
 }
 /* auto-generated by tools/pack_atlas.py */
 const ATLAS_SHEETS = {"petsa":"assets/atlas-petsa.webp","petsb":"assets/atlas-petsb.webp","mobs":"assets/atlas-mobs.webp"};
-const ATLAS_MAP = {"pets/chili-1":{"sheet":"petsa","x":2,"y":2,"w":248,"h":256},"pets/chili-1-s":{"sheet":"petsa","x":252,"y":2,"w":248,"h":256},"pets/chili-2":{"sheet":"petsa","x":502,"y":2,"w":251,"h":256},"pets/chili-2-s":{"sheet":"petsa","x":755,"y":2,"w":251,"h":256},"pets/chili-3":{"sheet":"petsa","x":1008,"y":2,"w":252,"h":256},"pets/chili-3-s":{"sheet":"petsa","x":1262,"y":2,"w":252,"h":256},"pets/chili-4":{"sheet":"petsa","x":1516,"y":2,"w":246,"h":256},"pets/chili-4-s":{"sheet":"petsa","x":1764,"y":2,"w":246,"h":256},"pets/chestnut-1":{"sheet":"petsa","x":2,"y":260,"w":255,"h":256},"pets/chestnut-1-s":{"sheet":"petsa","x":259,"y":260,"w":255,"h":256},"pets/chestnut-2":{"sheet":"petsa","x":516,"y":260,"w":245,"h":256},"pets/chestnut-2-s":{"sheet":"petsa","x":763,"y":260,"w":245,"h":256},"pets/chestnut-3":{"sheet":"petsa","x":1010,"y":260,"w":248,"h":256},"pets/chestnut-3-s":{"sheet":"petsa","x":1260,"y":260,"w":248,"h":256},"pets/berry-1":{"sheet":"petsa","x":1510,"y":260,"w":209,"h":256},"pets/berry-1-s":{"sheet":"petsa","x":1721,"y":260,"w":209,"h":256},"pets/berry-2":{"sheet":"petsa","x":2,"y":518,"w":203,"h":256},"pets/berry-2-s":{"sheet":"petsa","x":207,"y":518,"w":203,"h":256},"pets/berry-3":{"sheet":"petsa","x":412,"y":518,"w":232,"h":256},"pets/berry-3-s":{"sheet":"petsa","x":646,"y":518,"w":232,"h":256},"pets/berry-4":{"sheet":"petsa","x":880,"y":518,"w":201,"h":256},"pets/berry-4-s":{"sheet":"petsa","x":1083,"y":518,"w":201,"h":256},"pets/lychee-1":{"sheet":"petsa","x":1286,"y":518,"w":250,"h":256},"pets/lychee-1-s":{"sheet":"petsa","x":1538,"y":518,"w":250,"h":256},"pets/lychee-2":{"sheet":"petsa","x":1790,"y":518,"w":249,"h":256},"pets/lychee-2-s":{"sheet":"petsa","x":2,"y":776,"w":249,"h":256},"pets/lychee-3":{"sheet":"petsa","x":253,"y":776,"w":242,"h":256},"pets/lychee-3-s":{"sheet":"petsa","x":497,"y":776,"w":242,"h":256},"pets/lychee-4":{"sheet":"petsa","x":741,"y":776,"w":239,"h":256},"pets/lychee-4-s":{"sheet":"petsa","x":982,"y":776,"w":239,"h":256},"pets/melon-2":{"sheet":"petsa","x":1223,"y":776,"w":250,"h":256},"pets/melon-2-s":{"sheet":"petsa","x":1475,"y":776,"w":250,"h":256},"pets/lemon-1":{"sheet":"petsa","x":1727,"y":776,"w":223,"h":256},"pets/lemon-1-s":{"sheet":"petsa","x":2,"y":1034,"w":223,"h":256},"pets/lemon-2":{"sheet":"petsa","x":227,"y":1034,"w":220,"h":256},"pets/lemon-2-s":{"sheet":"petsa","x":449,"y":1034,"w":220,"h":256},"pets/lemon-3":{"sheet":"petsa","x":671,"y":1034,"w":216,"h":256},"pets/lemon-3-s":{"sheet":"petsa","x":889,"y":1034,"w":216,"h":256},"pets/lemon-4":{"sheet":"petsa","x":1107,"y":1034,"w":210,"h":256},"pets/lemon-4-s":{"sheet":"petsa","x":1319,"y":1034,"w":210,"h":256},"pets/coco-1":{"sheet":"petsa","x":1531,"y":1034,"w":207,"h":256},"pets/coco-1-s":{"sheet":"petsa","x":1740,"y":1034,"w":207,"h":256},"pets/coco-2":{"sheet":"petsa","x":2,"y":1292,"w":206,"h":256},"pets/coco-2-s":{"sheet":"petsa","x":210,"y":1292,"w":206,"h":256},"pets/coco-3":{"sheet":"petsa","x":418,"y":1292,"w":203,"h":256},"pets/coco-3-s":{"sheet":"petsa","x":623,"y":1292,"w":203,"h":256},"pets/coco-4":{"sheet":"petsa","x":828,"y":1292,"w":211,"h":256},"pets/coco-4-s":{"sheet":"petsa","x":1041,"y":1292,"w":211,"h":256},"pets/taro-1":{"sheet":"petsa","x":1254,"y":1292,"w":228,"h":256},"pets/taro-1-s":{"sheet":"petsa","x":1484,"y":1292,"w":228,"h":256},"pets/taro-2":{"sheet":"petsa","x":1714,"y":1292,"w":228,"h":256},"pets/taro-2-s":{"sheet":"petsa","x":2,"y":1550,"w":228,"h":256},"pets/taro-3":{"sheet":"petsa","x":232,"y":1550,"w":236,"h":256},"pets/taro-3-s":{"sheet":"petsa","x":470,"y":1550,"w":236,"h":256},"pets/taro-4":{"sheet":"petsa","x":708,"y":1550,"w":242,"h":256},"pets/taro-4-s":{"sheet":"petsa","x":952,"y":1550,"w":242,"h":256},"pets/peach-3":{"sheet":"petsa","x":1196,"y":1550,"w":250,"h":256},"pets/peach-3-s":{"sheet":"petsa","x":1448,"y":1550,"w":250,"h":256},"pets/peach-4":{"sheet":"petsa","x":1700,"y":1550,"w":255,"h":256},"pets/pitaya-1":{"sheet":"petsa","x":2,"y":1808,"w":256,"h":232},"pets/pitaya-1-s":{"sheet":"petsa","x":260,"y":1808,"w":256,"h":232},"pets/pitaya-4":{"sheet":"petsa","x":518,"y":1808,"w":256,"h":224},"pets/pitaya-4-s":{"sheet":"petsa","x":776,"y":1808,"w":256,"h":224},"pets/melon-1":{"sheet":"petsa","x":1034,"y":1808,"w":256,"h":211},"pets/melon-1-s":{"sheet":"petsa","x":1292,"y":1808,"w":256,"h":211},"pets/peach-4-s":{"sheet":"petsb","x":2,"y":2,"w":255,"h":256},"pets/blueberry-1":{"sheet":"petsb","x":259,"y":2,"w":252,"h":256},"pets/blueberry-1-s":{"sheet":"petsb","x":513,"y":2,"w":252,"h":256},"pets/blueberry-2":{"sheet":"petsb","x":767,"y":2,"w":241,"h":256},"pets/blueberry-2-s":{"sheet":"petsb","x":1010,"y":2,"w":241,"h":256},"pets/blueberry-3":{"sheet":"petsb","x":1253,"y":2,"w":234,"h":256},"pets/blueberry-3-s":{"sheet":"petsb","x":1489,"y":2,"w":234,"h":256},"pets/blueberry-4":{"sheet":"petsb","x":1725,"y":2,"w":238,"h":256},"pets/blueberry-4-s":{"sheet":"petsb","x":2,"y":260,"w":238,"h":256},"pets/pitaya-2":{"sheet":"petsb","x":242,"y":260,"w":253,"h":256},"pets/pitaya-2-s":{"sheet":"petsb","x":497,"y":260,"w":253,"h":256},"pets/melon-4":{"sheet":"petsb","x":752,"y":260,"w":256,"h":254},"pets/melon-4-s":{"sheet":"petsb","x":1010,"y":260,"w":256,"h":254},"pets/chestnut-4":{"sheet":"petsb","x":1268,"y":260,"w":256,"h":252},"pets/chestnut-4-s":{"sheet":"petsb","x":1526,"y":260,"w":256,"h":252},"pets/mango-1":{"sheet":"petsb","x":1784,"y":260,"w":256,"h":249},"pets/mango-1-s":{"sheet":"petsb","x":2,"y":518,"w":256,"h":249},"pets/mango-3":{"sheet":"petsb","x":260,"y":518,"w":256,"h":247},"pets/mango-3-s":{"sheet":"petsb","x":518,"y":518,"w":256,"h":247},"pets/peach-2":{"sheet":"petsb","x":776,"y":518,"w":256,"h":244},"pets/peach-2-s":{"sheet":"petsb","x":1034,"y":518,"w":256,"h":244},"pets/mango-2":{"sheet":"petsb","x":1292,"y":518,"w":256,"h":244},"pets/mango-2-s":{"sheet":"petsb","x":1550,"y":518,"w":256,"h":244},"pets/mango-4":{"sheet":"petsb","x":2,"y":769,"w":256,"h":244},"pets/mango-4-s":{"sheet":"petsb","x":260,"y":769,"w":256,"h":244},"pets/pitaya-3":{"sheet":"petsb","x":518,"y":769,"w":256,"h":243},"pets/pitaya-3-s":{"sheet":"petsb","x":776,"y":769,"w":256,"h":243},"pets/melon-3":{"sheet":"petsb","x":1034,"y":769,"w":256,"h":240},"pets/melon-3-s":{"sheet":"petsb","x":1292,"y":769,"w":256,"h":240},"pets/peach-1":{"sheet":"petsb","x":1550,"y":769,"w":256,"h":240},"pets/peach-1-s":{"sheet":"petsb","x":2,"y":1015,"w":256,"h":240},"enemies/b-1":{"sheet":"mobs","x":2,"y":2,"w":232,"h":256},"enemies/b-2":{"sheet":"mobs","x":236,"y":2,"w":228,"h":256},"enemies/b-3":{"sheet":"mobs","x":466,"y":2,"w":198,"h":256},"enemies/b-4":{"sheet":"mobs","x":666,"y":2,"w":217,"h":256},"enemies/z-1":{"sheet":"mobs","x":2,"y":260,"w":208,"h":256},"enemies/z-2":{"sheet":"mobs","x":212,"y":260,"w":240,"h":256},"enemies/z-3":{"sheet":"mobs","x":454,"y":260,"w":191,"h":256},"enemies/z-4":{"sheet":"mobs","x":647,"y":260,"w":193,"h":256},"enemies/z-5":{"sheet":"mobs","x":2,"y":518,"w":233,"h":256},"enemies/z-6":{"sheet":"mobs","x":237,"y":518,"w":146,"h":256},"eggs/egg-1":{"sheet":"mobs","x":385,"y":518,"w":221,"h":256},"eggs/egg-2":{"sheet":"mobs","x":608,"y":518,"w":220,"h":256},"eggs/egg-3":{"sheet":"mobs","x":2,"y":776,"w":222,"h":256},"eggs/egg-4":{"sheet":"mobs","x":226,"y":776,"w":199,"h":256}};
+const ATLAS_MAP = {"pets/chili-1":{"sheet":"petsa","x":2,"y":2,"w":217,"h":224},"pets/chili-1-s":{"sheet":"petsa","x":221,"y":2,"w":217,"h":224},"pets/chili-2":{"sheet":"petsa","x":440,"y":2,"w":220,"h":224},"pets/chili-2-s":{"sheet":"petsa","x":662,"y":2,"w":220,"h":224},"pets/chili-3":{"sheet":"petsa","x":884,"y":2,"w":220,"h":224},"pets/chili-3-s":{"sheet":"petsa","x":1106,"y":2,"w":220,"h":224},"pets/chili-4":{"sheet":"petsa","x":1328,"y":2,"w":215,"h":224},"pets/chili-4-s":{"sheet":"petsa","x":1545,"y":2,"w":215,"h":224},"pets/chestnut-1":{"sheet":"petsa","x":1762,"y":2,"w":223,"h":224},"pets/chestnut-1-s":{"sheet":"petsa","x":2,"y":228,"w":223,"h":224},"pets/chestnut-2":{"sheet":"petsa","x":227,"y":228,"w":215,"h":224},"pets/chestnut-2-s":{"sheet":"petsa","x":444,"y":228,"w":215,"h":224},"pets/chestnut-3":{"sheet":"petsa","x":661,"y":228,"w":217,"h":224},"pets/chestnut-3-s":{"sheet":"petsa","x":880,"y":228,"w":217,"h":224},"pets/berry-1":{"sheet":"petsa","x":1099,"y":228,"w":183,"h":224},"pets/berry-1-s":{"sheet":"petsa","x":1284,"y":228,"w":183,"h":224},"pets/berry-2":{"sheet":"petsa","x":1469,"y":228,"w":177,"h":224},"pets/berry-2-s":{"sheet":"petsa","x":1648,"y":228,"w":177,"h":224},"pets/berry-3":{"sheet":"petsa","x":1827,"y":228,"w":203,"h":224},"pets/berry-3-s":{"sheet":"petsa","x":2,"y":454,"w":203,"h":224},"pets/berry-4":{"sheet":"petsa","x":207,"y":454,"w":175,"h":224},"pets/berry-4-s":{"sheet":"petsa","x":384,"y":454,"w":175,"h":224},"pets/lychee-1":{"sheet":"petsa","x":561,"y":454,"w":219,"h":224},"pets/lychee-1-s":{"sheet":"petsa","x":782,"y":454,"w":219,"h":224},"pets/lychee-2":{"sheet":"petsa","x":1003,"y":454,"w":218,"h":224},"pets/lychee-2-s":{"sheet":"petsa","x":1223,"y":454,"w":218,"h":224},"pets/lychee-3":{"sheet":"petsa","x":1443,"y":454,"w":212,"h":224},"pets/lychee-3-s":{"sheet":"petsa","x":1657,"y":454,"w":212,"h":224},"pets/lychee-4":{"sheet":"petsa","x":2,"y":680,"w":209,"h":224},"pets/lychee-4-s":{"sheet":"petsa","x":213,"y":680,"w":209,"h":224},"pets/melon-2":{"sheet":"petsa","x":424,"y":680,"w":218,"h":224},"pets/melon-2-s":{"sheet":"petsa","x":644,"y":680,"w":218,"h":224},"pets/lemon-1":{"sheet":"petsa","x":864,"y":680,"w":195,"h":224},"pets/lemon-1-s":{"sheet":"petsa","x":1061,"y":680,"w":195,"h":224},"pets/lemon-2":{"sheet":"petsa","x":1258,"y":680,"w":192,"h":224},"pets/lemon-2-s":{"sheet":"petsa","x":1452,"y":680,"w":192,"h":224},"pets/lemon-3":{"sheet":"petsa","x":1646,"y":680,"w":189,"h":224},"pets/lemon-3-s":{"sheet":"petsa","x":1837,"y":680,"w":189,"h":224},"pets/lemon-4":{"sheet":"petsa","x":2,"y":906,"w":184,"h":224},"pets/lemon-4-s":{"sheet":"petsa","x":188,"y":906,"w":184,"h":224},"pets/coco-1":{"sheet":"petsa","x":374,"y":906,"w":181,"h":224},"pets/coco-1-s":{"sheet":"petsa","x":557,"y":906,"w":181,"h":224},"pets/coco-2":{"sheet":"petsa","x":740,"y":906,"w":180,"h":224},"pets/coco-2-s":{"sheet":"petsa","x":922,"y":906,"w":180,"h":224},"pets/coco-3":{"sheet":"petsa","x":1104,"y":906,"w":177,"h":224},"pets/coco-3-s":{"sheet":"petsa","x":1283,"y":906,"w":177,"h":224},"pets/coco-4":{"sheet":"petsa","x":1462,"y":906,"w":185,"h":224},"pets/coco-4-s":{"sheet":"petsa","x":1649,"y":906,"w":185,"h":224},"pets/taro-1":{"sheet":"petsa","x":1836,"y":906,"w":199,"h":224},"pets/taro-1-s":{"sheet":"petsa","x":2,"y":1132,"w":199,"h":224},"pets/taro-2":{"sheet":"petsa","x":203,"y":1132,"w":199,"h":224},"pets/taro-2-s":{"sheet":"petsa","x":404,"y":1132,"w":199,"h":224},"pets/taro-3":{"sheet":"petsa","x":605,"y":1132,"w":207,"h":224},"pets/taro-3-s":{"sheet":"petsa","x":814,"y":1132,"w":207,"h":224},"pets/taro-4":{"sheet":"petsa","x":1023,"y":1132,"w":212,"h":224},"pets/taro-4-s":{"sheet":"petsa","x":1237,"y":1132,"w":212,"h":224},"pets/peach-3":{"sheet":"petsa","x":1451,"y":1132,"w":218,"h":224},"pets/peach-3-s":{"sheet":"petsa","x":1671,"y":1132,"w":218,"h":224},"pets/peach-4":{"sheet":"petsa","x":2,"y":1358,"w":223,"h":224},"pets/peach-4-s":{"sheet":"petsa","x":227,"y":1358,"w":223,"h":224},"pets/blueberry-1":{"sheet":"petsa","x":452,"y":1358,"w":220,"h":224},"pets/blueberry-1-s":{"sheet":"petsa","x":674,"y":1358,"w":220,"h":224},"pets/blueberry-2":{"sheet":"petsa","x":896,"y":1358,"w":211,"h":224},"pets/blueberry-2-s":{"sheet":"petsa","x":1109,"y":1358,"w":211,"h":224},"pets/blueberry-3":{"sheet":"petsa","x":1322,"y":1358,"w":205,"h":224},"pets/blueberry-3-s":{"sheet":"petsa","x":1529,"y":1358,"w":205,"h":224},"pets/blueberry-4":{"sheet":"petsa","x":1736,"y":1358,"w":208,"h":224},"pets/blueberry-4-s":{"sheet":"petsa","x":2,"y":1584,"w":208,"h":224},"pets/pitaya-2":{"sheet":"petsa","x":212,"y":1584,"w":222,"h":224},"pets/pitaya-2-s":{"sheet":"petsa","x":436,"y":1584,"w":222,"h":224},"pets/kiwi-1":{"sheet":"petsa","x":660,"y":1584,"w":222,"h":224},"pets/kiwi-1-s":{"sheet":"petsa","x":884,"y":1584,"w":222,"h":224},"pets/kiwi-2":{"sheet":"petsa","x":1108,"y":1584,"w":202,"h":224},"pets/kiwi-2-s":{"sheet":"petsa","x":1312,"y":1584,"w":202,"h":224},"pets/kiwi-3":{"sheet":"petsa","x":1516,"y":1584,"w":182,"h":224},"pets/kiwi-3-s":{"sheet":"petsa","x":1700,"y":1584,"w":182,"h":224},"pets/kiwi-4":{"sheet":"petsa","x":2,"y":1810,"w":174,"h":224},"pets/kiwi-4-s":{"sheet":"petsa","x":178,"y":1810,"w":174,"h":224},"pets/grape-1":{"sheet":"petsa","x":354,"y":1810,"w":222,"h":224},"pets/grape-1-s":{"sheet":"petsa","x":578,"y":1810,"w":222,"h":224},"pets/grape-2":{"sheet":"petsa","x":802,"y":1810,"w":213,"h":224},"pets/grape-2-s":{"sheet":"petsa","x":1017,"y":1810,"w":213,"h":224},"pets/grape-3":{"sheet":"petsa","x":1232,"y":1810,"w":212,"h":224},"pets/grape-3-s":{"sheet":"petsa","x":1446,"y":1810,"w":212,"h":224},"pets/grape-4":{"sheet":"petsa","x":1660,"y":1810,"w":205,"h":224},"pets/grape-4-s":{"sheet":"petsb","x":2,"y":2,"w":205,"h":224},"pets/banana-1":{"sheet":"petsb","x":209,"y":2,"w":215,"h":224},"pets/banana-1-s":{"sheet":"petsb","x":426,"y":2,"w":215,"h":224},"pets/banana-2":{"sheet":"petsb","x":643,"y":2,"w":217,"h":224},"pets/banana-2-s":{"sheet":"petsb","x":862,"y":2,"w":217,"h":224},"pets/banana-3":{"sheet":"petsb","x":1081,"y":2,"w":217,"h":224},"pets/banana-3-s":{"sheet":"petsb","x":1300,"y":2,"w":217,"h":224},"pets/banana-4":{"sheet":"petsb","x":1519,"y":2,"w":220,"h":224},"pets/banana-4-s":{"sheet":"petsb","x":1741,"y":2,"w":220,"h":224},"pets/snowpear-3":{"sheet":"petsb","x":2,"y":228,"w":223,"h":224},"pets/snowpear-3-s":{"sheet":"petsb","x":227,"y":228,"w":223,"h":224},"pets/snowpear-4":{"sheet":"petsb","x":452,"y":228,"w":222,"h":224},"pets/snowpear-4-s":{"sheet":"petsb","x":676,"y":228,"w":222,"h":224},"pets/hen-3":{"sheet":"petsb","x":900,"y":228,"w":206,"h":224},"pets/hen-3-s":{"sheet":"petsb","x":1108,"y":228,"w":206,"h":224},"pets/hen-4":{"sheet":"petsb","x":1316,"y":228,"w":215,"h":224},"pets/hen-4-s":{"sheet":"petsb","x":1533,"y":228,"w":214,"h":224},"pets/chomp-1":{"sheet":"petsb","x":1749,"y":228,"w":217,"h":224},"pets/chomp-1-s":{"sheet":"petsb","x":2,"y":454,"w":217,"h":224},"pets/chomp-2":{"sheet":"petsb","x":221,"y":454,"w":220,"h":224},"pets/chomp-2-s":{"sheet":"petsb","x":443,"y":454,"w":220,"h":224},"pets/durian-2":{"sheet":"petsb","x":665,"y":454,"w":214,"h":224},"pets/durian-2-s":{"sheet":"petsb","x":881,"y":454,"w":214,"h":224},"pets/durian-1":{"sheet":"petsb","x":1097,"y":454,"w":224,"h":223},"pets/durian-1-s":{"sheet":"petsb","x":1323,"y":454,"w":224,"h":223},"pets/melon-4":{"sheet":"petsb","x":1549,"y":454,"w":224,"h":222},"pets/melon-4-s":{"sheet":"petsb","x":1775,"y":454,"w":224,"h":222},"pets/chestnut-4":{"sheet":"petsb","x":2,"y":680,"w":224,"h":220},"pets/chestnut-4-s":{"sheet":"petsb","x":228,"y":680,"w":224,"h":220},"pets/mango-1":{"sheet":"petsb","x":454,"y":680,"w":224,"h":218},"pets/mango-1-s":{"sheet":"petsb","x":680,"y":680,"w":224,"h":218},"pets/mango-3":{"sheet":"petsb","x":906,"y":680,"w":224,"h":217},"pets/mango-3-s":{"sheet":"petsb","x":1132,"y":680,"w":224,"h":217},"pets/snowpear-1":{"sheet":"petsb","x":1358,"y":680,"w":224,"h":215},"pets/snowpear-1-s":{"sheet":"petsb","x":1584,"y":680,"w":224,"h":215},"pets/chomp-3":{"sheet":"petsb","x":1810,"y":680,"w":224,"h":214},"pets/chomp-3-s":{"sheet":"petsb","x":2,"y":902,"w":224,"h":214},"pets/peach-2":{"sheet":"petsb","x":228,"y":902,"w":224,"h":213},"pets/peach-2-s":{"sheet":"petsb","x":454,"y":902,"w":224,"h":213},"pets/pitaya-3":{"sheet":"petsb","x":680,"y":902,"w":224,"h":213},"pets/pitaya-3-s":{"sheet":"petsb","x":906,"y":902,"w":224,"h":213},"pets/mango-2":{"sheet":"petsb","x":1132,"y":902,"w":224,"h":213},"pets/mango-2-s":{"sheet":"petsb","x":1358,"y":902,"w":224,"h":213},"pets/mango-4":{"sheet":"petsb","x":1584,"y":902,"w":224,"h":213},"pets/mango-4-s":{"sheet":"petsb","x":1810,"y":902,"w":224,"h":213},"pets/snowpear-2":{"sheet":"petsb","x":2,"y":1118,"w":224,"h":212},"pets/snowpear-2-s":{"sheet":"petsb","x":228,"y":1118,"w":224,"h":212},"pets/durian-4":{"sheet":"petsb","x":454,"y":1118,"w":224,"h":211},"pets/durian-4-s":{"sheet":"petsb","x":680,"y":1118,"w":224,"h":211},"pets/melon-3":{"sheet":"petsb","x":906,"y":1118,"w":224,"h":210},"pets/melon-3-s":{"sheet":"petsb","x":1132,"y":1118,"w":224,"h":210},"pets/peach-1":{"sheet":"petsb","x":1358,"y":1118,"w":224,"h":210},"pets/peach-1-s":{"sheet":"petsb","x":1584,"y":1118,"w":224,"h":210},"pets/durian-3":{"sheet":"petsb","x":1810,"y":1118,"w":224,"h":208},"pets/durian-3-s":{"sheet":"petsb","x":2,"y":1332,"w":224,"h":208},"pets/hen-5-s":{"sheet":"petsb","x":228,"y":1332,"w":224,"h":206},"pets/hen-5":{"sheet":"petsb","x":454,"y":1332,"w":224,"h":205},"pets/hen-2":{"sheet":"petsb","x":680,"y":1332,"w":224,"h":204},"pets/hen-2-s":{"sheet":"petsb","x":906,"y":1332,"w":224,"h":204},"pets/pitaya-1":{"sheet":"petsb","x":1132,"y":1332,"w":224,"h":203},"pets/pitaya-1-s":{"sheet":"petsb","x":1358,"y":1332,"w":224,"h":203},"pets/hen-1":{"sheet":"petsb","x":1584,"y":1332,"w":224,"h":201},"pets/hen-1-s":{"sheet":"petsb","x":1810,"y":1332,"w":224,"h":201},"pets/pitaya-4":{"sheet":"petsb","x":2,"y":1542,"w":224,"h":196},"pets/pitaya-4-s":{"sheet":"petsb","x":228,"y":1542,"w":224,"h":196},"pets/chomp-4":{"sheet":"petsb","x":454,"y":1542,"w":224,"h":193},"pets/chomp-4-s":{"sheet":"petsb","x":680,"y":1542,"w":224,"h":193},"pets/durian-5":{"sheet":"petsb","x":906,"y":1542,"w":224,"h":191},"pets/durian-5-s":{"sheet":"petsb","x":1132,"y":1542,"w":224,"h":191},"pets/chomp-5":{"sheet":"petsb","x":1358,"y":1542,"w":224,"h":189},"pets/chomp-5-s":{"sheet":"petsb","x":1584,"y":1542,"w":224,"h":189},"pets/pumpkin-1":{"sheet":"petsb","x":1810,"y":1542,"w":224,"h":187},"pets/pumpkin-1-s":{"sheet":"petsb","x":2,"y":1740,"w":224,"h":187},"pets/pumpkin-3":{"sheet":"petsb","x":228,"y":1740,"w":224,"h":187},"pets/pumpkin-3-s":{"sheet":"petsb","x":454,"y":1740,"w":224,"h":187},"pets/melon-1":{"sheet":"petsb","x":680,"y":1740,"w":224,"h":185},"pets/melon-1-s":{"sheet":"petsb","x":906,"y":1740,"w":224,"h":185},"pets/pumpkin-2":{"sheet":"petsb","x":1132,"y":1740,"w":224,"h":184},"pets/pumpkin-2-s":{"sheet":"petsb","x":1358,"y":1740,"w":224,"h":184},"pets/pumpkin-4":{"sheet":"petsb","x":1584,"y":1740,"w":224,"h":173},"pets/pumpkin-4-s":{"sheet":"petsb","x":1810,"y":1740,"w":224,"h":173},"enemies/b-1":{"sheet":"mobs","x":2,"y":2,"w":203,"h":224},"enemies/b-2":{"sheet":"mobs","x":207,"y":2,"w":200,"h":224},"enemies/b-3":{"sheet":"mobs","x":409,"y":2,"w":174,"h":224},"enemies/b-4":{"sheet":"mobs","x":585,"y":2,"w":190,"h":224},"enemies/z-1":{"sheet":"mobs","x":777,"y":2,"w":182,"h":224},"enemies/z-2":{"sheet":"mobs","x":2,"y":228,"w":210,"h":224},"enemies/z-3":{"sheet":"mobs","x":214,"y":228,"w":167,"h":224},"enemies/z-4":{"sheet":"mobs","x":383,"y":228,"w":169,"h":224},"enemies/z-5":{"sheet":"mobs","x":554,"y":228,"w":204,"h":224},"enemies/z-6":{"sheet":"mobs","x":760,"y":228,"w":128,"h":224},"eggs/egg-1":{"sheet":"mobs","x":2,"y":454,"w":194,"h":224},"eggs/egg-2":{"sheet":"mobs","x":198,"y":454,"w":193,"h":224},"eggs/egg-3":{"sheet":"mobs","x":393,"y":454,"w":194,"h":224},"eggs/egg-4":{"sheet":"mobs","x":589,"y":454,"w":174,"h":224},"enemies/mob-thief":{"sheet":"mobs","x":765,"y":454,"w":224,"h":223},"enemies/mob-split-big":{"sheet":"mobs","x":2,"y":680,"w":224,"h":192},"fx/hen-egg":{"sheet":"mobs","x":228,"y":680,"w":165,"h":192},"enemies/mob-split-small":{"sheet":"mobs","x":395,"y":680,"w":224,"h":187},"fx/hen-minion":{"sheet":"mobs","x":621,"y":680,"w":192,"h":172},"fx/charm-bell":{"sheet":"mobs","x":815,"y":680,"w":93,"h":128},"fx/charm-bolt":{"sheet":"mobs","x":910,"y":680,"w":89,"h":128},"fx/charm-clover":{"sheet":"mobs","x":2,"y":874,"w":114,"h":128},"fx/charm-scarf":{"sheet":"mobs","x":118,"y":874,"w":127,"h":128},"fx/charm-shield":{"sheet":"mobs","x":247,"y":874,"w":114,"h":128},"fx/charm-ribbon":{"sheet":"mobs","x":363,"y":874,"w":128,"h":122},"fx/charm-bow":{"sheet":"mobs","x":493,"y":874,"w":128,"h":108},"fx/charm-crown":{"sheet":"mobs","x":623,"y":874,"w":128,"h":98},"fx/charm-shades":{"sheet":"mobs","x":753,"y":874,"w":128,"h":68},"fx/charm-wings":{"sheet":"mobs","x":883,"y":874,"w":128,"h":68}};
 
 /* ================= art helpers (chibi, thick outline, flat + soft cel shade) ================= */
 const OL = "#2b1b22";
@@ -1264,7 +1482,69 @@ function crayonRing(c, x, y, rx, ry, col, seed) {
   }
   c.restore();
 }
-function petImg(id, star, shiny) { return spriteFrame("pets/" + id + "-" + stageOf(star) + (shiny ? "-s" : "")); }
+function petImg(id, star, shiny) { return spriteFrame("pets/" + id + "-" + spriteStage(id, star) + (shiny ? "-s" : "")); }
+/* ---- v12: dramatic per-star look (procedural crayon add-ons around the sprite) ----
+   1★ baby (smaller) · 2★ crest tuft · 3★ elemental aura + motes · 4★ crayon wings + halo · 5★ legendary: rays, crown, big wings, glow */
+const STAR_SCALE = [0, 0.74, 0.82, 0.9, 0.96, 1.0];
+function wingPath(cc, side, w, h) {
+  cc.moveTo(0, 0);
+  cc.bezierCurveTo(side * w * 0.5, -h * 0.9, side * w * 1.05, -h * 0.75, side * w, -h * 0.25);
+  cc.quadraticCurveTo(side * w * 0.85, -h * 0.05, side * w * 0.7, h * 0.05);
+  cc.quadraticCurveTo(side * w * 0.55, h * 0.25, side * w * 0.35, h * 0.12);
+  cc.quadraticCurveTo(side * w * 0.2, h * 0.3, 0, h * 0.1);
+  cc.closePath();
+}
+function petFxBack(c, id, star, shiny, cx, top, w, h, tt) {
+  if (star < 3) return;
+  const d = PET[id], col = ELEM_COL[d.el] || "#fff", own5 = (d.stages || 4) >= 5, my = top + h * 0.55;
+  c.save();
+  if (star >= 5) {          // rotating golden rays
+    c.translate(cx, my); c.rotate(tt * 0.5);
+    for (let i = 0; i < 10; i++) { c.rotate(TAU / 10); c.fillStyle = i % 2 ? "rgba(255,226,90,.38)" : "rgba(255,255,255,.28)";
+      c.beginPath(); c.moveTo(0, 0); c.lineTo(-w * 0.09, -w * 0.82); c.lineTo(w * 0.09, -w * 0.82); c.closePath(); c.fill(); }
+    c.restore(); c.save();
+  }
+  const g = c.createRadialGradient(cx, my, w * 0.1, cx, my, w * (star >= 5 ? 0.72 : 0.6));
+  g.addColorStop(0, shiny ? "rgba(255,220,250,.75)" : "rgba(255,255,255,.7)"); g.addColorStop(0.55, col + (star >= 5 ? "aa" : "77")); g.addColorStop(1, col + "00");
+  c.fillStyle = g; c.beginPath(); c.ellipse(cx, my, w * (star >= 5 ? 0.72 : 0.6), h * (star >= 5 ? 0.66 : 0.56), 0, 0, TAU); c.fill();
+  if (star >= 4 && !(own5 && star >= 5)) {   // crayon wings
+    const flap = Math.sin(tt * 5) * 0.12, ww = w * (star >= 5 ? 0.62 : 0.48), wh = h * (star >= 5 ? 0.62 : 0.5);
+    for (const side of [-1, 1]) {
+      c.save(); c.translate(cx + side * w * 0.22, top + h * 0.42); c.rotate(side * (-0.25 + flap));
+      F(c, cc => wingPath(cc, side, ww, wh), star >= 5 ? "#fff3b0" : "#ffffff", 3.2);
+      c.strokeStyle = star >= 5 ? "#ffc83a" : col; c.lineWidth = 2;
+      for (let k = 1; k <= 3; k++) { c.beginPath(); c.moveTo(side * ww * 0.15 * k, -wh * 0.05); c.lineTo(side * ww * (0.25 + 0.2 * k), -wh * (0.55 - 0.1 * k)); c.stroke(); }
+      c.restore();
+    }
+  }
+  c.restore();
+}
+function petFxFront(c, id, star, shiny, cx, top, w, h, tt) {
+  if (star < 2) return;
+  const d = PET[id], col = ELEM_COL[d.el] || "#fff", own5 = (d.stages || 4) >= 5;
+  if (star === 2 && !own5) {          // little crest tuft
+    for (let k = -1; k <= 1; k++) { c.save(); c.translate(cx + k * w * 0.07 + w * 0.12, top + h * 0.06); c.rotate(k * 0.45);
+      F(c, cc => { cc.moveTo(0, 0); cc.quadraticCurveTo(-w * 0.05, -h * 0.08, 0, -h * 0.15); cc.quadraticCurveTo(w * 0.05, -h * 0.08, 0, 0); cc.closePath(); }, col, 2.2); c.restore(); }
+  }
+  if (star >= 3) {                    // orbiting element motes
+    const n = star >= 5 ? 4 : 2;
+    for (let i = 0; i < n; i++) { const a = tt * 2 + i * TAU / n; const x = cx + Math.cos(a) * w * 0.55, y = top + h * 0.5 + Math.sin(a) * h * 0.18;
+      if (star >= 5) spark(c, x, y, Math.max(3, w * 0.06), "#fff6a0"); else E(c, x, y, Math.max(2.5, w * 0.04), Math.max(2.5, w * 0.04), col, { lw: 1.6, hl: false }); }
+  }
+  if (star === 4 && !own5) {          // halo
+    c.save(); c.lineWidth = Math.max(2.5, w * 0.035); c.strokeStyle = OL; c.beginPath(); c.ellipse(cx, top - h * 0.02, w * 0.22, h * 0.06, 0, 0, TAU); c.stroke();
+    c.lineWidth = Math.max(1.5, w * 0.022); c.strokeStyle = "#ffe14a"; c.stroke(); c.restore();
+  }
+  if (star >= 5 && !own5) crown(c, cx, top + h * 0.0, Math.max(6, w * 0.17), "#ffd23a", shiny ? "#7ad0ff" : "#ff5a8a");
+}
+function drawCharmOn(c, cid, cx, top, w, h, tt) {
+  const fr = cid && spriteFrame("fx/charm-" + cid); if (!fr) return;
+  const [cw, ch] = fitBox(fr, Math.max(14, w * 0.34));
+  const x = cx + w * 0.3, y = top + h * 0.78 + Math.sin((tt || 0) * 3) * 1.5;
+  c.save(); c.translate(x, y); c.rotate(Math.sin((tt || 0) * 2.2) * 0.12);
+  blit(c, fr, -cw / 2, -ch / 2, cw, ch); c.restore();
+}
+function drawCharmIcon(c, cid, cx, cy, size) { const fr = spriteFrame("fx/charm-" + cid); if (!fr) return; const [w, h] = fitBox(fr, size); blit(c, fr, cx - w / 2, cy - h / 2, w, h); }
 function fitBox(fr, box) { const k = box / Math.max(fr.w || fr.width, fr.h || fr.height); return [(fr.w || fr.width) * k, (fr.h || fr.height) * k]; }
 function blit(c, fr, dx, dy, dw, dh) { c.drawImage(fr.im, fr.x, fr.y, fr.w, fr.h, dx, dy, dw, dh); }
 // feet at (x, y); size = bounding box in px
@@ -1272,17 +1552,28 @@ function drawPet(c, id, star, shiny, x, y, size, o) {
   o = o || {};
   const fr = petImg(id, star, shiny); if (!fr) return;
   const [w, h] = fitBox(fr, size);
+  const tt = o.t != null ? o.t : (typeof time !== "undefined" ? time : 0);
   if (o.shadow !== false) ell(c, x, y - 2, w * 0.36, Math.max(4, w * 0.08), "rgba(30,20,30,.28)");
   c.save(); c.translate(x, y);
   if (o.squash) c.scale(1 + o.squash * 0.12, 1 - o.squash * 0.12);
   if (o.alpha != null) c.globalAlpha = o.alpha;
+  if (o.fx !== false) petFxBack(c, id, star, shiny, 0, -h, w, h, tt);
+  if (star >= 5 && o.fx !== false && o.glow !== false) { c.shadowColor = shiny ? "#ff9ae8" : "#ffe14a"; c.shadowBlur = 14; }
   blit(c, fr, -w / 2, -h, w, h);
+  c.shadowBlur = 0;
+  if (o.fx !== false) petFxFront(c, id, star, shiny, 0, -h, w, h, tt);
+  if (o.charm) drawCharmOn(c, o.charm, 0, -h, w, h, tt);
   c.restore();
 }
-function drawPetCentered(c, id, star, shiny, cx, cy, size) {
+function drawPetCentered(c, id, star, shiny, cx, cy, size, o) {
+  o = o || {};
   const fr = petImg(id, star, shiny); if (!fr) return;
-  const [w, h] = fitBox(fr, size);
-  blit(c, fr, cx - w / 2, cy - h / 2, w, h);
+  const [w, h] = fitBox(fr, size * (o.raw ? 1 : STAR_SCALE[Math.max(1, Math.min(5, star | 0))]));
+  const top = cy - h / 2 + (o.raw ? 0 : size * 0.06), tt = o.t || 0.6;
+  if (o.fx !== false) petFxBack(c, id, star, shiny, cx, top, w, h, tt);
+  blit(c, fr, cx - w / 2, top, w, h);
+  if (o.fx !== false) petFxFront(c, id, star, shiny, cx, top, w, h, tt);
+  if (o.charm) drawCharmOn(c, o.charm, cx, top, w, h, tt);
 }
 function drawEnemyImg(c, typ, x, y, size, o) {
   const fr = spriteFrame("enemies/" + ENEMY[typ].img); if (!fr) return;
@@ -1387,6 +1678,14 @@ const sfx = {
       case "snipe": tone(1500, .06, "triangle", .05, 900); tone(2000, .04, "sine", .03, 0, .03); break;
       case "meteor": tone(480, .18, "sawtooth", .045, 140); noiseHit(.14, .05, 400, 0, "lowpass"); break;
       case "roar": tone(180, .16, "sawtooth", .06, 90); tone(260, .12, "square", .04, 140, .05); break;
+      case "coinpeck": tone(1180, .04, "square", .03); tone(1760, .07, "sine", .04, 0, .04); break;
+      case "poison": tone(300, .14, "sine", .05, 180); noiseHit(.08, .03, 700, .05, "bandpass"); break;
+      case "boomerang": tone(600, .2, "triangle", .035, 900); tone(900, .16, "triangle", .025, 600, .1); break;
+      case "chomp": tone(160, .08, "square", .07, 90); tone(110, .14, "sine", .07, 60, .07); noiseHit(.1, .05, 300, .07, "lowpass"); break;
+      case "frost": tone(1600, .08, "sine", .04, 2400); tone(2200, .1, "triangle", .03, 1800, .05); break;
+      case "layegg": tone(520, .06, "square", .04, 760); tone(780, .08, "square", .035, 1040, .07); tone(330, .05, "sine", .05, 0, .16); break;
+      case "hex": tone(380, .16, "sawtooth", .035, 760); tone(240, .12, "triangle", .03, 0, .08); break;
+      case "spikequake": tone(70, .22, "sine", .1, 40); noiseHit(.16, .08, 260, 0, "lowpass"); tone(900, .05, "square", .025, 500, .05); break;
       default: if (now - lastShootSfx < 70) return; lastShootSfx = now; tone(460 + Math.random() * 90, .05, "square", .025);
     }
   },
@@ -1794,7 +2093,7 @@ function petCanvas(id, star, shiny, px, opts) {
   const c = cv.getContext("2d"); c.scale(2, 2);
   if (opts && opts.silhouette) { c.filter = "brightness(0) opacity(.35)"; }
   const k = (opts && opts.k) || 1.0;
-  drawPetCentered(c, id, star, shiny, px / 2, px / 2 + 4 * k, px * k);
+  drawPetCentered(c, id, star, shiny, px / 2, px / 2 + 4 * k, px * k, { charm: opts && opts.charm, fx: !(opts && opts.silhouette) });
   return cv;
 }
 
@@ -1804,7 +2103,7 @@ function petCanvas(id, star, shiny, px, opts) {
 let uidSeq = 1;
 const save = {
   started: false, muted: false, muteBgm: false, muteSfx: false, gems: 60, pets: [], eggs: [], beaten: 0, endlessBest: 0,
-  seen: {}, seenShiny: {}, firstEgg: false, hatched: 0, food: {}
+  seen: {}, seenShiny: {}, firstEgg: false, hatched: 0, food: {}, charms: {}, evoMain: {}
 };
 function persist() {
   try {
@@ -1812,7 +2111,7 @@ function persist() {
       v: 2, started: save.started, muted: !!(save.muteBgm && save.muteSfx), muteBgm: !!save.muteBgm, muteSfx: !!save.muteSfx,
       gems: save.gems, pets: save.pets, eggs: save.eggs,
       beaten: save.beaten, endlessBest: save.endlessBest, seen: save.seen, seenShiny: save.seenShiny,
-      firstEgg: save.firstEgg, hatched: save.hatched, food: save.food, uidSeq
+      firstEgg: save.firstEgg, hatched: save.hatched, food: save.food, charms: save.charms, evoMain: save.evoMain, uidSeq
     }));
   } catch (e) {}
 }
@@ -1820,7 +2119,7 @@ function snapshotSave() {
   return {
     v: 2, started: save.started, muted: !!(save.muteBgm && save.muteSfx), muteBgm: !!save.muteBgm, muteSfx: !!save.muteSfx,
     gems: save.gems, pets: save.pets, eggs: save.eggs, beaten: save.beaten, endlessBest: save.endlessBest,
-    seen: save.seen, seenShiny: save.seenShiny, firstEgg: save.firstEgg, hatched: save.hatched, food: save.food, uidSeq, lang: LANG
+    seen: save.seen, seenShiny: save.seenShiny, firstEgg: save.firstEgg, hatched: save.hatched, food: save.food, charms: save.charms, evoMain: save.evoMain, uidSeq, lang: LANG
   };
 }
 function applySave(d) {
@@ -1831,12 +2130,14 @@ function applySave(d) {
   save.gems = Math.max(0, d.gems | 0);
   save.pets = (Array.isArray(d.pets) ? d.pets : []).filter(p => p && PET[p.id])
     .map(p => normPet(p));
-  save.eggs = (Array.isArray(d.eggs) ? d.eggs : []).filter(e => e && e.q >= 1 && e.q <= 4).map(e => ({ q: e.q | 0, sh: +e.sh || 0.03 }));
+  save.eggs = (Array.isArray(d.eggs) ? d.eggs : []).filter(e => e && e.q >= 1 && e.q <= 4).map(e => ({ q: e.q | 0, sh: +e.sh || SHINY_BASE }));
   save.beaten = d.beaten | 0;
   save.endlessBest = d.endlessBest | 0;
   save.seen = d.seen || {}; save.seenShiny = d.seenShiny || {};
   save.firstEgg = !!d.firstEgg; save.hatched = d.hatched | 0;
   save.food = {}; for (const f of FOODS) { const n = d.food && d.food[f.id] | 0; if (n > 0) save.food[f.id] = n; }
+  save.charms = {}; for (const c of CHARMS) { const n = d.charms && d.charms[c.id] | 0; if (n > 0) save.charms[c.id] = n; }
+  save.evoMain = {}; if (d.evoMain && typeof d.evoMain === "object") for (const k in d.evoMain) if (PET[k]) save.evoMain[k] = d.evoMain[k] | 0;
   for (const p of save.pets) { save.seen[p.id] = true; if (p.shiny) save.seenShiny[p.id] = true; }
   uidSeq = Math.max(1, d.uidSeq | 0, ...save.pets.map(p => p.uid + 1));
   for (const p of save.pets) if (!p.uid) p.uid = uidSeq++;
@@ -1849,7 +2150,8 @@ function normPet(p) {
   return { uid: p.uid | 0, id: p.id, star: clamp(p.star | 0 || 1, 1, MAX_STAR), shiny, apt,
     grade: GRADES.includes(p.grade) ? p.grade : birthGrade(apt, d.rar, shiny),
     lv: clamp(p.lv | 0 || 1, 1, MAX_LV), xp: Math.max(0, p.xp | 0),
-    tr: { a: clamp(tr0.a | 0, 0, cap), h: clamp(tr0.h | 0, 0, cap), s: clamp(tr0.s | 0, 0, cap) } };
+    tr: { a: clamp(tr0.a | 0, 0, cap), h: clamp(tr0.h | 0, 0, cap), s: clamp(tr0.s | 0, 0, cap) },
+    evo: Math.max(0, p.evo | 0), nick: sanitizeNick(p.nick), charm: p.charm && CHARM[p.charm] ? p.charm : "" };
 }
 function loadSave() {
   try {
@@ -1876,15 +2178,15 @@ function loadSave() {
 let migratedNote = false;
 function newGame(starterId) {
   uidSeq = 1;
-  Object.assign(save, { started: true, gems: 60, pets: [], eggs: [{ q: 1, sh: 0.05 }], beaten: 0, endlessBest: 0,
-    seen: {}, seenShiny: {}, firstEgg: false, hatched: 0, food: { candy: 2 } });
+  Object.assign(save, { started: true, gems: 60, pets: [], eggs: [{ q: 1, sh: SHINY_BASE }], beaten: 0, endlessBest: 0,
+    seen: {}, seenShiny: {}, firstEgg: false, hatched: 0, food: { candy: 2 }, charms: {}, evoMain: {} });
   addPet(starterId || "chili", 1, false, { minApt: 45 });
   persist();
 }
 function addPet(id, star, shiny, o) {
   o = o || {};
   const rar = PET[id].rar, apt = o.apt != null ? clampN(o.apt | 0, 1, 100) : rollApt(rar, o.minApt);
-  const p = { uid: uidSeq++, id, star: star || 1, shiny: !!shiny, apt, grade: birthGrade(apt, rar, !!shiny), lv: 1, xp: 0, tr: { a: 0, h: 0, s: 0 } };
+  const p = { uid: uidSeq++, id, star: star || 1, shiny: !!shiny, apt, grade: birthGrade(apt, rar, !!shiny), lv: 1, xp: 0, tr: { a: 0, h: 0, s: 0 }, evo: 0, nick: "", charm: "" };
   save.pets.push(p); save.seen[id] = true; if (shiny) save.seenShiny[id] = true;
   return p;
 }
@@ -1966,7 +2268,10 @@ function packSave(d) {
   return {
     v: 2, g: d.gems | 0, b: d.beaten | 0, e: d.endlessBest | 0, u: d.uidSeq | 0,
     h: d.hatched | 0, f: d.firstEgg ? 1 : 0, mb: d.muteBgm ? 1 : 0, ms: d.muteSfx ? 1 : 0,
-    p: (d.pets || []).map(q => [q.uid | 0, q.id, q.star | 0, q.shiny ? 1 : 0, q.apt | 0, q.grade, q.lv | 0, q.xp | 0, (q.tr && q.tr.a) | 0, (q.tr && q.tr.h) | 0, (q.tr && q.tr.s) | 0]),
+    // v12 appends [11] evo progress, [12] nickname, [13] charm (older codes simply lack them)
+    p: (d.pets || []).map(q => { const a = [q.uid | 0, q.id, q.star | 0, q.shiny ? 1 : 0, q.apt | 0, q.grade, q.lv | 0, q.xp | 0, (q.tr && q.tr.a) | 0, (q.tr && q.tr.h) | 0, (q.tr && q.tr.s) | 0];
+      if (q.evo || q.nick || q.charm) a.push(q.evo | 0, q.nick || "", q.charm || ""); return a; }),
+    ch: d.charms || {}, em: d.evoMain || {},
     q: (d.eggs || []).map(e => [e.q | 0, +e.sh || 0]),
     fo: d.food || {}, s: d.seen || {}, ss: d.seenShiny || {}, lang: d.lang || LANG || ""
   };
@@ -1977,7 +2282,9 @@ function unpackSave(p) {
     started: true, v: 2,
     gems: p.g | 0, beaten: p.b | 0, endlessBest: p.e | 0, uidSeq: p.u | 0,
     hatched: p.h | 0, firstEgg: !!p.f, muteBgm: !!p.mb, muteSfx: !!p.ms, muted: !!(p.mb && p.ms),
-    pets: (p.p || []).map(a => ({ uid: a[0], id: a[1], star: a[2], shiny: !!a[3], apt: a[4], grade: a[5], lv: a[6], xp: a[7], tr: { a: a[8] | 0, h: a[9] | 0, s: a[10] | 0 } })),
+    pets: (p.p || []).map(a => ({ uid: a[0], id: a[1], star: a[2], shiny: !!a[3], apt: a[4], grade: a[5], lv: a[6], xp: a[7], tr: { a: a[8] | 0, h: a[9] | 0, s: a[10] | 0 },
+      evo: a[11] | 0, nick: a[12] || "", charm: a[13] || "" })),
+    charms: p.ch || {}, evoMain: p.em || {},
     eggs: (p.q || []).map(a => ({ q: a[0], sh: a[1] })),
     food: p.fo || {}, seen: p.s || {}, seenShiny: p.ss || {}, lang: p.lang || ""
   };
@@ -2098,27 +2405,30 @@ let homeTab = "play";
 let time = 0;
 const B = {
   level: null, lives: 10, gold: 0, wave: 0, waveTotal: 0, running: false, paused: false, speed: 1, over: false, won: false,
-  enemies: [], towers: [], shots: [], fx: [], zones: [], floaters: [], flyEggs: [],
+  enemies: [], towers: [], shots: [], fx: [], zones: [], floaters: [], flyEggs: [], minions: [],
   spawnQ: [], spawnT: 0, spawnGap: 1, waveActive: false, countdown: 0, t: 0,
-  selPet: null, selTower: null, kills: 0, gemsGot: 0, eggsGot: [], foodGot: 0, bestWave: 0
+  selPet: null, selTower: null, kills: 0, gemsGot: 0, eggsGot: [], foodGot: 0, bestWave: 0, charmsGot: 0
 };
+let curSrc = null;   // tower whose attack is resolving right now (charm on-hit effects, 5★ projectiles)
 function deployedUids() { return new Set(B.towers.map(t => t.uid)); }
+function petName(p) { return p.nick ? esc(p.nick) : stageName(p.id, p.star); }
+function battleUids() { return B.running && !B.over ? deployedUids() : new Set(); }
 function petStats(t) {
-  const d = PET[t.id];
-  const sm = 1 + 0.4 * (t.star - 1), tm = [1, 1.35, 1.8][t.tier - 1], sh = t.shiny ? 1.08 : 1;
+  const d = PET[t.id], ce = t.ce || {};
+  const sm = STAR_MUL[clamp(t.star | 0, 1, MAX_STAR)], tm = [1, 1.35, 1.8][t.tier - 1], sh = t.shiny ? 1.08 : 1;
   const base = sm * tm * sh;
   return {
-    dmg: d.dmg * base * (t.ind ? t.ind.atk : 1) * (1 + (t._dmgB || 0)),
-    rate: d.rate / (t.ind ? t.ind.spd : 1) / (1 + (t._haste || 0)) / (t.tier === 3 ? 1.12 : t.tier === 2 ? 1.06 : 1),
-    range: d.range * (1 + 0.04 * (t.star - 1)) * (t.tier === 3 ? 1.08 : 1),
-    maxHp: d.hp * base * (t.ind ? t.ind.hp : 1),
-    splash: (d.splash || 0) * (1 + 0.05 * (t.star - 1)),
+    dmg: d.dmg * base * (t.ind ? t.ind.atk : 1) * (1 + (t._dmgB || 0)) * (1 + (ce.atk || 0)),
+    rate: d.rate / (t.ind ? t.ind.spd : 1) / (1 + (t._haste || 0)) / (1 + (ce.spd || 0)) / (t.tier === 3 ? 1.12 : t.tier === 2 ? 1.06 : 1) / (t.star >= 5 ? 1.1 : 1),
+    range: d.range * (1 + 0.04 * (t.star - 1)) * (t.tier === 3 ? 1.08 : 1) * (1 + (ce.range || 0)),
+    maxHp: d.hp * base * (t.ind ? t.ind.hp : 1) * (1 + (ce.hp || 0)),
+    splash: (d.splash || 0) * (1 + 0.05 * (t.star - 1)) * (1 + (ce.splash || 0)),
     heal: (d.heal || 0) * (1 + 0.15 * (t.star - 1)) * (t.tier === 3 ? 1.3 : t.tier === 2 ? 1.15 : 1),
     haste: (d.haste || 0) * (1 + 0.12 * (t.star - 1)),
     buff: (d.buff || 0) * (1 + 0.12 * (t.star - 1)),
     slow: d.slow || 0, slowT: d.slowT || 0, chain: (d.chain || 0) + (t.star >= 4 ? 1 : 0), fall: d.fall || 0.7,
-    crit: d.crit || 0, critM: d.critM || 2, stun: (d.stun || 0) * (t.tier === 3 ? 1.25 : 1), burn: (d.burn || 0) * base,
-    thorns: d.thorns || 0, regen: d.regen || 0
+    crit: (d.crit || 0) + (ce.crit || 0), critM: d.critM || 2, stun: (d.stun || 0) * (t.tier === 3 ? 1.25 : 1), burn: (d.burn || 0) * base,
+    thorns: d.thorns || 0, regen: (d.regen || 0) + (ce.regen || 0)
   };
 }
 function upgradeCost(t) { const r = PET[t.id].rar; return t.tier === 1 ? 40 + 12 * r : t.tier === 2 ? 90 + 25 * r : 0; }
@@ -2128,9 +2438,9 @@ function startRun() {
   Object.assign(B, {
     level, lives: level.lives, gold: 60, wave: 0, waveTotal: 0,
     running: true, paused: false, speed: 1, over: false, won: false,
-    enemies: [], towers: [], shots: [], fx: [], zones: [], floaters: [], flyEggs: [],
+    enemies: [], towers: [], shots: [], fx: [], zones: [], floaters: [], flyEggs: [], minions: [],
     spawnQ: [], spawnT: 0, spawnGap: 1, waveActive: false, countdown: 12, t: 0,
-    selPet: null, selTower: null, kills: 0, gemsGot: 0, eggsGot: [], foodGot: 0, bestWave: 0
+    selPet: null, selTower: null, kills: 0, gemsGot: 0, eggsGot: [], foodGot: 0, bestWave: 0, charmsGot: 0
   });
   screen = "battle";
   hideAll();
@@ -2145,7 +2455,7 @@ function startRun() {
   showToast(B.towers.length ? tr("deploy_hint") : tr("deploy_empty"), 3.2);
   musicFollowScreen();
 }
-function petPower(p) { const d = PET[p.id], m = indivMul(p); return (1 + 0.4 * (p.star - 1)) * (d.rar + 1) * (p.shiny ? 1.08 : 1) * m.base * (1 + 0.02 * ((p.tr && (p.tr.a + p.tr.h + p.tr.s)) || 0)); }
+function petPower(p) { const d = PET[p.id], m = indivMul(p); return STAR_MUL[clamp(p.star | 0, 1, MAX_STAR)] * (d.rar + 1) * (p.charm ? 1.06 : 1) * (p.shiny ? 1.08 : 1) * m.base * (1 + 0.02 * ((p.tr && (p.tr.a + p.tr.h + p.tr.s)) || 0)); }
 function gainXp(p, n) {
   let ups = 0;
   if (p.lv >= MAX_LV) return 0;
@@ -2183,7 +2493,8 @@ function deploy(uid, slot, quiet) {
   const old = B.towers.find(t => t.slot === slot);
   if (old) B.towers = B.towers.filter(t => t !== old);
   const { x, y } = slotPos(slot);
-  const t = { uid, id: p.id, star: p.star, shiny: p.shiny, ind: indivMul(p), lv: p.lv, slot, x, y, tier: 1, cd: 0.5, bounce: 0, hp: 0, fainted: false, ph: Math.random() * 6 };
+  const t = { uid, id: p.id, star: p.star, shiny: p.shiny, ind: indivMul(p), lv: p.lv, slot, x, y, tier: 1, cd: 0.5, bounce: 0, hp: 0, fainted: false, ph: Math.random() * 6,
+    nick: p.nick || "", charm: p.charm || "", ce: charmEff(p) };
   t.hp = petStats(t).maxHp;
   B.towers.push(t);
   if (!quiet) { sfx.place(); burst(x, y - 30, "#fff6a0", 10); renderTray(); }
@@ -2221,9 +2532,9 @@ function renderTray() {
     div.className = "tcard r" + d.rar + (B.selPet === p.uid ? " on" : "");
     div.innerHTML = "<span class='el el-" + d.el + "'>" + elShort(d.el) + "</span>";
     div.insertAdjacentHTML("beforeend", "<span class='tg'>" + RAR_NAME[d.rar] + "</span>");
-    div.appendChild(petCanvas(p.id, p.star, p.shiny, 84));
+    div.appendChild(petCanvas(p.id, p.star, p.shiny, 84, { charm: p.charm }));
     const nm = document.createElement("div"); nm.className = "nm";
-    nm.innerHTML = (p.shiny ? "✦" : "") + stageName(p.id, p.star) + "<br><span class='st'>" + "★".repeat(p.star) + "</span>";
+    nm.innerHTML = (p.shiny ? "✦" : "") + petName(p) + "<br><span class='st'>" + "★".repeat(p.star) + "</span>";
     div.appendChild(nm);
     div.addEventListener("click", (e) => { e.stopPropagation(); sfx.click(); B.selPet = B.selPet === p.uid ? null : p.uid; B.selTower = null; el("inspect").classList.add("hidden"); renderTray(); });
     box.appendChild(div);
@@ -2234,7 +2545,8 @@ function showInspect(t) {
   const d = PET[t.id], st = petStats(t);
   const box = el("inspect");
   const next = t.tier < 3 ? upgradeCost(t) : 0;
-  box.innerHTML = "<h3>" + (t.shiny ? tr("shiny_pre") : "") + stageName(t.id, t.star) + " " + starsHTML(t.star) + "</h3>"
+  box.innerHTML = "<h3>" + (t.shiny ? tr("shiny_pre") : "") + (t.nick ? esc(t.nick) + " <small style='opacity:.75'>(" + stageName(t.id, t.star) + ")</small>" : stageName(t.id, t.star)) + " " + starsHTML(t.star) + "</h3>"
+    + (t.charm ? "<div class='charm-line'>" + tr("charm_on", tr("charm_" + t.charm)) + " · " + tr("charm_" + t.charm + "_d") + "</div>" : "")
     + "<div><span class='role role-" + d.role + "'>" + ROLE_NAME[d.role] + "</span> <span class='role'>" + tr("el_type", elName(d.el)) + "</span> · " + tr("field_lv", t.tier) + "</div>"
     + (save.pets.find(q => q.uid === t.uid) ? (() => { const q = save.pets.find(q => q.uid === t.uid); return "<div style='margin:3px 0'>" + lvHTML(q) + " " + gradeHTML(q.grade) + "</div>" + aptBarHTML(q, true); })() : "")
     + "<div class='skill'><b>" + tr("skill_line", d.sk) + "</b>" + d.skd + "<br><span style='opacity:.8'>" + tr("skill_up", d.up) + "</span></div>"
@@ -2289,9 +2601,18 @@ function targetFor(t, range) {
   for (const e of B.enemies) { if (e.hp <= 0) continue; if (dist(t.x, t.y - 30, e.x, e.y) <= range && e.y > by) { best = e; by = e.y; } }
   return best;
 }
+function teamGoldMul() { let g = 1; for (const t of B.towers) if (t.ce && t.ce.gold) g += t.ce.gold; return g; }
 function hitEnemy(e, dmg, elem, o) {
   o = o || {};
   if (e.hp <= 0) return;
+  const src = o.src || curSrc, ce = (src && src.ce) || {};
+  if (ce.crit && !o.crit && !src.critDone && Math.random() < ce.crit && !(PET[src.id].crit)) { o = Object.assign({}, o, { crit: true }); dmg *= 2; }
+  if (ce.boss && e.boss) dmg *= 1 + ce.boss;
+  if (src && src.star >= 5) dmg *= 1.08;
+  if (e.hexT > 0) dmg *= 1 + (e.hexV || 0.25);
+  if (e.frozenT > 0) dmg *= 1.25;
+  if (ce.slow) o = Object.assign({}, o, { slow: Math.max(o.slow || 0, ce.slow), slowT: Math.max(o.slowT || 0, 1.2) });
+  if (ce.burn && !o.burn) o = Object.assign({}, o, { burn: Math.max(2, dmg * ce.burn), burnT: 2 });
   const m = elemMul(elem, e.el);
   const d = dmg * m;
   e.hp -= d; e.hitT = 0.12;
@@ -2303,17 +2624,31 @@ function hitEnemy(e, dmg, elem, o) {
 }
 function killEnemy(e) {
   e.hp = 0;
-  B.gold += e.reward; B.kills++;
+  const def0 = ENEMY[e.typ];
+  let bonus = (e.goldMark | 0) + (def0.thief ? 10 + Math.floor(B.wave / 2) : 0);
+  const gain = Math.round((e.reward + bonus) * teamGoldMul());
+  B.gold += gain; B.kills++;
+  if (bonus) B.floaters.push({ x: e.x + 12, y: e.y - 40, text: "+" + bonus + "g", color: "#ffe14a", life: 1, max: 1, big: true });
+  if (def0.split) for (let k = -1; k <= 1; k += 2) {                 // Split Slime: two minis pop out
+    spawnEnemy({ id: def0.split, hpMul: e.max / def0.hp, spdMul: e.spd / def0.spd });
+    const m = B.enemies[B.enemies.length - 1]; m.lane = e.lane; m.y = e.y - 6; m.x = e.x + k * 14; m.ph = e.ph + k;
+  }
+  if (e.hexBoom) {                                                    // Pumpkin Hex stage 4: hexed slimes explode
+    B.fx.push({ typ: "ring", x: e.x, y: e.y, r0: 8, r1: 80, color: "#ff9a2e", life: 0.35, max: 0.35 });
+    const boom = e.hexBoom; e.hexBoom = 0;
+    for (const o of enemiesIn(e.x, e.y, 80)) if (o !== e) hitEnemy(o, boom, "火", { src: null });
+  }
   const ec = ENEMY[e.typ].col || ELEM_COL[e.el], esz = ENEMY[e.typ].size;
   B.fx.push({ typ: "splat", x: e.x, y: e.y + esz * 0.38, r: esz * 0.45, color: ec, life: 0.9, max: 0.9, seed: Math.random() * 99 });
   burst(e.x, e.y, ec, e.boss ? 22 : 12);
   sfx.pop();
-  B.floaters.push({ x: e.x, y: e.y - 10, text: "+" + e.reward, color: "#ffd23a", life: 0.8, max: 0.8 });
+  B.floaters.push({ x: e.x, y: e.y - 10, text: "+" + gain, color: "#ffd23a", life: 0.8, max: 0.8 });
   // egg drops: deeper = more & better
   const lv = B.level, L = lootLevel(lv, Math.max(1, B.wave));
   let p = dropChance(lv, B.wave);
   let minQ = 1;
-  if (e.boss) { p = 1; minQ = lv.endless ? Math.min(4, 2 + Math.floor(B.wave / 15)) : 2; }
+  if (e.boss) { p = 1; minQ = lv.endless ? Math.min(4, 2 + Math.floor(B.wave / 25)) : 2;
+    if (Math.random() < (B.wave <= 5 ? 0.6 : 0.35)) dropCharm(e.x, e.y); }
   if (!save.firstEgg && B.kills >= 3) { p = 1; save.firstEgg = true; }
   if (Math.random() < p) dropEgg(e.x, e.y, rollEggQ(L, minQ), shinyChance(L) * (e.boss ? 1.5 : 1));
   for (let k = 0; k < (e.boss ? 2 : 1); k++) if (Math.random() < foodChance(L, e.boss)) {
@@ -2322,8 +2657,16 @@ function killEnemy(e) {
   }
   refreshHUD();
 }
+function dropCharm(x, y, cid) {
+  cid = cid || rollCharm();
+  save.charms[cid] = (save.charms[cid] | 0) + 1; B.charmsGot++; persist();
+  B.floaters.push({ x, y: y - 56, text: tr("charm_" + cid), color: "#ffb0f0", life: 1.6, max: 1.6, big: true });
+  B.fx.push({ typ: "charmfly", cid, x, y, life: 1.2, max: 1.2 });
+  showToast(tr("charm_drop", tr("charm_" + cid)), 2.6); sfx.shiny();
+  return cid;
+}
 function dropEgg(x, y, q, sh) {
-  const egg = { q, sh: Math.min(0.5, +sh.toFixed(3)) };
+  const egg = { q, sh: Math.min(SHINY_CAP * 1.5, +sh.toFixed(4)) };
   save.eggs.push(egg); B.eggsGot.push(egg); persist();
   B.flyEggs.push({ x, y, sx: x, sy: y, q, t: 0 });
   sfx.egg();
@@ -2340,6 +2683,7 @@ function hitPet(t, dmg, e) {
 function leak(e) {
   e.hp = 0; e.leaked = true;
   B.lives -= e.boss ? 5 : 1;
+  if (ENEMY[e.typ].thief) { const st = Math.min(B.gold, 15 + B.wave); B.gold -= st; if (st) B.floaters.push({ x: e.x, y: FENCE_Y - 30, text: "-" + st + "g", color: "#ff8a8a", life: 1, max: 1, big: true }); }
   sfx.leak();
   B.fx.push({ typ: "flash", life: 0.3, max: 0.3 });
   if (B.lives <= 0) { B.lives = 0; endRun(false); }
@@ -2349,7 +2693,7 @@ function waveCleared() {
   B.waveActive = false;
   B.bestWave = Math.max(B.bestWave, B.wave);
   const lv = B.level;
-  const g = 2 + Math.floor(B.wave * 1.5);
+  const g = 2 + Math.floor(B.wave * 1.2);
   B.gemsGot += g; save.gems += g;
   const xpG = 6 + 2 * B.wave; let upMsg = "";
   for (const t of B.towers) {
@@ -2388,6 +2732,7 @@ function showSummary(won, bonus) {
     + "<li>" + tr("sum_kills", B.kills) + "</li>"
     + "<li>" + tr("sum_gems", B.gemsGot) + "</li>"
     + "<li>" + tr("sum_eggs", B.eggsGot.length) + "</li><li>" + tr("sum_food", B.foodGot) + "</li>"
+    + (B.charmsGot ? "<li>" + tr("sum_charms", B.charmsGot) + "</li>" : "")
     + "</ul><div class='chips'>" + chips + "</div>"
     + (bonus ? "<p style='font-weight:900;color:#e0507a;margin:0 0 10px'>" + bonus + "</p>" : "")
     + "<p class='subtitle' style='margin:0 0 12px'>" + tr("sum_saved") + "</p>";
@@ -2408,8 +2753,9 @@ function fxCol(t) { const d = PET[t.id]; return d.fx[t.shiny ? 1 : 0]; }
 function nearestOther(x, y, r, used) {
   return enemiesIn(x, y, r).filter(e => !used.has(e)).sort((a, b) => dist(x, y, a.x, a.y) - dist(x, y, b.x, b.y))[0] || null;
 }
-function shoot(o) { B.shots.push(Object.assign({ age: 0, hit: new Set() }, o)); }
-function fireTower(t, st) {
+function shoot(o) { B.shots.push(Object.assign({ age: 0, hit: new Set(), src: curSrc, big: !!(curSrc && curSrc.star >= 5) }, o)); }
+function fireTower(t, st) { const prev = curSrc; curSrc = t; try { return fireTower0(t, st); } finally { curSrc = prev; } }
+function fireTower0(t, st) {
   const d = PET[t.id], stg = stageOf(t.star), col = fxCol(t);
   const ox = t.x, oy = t.y - 40;
   if (d.typ === "berrypop") {               // heal + attack buff, berries lobbed to friends
@@ -2432,10 +2778,78 @@ function fireTower(t, st) {
     if (tgt) for (let k = -1; k <= 1; k++) shoot({ kind: "pip", x: ox + k * 8, y: oy, tgt, tx: tgt.x, ty: tgt.y, spd: 480, dmg: st.dmg * 0.5, el: d.el, color: col, wob: k });
     t.bounce = 1; sfx.attack(d.typ); return true;
   }
+  if (d.typ === "layegg") {                 // Nest Hen: lays an egg on its lane that hatches a charging chick
+    if (!B.enemies.some(e => e.hp > 0)) return false;
+    const mine = B.minions.filter(m => m.owner === t.uid).length, cap = t.star >= 4 ? 4 : t.star >= 2 ? 3 : 2;
+    if (mine >= cap) return false;
+    const lane = t.slot % LANES, n = t.star >= 4 ? 2 : 1;
+    for (let k = 0; k < n; k++) {
+      const giant = t.star >= 5 && k === 0;
+      const hpK = (t.star >= 3 ? 1.35 : 1) * (giant ? 3 : 1);
+      B.minions.push({ owner: t.uid, lane, x: LANE_X[lane] + (n > 1 ? (k ? 14 : -14) : 0), y: t.y - 78 - k * 6, phase: "egg", t: 0, hatchT: 0.9 + k * 0.25,
+        hp: st.maxHp * 0.3 * hpK, max: st.maxHp * 0.3 * hpK, atk: st.dmg * (giant ? 2.6 : 1) * (t.star >= 3 ? 1.25 : 1), spd: 72, cd: 0, size: giant ? 74 : 46,
+        giant, armored: t.star >= 3, el: d.el, color: col, life: 14 });
+    }
+    B.fx.push({ typ: "ring", x: t.x, y: t.y - 70, r0: 6, r1: 34, color: col, life: 0.3, max: 0.3 });
+    t.bounce = 1; sfx.attack(d.typ); return true;
+  }
+  if (d.typ === "spikequake") {             // Durian: spiked shockwave around itself
+    const r = st.splash * (stg >= 3 ? 1.25 : 1), cx = t.x, cy = t.y - 40;
+    const hits = enemiesIn(cx, cy, r + 30);
+    if (!hits.length) return false;
+    B.fx.push({ typ: "spikes", x: cx, y: cy + 10, r, color: col, life: 0.5, max: 0.5, seed: Math.random() * 99 });
+    for (const e of hits) {
+      hitEnemy(e, st.dmg * (stg >= 4 ? 1.5 : 1), d.el, Object.assign({ slow: 0.6, slowT: 1.6 }, stg >= 3 ? { stun: 0.4 } : {}));
+      if (e.hp > 0 && !e.fly) e.y = Math.max(FIELD_TOP - 20, e.y - d.knock * (e.boss ? 0.3 : 1) * (stg >= 3 ? 1.4 : 1));
+    }
+    t.bounce = 1; sfx.attack(d.typ); return true;
+  }
   const tgt = targetFor(t, st.range);
   if (!tgt) return false;
   t.bounce = 1; sfx.attack(d.typ);
   switch (d.typ) {
+    case "coinpeck": {
+      const n = stg >= 3 ? 2 : 1, used = new Set();
+      for (let k = 0; k < n; k++) { const e = k ? (nearestOther(tgt.x, tgt.y, 180, used) || tgt) : tgt; used.add(e);
+        shoot({ kind: "peck", x: ox + k * 8, y: oy, tgt: e, tx: e.x, ty: e.y, spd: 560, dmg: st.dmg, el: d.el, color: col, gold: (d.gold || 2) * (stg >= 4 ? 2 : 1) + (t.star >= 5 ? 2 : 0) }); }
+      return true;
+    }
+    case "poison":
+      shoot({ kind: "grape", x: ox, y: oy, sx: ox, sy: oy, tgt, tx: tgt.x, ty: tgt.y + tgt.spd * 0.4, spd: 380, dmg: st.dmg, el: d.el, color: col,
+        splash: st.splash * (stg >= 3 ? 1.3 : 1), poison: d.poison * STAR_MUL[clamp(t.star, 1, 5)] * (t.ind ? t.ind.atk : 1) * (1 + ((t.ce && t.ce.atk) || 0)), zt: stg >= 3 ? 4 : 3, zslow: stg >= 4 });
+      return true;
+    case "boomerang": {
+      const n = stg >= 3 ? 2 : 1, reach = st.range * (stg >= 4 ? 1.15 : 1);
+      for (let k = 0; k < n; k++) {
+        const ang = Math.atan2(tgt.y - oy, tgt.x - ox) + (n > 1 ? (k - 0.5) * 0.35 : 0);
+        shoot({ kind: "boomer", x: ox, y: oy, ox, oy, ang, d: 0, reach, out: true, spd: 520, dmg: st.dmg, el: d.el, color: col, size: stg >= 4 ? 1.35 : 1 });
+      }
+      return true;
+    }
+    case "chomp": {
+      const gulp = tgt.boss ? 0 : (stg >= 3 ? 0.4 : 0.28) + (t.star >= 5 ? 0.1 : 0);
+      B.fx.push({ typ: "chompfx", x: tgt.x, y: tgt.y, color: col, life: 0.35, max: 0.35 });
+      if (tgt.hp / tgt.max <= gulp) { B.floaters.push({ x: tgt.x, y: tgt.y - 50, text: "GULP!", color: "#7fe07a", life: 0.8, max: 0.8, big: true }); hitEnemy(tgt, tgt.hp * 4 + 1, d.el); }
+      else hitEnemy(tgt, st.dmg * (tgt.boss ? 1.6 : 1), d.el);
+      const r = st.splash * (stg >= 4 ? 1.35 : 1);
+      B.fx.push({ typ: "wave", x: tgt.x, y: tgt.y, r, color: col, life: 0.45, max: 0.45 });
+      for (const e of enemiesIn(tgt.x, tgt.y, r)) if (e !== tgt) { hitEnemy(e, st.dmg * 0.5, d.el); if (stg >= 4 && e.hp > 0 && !e.fly) e.y = Math.max(FIELD_TOP - 20, e.y - 22 * (e.boss ? 0.3 : 1)); }
+      return true;
+    }
+    case "frost": {
+      const used = new Set(); let e = tgt;
+      for (let k = 0; k < (stg >= 3 ? 2 : 1) && e; k++) { used.add(e);
+        B.fx.push({ typ: "frost", x1: ox, y1: oy, x2: e.x, y2: e.y, color: col, life: 0.35, max: 0.35, seed: Math.random() * 99 });
+        hitEnemy(e, st.dmg, d.el, { slow: 0.3, slowT: 1.5 });
+        if (e.hp > 0) { e.chill = (e.chill | 0) + 1;
+          if (e.chill >= (d.chill || 3)) { e.chill = 0; e.frozenT = (d.freeze || 1) * (stg >= 3 ? 1.5 : 1) * (e.boss ? 0.4 : 1); e.shatter = stg >= 4 ? st.dmg * 1.5 : 0; B.fx.push({ typ: "ring", x: e.x, y: e.y, r0: 6, r1: 40, color: "#bfe6ff", life: 0.3, max: 0.3 }); } }
+        e = nearestOther(e.x, e.y, 120, used);
+      }
+      return true;
+    }
+    case "hex":
+      shoot({ kind: "pumpseed", x: ox, y: oy, tgt, tx: tgt.x, ty: tgt.y, spd: 520, dmg: st.dmg, el: d.el, color: col, hexV: d.hex || 0.25, spread: stg >= 3, boom: stg >= 4 ? st.dmg * 0.8 : 0 });
+      return true;
     case "fireseed": {
       const n = stg >= 3 ? 2 : 1, used = new Set();
       for (let k = 0; k < n; k++) { const e = k ? (nearestOther(tgt.x, tgt.y, 160, used) || tgt) : tgt; used.add(e);
@@ -2503,6 +2917,26 @@ function fireTower(t, st) {
   return false;
 }
 function shotLand(s) {
+  const prev = curSrc; curSrc = s.src || null;
+  try { shotLand0(s); } finally { curSrc = prev; }
+}
+function applyHex(e, s) { e.hexT = 4; e.hexV = s.hexV; if (s.boom) e.hexBoom = Math.max(e.hexBoom || 0, s.boom); }
+function shotLand0(s) {
+  if (s.kind === "grape") {
+    B.fx.push({ typ: "ring", x: s.tx, y: s.ty, r0: 6, r1: s.splash, color: "#a05ae0", life: 0.3, max: 0.3 });
+    for (const e of enemiesIn(s.tx, s.ty, s.splash)) hitEnemy(e, s.dmg, s.el);
+    B.zones.push({ kind: "poison", x: s.tx, y: s.ty, r: s.splash, life: s.zt, max: s.zt, poison: s.poison, slow: s.zslow, tick: 0, el: s.el, color: s.color });
+    return;
+  }
+  if (s.kind === "pumpseed") {
+    if (s.tgt && s.tgt.hp > 0) { const e = s.tgt; applyHex(e, s); hitEnemy(e, s.dmg, s.el);
+      if (s.spread) { const n = nearestOther(e.x, e.y, 150, new Set([e])); if (n) { applyHex(n, s); B.fx.push({ typ: "beam", x1: e.x, y1: e.y, x2: n.x, y2: n.y, color: s.color, life: 0.25, max: 0.25 }); } } }
+    return;
+  }
+  if (s.kind === "peck") {
+    if (s.tgt && s.tgt.hp > 0) { s.tgt.goldMark = Math.max(s.tgt.goldMark | 0, s.gold); hitEnemy(s.tgt, s.dmg, s.el); }
+    return;
+  }
   if (s.kind === "bubble") {
     B.fx.push({ typ: "ring", x: s.tx, y: s.ty, r0: 6, r1: s.splash, color: s.color, life: 0.3, max: 0.3 });
     for (const e of enemiesIn(s.tx, s.ty, s.splash)) hitEnemy(e, s.dmg, s.el, { slow: s.slow, slowT: s.slowT, stun: s.trap });
@@ -2553,8 +2987,16 @@ function step(dt) {
     if (e.hp <= 0) continue;
     e.hitT = Math.max(0, e.hitT - dt);
     if (e.burnT > 0) { e.burnT -= dt; e.hp -= e.burnD * dt; if (e.hp <= 0) { killEnemy(e); continue; } }
+    if (e.poisonT > 0) { e.poisonT -= dt; e.hp -= (e.poisonD || 0) * (e.poisonStk || 1) * dt; if (e.poisonT <= 0) e.poisonStk = 0; if (e.hp <= 0) { killEnemy(e); continue; } }
+    if (e.hexT > 0) { e.hexT -= dt; if (e.hexT <= 0) e.hexBoom = 0; }
+    if (e.frozenT > 0) { e.frozenT -= dt;
+      if (e.frozenT <= 0 && e.shatter) { const sh = e.shatter; e.shatter = 0; B.fx.push({ typ: "ring", x: e.x, y: e.y, r0: 6, r1: 60, color: "#bfe6ff", life: 0.3, max: 0.3 }); burst(e.x, e.y, "#d8f2ff", 10);
+        for (const o of enemiesIn(e.x, e.y, 60)) hitEnemy(o, sh, "水", { src: null }); if (e.hp <= 0) continue; }
+      if (e.frozenT > 0) continue; }
     if (e.slowT > 0) { e.slowT -= dt; if (e.slowT <= 0) e.slowV = 1; }
     if (e.stunT > 0) { e.stunT -= dt; continue; }
+    const mn = e.fly ? null : B.minions.find(m => m.phase === "run" && m.hp > 0 && m.lane === e.lane && m.y > e.y - 10 && m.y - e.y < (m.size + ENEMY[e.typ].size) * 0.42);
+    if (mn) { e.biting = true; e.atkCd -= dt; if (e.atkCd <= 0) { e.atkCd = 1; mn.hp -= e.atk * (mn.armored ? 0.7 : 1); mn.hurtT = 0.15; sfx.bite(); } e.x = LANE_X[e.lane] + Math.sin(B.t * 2 + e.ph) * 3; continue; }
     const bl = e.fly ? null : blockerFor(e);
     const stopY = bl ? bl.y - (e.boss ? 66 : 52) : 1e9;
     if (bl && e.y >= stopY) {
@@ -2570,6 +3012,17 @@ function step(dt) {
     if (B.over) return;
   }
   B.enemies = B.enemies.filter(e => e.hp > 0);
+  // Nest Hen chicks: egg -> hatch -> charge up the lane, ram and block slimes
+  for (const m of B.minions) {
+    m.t += dt; m.hurtT = Math.max(0, (m.hurtT || 0) - dt);
+    if (m.phase === "egg") { if (m.t >= m.hatchT) { m.phase = "run"; burst(m.x, m.y - 10, "#ffd27a", 8); B.fx.push({ typ: "ring", x: m.x, y: m.y, r0: 4, r1: 26, color: "#ffb02e", life: 0.25, max: 0.25 }); } continue; }
+    m.life -= dt;
+    const foe = B.enemies.find(e => e.hp > 0 && !e.fly && e.lane === m.lane && m.y > e.y - 10 && m.y - e.y < (m.size + ENEMY[e.typ].size) * 0.42);
+    if (foe) { m.cd -= dt; if (m.cd <= 0) { m.cd = 0.6; const prev = curSrc; curSrc = B.towers.find(t => t.uid === m.owner) || null; hitEnemy(foe, m.atk, m.el); curSrc = prev; burst(foe.x, foe.y + 10, "#ffd27a", 3); } }
+    else m.y -= m.spd * dt;
+    if (m.y < FIELD_TOP - 10 || m.life <= 0) m.hp = 0;
+  }
+  B.minions = B.minions.filter(m => m.hp > 0);
   // towers
   for (const t of B.towers) {
     t.bounce = Math.max(0, t.bounce - dt * 5);
@@ -2583,7 +3036,19 @@ function step(dt) {
   // shots
   for (const s of B.shots) {
     s.age += dt;
+    if (s.kind === "boomer") {                             // out, then back home: hits each slime twice
+      s.d += (s.out ? 1 : -1) * s.spd * dt;
+      if (s.out && s.d >= s.reach) { s.out = false; s.hit = new Set(); }
+      s.x = s.ox + Math.cos(s.ang) * s.d + Math.sin(s.d / s.reach * Math.PI) * 40 * (s.out ? 1 : -1);
+      s.y = s.oy + Math.sin(s.ang) * s.d;
+      curSrc = s.src || null;
+      for (const e of B.enemies) if (e.hp > 0 && !s.hit.has(e) && dist(s.x, s.y, e.x, e.y) < 30 * s.size) { s.hit.add(e); hitEnemy(e, s.dmg, s.el); }
+      curSrc = null;
+      if (!s.out && s.d <= 0) s.dead = true;
+      continue;
+    }
     if (s.kind === "roll" || s.kind === "feather") {       // straight, piercing
+      curSrc = s.src || null;
       s.x += s.vx * dt; s.y += s.vy * dt; s.life -= dt;
       for (const e of B.enemies) {
         if (e.hp <= 0 || s.hit.has(e) || (s.kind === "roll" && e.fly)) continue;
@@ -2593,6 +3058,7 @@ function step(dt) {
           else { const c = Math.random() < s.crit; hitEnemy(e, c ? s.dmg * s.critM : s.dmg, s.el, { crit: c }); }
         }
       }
+      curSrc = null;
       if (s.life <= 0 || s.y < FIELD_TOP - 40) s.dead = true;
       continue;
     }
@@ -2602,7 +3068,11 @@ function step(dt) {
     else { s.x += dx / L * mv; s.y += dy / L * mv; }
   }
   // fire fields
-  for (const z of B.zones) { z.life -= dt; for (const e of enemiesIn(z.x, z.y, z.r)) { e.burnT = Math.max(e.burnT, 0.4); e.burnD = Math.max(e.burnD, z.burn); } }
+  for (const z of B.zones) { z.life -= dt;
+    if (z.kind === "poison") { z.tick -= dt; if (z.tick <= 0) { z.tick = 0.5;
+        for (const e of enemiesIn(z.x, z.y, z.r)) { e.poisonStk = Math.min(5, (e.poisonStk | 0) + 1); e.poisonT = 2; e.poisonD = Math.max(e.poisonD || 0, z.poison); if (z.slow) { e.slowT = Math.max(e.slowT, 0.6); e.slowV = Math.min(e.slowV, 0.7); } } }
+      continue; }
+    for (const e of enemiesIn(z.x, z.y, z.r)) { e.burnT = Math.max(e.burnT, 0.4); e.burnD = Math.max(e.burnD, z.burn); } }
   B.zones = B.zones.filter(z => z.life > 0);
   B.shots = B.shots.filter(s => !s.dead);
 }
@@ -2643,6 +3113,13 @@ function renderBattle() {
   for (const f of B.fx) if (f.typ === "splat") drawSplat(c, f);
   // fire fields
   for (const z of B.zones) { const a = Math.min(1, z.life / 0.5);
+    if (z.kind === "poison") {
+      c.globalAlpha = 0.5 * a; c.fillStyle = "#9a4ad8"; c.beginPath(); c.ellipse(z.x, z.y + 18, z.r, z.r * 0.45, 0, 0, TAU); c.fill();
+      c.globalAlpha = a; c.strokeStyle = OL; c.lineWidth = 3; c.stroke();
+      for (let i = 0; i < 6; i++) { const ang = i * 1.05 + z.x, rise = (B.t * 0.8 + i * 0.37) % 1;
+        c.globalAlpha = a * (1 - rise); E(c, z.x + Math.cos(ang) * z.r * 0.55, z.y + 18 + Math.sin(ang) * z.r * 0.2 - rise * 26, 4 + i % 2 * 2, 4 + i % 2 * 2, i % 2 ? "#c890ff" : "#7ad84a", { lw: 1.5, hl: false }); }
+      c.globalAlpha = 1; continue;
+    }
     c.globalAlpha = 0.55 * a; c.fillStyle = "#ff6a2e"; c.beginPath(); c.ellipse(z.x, z.y + 20, z.r, z.r * 0.45, 0, 0, TAU); c.fill();
     c.globalAlpha = a; c.strokeStyle = OL; c.lineWidth = 3; c.stroke();
     for (let i = 0; i < 5; i++) { const ang = i * 1.26 + z.x; flame(c, z.x + Math.cos(ang) * z.r * 0.6, z.y + 18 + Math.sin(ang) * z.r * 0.25 - Math.abs(Math.sin(B.t * 8 + i)) * 4, 5, z.color, "#ffe14a"); }
@@ -2663,29 +3140,47 @@ function renderBattle() {
     c.restore();
     if (e.slowT > 0) { E(c, e.x + sz * 0.35, e.y - sz * 0.45, 5, 5, "#9ad8ff", { lw: 2, hl: false }); }
     if (e.burnT > 0) flame(c, e.x - sz * 0.35, e.y - sz * 0.4, 4, "#ff7a2e", null);
+    if (e.frozenT > 0) { c.globalAlpha = 0.55; F(c, cc => cc.roundRect(e.x - sz * 0.42, e.y - sz * 0.45, sz * 0.84, sz * 0.82, 10), "#bfe6ff", 3); c.globalAlpha = 1; spark(c, e.x + sz * 0.25, e.y - sz * 0.3, 4, "#fff"); }
+    if (e.poisonT > 0) for (let i = 0; i < Math.min(3, e.poisonStk | 0); i++) dot(c, e.x - 10 + i * 10, e.y - sz * 0.5 - Math.abs(Math.sin(B.t * 4 + i)) * 5, 3.5, "#a05ae0");
+    if (e.hexT > 0) { c.save(); c.globalAlpha = 0.85; c.strokeStyle = "#ff8a1e"; c.lineWidth = 2.5; c.setLineDash([5, 4]); c.beginPath(); c.arc(e.x, e.y + 2, sz * 0.45, B.t * 3, B.t * 3 + TAU); c.stroke(); c.setLineDash([]); c.restore(); }
+    if (e.goldMark) { E(c, e.x - sz * 0.38, e.y - sz * 0.48, 6, 6, "#ffd23a", { lw: 2, hl: false }); }
+    if (e.chill) for (let i = 0; i < e.chill; i++) dot(c, e.x + sz * 0.3 - i * 7, e.y + sz * 0.38, 2.5, "#9ad8ff");
     if (e.stunT > 0) for (let i = 0; i < 3; i++) { const a = B.t * 5 + i * 2.1; spark(c, e.x + Math.cos(a) * 14, e.y - sz * 0.6 + Math.sin(a) * 4, 4, "#ffe14a"); }
     // hp
     const w = e.boss ? 70 : 38, y0 = e.y - sz * 0.62 - fy;
     crayonBar(c, e.x - w / 2, y0, w, 5, Math.max(0, e.hp / e.max), e.boss ? "#ff5a8a" : "#f0a030", (e.ph * 10) | 0);
+    if (ENEMY[e.typ].thief) { c.font = "900 11px sans-serif"; c.textAlign = "center"; c.lineWidth = 3; c.strokeStyle = OL; c.strokeText("$", e.x + w / 2 + 6, y0 + 5); c.fillStyle = "#ffe14a"; c.fillText("$", e.x + w / 2 + 6, y0 + 5); }
     if (e.boss) { c.font = "900 13px sans-serif"; c.textAlign = "center"; c.lineWidth = 4; c.strokeStyle = OL; c.strokeText(ENEMY[e.typ].name, e.x, y0 - 6); c.fillStyle = "#fff"; c.fillText(ENEMY[e.typ].name, e.x, y0 - 6); }
+  }
+  // Nest Hen eggs + charging chicks
+  for (const m of B.minions) {
+    if (m.phase === "egg") { const fr = spriteFrame("fx/hen-egg"); const wob = Math.sin(m.t * 22) * Math.min(1, m.t / m.hatchT) * 0.25;
+      ell(c, m.x, m.y + 2, 12, 4, "rgba(30,20,30,.25)");
+      if (fr) { const [w, h] = fitBox(fr, 34); c.save(); c.translate(m.x, m.y); c.rotate(wob); blit(c, fr, -w / 2, -h, w, h); c.restore(); }
+      continue; }
+    const fr = spriteFrame("fx/hen-minion"), hop = Math.abs(Math.sin(m.t * 12)) * 5;
+    ell(c, m.x, m.y + 2, m.size * 0.3, 5, "rgba(30,20,30,.25)");
+    if (fr) { const [w, h] = fitBox(fr, m.size); c.save(); c.translate(m.x, m.y - hop); if (m.hurtT > 0) c.globalAlpha = 0.6; blit(c, fr, -w / 2, -h, w, h); c.restore(); }
+    if (m.giant) crown(c, m.x, m.y - m.size * 0.95 - hop, 9, "#ffd23a", "#ff5a8a");
+    if (m.hp < m.max) crayonBar(c, m.x - 14, m.y - m.size - 6, 28, 4, Math.max(0, m.hp / m.max), "#ffd23a", 7);
   }
   // pets (back row first)
   const ts = B.towers.slice().sort((a, b) => a.y - b.y);
   for (const t of ts) {
-    const st = stageOf(t.star);
-    const size = [0, 74, 82, 90, 98][st];
+    const size = [0, 70, 80, 90, 100, 112][clamp(t.star | 0, 1, 5)];
     const breathe = Math.sin(time * 3 + t.ph) * 0.03;
     groundRing(c, t.x, t.y + 4, size * 0.34, t.fainted ? "#9a8a90" : "#3ac8ff", t.slot + 3);
     c.save();
     if (t.fainted) c.globalAlpha = 0.45;
-    drawPet(c, t.id, t.star, t.shiny, t.x, t.y + 6 - t.bounce * 6, size, { squash: t.bounce * 0.6 - breathe * 3 });
+    drawPet(c, t.id, t.star, t.shiny, t.x, t.y + 6 - t.bounce * 6, size, { squash: t.bounce * 0.6 - breathe * 3, charm: t.charm, t: time + t.ph });
     c.restore();
     if (t.shield > 0) { const k = 0.5 + 0.5 * t.shield / (t.shieldMax || 1); c.globalAlpha = 0.35 * k; c.fillStyle = t.shieldCol || "#3fa84d"; c.beginPath(); c.ellipse(t.x, t.y - 30, 42, 46, 0, 0, TAU); c.fill(); c.globalAlpha = 0.9 * k; c.strokeStyle = t.shieldCol || "#3fa84d"; c.lineWidth = 4; c.setLineDash([10, 6]); c.stroke(); c.setLineDash([]); c.globalAlpha = 1; }
     if (t.hurtT > 0) { c.fillStyle = "rgba(255,80,80,.35)"; c.beginPath(); c.arc(t.x, t.y - 30, 30, 0, TAU); c.fill(); }
     if (t.shiny && !t.fainted) for (let i = 0; i < 2; i++) { const a = time * 2 + i * 3 + t.ph; const s = (Math.sin(time * 4 + i * 2) + 1) * 2.5 + 1; spark(c, t.x + Math.cos(a) * 30, t.y - 40 + Math.sin(a) * 22, s, "#fff6a0"); }
     if (t.fainted) { c.font = "900 18px sans-serif"; c.textAlign = "center"; c.fillStyle = "#fff"; c.strokeStyle = OL; c.lineWidth = 4; c.strokeText("Zzz", t.x + 20, t.y - 60); c.fillText("Zzz", t.x + 20, t.y - 60); }
     // hp bar
-    const mx = petStats(t).maxHp, w = 44, hy = t.y - size * 0.92;
+    const mx = petStats(t).maxHp, w = 44, hy = t.y - Math.min(size, 100) * 0.92;
+    if (t.nick) { c.font = "900 12px sans-serif"; c.textAlign = "center"; c.lineWidth = 4; c.strokeStyle = OL; c.strokeText(t.nick, t.x, hy - 6); c.fillStyle = "#fff"; c.fillText(t.nick, t.x, hy - 6); }
     crayonBar(c, t.x - w / 2, hy, w, 5, clamp(t.hp / mx, 0, 1), PET[t.id].role === "tank" ? "#5ab8ff" : "#7ad84a", t.slot + 11);
     // field tier pips
     for (let i = 1; i < t.tier; i++) F(c, cc => { const x = t.x + 26 + (i - 1) * 9, y = t.y - 4; cc.moveTo(x - 5, y + 3); cc.lineTo(x, y - 3); cc.lineTo(x + 5, y + 3); cc.closePath(); }, "#ffd23a", 2);
@@ -2696,7 +3191,13 @@ function renderBattle() {
   // shots
   for (const s of B.shots) {
     const col = s.color;
+    if (s.big) { c.save(); c.globalAlpha = 0.45; dot(c, s.x, s.y, 16, "#fff3a0"); c.globalAlpha = 0.25; dot(c, s.x, s.y, 24, col); c.restore(); c.save(); c.translate(s.x, s.y); c.scale(1.35, 1.35); c.translate(-s.x, -s.y); }
     switch (s.kind) {
+      case "peck": c.save(); c.translate(s.x, s.y); c.rotate(Math.atan2(s.ty - s.y, s.tx - s.x)); F(c, cc => { cc.moveTo(10, 0); cc.lineTo(-6, -5); cc.lineTo(-6, 5); cc.closePath(); }, "#ffb02e", 2); c.restore(); E(c, s.x - 8, s.y, 4, 4, "#ffd23a", { lw: 1.5, hl: false }); break;
+      case "grape": { const p = Math.min(1, s.age * s.spd / Math.max(1, dist(s.sx, s.sy, s.tx, s.ty))); const yy = s.y - Math.sin(p * Math.PI) * 40;
+        for (const [dx, dy] of [[-5, 2], [5, 2], [0, -5], [0, 6]]) E(c, s.x + dx, yy + dy, 5, 5, "#9a4ad8", { lw: 1.8, hl: false }); dot(c, s.x, yy - 11, 2.5, "#5cbf5a"); break; }
+      case "boomer": c.save(); c.translate(s.x, s.y); c.rotate(s.age * 16); c.scale(s.size, s.size); F(c, cc => { cc.moveTo(-16, -4); cc.quadraticCurveTo(0, -18, 16, -4); cc.quadraticCurveTo(0, -9, -16, -4); cc.closePath(); }, "#ffe14a", 2.5); c.restore(); break;
+      case "pumpseed": c.save(); c.translate(s.x, s.y); c.rotate(s.age * 10); E(c, 0, 0, 7, 5, "#ff9a2e", { lw: 2, hl: false }); c.strokeStyle = OL; c.lineWidth = 1.5; c.beginPath(); c.moveTo(0, -5); c.lineTo(0, 5); c.stroke(); c.restore(); spark(c, s.x + 7, s.y - 6, 3, "#c890ff"); break;
       case "seed": flame(c, s.x, s.y, 7, col, "#ffe14a"); break;
       case "roll": c.save(); c.translate(s.x, s.y); c.rotate(-s.age * 14); F(c, cc => starPath(cc, 0, 0, 15, 9, 0.68), col, 3); E(c, 0, 0, 7, 7, "#f2c879", { lw: 2, hl: false }); c.restore(); break;
       case "bubble": E(c, s.x, s.y, 11, 11, col, { lw: 3, hl: false }); dot(c, s.x - 3, s.y - 3, 2.5, "#fff"); break;
@@ -2708,6 +3209,7 @@ function renderBattle() {
         E(c, s.x, s.y, 13, 13, col, { lw: 3, hl: false }); dot(c, s.x - 4, s.y + 2, 2, "#2a1c20"); dot(c, s.x + 4, s.y - 3, 2, "#2a1c20"); flame(c, s.x - 2, s.y - 12, 6, "#ffb02e", "#ffe14a"); break; }
       default: E(c, s.x, s.y, 5, 5, col, { lw: 2.5, hl: false });
     }
+    if (s.big) c.restore();
   }
   // fx
   for (const f of B.fx) {
@@ -2728,6 +3230,16 @@ function renderBattle() {
       if (p < 0.5) for (let i = 0; i < 6; i++) { const ang = i * 1.05; E(c, f.x + Math.cos(ang) * f.r * p * 1.6, f.y + 20 + Math.sin(ang) * f.r * 0.45 * p * 1.6 - 10, 4, 3, "#8c7a72", { lw: 1.5, hl: false }); } }
     else if (f.typ === "claw") { c.globalAlpha = a; c.lineCap = "round"; for (let i = -1; i <= 1; i++) for (const [lw, cl] of [[8, OL], [4, f.color]]) { c.lineWidth = lw; c.strokeStyle = cl; c.beginPath(); c.moveTo(f.x - 22 + i * 12, f.y - 34); c.quadraticCurveTo(f.x + i * 12, f.y - 10, f.x + 14 + i * 12, f.y + 14); c.stroke(); } c.globalAlpha = 1; }
 
+    else if (f.typ === "spikes") { const p = 1 - a, r = f.r * Math.min(1, p * 2.2);
+      c.globalAlpha = a; c.strokeStyle = OL; c.lineWidth = 6; c.beginPath(); c.ellipse(f.x, f.y, r, r * 0.45, 0, 0, TAU); c.stroke(); c.strokeStyle = "#c8b03a"; c.lineWidth = 3; c.stroke();
+      for (let i = 0; i < 12; i++) { const ang = i / 12 * TAU, x = f.x + Math.cos(ang) * r, y = f.y + Math.sin(ang) * r * 0.45, hh = 14 * (1 - p * 0.5);
+        F(c, cc => { cc.moveTo(x - 6, y); cc.lineTo(x, y - hh); cc.lineTo(x + 6, y); cc.closePath(); }, i % 2 ? "#9bc33a" : "#d8c24a", 2); }
+      c.globalAlpha = 1; }
+    else if (f.typ === "chompfx") { const p = 1 - a, o = 22 * (1 - Math.min(1, p * 3));
+      c.globalAlpha = a; for (const sg of [-1, 1]) F(c, cc => { cc.ellipse(f.x, f.y - 10 + sg * (o + 6), 26, 10, 0, sg < 0 ? Math.PI : 0, sg < 0 ? TAU : Math.PI); cc.closePath(); }, "#5cbf5a", 3);
+      c.globalAlpha = 1; }
+    else if (f.typ === "frost") { c.globalAlpha = a; for (const [lw, col] of [[8, OL], [4, "#9ad8ff"], [1.5, "#fff"]]) { c.lineWidth = lw; c.strokeStyle = col; c.beginPath(); c.moveTo(f.x1, f.y1); c.lineTo(f.x2, f.y2); c.stroke(); } spark(c, f.x2, f.y2, 7, "#e8f8ff"); c.globalAlpha = 1; }
+    else if (f.typ === "charmfly") { const p = 1 - a; c.globalAlpha = Math.min(1, a * 2); drawCharmIcon(c, f.cid, f.x, f.y - 30 - p * 60, 40 + Math.sin(p * 12) * 4); c.globalAlpha = 1; }
     else if (f.typ === "flash") { c.fillStyle = "rgba(255,60,60," + (0.25 * a) + ")"; c.fillRect(0, 0, W, H); }
   }
   // flying eggs to HUD
@@ -2792,7 +3304,17 @@ function renderHome() {
   else if (homeTab === "book") renderBook(body);
   else if (homeTab === "hatch") renderHatchTab(body);
   else if (homeTab === "train") renderTrain(body);
+  else if (homeTab === "charm") renderCharms(body);
   else renderEvo(body);
+  body.classList.toggle("fit", homeTab === "evo" || homeTab === "charm" || homeTab === "play" || homeTab === "train");
+  body.dataset.tab = homeTab;
+  if (homeTab === "play" || homeTab === "train") {      // two columns on desktop: left = hero / pet panel, right = actions / grid
+    const kids = [...body.children], nRight = homeTab === "play" ? 3 : 2;
+    const L = document.createElement("div"), R = document.createElement("div"), wrap = document.createElement("div");
+    L.className = "sp-l"; R.className = "sp-r"; wrap.className = "split";
+    kids.slice(0, Math.max(0, kids.length - nRight)).forEach(k => L.appendChild(k)); kids.slice(-nRight).forEach(k => R.appendChild(k));
+    wrap.appendChild(L); wrap.appendChild(R); body.appendChild(wrap);
+  }
 }
 function renderPlay(body) {
   if (migratedNote) { const n = document.createElement("div"); n.className = "box"; n.style.fontWeight = "800";
@@ -2806,7 +3328,7 @@ function renderPlay(body) {
   if (bi) { const [w, h] = fitBox(bi, 104); blit(c, bi, 150 - w / 2, 126 - h, w, h); }
   if (zi) { const [w, h] = fitBox(zi, 64); blit(c, zi, 70 - w / 2, 132 - h, w, h); }
   const top = save.pets.slice().sort((a, b) => petPower(b) - petPower(a))[0];
-  if (top) { const fr = petImg(top.id, top.star, top.shiny); if (fr) { const [w, h] = fitBox(fr, 78); blit(c, fr, 210 - w / 2, 146 - h, w, h); } }
+  if (top) drawPet(c, top.id, top.star, top.shiny, 205, 146, [0, 62, 68, 74, 80, 86][top.star], { charm: top.charm, shadow: false, glow: false, t: 0.6 });
   hero.appendChild(cv);
   hero.insertAdjacentHTML("beforeend", "<div class='ph-txt'><h3>" + ENDLESS.name + "</h3><p>" + tr("endless_desc") + "</p>"
     + "<div class='ph-stats'><span class='chip'>" + tr("best_wave", save.endlessBest) + "</span><span class='chip'>" + tr("pets_n", save.pets.length) + "</span><span class='chip'>" + tr("eggs_n", save.eggs.length) + "</span></div></div>");
@@ -2853,18 +3375,19 @@ function renderTrain(body) {
   if (!save.pets.some(p => p.uid === trainSel)) trainSel = save.pets.slice().sort((a, b) => petPower(b) - petPower(a))[0].uid;
   const p = save.pets.find(q => q.uid === trainSel), cap = trainCap(p.apt), m = indivMul(p);
   const box = document.createElement("div"); box.className = "box train-panel" + (p.shiny ? " shiny" : "");
-  const left = document.createElement("div"); left.className = "tp-art"; left.appendChild(petCanvas(p.id, p.star, p.shiny, 96));
+  const left = document.createElement("div"); left.className = "tp-art"; left.appendChild(petCanvas(p.id, p.star, p.shiny, 96, { charm: p.charm }));
   left.insertAdjacentHTML("beforeend", gradeHTML(p.grade));
   box.appendChild(left);
   const need = xpNeed(p.lv);
   const stat = (k, lab, pct) => "<div class='trs'><span class='trs-l'>" + lab + "</span><span class='trs-bar'><i style='width:" + (p.tr[k] / cap * 100) + "%'></i></span><span class='trs-v'>"
     + tr("tr_line", "", pct) + " <small>" + (p.tr[k] >= cap ? tr("stat_cap") : tr("tr_cnt", p.tr[k], cap)) + "</small></span></div>";
-  box.insertAdjacentHTML("beforeend", "<div class='tp-info'><div class='tp-name'>" + (isUltra(p) ? "<span class='ultra'>" + tr("ultra") + "</span> " : p.shiny ? tr("shiny_pre") : "") + stageName(p.id, p.star) + " " + starsHTML(p.star) + "</div>"
+  box.insertAdjacentHTML("beforeend", "<div class='tp-info'><div class='tp-name'>" + (isUltra(p) ? "<span class='ultra'>" + tr("ultra") + "</span> " : p.shiny ? tr("shiny_pre") : "") + petName(p) + " " + starsHTML(p.star) + " <button type='button' class='mini b-sky' data-rename='" + p.uid + "'>✎ " + tr("rename") + "</button></div>"
     + "<div class='tp-lv'>" + lvHTML(p) + "<span class='xpbar'><i style='width:" + (p.lv >= MAX_LV ? 100 : p.xp / need * 100) + "%'></i></span><small>" + (p.lv >= MAX_LV ? tr("maxlv") : tr("xp", p.xp, need)) + "</small></div>"
     + aptBarHTML(p, true) + "<div class='apt-note'>" + tr("apt_note") + "</div>"
     + stat("a", tr("st_atk"), Math.round(p.tr.a * 3)) + stat("h", tr("st_hp"), Math.round(p.tr.h * 4)) + stat("s", tr("st_spd"), Math.round(p.tr.s * 1.5 * 10) / 10)
     + "</div>");
   body.appendChild(box);
+  bindRename(box);
   body.insertAdjacentHTML("beforeend", "<div class='sec-title'>" + tr("my_snacks") + "</div>");
   const fr = document.createElement("div"); fr.className = "food-row";
   const have = FOODS.filter(f => save.food[f.id] > 0);
@@ -2894,13 +3417,13 @@ function hatchAll() {
   const got = eggs.map(egg => { const r = rollHatch(egg); save.hatched++; return addPet(r.id, 1, r.shiny); });
   persist();
   lastHatchAll = got;
-  const shiny = got.filter(p => p.shiny).length, hi = got.filter(p => p.grade === "S" || p.grade === "SS").length;
+  const shiny = got.filter(p => p.shiny).length, hi = got.filter(p => /^S/.test(p.grade)).length;
   el("detail-title").textContent = tr("hatch_all_title");
   const box = el("detail-body"); box.innerHTML = "<div class='box hatch-sum' style='font-weight:900;text-align:center'>" + tr("hatch_all_sum", got.length, shiny, hi) + "</div>";
   const grid = document.createElement("div"); grid.className = "grid3";
   got.slice().sort((a, b) => (b.shiny - a.shiny) || (b.apt - a.apt)).forEach(p => {
     const c = petCard(p.id, 1, p.shiny, { pet: p });
-    if (p.shiny || p.grade === "S" || p.grade === "SS") c.classList.add("hl");
+    if (p.shiny || /^S/.test(p.grade)) c.classList.add("hl");
     grid.appendChild(c);
   });
   box.appendChild(grid);
@@ -2917,10 +3440,10 @@ function petCard(id, star, shiny, opts) {
   div.className = "card r" + d.rar + (shiny ? " shiny" : "") + (opts.locked ? " locked" : "");
   const art = document.createElement("div"); art.className = "art";
   art.innerHTML = (opts.locked ? "" : "<span class='el el-" + d.el + "'>" + elShort(d.el) + "</span><span class='rtag'>" + RAR_NAME[d.rar] + "</span>") + (shiny ? "<span class='stag'>" + tr("shiny_tag") + "</span>" : "");
-  art.appendChild(petCanvas(id, star, shiny, 104, { silhouette: opts.locked }));
+  art.appendChild(petCanvas(id, star, shiny, 104, { silhouette: opts.locked, charm: opts.pet && opts.pet.charm }));
   if (opts.pet) { art.insertAdjacentHTML("beforeend", gradeHTML(opts.pet.grade) + lvHTML(opts.pet)); if (isUltra(opts.pet)) { div.classList.add("ultra-card"); art.insertAdjacentHTML("beforeend", "<span class='stag ultra'>" + tr("ultra") + "</span>"); } }
   div.appendChild(art);
-  div.insertAdjacentHTML("beforeend", "<div class='nm'>" + (opts.locked ? "???" : stageName(id, star)) + "</div>"
+  div.insertAdjacentHTML("beforeend", "<div class='nm'>" + (opts.locked ? "???" : opts.pet && opts.pet.nick ? "<span class='nick'>" + esc(opts.pet.nick) + "</span>" : stageName(id, star)) + "</div>"
     + (opts.locked ? "<div class='meta'>" + tr("not_met") + "</div>" : "<div>" + starsHTML(star) + "</div>" + (opts.pet ? aptBarHTML(opts.pet) : "") + "<div class='meta'><span class='role role-" + d.role + "'>" + ROLE_NAME[d.role] + "</span>" + (opts.extra || "") + "</div>"));
   return div;
 }
@@ -2948,12 +3471,12 @@ function openDetail(id) {
     const known = sh ? save.seenShiny[id] : true;
     box.insertAdjacentHTML("beforeend", "<div class='sec-title'>" + (sh ? tr("shiny_sec") + (known ? "" : tr("not_hatched")) : tr("normal_sec")) + "</div>");
     const ch = document.createElement("div"); ch.className = "chain" + (sh ? " sh" : "");
-    for (let s = 1; s <= 4; s++) {
+    for (let s = 1; s <= MAX_STAR; s++) {
       const w = document.createElement("div"); w.className = "st";
       const cv = petCanvas(id, s, sh, 110, { silhouette: !known, k: 0.9 });
       cv.style.background = sh ? "radial-gradient(circle,#fff,#ead8ff)" : "radial-gradient(circle,#fff,#e4f6d0)";
       w.appendChild(cv);
-      w.insertAdjacentHTML("beforeend", "<div class='lab'>" + (known ? d.names[s - 1] : "???") + "</div><div class='stars' style='font-size:12px'>" + "★".repeat(s) + (s === 4 ? "+" : "") + "</div>");
+      w.insertAdjacentHTML("beforeend", "<div class='lab'>" + (known ? stageName(id, s) : "???") + "</div><div class='stars' style='font-size:12px'>" + "★".repeat(s) + "</div>");
       ch.appendChild(w);
     }
     box.appendChild(ch);
@@ -2964,11 +3487,13 @@ function openDetail(id) {
     box.insertAdjacentHTML("beforeend", "<div class='sec-title'>" + tr("my_family", d.names[0], mine.length) + "</div><div class='apt-note' style='margin:-2px 0 6px'>" + tr("apt_note") + "</div>");
     for (const p of mine) {
       const row = document.createElement("div"); row.className = "own-row" + (p.shiny ? " shiny" : "") + (isUltra(p) ? " ultra-card" : "");
-      row.appendChild(petCanvas(p.id, p.star, p.shiny, 62));
-      row.insertAdjacentHTML("beforeend", "<div class='own-info'><div><b>" + (isUltra(p) ? "<span class='ultra'>" + tr("ultra") + "</span> " : p.shiny ? tr("shiny_pre") : "") + stageName(p.id, p.star) + "</b> " + lvHTML(p) + " " + gradeHTML(p.grade) + "</div>"
+      row.appendChild(petCanvas(p.id, p.star, p.shiny, 62, { charm: p.charm }));
+      row.insertAdjacentHTML("beforeend", "<div class='own-info'><div><b>" + (isUltra(p) ? "<span class='ultra'>" + tr("ultra") + "</span> " : p.shiny ? tr("shiny_pre") : "") + petName(p) + "</b> " + starsHTML(p.star) + " " + lvHTML(p) + " " + gradeHTML(p.grade)
+        + " <button type='button' class='mini b-sky' data-rename='" + p.uid + "'>✎</button></div>"
         + aptBarHTML(p, true) + "<div class='own-tr'>" + tr("st_atk") + " +" + p.tr.a * 3 + "% · " + tr("st_hp") + " +" + p.tr.h * 4 + "% · " + tr("st_spd") + " +" + Math.round(p.tr.s * 15) / 10 + "%</div></div>");
       box.appendChild(row);
     }
+    bindRename(box, () => openDetail(id));
   }
   el("detail").classList.remove("hidden");
 }
@@ -2983,7 +3508,7 @@ function renderHatchTab(body) {
   el("btn-buy").disabled = save.gems < EGG_COST;
   el("btn-buy").addEventListener("click", () => {
     if (save.gems < EGG_COST) return;
-    save.gems -= EGG_COST; save.eggs.push({ q: Math.random() < 0.15 ? 2 : 1, sh: 0.04 }); persist(); sfx.coin(); renderHome();
+    save.gems -= EGG_COST; save.eggs.push({ q: Math.random() < 0.10 ? 2 : 1, sh: SHINY_BASE }); persist(); sfx.coin(); renderHome();
   });
   body.insertAdjacentHTML("beforeend", "<div class='sec-title'>" + tr("my_eggs", save.eggs.length) + "</div>");
   if (!save.eggs.length) { body.insertAdjacentHTML("beforeend", "<div class='box' style='font-weight:800'>" + tr("no_eggs") + "</div>"); return; }
@@ -2995,55 +3520,242 @@ function renderHatchTab(body) {
   save.eggs.map((e, i) => ({ e, i })).sort((a, b) => b.e.q - a.e.q || b.e.sh - a.e.sh).forEach(({ e, i }) => {
     const d = document.createElement("div"); d.className = "egg-card q" + e.q;
     d.appendChild(eggCanvas(e.q));
-    d.insertAdjacentHTML("beforeend", "<div class='nm'>" + EGG_NAME[e.q] + "</div><div class='meta'>" + tr("shiny_rate", Math.round(e.sh * 100)) + "</div>");
+    d.insertAdjacentHTML("beforeend", "<div class='nm'>" + EGG_NAME[e.q] + "</div><div class='meta'>" + tr("shiny_rate", Math.round(e.sh * 1000) / 10) + "</div>");
     d.addEventListener("click", () => { sfx.click(); openHatch(i); });
     grid.appendChild(d);
   });
   body.appendChild(grid);
 }
-function evoGroups() {
-  const m = new Map();
-  for (const p of save.pets) { if (p.star >= MAX_STAR) continue; const k = p.id + "|" + p.star; if (!m.has(k)) m.set(k, []); m.get(k).push(p); }
-  return [...m.values()].filter(g => g.length >= 2);
+/* ================= v12 evolution: main pet + duplicate feeding ================= */
+let evoSpecies = null;
+function evoMainOf(id) {
+  const uid = save.evoMain[id];
+  let m = uid != null && save.pets.find(p => p.uid === uid && p.id === id);
+  if (!m) { m = bestOf(id); if (m) save.evoMain[id] = m.uid; }
+  return m || null;
+}
+function evoProtected(main, p) {
+  return p.shiny || !!p.nick || !!p.charm || battleUids().has(p.uid) || (/^S/.test(p.grade) && (p.apt || 0) > (main.apt || 0));
+}
+function evoCopies(main) { return save.pets.filter(p => p.id === main.id && p !== main); }
+function evoEligible(main) {
+  return evoCopies(main).filter(p => !evoProtected(main, p)).sort((a, b) => (a.star - b.star) || ((a.apt || 0) - (b.apt || 0)) || (a.uid - b.uid));
+}
+function feedEvo(mainUid, uids, opt) {
+  opt = opt || {};
+  const main = save.pets.find(p => p.uid === mainUid);
+  if (!main) return { fed: 0, gained: 0, ups: 0 };
+  const busy = battleUids();
+  const oldStar = main.star, oldName = stageName(main.id, main.star);
+  let fed = 0, gained = 0;
+  for (const uid of uids) {
+    if (main.star >= MAX_STAR) break;
+    const b = save.pets.find(p => p.uid === uid);
+    if (!b || b === main || b.id !== main.id || busy.has(b.uid)) continue;
+    const cap = trainCap(main.apt);
+    if (b.lv > main.lv) { main.lv = b.lv; main.xp = b.xp; }
+    main.tr = { a: Math.min(cap, Math.max(main.tr.a, b.tr.a)), h: Math.min(cap, Math.max(main.tr.h, b.tr.h)), s: Math.min(cap, Math.max(main.tr.s, b.tr.s)) };
+    if (b.shiny && !main.shiny) { main.shiny = true; save.seenShiny[main.id] = true; }
+    if (b.charm) save.charms[b.charm] = (save.charms[b.charm] | 0) + 1;
+    const v = copyValue(b); main.evo = (main.evo | 0) + v; gained += v; fed++;
+    save.pets = save.pets.filter(p => p !== b);
+    while (main.star < MAX_STAR && main.evo >= evoRequired(main.star)) { main.evo -= evoRequired(main.star); main.star++; }
+  }
+  if (main.star >= MAX_STAR) main.evo = 0;
+  save.evoMain[main.id] = main.uid;
+  persist();
+  const ups = main.star - oldStar;
+  if (ups > 0 && !opt.quiet) reveal(main, tr("evo_ok"), tr("evo_msg", oldName, main.shiny ? tr("shiny_pre") : "", petName(main)) + (main.star === MAX_STAR ? tr("max_star") : ""), true);
+  else if (fed && !opt.quiet) { showToast(tr("evo_fed", fed, gained)); sfx.coin(); }
+  return { fed, gained, ups, star: main.star, evo: main.evo };
+}
+function oneClickEvo(id) {
+  const main = evoMainOf(id); if (!main) return { fed: 0, gained: 0, ups: 0 };
+  if (main.star >= MAX_STAR) return { fed: 0, gained: 0, ups: 0 };
+  // feed only what is needed to reach 5★ (cheapest copies first)
+  let need = 0; for (let s = main.star; s < MAX_STAR; s++) need += EVO_REQ[s]; need -= main.evo | 0;
+  const pick = []; for (const p of evoEligible(main)) { if (need <= 0) break; pick.push(p.uid); need -= copyValue(p); }
+  if (!pick.length) { showToast(tr("evo_nothing")); return { fed: 0, gained: 0, ups: 0 }; }
+  return feedEvo(main.uid, pick);
+}
+function setEvoMain(uid) { const p = save.pets.find(q => q.uid === uid); if (!p) return false; save.evoMain[p.id] = uid; persist(); return true; }
+function evolve(uidA, uidB) {   // legacy hook: feed B into A
+  const a = save.pets.find(p => p.uid === uidA), b = save.pets.find(p => p.uid === uidB);
+  if (!a || !b || a === b || a.id !== b.id || a.star >= MAX_STAR) return false;
+  feedEvo(a.uid, [b.uid]); return true;
+}
+function evoStatsOf(p, star) {
+  const t = { id: p.id, star, tier: 1, shiny: p.shiny, ind: indivMul(p), ce: charmEff(p) }, st = petStats(t);
+  return { dmg: Math.round(st.dmg), hp: Math.round(st.maxHp) };
 }
 function renderEvo(body) {
-  body.insertAdjacentHTML("beforeend", "<div class='box' style='font-weight:800;font-size:14px'>" + tr("evo_info") + "</div>");
-  const gs = evoGroups();
-  if (!gs.length) { body.insertAdjacentHTML("beforeend", "<div class='box' style='font-weight:800'>" + tr("evo_none") + "</div>"); }
-  for (const g of gs) {
-    g.sort((a, b) => (b.apt - a.apt) || (b.shiny - a.shiny));
-    const p = g[0], d = PET[p.id];
-    const row = document.createElement("div"); row.className = "evo-row";
-    const sh = g[0].shiny || g[1].shiny;
-    row.appendChild(petCanvas(p.id, p.star, p.shiny, 70));
-    row.insertAdjacentHTML("beforeend", "<span class='arrow'>➜</span>");
-    row.appendChild(petCanvas(p.id, p.star + 1, sh, 70));
-    row.insertAdjacentHTML("beforeend", "<div class='info'>" + stageName(p.id, p.star) + " ×" + g.length + "<br>→ " + (sh ? "✦" : "") + stageName(p.id, p.star + 1) + " " + starsHTML(p.star + 1) + "</div>");
-    const btn = document.createElement("button"); btn.type = "button"; btn.className = "b-mint"; btn.textContent = tr("evolve_btn");
-    btn.addEventListener("click", () => evolve(g[0].uid, g[1].uid));
-    row.appendChild(btn);
-    body.appendChild(row);
+  const owned = PETS.filter(d => save.pets.some(p => p.id === d.id));
+  if (!owned.length) { body.insertAdjacentHTML("beforeend", "<div class='box' style='font-weight:800'>" + tr("evo_none") + "</div>"); return; }
+  if (!owned.some(d => d.id === evoSpecies)) {
+    const ready = owned.find(d => { const m = evoMainOf(d.id); return m.star < MAX_STAR && evoEligible(m).length; });
+    evoSpecies = (ready || owned[0]).id;
   }
-  body.insertAdjacentHTML("beforeend", "<div class='sec-title' style='margin-top:12px'>" + tr("my_pets", save.pets.length) + "</div>");
-  const grid = document.createElement("div"); grid.className = "grid3";
-  save.pets.slice().sort((a, b) => petPower(b) - petPower(a)).forEach(p => grid.appendChild(petCard(p.id, p.star, p.shiny, { pet: p })));
-  body.appendChild(grid);
+  const wrap = document.createElement("div"); wrap.className = "evo-wrap";
+  const side = document.createElement("div"); side.className = "evo-side";
+  side.insertAdjacentHTML("beforeend", "<div class='sec-title'>" + tr("evo_species") + "</div>");
+  for (const d of owned) {
+    const m = evoMainOf(d.id), n = save.pets.filter(p => p.id === d.id).length, el2 = evoEligible(m).length;
+    const b = document.createElement("button"); b.type = "button"; b.className = "evo-sp" + (d.id === evoSpecies ? " on" : "") + (m.shiny ? " shiny" : "");
+    b.dataset.sp = d.id;
+    b.appendChild(petCanvas(m.id, m.star, m.shiny, 40, { charm: m.charm }));
+    b.insertAdjacentHTML("beforeend", "<span class='es-n'>" + petName(m) + "<small>" + "★".repeat(m.star) + " ×" + n + "</small></span>" + (m.star < MAX_STAR && el2 ? "<i class='es-dot'>" + el2 + "</i>" : ""));
+    b.addEventListener("click", () => { sfx.click(); evoSpecies = d.id; renderHome(); });
+    side.appendChild(b);
+  }
+  wrap.appendChild(side);
+  const main = evoMainOf(evoSpecies), d = PET[main.id];
+  const pane = document.createElement("div"); pane.className = "evo-pane";
+  const hd = document.createElement("div"); hd.className = "box evo-head" + (main.shiny ? " shiny" : "");
+  hd.innerHTML = "<div class='eh-name'><span class='chip'>" + tr("evo_main") + "</span> <b>" + (main.shiny ? "✦" : "") + petName(main) + "</b> " + starsHTML(main.star) + " " + gradeHTML(main.grade) + " " + lvHTML(main)
+    + " <button type='button' class='mini b-sky' data-rename='" + main.uid + "'>✎ " + tr("rename") + "</button></div>"
+    + "<div class='evo-rules'>" + tr("evo_rules") + "</div>";
+  const rec = document.createElement("div"); rec.className = "evo-recipe";
+  const slot = (cv, lab, cls) => { const w = document.createElement("div"); w.className = "er-slot " + (cls || ""); w.appendChild(cv); w.insertAdjacentHTML("beforeend", "<div class='er-lab'>" + lab + "</div>"); return w; };
+  const req = evoRequired(main.star), elig = evoEligible(main);
+  rec.appendChild(slot(petCanvas(main.id, main.star, main.shiny, 96, { charm: main.charm }), tr("evo_main") + " " + "★".repeat(main.star), "er-main"));
+  if (main.star < MAX_STAR) {
+    rec.insertAdjacentHTML("beforeend", "<span class='er-op'>+</span>");
+    const cp = slot(petCanvas(main.id, 1, false, 64), tr("evo_copies") + " ×" + Math.max(0, req - (main.evo | 0)), "er-copy");
+    rec.appendChild(cp);
+    rec.insertAdjacentHTML("beforeend", "<span class='er-op'>➜</span>");
+    rec.appendChild(slot(petCanvas(main.id, main.star + 1, main.shiny, 96, { charm: main.charm }), tr("evo_next") + " " + "★".repeat(main.star + 1), "er-next"));
+  }
+  hd.appendChild(rec);
+  if (main.star < MAX_STAR) {
+    const a = evoStatsOf(main, main.star), b2 = evoStatsOf(main, main.star + 1);
+    hd.insertAdjacentHTML("beforeend", "<div class='evo-prog'><span class='ep-bar'><i style='width:" + Math.min(100, (main.evo | 0) / req * 100) + "%'></i></span><b>" + tr("evo_progress", main.evo | 0, req) + "</b></div>"
+      + "<div class='evo-stats'><span>" + tr("evo_stats", STAR_MUL[main.star], STAR_MUL[main.star + 1]) + "</span>"
+      + (d.dmg ? "<span>" + tr("st_atk") + " " + a.dmg + " ➜ <b>" + b2.dmg + "</b></span>" : "") + "<span>" + tr("st_hp") + " " + a.hp + " ➜ <b>" + b2.hp + "</b></span>"
+      + "<span>" + tr("evo_look") + ": " + stageName(main.id, main.star) + " ➜ <b>" + (stageName(main.id, main.star + 1) === stageName(main.id, main.star) ? tr("evo_legend") : stageName(main.id, main.star + 1)) + "</b></span></div>");
+    const br = document.createElement("div"); br.className = "btn-row evo-btns";
+    const one = document.createElement("button"); one.type = "button"; one.className = "b-mint"; one.id = "btn-feed-one"; one.textContent = tr("evo_feed_one"); one.disabled = !elig.length;
+    one.addEventListener("click", () => { sfx.click(); feedEvo(main.uid, [elig[0].uid]); renderHome(); });
+    const all = document.createElement("button"); all.type = "button"; all.className = "b-gold b-big evo-onekey"; all.id = "btn-onekey"; all.textContent = "⚡ " + tr("evo_onekey_n", elig.length); all.disabled = !elig.length;
+    all.addEventListener("click", () => { sfx.click(); oneClickEvo(main.id); renderHome(); });
+    br.appendChild(one); br.appendChild(all); hd.appendChild(br);
+  } else hd.insertAdjacentHTML("beforeend", "<div class='evo-max'>🏆 " + tr("evo_maxed") + "</div>");
+  hd.insertAdjacentHTML("beforeend", "<div class='apt-note'>" + tr("evo_protect_note") + "</div>");
+  pane.appendChild(hd);
+  const copies = evoCopies(main).sort((a, b) => (b.star - a.star) || (b.shiny - a.shiny) || ((b.apt || 0) - (a.apt || 0)));
+  pane.insertAdjacentHTML("beforeend", "<div class='sec-title'>" + tr("evo_dupes", copies.length) + "</div>");
+  const grid = document.createElement("div"); grid.className = "evo-copies";
+  copies.slice(0, 48).forEach(p => {
+    const c = document.createElement("div"); c.className = "evo-copy" + (p.shiny ? " shiny" : "");
+    c.appendChild(petCanvas(p.id, p.star, p.shiny, 52, { charm: p.charm }));
+    const prot = evoProtected(main, p);
+    c.insertAdjacentHTML("beforeend", "<div class='ec-i'><b>" + petName(p) + "</b><span>" + "★".repeat(p.star) + " " + gradeHTML(p.grade) + " " + p.apt + "</span>"
+      + "<small>" + tr("evo_value", copyValue(p)) + (prot ? " · 🔒" + tr("evo_protected") : "") + "</small></div>");
+    const bm = document.createElement("button"); bm.type = "button"; bm.className = "mini b-sky"; bm.textContent = tr("evo_set_main");
+    bm.addEventListener("click", () => { sfx.click(); setEvoMain(p.uid); renderHome(); });
+    c.appendChild(bm);
+    if (main.star < MAX_STAR) { const bf = document.createElement("button"); bf.type = "button"; bf.className = "mini b-mint"; bf.textContent = tr("evo_feed_this");
+      bf.addEventListener("click", () => { sfx.click(); feedEvo(main.uid, [p.uid]); renderHome(); }); c.appendChild(bf); }
+    grid.appendChild(c);
+  });
+  if (copies.length > 48) grid.insertAdjacentHTML("beforeend", "<div class='evo-more'>+" + (copies.length - 48) + "</div>");
+  pane.appendChild(grid);
+  wrap.appendChild(pane);
+  body.appendChild(wrap);
+  bindRename(wrap);
 }
-function evolve(uidA, uidB) {
-  let a = save.pets.find(p => p.uid === uidA);
-  let b = save.pets.find(p => p.uid === uidB);
-  if (!a || !b || a === b || a.id !== b.id || a.star !== b.star || a.star >= MAX_STAR) return false;
-  if ((b.apt || 0) > (a.apt || 0)) { const t = a; a = b; b = t; }   // the higher-aptitude pet survives; its aptitude never changes
-  const oldName = stageName(a.id, a.star);
-  const cap = trainCap(a.apt);
-  if (b.lv > a.lv) { a.lv = b.lv; a.xp = b.xp; }
-  a.tr = { a: Math.min(cap, Math.max(a.tr.a, b.tr.a)), h: Math.min(cap, Math.max(a.tr.h, b.tr.h)), s: Math.min(cap, Math.max(a.tr.s, b.tr.s)) };
-  a.star++; a.shiny = a.shiny || b.shiny;
-  if (a.shiny) save.seenShiny[a.id] = true;
-  save.pets = save.pets.filter(p => p !== b);
-  persist();
-  reveal(a, tr("evo_ok"), tr("evo_msg", oldName, a.shiny ? tr("shiny_pre") : "", stageName(a.id, a.star)) + (a.star === 5 ? tr("max_star") : ""), true);
-  return true;
+
+/* ================= v12 charms ================= */
+let charmSel = null;
+function buyCharm(cid) {
+  const c = CHARM[cid]; if (!c || save.gems < c.cost) return false;
+  save.gems -= c.cost; save.charms[cid] = (save.charms[cid] | 0) + 1; persist(); sfx.coin();
+  showToast(tr("charm_got", tr("charm_" + cid))); return true;
+}
+function equipCharm(uid, cid) {
+  const p = save.pets.find(q => q.uid === uid); if (!p || !CHARM[cid] || !(save.charms[cid] > 0)) return false;
+  if (p.charm) save.charms[p.charm] = (save.charms[p.charm] | 0) + 1;
+  save.charms[cid]--; p.charm = cid; persist(); sfx.place();
+  showToast(tr("charm_equipped", petName(p), tr("charm_" + cid))); return true;
+}
+function unequipCharm(uid) {
+  const p = save.pets.find(q => q.uid === uid); if (!p || !p.charm) return false;
+  save.charms[p.charm] = (save.charms[p.charm] | 0) + 1; p.charm = ""; persist(); sfx.click(); return true;
+}
+function charmIconCanvas(cid, px) {
+  const cv = document.createElement("canvas"); cv.width = cv.height = px * 2; cv.style.width = cv.style.height = px + "px";
+  const c = cv.getContext("2d"); c.scale(2, 2); drawCharmIcon(c, cid, px / 2, px / 2, px * 0.92); return cv;
+}
+function renderCharms(body) {
+  body.insertAdjacentHTML("beforeend", "<div class='box charm-info'>" + tr("charm_info") + "</div>");
+  if (!save.pets.some(p => p.uid === charmSel)) { const b = save.pets.slice().sort((a, b) => petPower(b) - petPower(a))[0]; charmSel = b ? b.uid : null; }
+  const wrap = document.createElement("div"); wrap.className = "charm-wrap";
+  const shop = document.createElement("div"); shop.className = "charm-shop";
+  shop.insertAdjacentHTML("beforeend", "<div class='sec-title'>" + tr("charm_bag") + "</div>");
+  const sel = save.pets.find(p => p.uid === charmSel);
+  for (const c of CHARMS) {
+    const row = document.createElement("div"); row.className = "charm-row r" + c.rar + (sel && sel.charm === c.id ? " on" : ""); row.dataset.charm = c.id;
+    row.appendChild(charmIconCanvas(c.id, 44));
+    row.insertAdjacentHTML("beforeend", "<div class='cr-i'><b>" + tr("charm_" + c.id) + "</b><small>" + tr("charm_" + c.id + "_d") + "</small><span class='chip'>" + tr("charm_owned", save.charms[c.id] | 0) + "</span></div>");
+    const bb = document.createElement("button"); bb.type = "button"; bb.className = "mini b-gold"; bb.textContent = tr("charm_buy", c.cost) + "💎"; bb.disabled = save.gems < c.cost; bb.dataset.buy = c.id;
+    bb.addEventListener("click", () => { if (buyCharm(c.id)) renderHome(); });
+    const be = document.createElement("button"); be.type = "button"; be.className = "mini b-mint"; be.textContent = tr("charm_equip"); be.disabled = !sel || !(save.charms[c.id] > 0); be.dataset.equip = c.id;
+    be.addEventListener("click", () => { if (sel && equipCharm(sel.uid, c.id)) renderHome(); });
+    const bx = document.createElement("div"); bx.className = "cr-b"; bx.appendChild(bb); bx.appendChild(be); row.appendChild(bx);
+    shop.appendChild(row);
+  }
+  const right = document.createElement("div"); right.className = "charm-pets";
+  if (sel) {
+    const pv = document.createElement("div"); pv.className = "box charm-sel" + (sel.shiny ? " shiny" : "");
+    pv.appendChild(petCanvas(sel.id, sel.star, sel.shiny, 104, { charm: sel.charm }));
+    pv.insertAdjacentHTML("beforeend", "<div class='cs-i'><b>" + (sel.shiny ? "✦" : "") + petName(sel) + "</b> " + starsHTML(sel.star) + "<div>" + (sel.charm ? tr("charm_on", tr("charm_" + sel.charm)) + "<br><small>" + tr("charm_" + sel.charm + "_d") + "</small>" : tr("charm_none")) + "</div>"
+      + "<div class='btn-row' style='justify-content:flex-start;margin-top:6px'>" + (sel.charm ? "<button type='button' class='mini b-pink' id='btn-unequip'>" + tr("charm_unequip") + "</button>" : "") + "<button type='button' class='mini b-sky' data-rename='" + sel.uid + "'>✎ " + tr("rename") + "</button></div></div>");
+    right.appendChild(pv);
+    const ub = pv.querySelector("#btn-unequip"); if (ub) ub.addEventListener("click", () => { unequipCharm(sel.uid); renderHome(); });
+  }
+  right.insertAdjacentHTML("beforeend", "<div class='sec-title'>" + tr("charm_pick") + "</div>");
+  const grid = document.createElement("div"); grid.className = "charm-grid";
+  save.pets.slice().sort((a, b) => petPower(b) - petPower(a)).slice(0, 60).forEach(p => {
+    const c = document.createElement("button"); c.type = "button"; c.className = "charm-pet" + (p.uid === charmSel ? " on" : "") + (p.shiny ? " shiny" : "");
+    c.appendChild(petCanvas(p.id, p.star, p.shiny, 52, { charm: p.charm }));
+    c.insertAdjacentHTML("beforeend", "<span>" + petName(p) + "</span>");
+    c.addEventListener("click", () => { sfx.click(); charmSel = p.uid; renderHome(); });
+    grid.appendChild(c);
+  });
+  right.appendChild(grid);
+  wrap.appendChild(shop); wrap.appendChild(right);
+  body.appendChild(wrap);
+  bindRename(wrap);
+}
+
+/* ================= v12 pet naming ================= */
+function renamePet(uid, name) {
+  const p = save.pets.find(q => q.uid === uid); if (!p) return null;
+  p.nick = sanitizeNick(name);
+  for (const t of B.towers) if (t.uid === uid) t.nick = p.nick;
+  persist(); return p.nick;
+}
+function openRename(uid, after) {
+  const p = save.pets.find(q => q.uid === uid); if (!p) return;
+  let m = el("rename-modal");
+  if (!m) { m = document.createElement("div"); m.id = "rename-modal"; m.className = "overlay dim-bg"; el("detail").parentNode.appendChild(m); }
+  m.innerHTML = "<div class='panel rename-panel'><div class='center' style='margin-top:-40px'><span class='ribbon'>" + tr("rename_title") + "</span></div>"
+    + "<div class='rn-art'></div><div class='rn-def'>" + stageName(p.id, p.star) + " " + starsHTML(p.star) + "</div>"
+    + "<input id='rename-input' type='text' maxlength='" + NICK_MAX * 2 + "' autocomplete='off' spellcheck='false'>"
+    + "<div class='apt-note'>" + tr("rename_hint") + "</div>"
+    + "<div class='btn-row'><button type='button' class='b-mint' id='btn-rn-save'>" + tr("rename_save") + "</button><button type='button' class='b-sky' id='btn-rn-reset'>" + tr("rename_reset") + "</button><button type='button' class='b-pink' id='btn-rn-cancel'>" + tr("rename_cancel") + "</button></div></div>";
+  m.querySelector(".rn-art").appendChild(petCanvas(p.id, p.star, p.shiny, 96, { charm: p.charm }));
+  const inp = m.querySelector("#rename-input"); inp.value = p.nick || ""; inp.placeholder = tr("rename_ph");
+  m.classList.remove("hidden");
+  const close = () => { m.classList.add("hidden"); if (after) after(); else if (screen === "home") renderHome(); };
+  const done = (v) => { const n = renamePet(uid, v); showToast(tr("rename_ok", n || stageName(p.id, p.star))); sfx.click(); close(); };
+  m.querySelector("#btn-rn-save").addEventListener("click", () => done(inp.value));
+  m.querySelector("#btn-rn-reset").addEventListener("click", () => done(""));
+  m.querySelector("#btn-rn-cancel").addEventListener("click", () => { m.classList.add("hidden"); });
+  inp.addEventListener("keydown", (e) => { e.stopPropagation(); if (e.key === "Enter") done(inp.value); if (e.key === "Escape") m.classList.add("hidden"); });
+  setTimeout(() => { try { inp.focus(); } catch (e) {} }, 30);
+}
+function bindRename(root, after) {
+  root.querySelectorAll("[data-rename]").forEach(b => b.addEventListener("click", (e) => { e.stopPropagation(); sfx.click(); openRename(+b.dataset.rename, after); }));
 }
 
 /* ================= hatching ================= */
@@ -3283,14 +3995,24 @@ window.__PETTD__ = {
   hatchFirst() { if (!save.eggs.length) save.eggs.push({ q: 1, sh: 0.05 }); return openHatch(save.eggs.reduce((bi, e, i, a) => e.q > a[bi].q ? i : bi, 0)); },
   skipHatchAnim: skipHatch,
   hatchedPet: () => H8.pet ? { ...H8.pet } : null,
-  evolve, evoGroups: () => evoGroups().map(g => g.map(p => p.uid)),
+  evolve, feedEvo: (m, u, o) => feedEvo(m, u, o), oneClickEvo, setEvoMain, evoMain: (id) => { const m = evoMainOf(id); return m ? m.uid : null; },
+  evoEligible: (id) => { const m = evoMainOf(id); return m ? evoEligible(m).map(p => p.uid) : []; },
+  copyValue: (uid) => copyValue(save.pets.find(q => q.uid === uid)), EVO_REQ, CHARMS, SHINY_BASE, SHINY_CAP, HATCH_W, rollApt, birthGrade, sanitizeNick, NICK_MAX,
+  getCharms: () => ({ ...save.charms }), giveCharm(cid, n) { save.charms[cid] = (save.charms[cid] | 0) + (n || 1); persist(); },
+  buyCharm, equipCharm, unequipCharm, renamePet, openRename, dropCharm: (cid) => dropCharm(200, 300, cid), setGems(n) { save.gems = n; persist(); },
+  petName: (uid) => { const p = save.pets.find(q => q.uid === uid); return p ? petName(p) : null; },
+  towerInfo: () => B.towers.map(t => ({ uid: t.uid, nick: t.nick, charm: t.charm, star: t.star })),
+  minions: () => B.minions.map(m => ({ phase: m.phase, giant: m.giant, lane: m.lane, y: Math.round(m.y) })),
+  spawnEnemyAt(id, lane, y, hpMul) { spawnEnemy({ id, hpMul: hpMul || 1, spdMul: 1 }); const e = B.enemies[B.enemies.length - 1]; e.lane = lane; e.x = LANE_X[lane]; e.y = y; return B.enemies.length; },
+  killAll() { for (const e of B.enemies.slice()) if (e.hp > 0) killEnemy(e); B.enemies = B.enemies.filter(e => e.hp > 0); return B.enemies.map(e => e.typ); },
+  stepN(n, dt) { for (let i = 0; i < n; i++) step(dt || 1 / 60); },
   openBook() { openHome("book"); },
   openDetail, selectTray(uid) { B.selPet = uid; renderTray(); },
-  fxKinds: () => [...new Set([...B.shots.map(s => "shot:" + s.kind), ...B.fx.map(f => "fx:" + f.typ), ...B.zones.map(() => "zone")])],
+  fxKinds: () => [...new Set([...B.shots.map(s => "shot:" + s.kind), ...B.fx.map(f => "fx:" + f.typ), ...B.zones.map(() => "zone"), ...B.minions.map(m => "minion:" + m.phase)])],
   spawnDemo() {   // a field full of tough slimes so every skill is visible at once
     B.enemies = []; B.spawnQ = []; B.waveActive = true;
-    const ty = ["sprout", "jelly", "ember", "zap", "pebble", "puff"];
-    for (let i = 0; i < 10; i++) { spawnEnemy({ id: ty[i % 6], hpMul: 60, spdMul: 0.15 }); const e = B.enemies[B.enemies.length - 1]; e.lane = i % 5; e.x = LANE_X[e.lane]; e.y = 330 + Math.floor(i / 5) * 110 + (i % 2) * 20; }
+    const ty = ["sprout", "jelly", "ember", "zap", "pebble", "puff", "split", "thief"];
+    for (let i = 0; i < 10; i++) { spawnEnemy({ id: ty[i % 8], hpMul: 60, spdMul: 0.15 }); const e = B.enemies[B.enemies.length - 1]; e.lane = i % 5; e.x = LANE_X[e.lane]; e.y = 330 + Math.floor(i / 5) * 110 + (i % 2) * 20; }
     spawnEnemy({ id: "boss2", hpMul: 8, spdMul: 0.1 }); B.enemies[B.enemies.length - 1].y = 220;
   },
   enemyNames: () => B.enemies.map(e => ENEMY[e.typ].name),
@@ -3305,16 +4027,17 @@ window.__PETTD__ = {
 
   // fire one pet once in a sandbox and report what its attack produced
   probeAttack(id, star) {
-    const keep = { shots: B.shots, fx: B.fx, zones: B.zones, towers: B.towers, enemies: B.enemies, floaters: B.floaters };
-    B.shots = []; B.fx = []; B.zones = []; B.floaters = [];
+    const keep = { shots: B.shots, fx: B.fx, zones: B.zones, towers: B.towers, enemies: B.enemies, floaters: B.floaters, minions: B.minions };
+    B.shots = []; B.fx = []; B.zones = []; B.floaters = []; B.minions = [];
     const t = { uid: -1, id, star: star || 1, shiny: false, slot: 7, x: LANE_X[2], y: BACK_Y, tier: 1, cd: 0, bounce: 0, hp: 1, fainted: false, ph: 0 };
     const mate = { uid: -2, id: "chili", star: 1, shiny: false, slot: 6, x: LANE_X[1], y: BACK_Y, tier: 1, cd: 9, bounce: 0, hp: 1, fainted: false, ph: 0 };
     B.towers = [t, mate];
     const mk = (lane, y) => ({ typ: "pebble", lane, x: LANE_X[lane], y, hp: 9999, max: 9999, spd: 20, atk: 0, el: "土", fly: false, boss: false, reward: 0, slowT: 0, slowV: 1, stunT: 0, burnT: 0, burnD: 0, atkCd: 9, ph: 0, biting: false, hitT: 0 });
     B.enemies = [mk(2, 420), mk(2, 360), mk(1, 400), mk(3, 410)];
+    if (PET[id].typ === "spikequake") B.enemies.push(mk(2, BACK_Y - 70));
     let fired = false; try { fired = fireTower(t, petStats(t)); } catch (err) { return "ERR " + err.message; }
     const sig = [...new Set([...B.shots.map(s => "shot:" + s.kind), ...B.fx.map(f => "fx:" + f.typ)])].sort().join("+")
-      + (t.shield || mate.shield ? "+shield" : "") + (B.enemies.some(e => e.hp < 9999) ? "+dmg" : "") + (mate.berryT ? "+buff" : "");
+      + (t.shield || mate.shield ? "+shield" : "") + (B.enemies.some(e => e.hp < 9999) ? "+dmg" : "") + (mate.berryT ? "+buff" : "") + (B.minions.length ? "+minion" : "");
     Object.assign(B, keep);
     return fired ? (PET[id].typ + "|" + sig) : "NOFIRE";
   }
