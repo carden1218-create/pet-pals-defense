@@ -467,27 +467,120 @@
   .overlay > * { flex-shrink: 0; }
   .overlay > :first-child { margin-top: auto; }
   .overlay > :last-child { margin-bottom: auto; }
+
+  /* ===== save code ===== */
+  .save-code {
+    width: 100%; min-height: 4.5em; resize: vertical;
+    font: 700 12px/1.45 ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+    color: var(--ink); background: #fff8e6;
+    border: 3px solid var(--ol); border-radius: 12px; padding: 8px;
+    word-break: break-all; box-sizing: border-box;
+  }
+  .save-confirm { margin-top: 12px; background: #fff3d6; border: 3px solid var(--ol); border-radius: 14px; padding: 8px; }
+  #save-screen .panel { max-width: 520px; }
+
+  /* ===== portrait / landscape shell ===== */
+  #stage { position: absolute; inset: 0; z-index: 1; }
+  html.port body, html.land body {
+    background-color: #e8c57a;
+    background-image:
+      radial-gradient(circle at 12% 18%, rgba(255,255,255,.28), transparent 26%),
+      radial-gradient(circle at 88% 80%, rgba(255,140,90,.18), transparent 30%),
+      repeating-linear-gradient(90deg, rgba(43,27,34,.03) 0 2px, transparent 2px 18px),
+      linear-gradient(180deg, #f3d79a 0%, #e2b45c 100%);
+  }
+  html.land #app {
+    left: 0; top: 0; width: 100%; height: 100%;
+    transform: none;
+    border-radius: 0;
+    display: flex; flex-direction: row; align-items: stretch;
+    background: #e8c57a url(assets/ui/grain.png);
+    overflow: hidden;
+    padding: env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left);
+  }
+  html.land #stage {
+    position: relative; inset: auto;
+    flex: 0 0 var(--stage-w, 42%);
+    width: var(--stage-w, 42%);
+    height: 100%;
+    overflow: hidden;
+    z-index: 1;
+    background: #9ad77a;
+    box-shadow: 5px 0 0 var(--ol);
+  }
+  html.land #cv {
+    width: 100%;
+    height: calc(100% * 960 / 724);
+    left: 0; top: 0;
+  }
+  html.land #dock {
+    position: relative;
+    inset: auto;
+    top: auto; left: auto; right: auto; bottom: auto;
+    flex: 1 1 auto;
+    width: auto; height: auto;
+    border-top: none;
+    border-left: 4px solid var(--ol);
+    min-width: 200px;
+  }
+  html.land #tray {
+    flex-wrap: wrap;
+    overflow-x: hidden;
+    overflow-y: auto;
+    align-content: flex-start;
+    align-items: flex-start;
+  }
+  html.land #tray .tcard { flex: 0 0 88px; }
+  html.land #inspect { bottom: 14px; width: min(320px, 92%); }
+  html.land #toast { left: 50%; max-width: calc(100% - 16px); white-space: normal; text-align: center; line-height: 1.3; border-radius: 20px; }
+  html.land #hud-sub { position: static; transform: none; left: auto; top: auto; margin-top: 4px; justify-content: flex-start; }
+  html.land #dock-bar { flex-wrap: wrap; }
+  html.land #home { padding: 12px 20px; }
+  html.land #home .panel { max-width: 1100px; margin: 0 auto; height: calc(100% - 8px); }
+  html.land .overlay { padding-top: 16px; }
+  @media (min-width: 1200px) and (orientation: landscape) {
+    html.land #app { padding-left: 32px; }
+  }
+  @media (max-height: 500px) and (orientation: landscape) {
+    html.land #title-screen h1, html.land #lang-screen h1 { font-size: 34px !important; }
+    html.land #title-screen .subtitle { margin: 2px 0 6px; font-size: 13px !important; }
+    html.land .b-big { font-size: 18px; padding: 2px 14px; }
+    html.land #home { padding: 6px 10px; }
+    html.land #home .panel { padding: 2px 2px; }
+    html.land .overlay { padding-top: 8px; }
+    html.land #tray .tcard { flex: 0 0 74px; }
+    html.land #tray .tcard canvas { width: 64px; height: 64px; }
+    html.land .hud-btns button.rnd { width: 34px; height: 34px; font-size: 10px; border-width: 7px; }
+    html.land #hud { padding: 4px 4px 0; }
+    html.land .hud-stats { gap: 2px; }
+    html.land .hud-stats .pill { font-size: 11px; border-width: 6px; padding: 0 4px; }
+    html.land .banner { font-size: 11px; padding: 1px 8px; }
+    html.land #toast { top: 78px; font-size: 12px; padding: 5px 10px; }
+  }
 </style>
 </head>
 <body>
 <div id="app">
-  <canvas id="cv"></canvas>
-  <div id="loading"><h1 style="font-size:46px" data-i18n="game_title">Pet Pals Defense</h1><div class="bar"><i id="load-bar"></i></div><div id="load-txt">Loading pets… 0%</div></div>
-
-  <div id="hud" class="hidden">
-    <div class="hud-row">
-      <div class="hud-stats">
-        <span class="pill" id="st-wave" data-i18n="wave_init">第 1 波</span>
-        <span class="pill sm" id="st-eggs" data-i18n="eggs_init">蛋 0</span>
+  <div id="stage">
+    <canvas id="cv"></canvas>
+    <div id="hud" class="hidden">
+      <div class="hud-row">
+        <div class="hud-stats">
+          <span class="pill" id="st-wave" data-i18n="wave_init">第 1 波</span>
+          <span class="pill sm" id="st-eggs" data-i18n="eggs_init">蛋 0</span>
+        </div>
+        <div class="hud-btns">
+          <button type="button" class="rnd" id="btn-speed">×1</button>
+          <button type="button" class="rnd" id="btn-pause" data-i18n="pause_btn">暂停</button>
+          <button type="button" class="rnd b-red" id="btn-end" data-i18n="end">结束</button>
+        </div>
       </div>
-      <div class="hud-btns">
-        <button type="button" class="rnd" id="btn-speed">×1</button>
-        <button type="button" class="rnd" id="btn-pause" data-i18n="pause_btn">暂停</button>
-        <button type="button" class="rnd b-red" id="btn-end" data-i18n="end">结束</button>
-      </div>
+      <div id="hud-sub"><span class="banner hidden" id="loot-pill" data-i18n="loot_init">掉落 Lv.1</span></div>
     </div>
-    <div id="hud-sub"><span class="banner hidden" id="loot-pill" data-i18n="loot_init">掉落 Lv.1</span></div>
+    <div id="inspect" class="hidden"></div>
+    <div id="toast" class="hidden"></div>
   </div>
+  <div id="loading"><h1 style="font-size:46px" data-i18n="game_title">Pet Pals Defense</h1><div class="bar"><i id="load-bar"></i></div><div id="load-txt">Loading pets… 0%</div></div>
   <div id="dock" class="hidden">
     <div id="dock-bar">
       <span class="dpill" id="st-gold" data-i18n="gold_init">金币 0</span>
@@ -497,7 +590,6 @@
     </div>
     <div id="tray"></div>
   </div>
-  <div id="inspect" class="hidden"></div>
 
   <div id="lang-screen" class="overlay hidden" data-lang-choice="1">
     <div style="flex:1"></div>
@@ -550,6 +642,7 @@
       <div class="audio-bar">
         <button type="button" class="audio-btn" data-audio="bgm" data-i18n="music">Music</button>
         <button type="button" class="audio-btn" data-audio="sfx" data-i18n="sfx">SFX</button>
+        <button type="button" id="btn-save-home" data-i18n="save_code">Save Code</button>
       </div>
       <div class="tabs">
         <button type="button" class="on" data-tab="play" data-i18n="tab_play">冒险</button>
@@ -605,6 +698,9 @@
         <button type="button" class="audio-btn" data-audio="bgm" data-i18n="music">Music</button>
         <button type="button" class="audio-btn" data-audio="sfx" data-i18n="sfx">SFX</button>
       </div>
+      <div class="btn-row" style="margin-top:10px">
+        <button type="button" id="btn-save-pause" data-i18n="save_code">Save Code</button>
+      </div>
       <p class="subtitle" style="margin:12px 0 0" data-i18n="pause_note">结束后，已经掉落的蛋和宝石都会保留。</p>
     </div>
   </div>
@@ -617,7 +713,31 @@
     </div>
   </div>
 
-  <div id="toast" class="hidden"></div>
+
+  <div id="save-screen" class="overlay dim-bg hidden">
+    <div class="panel center" style="max-width:520px">
+      <div style="margin-top:-40px"><span class="ribbon" data-i18n="save_code">Save Code</span></div>
+      <p class="subtitle" data-i18n="save_hint">Copy this code, open the game on another phone or computer, and paste it to continue. No account needed.</p>
+      <div class="sec-title" data-i18n="save_export">Export save</div>
+      <textarea id="save-code-out" class="save-code" readonly rows="5" spellcheck="false"></textarea>
+      <div class="btn-row" style="margin:8px 0 14px">
+        <button type="button" class="b-gold" id="btn-save-copy" data-i18n="save_copy">Copy</button>
+      </div>
+      <div class="sec-title" data-i18n="save_import">Import save</div>
+      <textarea id="save-code-in" class="save-code" rows="4" spellcheck="false" data-i18n-placeholder="save_paste" placeholder="Paste a save code here"></textarea>
+      <div class="btn-row" style="margin-top:8px">
+        <button type="button" class="b-pink" id="btn-save-import" data-i18n="save_go">Import</button>
+        <button type="button" id="btn-save-close" data-i18n="back">Back</button>
+      </div>
+      <div id="save-confirm" class="save-confirm hidden">
+        <p class="subtitle" id="save-confirm-msg" data-i18n="save_overwrite">Importing will replace the progress on this device. Continue?</p>
+        <div class="btn-row">
+          <button type="button" class="b-red" id="btn-save-yes" data-i18n="save_yes">Replace and import</button>
+          <button type="button" id="btn-save-no" data-i18n="save_no">Cancel</button>
+        </div>
+      </div>
+    </div>
+  </div>
 </div>
 <script>
 (() => {
@@ -840,7 +960,11 @@ const STR = {
     hatch_all_sum:"孵出 {0} 只萌宠 · 异色 {1} 只 · S 级以上 {2} 只", lvup:"{0} 升到 Lv.{1}！", fed:"{0} 吃掉了{1}！", ultra:"✦异色极致",
     my_family:"我的{0}（{1}）", sum_food:"获得零食：<b>{0}</b> 份", food_float:"+{0}", apt_tiers:"平平,不错,优秀,卓越,天才", ok:"好的",
     food_candy:"莓果糖", food_candy_d:"经验 +40", food_chili:"辣椒脆", food_chili_d:"经验 +25 · 攻击 +1", food_cookie:"坚果饼", food_cookie_d:"经验 +25 · 生命 +1",
-    food_jelly:"跳跳果冻", food_jelly_d:"经验 +25 · 攻速 +1", food_cake:"彩虹蛋糕", food_cake_d:"经验 +150 · 全属性 +1", food_apple:"金苹果", food_apple_d:"经验 +500 · 全属性 +2"
+    food_jelly:"跳跳果冻", food_jelly_d:"经验 +25 · 攻速 +1", food_cake:"彩虹蛋糕", food_cake_d:"经验 +150 · 全属性 +1", food_apple:"金苹果", food_apple_d:"经验 +500 · 全属性 +2",
+    save_code:"存档码", save_export:"导出存档", save_import:"导入存档", save_copy:"复制", save_copied:"已复制！",
+    save_hint:"把这段存档码复制到另一台手机或电脑上，再粘贴导入，就能接着玩。不用注册账号。",
+    save_paste:"把存档码粘贴到这里", save_go:"导入", save_overwrite:"导入会覆盖这台设备上的当前进度，确定吗？",
+    save_yes:"覆盖并导入", save_no:"取消", save_ok:"存档已导入！", save_bad:"存档码无效或已损坏", save_empty:"还没有可以导出的存档"
   },
   en: {
     game_title:"Pet Pals Defense", short_title:"Pet Pals", doc_title:"Pet Pals Defense — Catch · Hatch · Evolve", tagline:"Catch pets · Hatch & evolve · Battle endless slimes",
@@ -891,7 +1015,11 @@ const STR = {
     hatch_all_sum:"Hatched {0} pets · {1} shiny · {2} S-grade or better", lvup:"{0} reached Lv.{1}!", fed:"{0} ate the {1}!", ultra:"✦Ultra Shiny",
     my_family:"My {0} ({1})", sum_food:"Snacks found: <b>{0}</b>", food_float:"+{0}", apt_tiers:"Plain,Good,Great,Superb,Genius", ok:"OK",
     food_candy:"Berry Candy", food_candy_d:"XP +40", food_chili:"Spicy Crisp", food_chili_d:"XP +25 · Attack +1", food_cookie:"Nut Cookie", food_cookie_d:"XP +25 · HP +1",
-    food_jelly:"Zippy Jelly", food_jelly_d:"XP +25 · Speed +1", food_cake:"Rainbow Cake", food_cake_d:"XP +150 · All stats +1", food_apple:"Golden Apple", food_apple_d:"XP +500 · All stats +2"
+    food_jelly:"Zippy Jelly", food_jelly_d:"XP +25 · Speed +1", food_cake:"Rainbow Cake", food_cake_d:"XP +150 · All stats +1", food_apple:"Golden Apple", food_apple_d:"XP +500 · All stats +2",
+    save_code:"Save Code", save_export:"Export save", save_import:"Import save", save_copy:"Copy", save_copied:"Copied!",
+    save_hint:"Copy this code, open the game on another phone or computer, and paste it to continue. No account needed.",
+    save_paste:"Paste a save code here", save_go:"Import", save_overwrite:"Importing will replace the progress on this device. Continue?",
+    save_yes:"Replace and import", save_no:"Cancel", save_ok:"Save imported!", save_bad:"That save code is invalid or damaged", save_empty:"There's no save to export yet"
   }
 };
 function tr(key, ...a) { const s = (STR[LANG] && STR[LANG][key]) ?? STR.zh[key] ?? key; return s.replace(/\{(\d)\}/g, (_, i) => a[+i]); }
@@ -1469,16 +1597,33 @@ const app = document.getElementById("app");
 const canvas = document.getElementById("cv");
 const ctx = canvas.getContext("2d");
 const el = (id) => document.getElementById(id);
-let pxk = 1;
+let pxk = 1, land = false;
+const FIELD_H = 724;
+function isLand() { return window.innerWidth > window.innerHeight + 20; }
 function fit() {
-  const s = Math.min(window.innerWidth / W, window.innerHeight / H);
-  app.style.setProperty("--s", s);
-  pxk = Math.min(3, Math.max(1, (window.devicePixelRatio || 1) * s));
+  const vw = window.innerWidth, vh = window.innerHeight;
+  land = isLand();
+  document.documentElement.classList.toggle("land", land);
+  document.documentElement.classList.toggle("port", !land);
+  app.classList.toggle("land", land);
+  if (!land) {
+    const s = Math.min(vw / W, vh / H);
+    app.style.setProperty("--s", s);
+    app.style.removeProperty("--stage-w");
+    pxk = Math.min(3, Math.max(1, (window.devicePixelRatio || 1) * s));
+  } else {
+    app.style.setProperty("--s", 1);
+    const stageW = Math.max(200, Math.min(vh * W / FIELD_H, vw * 0.62));
+    app.style.setProperty("--stage-w", Math.round(stageW) + "px");
+    pxk = Math.min(3, Math.max(1, (window.devicePixelRatio || 1) * (stageW / W)));
+  }
   canvas.width = Math.round(W * pxk); canvas.height = Math.round(H * pxk);
   ctx.setTransform(pxk, 0, 0, pxk, 0, 0);
   BG.clear();
 }
 window.addEventListener("resize", fit);
+window.addEventListener("orientationchange", () => setTimeout(fit, 60));
+if (window.visualViewport) visualViewport.addEventListener("resize", fit);
 function lerp(a, b, t) { return a + (b - a) * t; }
 function dist(ax, ay, bx, by) { return Math.hypot(ax - bx, ay - by); }
 function clamp(v, a, b) { return Math.max(a, Math.min(b, v)); }
@@ -1512,6 +1657,13 @@ function persist() {
       firstEgg: save.firstEgg, hatched: save.hatched, food: save.food, uidSeq
     }));
   } catch (e) {}
+}
+function snapshotSave() {
+  return {
+    v: 2, started: save.started, muted: !!(save.muteBgm && save.muteSfx), muteBgm: !!save.muteBgm, muteSfx: !!save.muteSfx,
+    gems: save.gems, pets: save.pets, eggs: save.eggs, beaten: save.beaten, endlessBest: save.endlessBest,
+    seen: save.seen, seenShiny: save.seenShiny, firstEgg: save.firstEgg, hatched: save.hatched, food: save.food, uidSeq, lang: LANG
+  };
 }
 function applySave(d) {
   save.started = true;
@@ -1577,6 +1729,163 @@ function addPet(id, star, shiny, o) {
   const p = { uid: uidSeq++, id, star: star || 1, shiny: !!shiny, apt, grade: birthGrade(apt, rar, !!shiny), lv: 1, xp: 0, tr: { a: 0, h: 0, s: 0 } };
   save.pets.push(p); save.seen[id] = true; if (shiny) save.seenShiny[id] = true;
   return p;
+}
+
+
+/* ================= save codes (compressed + checksum, no account) ================= */
+const SAVE_CODE_PREFIX = "PPD1";
+function crc32(u8) {
+  let c = ~0 >>> 0;
+  for (let i = 0; i < u8.length; i++) {
+    c ^= u8[i];
+    for (let k = 0; k < 8; k++) c = (c >>> 1) ^ (0xedb88320 & -(c & 1));
+  }
+  return (~c) >>> 0;
+}
+function b64urlEnc(u8) {
+  let s = "";
+  for (let i = 0; i < u8.length; i++) s += String.fromCharCode(u8[i]);
+  return btoa(s).replace(/\+/g, "-").replace(/\//g, "_").replace(/=+$/g, "");
+}
+function b64urlDec(str) {
+  const pad = str.length % 4 === 2 ? "==" : str.length % 4 === 3 ? "=" : "";
+  const bin = atob(str.replace(/-/g, "+").replace(/_/g, "/") + pad);
+  const u8 = new Uint8Array(bin.length);
+  for (let i = 0; i < bin.length; i++) u8[i] = bin.charCodeAt(i);
+  return u8;
+}
+function lzEncode(u8) {
+  const N = u8.length, out = [];
+  const last = new Map();
+  let i = 0;
+  while (i < N) {
+    let best = 0, dist = 0;
+    if (i + 2 < N) {
+      const key = u8[i] | (u8[i + 1] << 8) | (u8[i + 2] << 16);
+      const pos = last.get(key);
+      if (pos != null) {
+        const d = i - pos;
+        if (d > 0 && d < 65535) {
+          let k = 0;
+          while (k < 255 && i + k < N && pos + k < i && u8[pos + k] === u8[i + k]) k++;
+          if (k >= 3) { best = k; dist = d; }
+        }
+      }
+    }
+    if (best >= 3) {
+      out.push(1, dist & 255, (dist >> 8) & 255, best);
+      const end = i + best;
+      while (i < end) {
+        if (i + 2 < N) last.set(u8[i] | (u8[i + 1] << 8) | (u8[i + 2] << 16), i);
+        i++;
+      }
+    } else {
+      out.push(0, u8[i]);
+      if (i + 2 < N) last.set(u8[i] | (u8[i + 1] << 8) | (u8[i + 2] << 16), i);
+      i++;
+    }
+  }
+  return new Uint8Array(out);
+}
+function lzDecode(u8) {
+  const out = [];
+  for (let i = 0; i < u8.length; ) {
+    const flag = u8[i++];
+    if (flag === 0) {
+      if (i >= u8.length) throw new Error("short");
+      out.push(u8[i++]);
+    } else if (flag === 1) {
+      if (i + 2 >= u8.length) throw new Error("short");
+      const dist = u8[i] | (u8[i + 1] << 8), len = u8[i + 2]; i += 3;
+      if (dist <= 0 || dist > out.length || len < 3) throw new Error("bad ref");
+      const start = out.length - dist;
+      for (let k = 0; k < len; k++) out.push(out[start + k]);
+    } else throw new Error("bad flag");
+  }
+  return new Uint8Array(out);
+}
+function packSave(d) {
+  return {
+    v: 2, g: d.gems | 0, b: d.beaten | 0, e: d.endlessBest | 0, u: d.uidSeq | 0,
+    h: d.hatched | 0, f: d.firstEgg ? 1 : 0, mb: d.muteBgm ? 1 : 0, ms: d.muteSfx ? 1 : 0,
+    p: (d.pets || []).map(q => [q.uid | 0, q.id, q.star | 0, q.shiny ? 1 : 0, q.apt | 0, q.grade, q.lv | 0, q.xp | 0, (q.tr && q.tr.a) | 0, (q.tr && q.tr.h) | 0, (q.tr && q.tr.s) | 0]),
+    q: (d.eggs || []).map(e => [e.q | 0, +e.sh || 0]),
+    fo: d.food || {}, s: d.seen || {}, ss: d.seenShiny || {}, lang: d.lang || LANG || ""
+  };
+}
+function unpackSave(p) {
+  if (!p || typeof p !== "object") throw new Error("empty");
+  return {
+    started: true, v: 2,
+    gems: p.g | 0, beaten: p.b | 0, endlessBest: p.e | 0, uidSeq: p.u | 0,
+    hatched: p.h | 0, firstEgg: !!p.f, muteBgm: !!p.mb, muteSfx: !!p.ms, muted: !!(p.mb && p.ms),
+    pets: (p.p || []).map(a => ({ uid: a[0], id: a[1], star: a[2], shiny: !!a[3], apt: a[4], grade: a[5], lv: a[6], xp: a[7], tr: { a: a[8] | 0, h: a[9] | 0, s: a[10] | 0 } })),
+    eggs: (p.q || []).map(a => ({ q: a[0], sh: a[1] })),
+    food: p.fo || {}, seen: p.s || {}, seenShiny: p.ss || {}, lang: p.lang || ""
+  };
+}
+function exportSaveCode() {
+  if (!save.started) return "";
+  const json = JSON.stringify(packSave(snapshotSave()));
+  const raw = new TextEncoder().encode(json);
+  const packed = lzEncode(raw);
+  const payload = b64urlEnc(packed);
+  const sum = crc32(packed).toString(16).padStart(8, "0");
+  return SAVE_CODE_PREFIX + "." + payload + "." + sum;
+}
+function importSaveCode(code, o) {
+  o = o || {};
+  try {
+    const parts = String(code || "").trim().split(".");
+    if (parts.length !== 3 || parts[0] !== SAVE_CODE_PREFIX) return { ok: false, error: "format" };
+    const packed = b64urlDec(parts[1]);
+    const sum = crc32(packed).toString(16).padStart(8, "0");
+    if (sum !== parts[2].toLowerCase()) return { ok: false, error: "checksum" };
+    const json = new TextDecoder().decode(lzDecode(packed));
+    const data = unpackSave(JSON.parse(json));
+    if (!data.pets || !data.pets.length && !data.started) return { ok: false, error: "empty" };
+    if (save.started && !o.confirm) return { ok: false, needConfirm: true, data };
+    applySave(data);
+    persist();
+    if (data.lang === "en" || data.lang === "zh") applyLang(data.lang, true);
+    if (el("btn-continue")) el("btn-continue").classList.remove("hidden");
+    refreshMuteUI();
+    if (screen === "home") renderHome();
+    return { ok: true };
+  } catch (e) {
+    return { ok: false, error: "bad" };
+  }
+}
+function openSave() {
+  const box = el("save-screen");
+  el("save-code-out").value = exportSaveCode();
+  el("save-code-in").value = "";
+  el("save-code-in").placeholder = tr("save_paste");
+  el("save-confirm").classList.add("hidden");
+  box.classList.remove("hidden");
+  pendingImport = null;
+}
+function closeSave() { el("save-screen").classList.add("hidden"); pendingImport = null; }
+let pendingImport = null;
+function doImport(code, confirmed) {
+  const r = importSaveCode(code, { confirm: !!confirmed });
+  if (r.needConfirm) { pendingImport = code; el("save-confirm").classList.remove("hidden"); el("save-confirm-msg").textContent = tr("save_overwrite"); return r; }
+  el("save-confirm").classList.add("hidden");
+  if (r.ok) { showToast(tr("save_ok")); closeSave(); if (screen === "home") renderHome(); }
+  else showToast(tr("save_bad"));
+  return r;
+}
+async function copySaveCode() {
+  const text = el("save-code-out").value;
+  if (!text) { showToast(tr("save_empty")); return; }
+  try {
+    if (navigator.clipboard && navigator.clipboard.writeText) await navigator.clipboard.writeText(text);
+    else { el("save-code-out").select(); document.execCommand("copy"); }
+    showToast(tr("save_copied"));
+  } catch (e) {
+    try { el("save-code-out").select(); document.execCommand("copy"); showToast(tr("save_copied")); }
+    catch (e2) { showToast(tr("save_bad")); }
+  }
 }
 
 /* ================= toast ================= */
@@ -2307,7 +2616,7 @@ function renderMenuBG() {
 
 /* ================= screens ================= */
 function hideAll() {
-  for (const id of ["lang-screen", "title-screen", "starter", "home", "detail", "hatch", "help", "pause", "result", "hud", "dock", "inspect"]) el(id).classList.add("hidden");
+  for (const id of ["lang-screen", "title-screen", "starter", "home", "detail", "hatch", "help", "pause", "result", "save-screen", "hud", "dock", "inspect"]) el(id).classList.add("hidden");
 }
 function openHome(tab) {
   if (tab) homeTab = tab;
@@ -2700,6 +3009,14 @@ el("btn-start").addEventListener("click", () => { unlockAudio(); sfx.click(); op
 el("btn-continue").addEventListener("click", () => { unlockAudio(); sfx.click(); openHome("play"); });
 document.querySelectorAll(".tabs button").forEach(b => b.addEventListener("click", () => { sfx.click(); homeTab = b.dataset.tab; renderHome(); }));
 el("btn-help").addEventListener("click", () => { el("help").classList.remove("hidden"); });
+el("btn-save-home").addEventListener("click", () => { sfx.click(); openSave(); });
+el("btn-save-pause").addEventListener("click", () => { sfx.click(); openSave(); });
+el("btn-save-close").addEventListener("click", () => { sfx.click(); closeSave(); });
+el("btn-save-copy").addEventListener("click", () => { sfx.click(); copySaveCode(); });
+el("btn-save-import").addEventListener("click", () => { sfx.click(); doImport(el("save-code-in").value, false); });
+el("btn-save-yes").addEventListener("click", () => { sfx.click(); doImport(pendingImport || el("save-code-in").value, true); });
+el("btn-save-no").addEventListener("click", () => { sfx.click(); el("save-confirm").classList.add("hidden"); pendingImport = null; });
+
 el("btn-help-ok").addEventListener("click", () => { el("help").classList.add("hidden"); });
 bindAudioButtons();
 el("btn-detail-ok").addEventListener("click", () => el("detail").classList.add("hidden"));
@@ -2820,6 +3137,10 @@ window.__PETTD__ = {
   },
   enemyNames: () => B.enemies.map(e => ENEMY[e.typ].name),
   getMute: () => ({ muted: !!save.muted, muteBgm: !!save.muteBgm, muteSfx: !!save.muteSfx }),
+  exportSave: () => exportSaveCode(),
+  importSave: (code, o) => importSaveCode(code, o || {}),
+  openSave, fit, isLand: () => land,
+
   setMute(bgm, sfxOff) { setMuteBgm(!!bgm); setMuteSfx(!!sfxOff); return this.getMute(); },
   musicTrack: () => musicTrack,
   audioReady: () => !!(audioCtx && SONG && SONG.main),
