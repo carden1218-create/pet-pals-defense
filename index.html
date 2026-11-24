@@ -937,6 +937,18 @@
     </div>
   </div>
 
+
+  <div id="newgame-screen" class="overlay dim-bg hidden">
+    <div class="panel center" style="max-width:400px">
+      <div style="margin-top:-38px"><span class="ribbon pink" data-i18n="newgame_title">New Game</span></div>
+      <p class="subtitle" data-i18n="newgame_confirm">Starting a new game will erase the progress on this device (pets, gems, and waves). Are you sure?</p>
+      <div class="btn-row" style="justify-content:center;gap:12px;margin-top:12px">
+        <button type="button" class="b-red" id="btn-newgame-yes" data-i18n="newgame_yes">Erase and start over</button>
+        <button type="button" class="b-mint" id="btn-newgame-no" data-i18n="newgame_no">Keep my progress</button>
+      </div>
+    </div>
+  </div>
+
   <div id="save-screen" class="overlay dim-bg hidden">
     <div class="panel center" style="max-width:520px">
       <div style="margin-top:-40px"><span class="ribbon" data-i18n="save_code">Save Code</span></div>
@@ -1233,7 +1245,7 @@ let LANG = (() => { try { return localStorage.getItem(LANG_KEY) || ""; } catch (
 const STR = {
   zh: {
     game_title:"萌宠防线", short_title:"萌宠防线", doc_title:"萌宠防线 — 抓宠·孵蛋·进化塔防", tagline:"抓萌宠 · 孵蛋进化 · 无尽打史莱姆",
-    btn_start:"开始冒险", btn_continue:"继续冒险", title_hint:"史莱姆从上面来，把萌宠摆在下面挡住它们",
+    btn_start:"开始冒险", btn_continue:"继续冒险", btn_new:"重新开始", title_hint:"史莱姆从上面来，把萌宠摆在下面挡住它们",
     pick_starter:"选一只初始萌宠", starter_sub:"它会陪你打第一场仗。别担心，打史莱姆会掉蛋，其他的都能孵出来！",
     help:"说明", tab_play:"冒险", tab_book:"图鉴", tab_hatch:"孵蛋", tab_evo:"进化", back:"返回", how:"怎么玩",
     help_1:"只有一个模式：无尽冒险。史莱姆从上方沿 5 条小路走下来。点下面的萌宠卡片，再点底部的空位，把它放上去。",
@@ -1310,11 +1322,13 @@ const STR = {
     board_syncing:"正在同步成绩…", board_updated:"排行榜已更新", board_err:"暂时排不上，先看看本地成绩吧",
     name_title:"玩家昵称", name_hint:"1–20 个字。想快点开始的话，直接用推荐名字就好！",
     name_ok:"就用这个", name_shuffle:"换一个", name_ph:"输入你的昵称", name_bad:"换个昵称再试试（1–20 个字，不要用符号）",
-    name_edit:"改昵称"
+    name_edit:"改昵称",
+    newgame_title:"重新开始", newgame_confirm:"重新开始会清空这台设备上的当前进度（萌宠、宝石、波数都会被清掉）。确定要重新开始吗？",
+    newgame_yes:"清空并重开", newgame_no:"保留进度"
   },
   en: {
     game_title:"Pet Pals Defense", short_title:"Pet Pals", doc_title:"Pet Pals Defense — Catch · Hatch · Evolve", tagline:"Catch pets · Hatch & evolve · Battle endless slimes",
-    btn_start:"Start", btn_continue:"Continue", title_hint:"Slimes come from the top — line up your pets at the bottom to stop them!",
+    btn_start:"Start", btn_continue:"Continue", btn_new:"New Game", title_hint:"Slimes come from the top — line up your pets at the bottom to stop them!",
     pick_starter:"Pick Your First Pet", starter_sub:"It will fight your first battle with you. Don't worry — slimes drop eggs, so you can hatch all the others!",
     help:"Help", tab_play:"Play", tab_book:"Pets", tab_hatch:"Hatch", tab_evo:"Evolve", back:"Back", how:"How to Play",
     help_1:"There is just one mode: Endless Adventure. Slimes march down 5 lanes from the top. Tap a pet card below, then tap an empty spot at the bottom to place it.",
@@ -1391,7 +1405,9 @@ const STR = {
     board_syncing:"Syncing your score…", board_updated:"Leaderboard updated", board_err:"Couldn't reach the board — showing local records",
     name_title:"Player Name", name_hint:"1–20 characters. In a hurry? Just keep the suggested name!",
     name_ok:"Let's go!", name_shuffle:"New idea", name_ph:"Type your name", name_bad:"Pick another name (1–20 characters, no symbols)",
-    name_edit:"Edit name"
+    name_edit:"Edit name",
+    newgame_title:"New Game", newgame_confirm:"Starting a new game will erase the progress on this device (pets, gems, and waves). Are you sure?",
+    newgame_yes:"Erase and start over", newgame_no:"Keep my progress"
   }
 };
 function tr(key, ...a) { const s = (STR[LANG] && STR[LANG][key]) ?? STR.zh[key] ?? key; return s.replace(/\{(\d)\}/g, (_, i) => a[+i]); }
@@ -2295,6 +2311,13 @@ const save = {
 };
 function persist() {
   try {
+    // Never let an unstarted in-memory save wipe a real localStorage run.
+    if (!save.started) {
+      const raw = localStorage.getItem(SAVE_KEY);
+      if (raw) {
+        try { const prev = JSON.parse(raw); if (isUsableSave(prev)) return; } catch (e) {}
+      }
+    }
     localStorage.setItem(SAVE_KEY, JSON.stringify({
       v: 2, started: save.started, muted: !!(save.muteBgm && save.muteSfx), muteBgm: !!save.muteBgm, muteSfx: !!save.muteSfx,
       gems: save.gems, pets: save.pets, eggs: save.eggs,
@@ -2303,8 +2326,13 @@ function persist() {
       playerName: save.playerName || "", clientId: save.clientId || getClientId()
     }));
   } catch (e) {}
-  maybeSubmitScore("persist");
+  if (save.started) { try { maybeSubmitScore("persist"); } catch (e) {} }
 }
+function isUsableSave(d) {
+  return !!(d && (d.started || (Array.isArray(d.pets) && d.pets.length) || (d.endlessBest | 0) > 0 || (d.hatched | 0) > 0 || (Array.isArray(d.eggs) && d.eggs.length)));
+}
+let persistSuspended = false;
+function flushSave() { if (!persistSuspended && save.started) { try { persist(); } catch (e) {} } }
 function snapshotSave() {
   return {
     v: 2, started: save.started, muted: !!(save.muteBgm && save.muteSfx), muteBgm: !!save.muteBgm, muteSfx: !!save.muteSfx,
@@ -2354,12 +2382,22 @@ function normPet(p) {
 function loadSave() {
   try {
     const raw = localStorage.getItem(SAVE_KEY);
-    if (raw) { const d = JSON.parse(raw); if (d && d.started) { applySave(d); return true; } }
+    if (raw) {
+      const d = JSON.parse(raw);
+      if (isUsableSave(d)) {
+        applySave(d);
+        save.started = true;
+        // Freeze newly normalized fields (aptitude, client id, v2 keys) so a later reload can't reroll them.
+        const needsUpgrade = d.v !== 2 || d.charms == null || d.evoMain == null || !d.clientId || d.muteBgm == null;
+        if (needsUpgrade) persist();
+        return true;
+      }
+    }
     // migrate v1 (old office-pet version): same progress, pets become their new fruit/element counterparts
     const old = localStorage.getItem(OLD_SAVE_KEY);
     if (old) {
       const d = JSON.parse(old);
-      if (d && d.started) {
+      if (isUsableSave(d) || (d && d.started)) {
         applySave({
           muted: d.muted, gems: d.gems, beaten: Math.min(3, d.beaten | 0), endlessBest: d.endlessBest | 0,
           pets: (d.pets || []).map(p => ({ uid: p.uid, id: OLD_MAP[p.id] || "chili", star: p.star, shiny: false })),
@@ -2382,6 +2420,7 @@ function newGame(starterId) {
     playerName: keepName, clientId: keepId });
   addPet(starterId || "chili", 1, false, { minApt: 45 });
   persist();
+  refreshTitleButtons();
 }
 function addPet(id, star, shiny, o) {
   o = o || {};
@@ -2856,7 +2895,7 @@ function killEnemy(e) {
   if (!save.firstEgg && B.kills >= 3) { p = 1; save.firstEgg = true; }
   if (Math.random() < p) dropEgg(e.x, e.y, rollEggQ(L, minQ), shinyChance(L) * (e.boss ? 1.5 : 1));
   for (let k = 0; k < (e.boss ? 2 : 1); k++) if (Math.random() < foodChance(L, e.boss)) {
-    const fid = rollFood(L); save.food[fid] = (save.food[fid] | 0) + 1; B.foodGot++;
+    const fid = rollFood(L); save.food[fid] = (save.food[fid] | 0) + 1; B.foodGot++; persist();
     B.floaters.push({ x: e.x + 14, y: e.y - 34 - k * 16, text: tr("food_float", foodName(fid)), color: FOOD[fid].col, life: 1.1, max: 1.1 });
   }
   refreshHUD();
@@ -3678,7 +3717,7 @@ function renderMenuBG() {
 
 /* ================= screens ================= */
 function hideAll() {
-  for (const id of ["lang-screen", "title-screen", "starter", "home", "detail", "hatch", "help", "pause", "result", "save-screen", "name-screen", "board-screen", "hud", "dock", "inspect"]) el(id).classList.add("hidden");
+  for (const id of ["lang-screen", "title-screen", "starter", "home", "detail", "hatch", "help", "pause", "result", "save-screen", "name-screen", "newgame-screen", "board-screen", "hud", "dock", "inspect"]) el(id).classList.add("hidden");
 }
 function openHome(tab) {
   if (tab) homeTab = tab;
@@ -4268,8 +4307,37 @@ canvas.addEventListener("pointerdown", (ev) => {
   if (occ) { sfx.click(); showInspect(occ); }
   else { B.selTower = null; el("inspect").classList.add("hidden"); }
 });
-el("btn-start").addEventListener("click", () => { unlockAudio(); sfx.click(); ensurePlayerName(() => openStarter()); });
+function hasActiveSave() { return !!(save.started && (save.pets.length || save.eggs.length || save.endlessBest || save.hatched)); }
+function refreshTitleButtons() {
+  const start = el("btn-start"), cont = el("btn-continue");
+  if (!start || !cont) return;
+  if (hasActiveSave()) {
+    cont.classList.remove("hidden");
+    cont.className = "b-pink b-big";
+    start.className = "b-lav";
+    start.setAttribute("data-i18n", "btn_new");
+    start.innerHTML = tr("btn_new");
+    if (start.parentNode && start.previousElementSibling !== cont) start.parentNode.insertBefore(cont, start);
+  } else {
+    cont.classList.add("hidden");
+    start.className = "b-pink b-big";
+    start.setAttribute("data-i18n", "btn_start");
+    start.innerHTML = tr("btn_start");
+  }
+}
+function requestNewGame() {
+  if (hasActiveSave()) { el("newgame-screen").classList.remove("hidden"); return; }
+  beginNewGame();
+}
+function beginNewGame() {
+  el("newgame-screen").classList.add("hidden");
+  ensurePlayerName(() => openStarter());
+}
+function cancelNewGame() { el("newgame-screen").classList.add("hidden"); }
+el("btn-start").addEventListener("click", () => { unlockAudio(); sfx.click(); requestNewGame(); });
 el("btn-continue").addEventListener("click", () => { unlockAudio(); sfx.click(); ensurePlayerName(() => openHome("play")); });
+el("btn-newgame-yes").addEventListener("click", () => { sfx.click(); beginNewGame(); });
+el("btn-newgame-no").addEventListener("click", () => { sfx.click(); cancelNewGame(); });
 el("btn-name-ok").addEventListener("click", () => { sfx.click(); confirmPlayerName(); });
 el("btn-name-shuffle").addEventListener("click", () => { sfx.click(); el("name-input").value = suggestName(); });
 el("name-input").addEventListener("keydown", (e) => { if (e.key === "Enter") { e.preventDefault(); confirmPlayerName(); } });
@@ -4301,7 +4369,14 @@ el("btn-quit").addEventListener("click", () => { el("pause").classList.add("hidd
 el("btn-end").addEventListener("click", () => { sfx.click(); endRun(false); });
 el("btn-next").addEventListener("click", () => { sfx.click(); if (!B.waveActive) { B.countdown = 0; startNextWave(); } });
 el("btn-result-ok").addEventListener("click", () => { el("result").classList.add("hidden"); openHome(save.eggs.length ? "hatch" : "levels"); });
-document.addEventListener("visibilitychange", () => { if (document.hidden && screen === "battle" && !B.over) { B.paused = true; el("pause").classList.remove("hidden"); } });
+document.addEventListener("visibilitychange", () => {
+  if (document.hidden) {
+    flushSave();
+    if (screen === "battle" && !B.over) { B.paused = true; el("pause").classList.remove("hidden"); }
+  }
+});
+window.addEventListener("pagehide", flushSave);
+window.addEventListener("beforeunload", flushSave);
 
 /* ================= loop ================= */
 let last = 0;
@@ -4327,6 +4402,7 @@ function applyLang(l, rerender) {
   refreshMuteUI();
   if (rerender && screen === "home") renderHome();
   if (el("board-screen") && !el("board-screen").classList.contains("hidden")) loadBoard(boardSort);
+  refreshTitleButtons();
 }
 let langFrom = "title";
 function openLang(from) {
@@ -4345,9 +4421,10 @@ el("btn-lang-en").addEventListener("click", () => chooseLang("en"));
 el("btn-lang-title").addEventListener("click", () => { sfx.click(); openLang("title"); });
 el("btn-lang-home").addEventListener("click", () => { sfx.click(); openLang("home"); });
 fit();
-if (loadSave()) el("btn-continue").classList.remove("hidden");
+loadSave();
 const firstLaunch = !LANG;
 applyLang(LANG || "en", false);
+refreshTitleButtons();
 if (firstLaunch) openLang("title");
 bindAudioButtons();
 refreshMuteUI();
@@ -4376,12 +4453,14 @@ window.__PETTD__ = {
   getLang: () => LANG, setLang(l) { applyLang(l, true); },
   debugEnemies: () => B.enemies.map(e => ({ t: e.typ, x: Math.round(e.x), y: Math.round(e.y), hp: Math.round(e.hp), stun: e.stunT })),
   ready: () => assetsReady,
-  getSave: () => JSON.parse(JSON.stringify({ food: save.food, gems: save.gems, pets: save.pets, eggs: save.eggs, beaten: save.beaten, endlessBest: save.endlessBest, muted: save.muted, muteBgm: save.muteBgm, muteSfx: save.muteSfx, playerName: save.playerName, clientId: save.clientId })),
+  getSave: () => JSON.parse(JSON.stringify({ started: save.started, food: save.food, gems: save.gems, pets: save.pets, eggs: save.eggs, beaten: save.beaten, endlessBest: save.endlessBest, muted: save.muted, muteBgm: save.muteBgm, muteSfx: save.muteSfx, playerName: save.playerName, clientId: save.clientId, charms: save.charms, evoMain: save.evoMain, hatched: save.hatched })),
   getBattle: () => ({ running: B.running, over: B.over, won: B.won, lives: B.lives, gold: B.gold, wave: B.wave, waveActive: B.waveActive,
     enemies: B.enemies.length, spawnQ: B.spawnQ.length, kills: B.kills, eggsGot: B.eggsGot.length, speed: B.speed,
     towers: B.towers.map(t => ({ id: t.id, slot: t.slot, star: t.star, tier: t.tier, hp: t.hp, fainted: t.fainted })),
     loot: B.level ? lootLevel(B.level, Math.max(1, B.wave)) : 0 }),
-  newGame, openHome, persist, openStarter,
+  newGame, openHome, persist, flushSave, suspendPersist(on) { persistSuspended = !!on; }, openStarter, hasActiveSave, refreshTitleButtons, requestNewGame, beginNewGame, cancelNewGame,
+  setEndlessBest(n) { save.endlessBest = n | 0; persist(); },
+  clearWave() { waveCleared(); },
   startRun() { startRun(); },
   startLevel() { startRun(); },
   givePet(id, star, shiny, apt) { return addPet(id, star || 1, shiny, apt != null ? { apt } : {}).uid; },
