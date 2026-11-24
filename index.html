@@ -20,7 +20,7 @@
     background: #2a1d33;
     background-image: radial-gradient(circle at 50% 0%, #4a3360 0%, #2a1d33 70%);
     font-family: "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "Noto Sans SC", "Noto Sans CJK SC", "Source Han Sans SC", sans-serif;
-    color: var(--ink); user-select: none; -webkit-user-select: none;
+    color: var(--ink); user-select: none; -webkit-user-select: none; -moz-user-select: none; -ms-user-select: none;
   }
   #app {
     position: absolute; left: 50%; top: 50%;
@@ -49,8 +49,8 @@
     padding: 4px 22px; font-weight: 900; font-size: 24px; color: var(--ink);
     letter-spacing: 2px;
   }
-  .ribbon.pink { background: var(--pink); color: #fff; text-shadow: 0 2px 0 var(--ol), 2px 0 0 var(--ol), -2px 0 0 var(--ol), 0 -2px 0 var(--ol); }
-  .ribbon.lav { background: var(--lav); color: #fff; text-shadow: 0 2px 0 var(--ol), 2px 0 0 var(--ol), -2px 0 0 var(--ol), 0 -2px 0 var(--ol); }
+  .ribbon.pink { background: var(--pink); color: #2b1b22; text-shadow: none; }
+  .ribbon.lav { background: var(--lav); color: #2b1b22; text-shadow: none; }
   .ribbon.mint { background: var(--mint); }
   .center { text-align: center; }
   h1 {
@@ -85,7 +85,9 @@
   /* home */
   #home { justify-content: flex-start; padding: 14px 12px 12px; }
   #home .panel { flex: 1; display: flex; flex-direction: column; overflow: hidden; padding: 12px; }
-  .topbar { display: flex; justify-content: space-between; align-items: center; gap: 6px; margin-bottom: 8px; }
+  .topbar { display: flex; justify-content: space-between; align-items: center; gap: 6px; margin-bottom: 8px; flex-wrap: wrap; min-width: 0; }
+  .topbar > div { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; min-width: 0; }
+  .home-head { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 4px 8px; min-width: 0; width: 100%; }
   .tabs { display: grid; grid-template-columns: repeat(5, 1fr); gap: 6px; margin-bottom: 10px; }
   .tabs button { padding: 8px 4px; font-size: 16px; border-radius: 14px; background: #fff3d6; }
   .tabs button.on { background: var(--pink); color: #fff; }
@@ -127,7 +129,7 @@
     border: 2px solid var(--ol); font-size: 13px; line-height: 20px; font-weight: 900; color: #fff; text-align: center;
   }
   .el-火 { background: #ff5a3a; } .el-水 { background: #3a9aff; } .el-草 { background: #45b850; }
-  .el-雷 { background: #ffc83a; color: var(--ol); } .el-土 { background: #b07a4a; } .el-光 { background: #fff07a; color: var(--ol); }
+  .el-雷 { background: #ffc83a; color: var(--ol); } .el-土 { background: #bc8454; } .el-光 { background: #fff07a; color: var(--ol); }
   .rtag {
     position: absolute; right: 4px; top: 4px; z-index: 2; font-size: 11px; font-weight: 900;
     background: #fff; border: 2px solid var(--ol); border-radius: 8px; padding: 0 5px;
@@ -309,7 +311,7 @@
   /* menus: purple frame + gold headers, light content cards */
   .panel { background: linear-gradient(180deg, var(--pur1) 0%, var(--pur2) 55%, var(--pur3) 100%); color: #fff;
     box-shadow: inset 0 0 0 3px rgba(255,255,255,.3), inset 0 -6px 0 rgba(0,0,0,.2), 0 7px 0 var(--ol), 0 18px 40px rgba(0,0,0,.4); }
-  .panel .subtitle, .sec-title { color: #fff !important; text-shadow: 0 2px 0 var(--ol), 1px 0 0 var(--ol), -1px 0 0 var(--ol), 0 -1px 0 var(--ol); }
+  .panel > .subtitle, .panel > .center > .subtitle { color: #fff !important; text-shadow: 0 2px 0 var(--ol), 1px 0 0 var(--ol), -1px 0 0 var(--ol), 0 -1px 0 var(--ol); }
   .sec-title { font-weight: 900; }
   .box, .card, .egg-card, .evo-row, .zone, .chip, button, #inspect, .play-hero .ph-txt { color: var(--ink); }
   .tabs button { background: linear-gradient(180deg, #a98aff, #7a52e8); color: #fff; text-shadow: 0 2px 0 rgba(40,10,90,.6); }
@@ -334,13 +336,13 @@
   button:active { transform: translateY(2px); box-shadow: none; }
   button:disabled { filter: grayscale(.7); opacity: .6; box-shadow: none; }
   .b-pink, .tabs button.on { border-image-source: url(assets/ui/btn_pink.png); }
-  .b-lav { border-image-source: url(assets/ui/btn_purple.png); color: #4a2a8a; text-shadow: none; }
+  .b-lav { border-image-source: url(assets/ui/btn_purple.png); color: #2b1b22; text-shadow: none; }
   .b-gold { border-image-source: url(assets/ui/btn_gold.png); }
   .b-red { border-image-source: url(assets/ui/btn_red.png); }
   .b-go, .b-go-s { border-image-source: url(assets/ui/btn_green.png); background: none; box-shadow: none; }
   .tabs button { border-image-source: url(assets/ui/btn_purple.png); background: none; padding: 2px 2px; }
   .tabs button.on { border-image-source: url(assets/ui/btn_gold.png); color: var(--ink); text-shadow: none; }
-  .b-pink, .b-red, .b-go, .b-go-s, .tabs button { color: #fff; text-shadow: 0 2px 0 #24183a, 2px 0 0 #24183a, -2px 0 0 #24183a, 0 -2px 0 #24183a; }
+  .b-pink, .b-red, .b-go, .b-go-s, .b-lav, .b-gold, .tabs button, .tabs button.on { color: #2b1b22; text-shadow: none; }
   .b-go { padding: 4px; font-size: 26px; }
   .b-big { padding: 4px 18px; font-size: 22px; }
   .hud-btns button.rnd { border-style: solid; border-width: 11px; border-image: url(assets/ui/round.png) 38 fill / 11px stretch; background: none; box-shadow: none; border-radius: 0; width: 50px; height: 50px; padding: 0; font-size: 13px; line-height: 1.05; white-space: nowrap; }
@@ -655,11 +657,13 @@
   .split { display: block; }
   @media (max-width: 560px) { #home-body.fit[data-tab="play"], #home-body.fit[data-tab="train"] { display: block; overflow-y: auto; } }
   #home-body.fit[data-tab="play"], #home-body.fit[data-tab="train"] { overflow-y: auto; display: block; }
-  html.land #home .panel { max-width: 1240px; display: grid; grid-template-columns: 1fr auto; grid-template-rows: auto auto minmax(0, 1fr); column-gap: 10px; }
-  html.land #home .topbar { grid-column: 1; grid-row: 1; margin-bottom: 4px; }
-  html.land #home .audio-bar { grid-column: 2; grid-row: 1; margin: 0 0 4px; align-self: center; }
-  html.land #home .tabs { grid-column: 1 / span 2; grid-row: 2; margin-bottom: 6px; }
-  html.land #home-body { grid-column: 1 / span 2; grid-row: 3; min-height: 0; }
+  html.land #home .panel { max-width: 1240px; display: grid; grid-template-columns: 1fr; grid-template-rows: auto auto minmax(0, 1fr); column-gap: 10px; }
+  html.land #home .home-head { grid-column: 1; grid-row: 1; display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 4px 8px; min-width: 0; width: 100%; margin: 0 0 4px; }
+  html.land #home .topbar { display: flex; flex-wrap: wrap; align-items: center; gap: 4px; flex: 1 1 auto; min-width: 0; margin: 0; }
+  html.land #home .audio-bar { display: flex; flex-wrap: wrap; align-items: center; justify-content: flex-end; gap: 4px; flex: 0 1 auto; min-width: 0; margin: 0; }
+  html.land #home .home-head button, html.land #home .home-head .pill, html.land #home .home-head .pk26-btn, html.land #home .home-head .bgm-vol, html.land #home .home-head .s9-vol, html.land #home .home-head .fx8-btn { flex: 0 0 auto; position: relative; z-index: 2; }
+  html.land #home .tabs { grid-column: 1; grid-row: 2; margin-bottom: 6px; }
+  html.land #home-body { grid-column: 1; grid-row: 3; min-height: 0; }
   html.land #home-body.fit[data-tab="play"], html.land #home-body.fit[data-tab="train"] { display: flex; flex-direction: column; overflow: hidden; }
   html.land .split { flex: 1; min-height: 0; display: grid; grid-template-columns: 1.05fr 1fr; gap: 10px; }
   html.land .sp-l, html.land .sp-r { min-height: 0; overflow-y: auto; overflow-x: hidden; padding: 2px; }
@@ -717,7 +721,7 @@
   }
   .rk.g { background: #ffd24a; }
   .rk.s { background: #d5dbe3; }
-  .rk.b { background: #e8a36a; color: #fff; }
+  .rk.b { background: #e8a36a; color: #2b1b22; }
   .bpets { display: flex; gap: 1px; justify-content: flex-end; }
   .bpets canvas { width: 22px; height: 22px; display: block; }
   .board-self { margin: 4px 0 6px; }
@@ -846,7 +850,7 @@
   .tq-top > b { font-size: 15px; }
   .tq-amts { display: flex; gap: 4px; }
   .tq-amts button { font-size: 13px; padding: 3px 10px; }
-  .tq-amts button.on { background: linear-gradient(180deg, #ff9dbb, #ff5a8c); color: #fff; text-shadow: 0 1px 0 rgba(120,20,60,.6); }
+  .tq-amts button.on { background: linear-gradient(180deg, #ff9dbb, #ff5a8c); color: #2b1b22; text-shadow: none; }
   .tq-prev { margin: 5px 0 3px; background: #fff; border: 2px solid var(--ol); border-radius: 10px; padding: 3px 8px; }
   .tq-h { font-size: 12px; font-weight: 900; color: var(--dim); }
   .tq-r { display: grid; grid-template-columns: 1fr auto 16px auto 62px; gap: 4px; align-items: center; font-size: 13px; font-weight: 800; line-height: 1.5; }
@@ -888,7 +892,7 @@
   .bgm-vol.is-off { opacity: .7; } .bgm-vol.is-off .bv-ico { filter: grayscale(1); }
   @media (max-height: 500px) and (orientation: landscape) { .bgm-vol input { width: 60px; } }
 
-  .audio-bar .b-lav, .audio-row .b-lav { color: #4a2a8a !important; text-shadow: none !important; }
+  .audio-bar .b-lav, .audio-row .b-lav { color: #2b1b22 !important; text-shadow: none !important; }
   .tq-amts button.on { color: #fff !important; text-shadow: 0 1px 0 #7a1440, 1px 0 0 #7a1440, -1px 0 0 #7a1440 !important; border-image: none !important; border: 3px solid var(--ol) !important; background: #ff5a8c !important; border-radius: 10px; }
   html.land [data-tab="train"] .split { grid-template-columns: minmax(440px, 1.1fr) 1fr; }
   html.land [data-tab="train"] .train-info { font-size: 12px !important; padding: 5px 8px; line-height: 1.35; }
@@ -905,7 +909,7 @@
   .card.r5, #tray .tcard.r5 { border-image: none !important; border: 4px solid #e8282a; background: linear-gradient(180deg, #ffb0a0, #ff5a4a 60%, #b8101e) !important; animation: redpulse 1.8s ease-in-out infinite; }
   .card.r6, #tray .tcard.r6 { border-image: none !important; border: 4px solid transparent; background: linear-gradient(90deg, #ff5a5a, #ffb03a, #ffe14a, #6ae06a, #4ac8ff, #8a6aff, #ff6ad8, #ff5a5a) border-box !important; background-size: 300% 100% !important; animation: rbshift 4s linear infinite; }
   .card.r5 .art, .card.r6 .art { box-shadow: inset 0 0 12px rgba(255,255,255,.85); }
-  .card.r5 .rtag, #tray .tcard.v13.r5 .tc-rar { background: #e8282a !important; color: #fff !important; border-image: none; border: 2px solid #5a0a10; border-radius: 9px; }
+  .card.r5 .rtag, #tray .tcard.v13.r5 .tc-rar { background: #b01018 !important; color: #fff !important; border-image: none; border: 2px solid #5a0a10; border-radius: 9px; }
   .card.r6 .rtag, #tray .tcard.v13.r6 .tc-rar, .rb-text, .lim-tag.rb { background: linear-gradient(90deg, #ff5a5a, #ffe14a, #6ae06a, #4ac8ff, #c86aff) !important; background-size: 300% 100% !important; animation: rbshift 3s linear infinite; color: #2a1c2c !important; border-image: none; border: 2px solid #2a1c2c; border-radius: 9px; font-weight: 900; }
   .rb-text { padding: 0 6px; }
   .r5b { display: inline-flex; align-items: center; justify-content: center; min-width: 18px; height: 18px; border-radius: 9px; font-size: 11px; line-height: 1; border: 2px solid #2a1c2c; background: #fff; flex: none; }
@@ -1083,7 +1087,91 @@
   }
   #toast { white-space: nowrap !important; }
   html.land #toast { position: fixed !important; top: 10px !important; left: calc(var(--stage-w, 42vw) + (100vw - var(--stage-w, 42vw)) / 2) !important; transform: translateX(-50%) !important; max-width: calc((100vw - var(--stage-w, 42vw)) - 24px) !important; }
+
+  /* ===== v2.9.1: readable ink on light/mid surfaces (WCAG >= 4.5:1). White only on truly dark skins. ===== */
+  :root { --ink-strong: #2b1b22; }
+  .b-pink, .b-red, .b-go, .b-go-s, .b-go.hard, .b-lav, .b-gold, .b-mint, .b-sky,
+  .tabs button, .tabs button.on, button.b-pink, button.b-red, button.b-go,
+  .ribbon.pink, .ribbon.lav, .ribbon, .banner, #loot-pill.banner,
+  .tq-amts button.on, .tq-go, .bn-pull, .pill, .chip, .role, .rtag {
+    color: var(--ink-strong) !important;
+    text-shadow: none !important;
+  }
+  /* cream paper / boxes: section titles and body must be dark, even if they sit in a purple frame */
+  .box, .card, .egg-card, .evo-row, .zone, .chip, .play-hero .ph-txt, #inspect,
+  .box .sec-title, .card .sec-title, .box .subtitle, .card .subtitle,
+  .brow, .board-head, .board-self, .brow .bn, .brow .bw, .brow .bp, .rk, .rk.g, .rk.s, .rk.b {
+    color: var(--ink-strong) !important;
+    text-shadow: none !important;
+  }
+  /* result/pause copy sits on dark panel.png — keep white */
+  #result .sum-list, #result .sum-list li, #result .subtitle, #result p,
+  #pause .subtitle, #pause p {
+    color: #fff !important;
+    text-shadow: 0 2px 0 var(--ol), 1px 0 0 var(--ol), -1px 0 0 var(--ol), 0 -1px 0 var(--ol) !important;
+  }
+  /* title / language hints: dark ink + pale halo so they stay readable on gold paper or orchard grass */
+  #title-screen .subtitle, #lang-screen .subtitle {
+    color: var(--ink-strong) !important;
+    text-shadow: 0 1px 0 #fff8e8, 1px 0 0 #fff8e8, -1px 0 0 #fff8e8, 0 -1px 0 #fff8e8, 0 2px 0 #fff8e8 !important;
+  }
+  /* keep white only on genuinely dark chrome */
+  .hud-stats .pill, .dpill, .toast, #dock, .pill_dark,
+  #tray .tcard .nm, #tray .empty,
+  .panel > .subtitle, .panel > .center > .subtitle {
+    color: #fff !important;
+  }
+  .panel > .subtitle, .panel > .center > .subtitle {
+    text-shadow: 0 2px 0 var(--ol), 1px 0 0 var(--ol), -1px 0 0 var(--ol), 0 -1px 0 var(--ol) !important;
+  }
+  /* mid-tone element pills and train deltas: dark labels, deeper greens/browns */
+  .el, .el-火, .el-水, .el-草, .el-土, .el-暗 { color: var(--ink-strong) !important; text-shadow: none !important; }
+  .el-雷, .el-光 { color: var(--ol) !important; }
+  .stars .off, .off { color: #6a5a50 !important; }
+  .tq-r .dp, .dp { color: #0d5c18 !important; }
+  .tq-r .d0, .d0 { color: #5a4a4a !important; }
+  .play-hero [data-tab], .b-gold, button[data-i18n="hard"] { color: var(--ink-strong); }
+  /* elite-clear label on gold map button */
+  [data-tab="play"] .box button, [data-tab="play"] .cleared { color: #4a2a00; }
+
+  /* pack badges live in injected CSS too; these overrides win after assemble */
+  #pp-page .pp-badge, #pp-page .pp-badge.open, #pp-page .pp-badge.soon,
+  #pp-page .pp-badge.wait, #pp-page .pp-badge.lim, #pp-page .pp-badge.cos,
+  #pp-page .pp-badge.perm, #pp-page .pp-pet .rg, #pp-page .pp-pet.r1 .rg,
+  #pp-page .pp-pet.r2 .rg, #pp-page .pp-pet.r3 .rg, #pp-page .pp-pet.r4 .rg,
+  #pp-page .pp-pet.r6 .rg { color: #2b1b22 !important; }
+  /* mythic red is darkened so white text clears 4.5:1 */
+  #pp-page .pp-pet.r5 .rg { background: #b01018; color: #fff !important; }
+
+  #title-ui, #lang-ui { display: flex; flex-direction: column; align-items: center; width: 100%; max-width: 540px; padding: 10px 8px; box-sizing: border-box; }
+  html.land.ui11-menu #title-screen, html.land.ui11-menu #lang-screen { justify-content: center; align-items: center; overflow: hidden; }
+
+  /* v2.9.1: pin Start in the play column; never let it scroll off */
+  html.land [data-tab="play"] .sp-l { overflow: hidden; display: flex; flex-direction: column; justify-content: flex-start; }
+  html.land [data-tab="play"] .play-hero { flex: 1 1 auto; min-height: 0; overflow: hidden; }
+  html.land [data-tab="play"] .mode-row { flex: 0 0 auto; }
+  html.land [data-tab="play"] #btn-play { flex: 0 0 auto; margin-top: auto; width: 100%; }
+
+  /* v2.9.1: Music / SFX are clean icons with a clear on/off state (no slashed text) */
+  .audio-btn { font-size: 0 !important; min-width: 36px !important; padding: 2px 8px !important; line-height: 1; }
+  .audio-btn::before { font-size: 16px; line-height: 1; }
+  .audio-btn[data-audio="bgm"]::before { content: "🎵"; }
+  .audio-btn[data-audio="sfx"]::before { content: "🔊"; }
+  .audio-btn[data-audio="sfx"].is-off::before { content: "🔇"; }
+  .audio-btn[data-audio="sfx"].is-off::after { display: none !important; }
+  .audio-btn.is-off::after { left: 20%; right: 20%; top: 46%; height: 2px; }
+  /* tight-land play hero: keep title/chips readable, never clip Start or overlap Hard */
+  html.tight-land [data-tab="play"] .play-hero { flex: 0 1 auto !important; min-height: 0; overflow: hidden !important; margin-bottom: 2px !important; }
+  html.tight-land [data-tab="play"] .mode-row { position: relative; z-index: 2; margin-top: 2px !important; }
+  @media (max-height: 380px) and (orientation: landscape) {
+    html.tight-land [data-tab="play"] .play-hero p { display: none !important; }
+  }
+  @media (max-height: 365px) and (orientation: landscape) {
+    html.tight-land [data-tab="play"] .play-hero .ph-stats { display: none !important; }
+    html.tight-land [data-tab="play"] .play-hero h3 { font-size: 14px !important; }
+  }
 </style>
+<script src="https://sdk.crazygames.com/crazygames-sdk-v3.js"></script>
 </head>
 <body>
 <div id="app">
@@ -1130,6 +1218,7 @@
   </div>
 
   <div id="lang-screen" class="overlay hidden" data-lang-choice="1">
+    <div id="lang-ui">
     <div style="flex:1"></div>
     <h1 style="font-size:40px">萌宠防线<br><span style="font-size:30px">Pet Pals Defense</span></h1>
     <div class="panel center" style="margin-top:24px;max-width:360px">
@@ -1140,12 +1229,15 @@
       </div>
     </div>
     <div style="flex:1.4"></div>
+  
+    </div>
   </div>
 
   <div id="title-screen" class="overlay">
+    <div id="title-ui">
     <div style="flex:1"></div>
     <h1 data-i18n="game_title">萌宠防线</h1><span class="ver-badge" id="ver-badge">v2.2</span>
-    <p class="subtitle" style="color:#fff;text-shadow:0 2px 0 #2b1b22;font-size:17px" data-i18n="tagline">抓萌宠 · 孵蛋进化 · 无尽打史莱姆</p>
+    <p class="subtitle" style="font-size:17px" data-i18n="tagline">抓萌宠 · 孵蛋进化 · 无尽打史莱姆</p>
     <div style="flex:1.2"></div>
     <div class="btn-row" style="flex-direction:column;align-items:center">
       <button type="button" class="b-pink b-big" id="btn-start" data-i18n="btn_start">Start</button>
@@ -1159,7 +1251,9 @@
         <button type="button" class="audio-btn" data-audio="sfx" data-i18n="sfx">SFX</button>
       </div>
     </div>
-    <p class="subtitle" style="color:#fff;text-shadow:0 2px 0 #2b1b22;font-size:13px;margin-top:16px" data-i18n="title_hint">史莱姆从上面来，把萌宠摆在下面挡住它们</p>
+    <p class="subtitle" style="font-size:13px;margin-top:16px" data-i18n="title_hint">史莱姆从上面来，把萌宠摆在下面挡住它们</p>
+  
+    </div>
   </div>
 
   <div id="starter" class="overlay dim-bg hidden">
@@ -1172,6 +1266,7 @@
 
   <div id="home" class="overlay hidden">
     <div class="panel">
+      <div class="home-head">
       <div class="topbar">
         <span class="ribbon" style="font-size:20px;padding:2px 14px" data-i18n="short_title">萌宠防线</span>
         <div style="display:flex;gap:6px;align-items:center">
@@ -1189,6 +1284,7 @@
         <button type="button" class="b-lav" id="btn-board-home" data-i18n="board_btn">Leaderboard</button>
         <button type="button" id="btn-save-home" data-i18n="save_code">Save Code</button>
         <button type="button" id="btn-tut-home" class="b-sky" data-i18n="tut_btn">Tutorial</button><span class="ver-badge sm">v2.2</span>
+      </div>
       </div>
       <div class="tabs">
         <button type="button" class="on" data-tab="play" data-i18n="tab_play">冒险</button>
@@ -2746,14 +2842,14 @@ const PETS29_EN = {"capsule_chick":{"names":["Capsule Chick","Nutrient-Capsule C
 Object.assign(EN.pets, PETS29_EN);
 for (const id in PETS29_ZH) ZH.pets[id] = { names: PETS29_ZH[id].names.slice(), sk: PETS29_ZH[id].sk, skd: PETS29_ZH[id].skd, up: PETS29_ZH[id].up };
 /* auto-generated by tools/pack_atlas.py */
-const ATLAS_SHEETS = {"petsa":"assets/atlas-petsa.webp?v=2.9.0","petsb":"assets/atlas-petsb.webp?v=2.9.0","petsc":"assets/atlas-petsc.webp?v=2.9.0","petsd":"assets/atlas-petsd.webp?v=2.9.0","petse":"assets/atlas-petse.webp?v=2.9.0","petsf":"assets/atlas-petsf.webp?v=2.9.0","petsg":"assets/atlas-petsg.webp?v=2.9.0","mobs":"assets/atlas-mobs.webp?v=2.9.0"};
+const ATLAS_SHEETS = {"petsa":"assets/atlas-petsa.webp?v=2.9.1","petsb":"assets/atlas-petsb.webp?v=2.9.1","petsc":"assets/atlas-petsc.webp?v=2.9.1","petsd":"assets/atlas-petsd.webp?v=2.9.1","petse":"assets/atlas-petse.webp?v=2.9.1","petsf":"assets/atlas-petsf.webp?v=2.9.1","petsg":"assets/atlas-petsg.webp?v=2.9.1","mobs":"assets/atlas-mobs.webp?v=2.9.1"};
 const ATLAS_MAP = {"pets/chili-1":{"sheet":"petsa","x":2,"y":2,"w":217,"h":224},"pets/chili-1-s":{"sheet":"petsa","x":221,"y":2,"w":217,"h":224},"pets/chili-2":{"sheet":"petsa","x":440,"y":2,"w":220,"h":224},"pets/chili-2-s":{"sheet":"petsa","x":662,"y":2,"w":220,"h":224},"pets/chili-3":{"sheet":"petsa","x":884,"y":2,"w":220,"h":224},"pets/chili-3-s":{"sheet":"petsa","x":1106,"y":2,"w":220,"h":224},"pets/chili-4":{"sheet":"petsa","x":1328,"y":2,"w":215,"h":224},"pets/chili-4-s":{"sheet":"petsa","x":1545,"y":2,"w":215,"h":224},"pets/chestnut-1":{"sheet":"petsa","x":1762,"y":2,"w":223,"h":224},"pets/chestnut-1-s":{"sheet":"petsa","x":2,"y":228,"w":223,"h":224},"pets/chestnut-2":{"sheet":"petsa","x":227,"y":228,"w":215,"h":224},"pets/chestnut-2-s":{"sheet":"petsa","x":444,"y":228,"w":215,"h":224},"pets/chestnut-3":{"sheet":"petsa","x":661,"y":228,"w":217,"h":224},"pets/chestnut-3-s":{"sheet":"petsa","x":880,"y":228,"w":217,"h":224},"pets/berry-1":{"sheet":"petsa","x":1099,"y":228,"w":183,"h":224},"pets/berry-1-s":{"sheet":"petsa","x":1284,"y":228,"w":183,"h":224},"pets/berry-2":{"sheet":"petsa","x":1469,"y":228,"w":177,"h":224},"pets/berry-2-s":{"sheet":"petsa","x":1648,"y":228,"w":177,"h":224},"pets/berry-3":{"sheet":"petsa","x":1827,"y":228,"w":203,"h":224},"pets/berry-3-s":{"sheet":"petsa","x":2,"y":454,"w":203,"h":224},"pets/berry-4":{"sheet":"petsa","x":207,"y":454,"w":175,"h":224},"pets/berry-4-s":{"sheet":"petsa","x":384,"y":454,"w":175,"h":224},"pets/lychee-1":{"sheet":"petsa","x":561,"y":454,"w":219,"h":224},"pets/lychee-1-s":{"sheet":"petsa","x":782,"y":454,"w":219,"h":224},"pets/lychee-2":{"sheet":"petsa","x":1003,"y":454,"w":218,"h":224},"pets/lychee-2-s":{"sheet":"petsa","x":1223,"y":454,"w":218,"h":224},"pets/lychee-3":{"sheet":"petsa","x":1443,"y":454,"w":212,"h":224},"pets/lychee-3-s":{"sheet":"petsa","x":1657,"y":454,"w":212,"h":224},"pets/lychee-4":{"sheet":"petsa","x":2,"y":680,"w":209,"h":224},"pets/lychee-4-s":{"sheet":"petsa","x":213,"y":680,"w":209,"h":224},"pets/melon-2":{"sheet":"petsa","x":424,"y":680,"w":218,"h":224},"pets/melon-2-s":{"sheet":"petsa","x":644,"y":680,"w":218,"h":224},"pets/lemon-1":{"sheet":"petsa","x":864,"y":680,"w":195,"h":224},"pets/lemon-1-s":{"sheet":"petsa","x":1061,"y":680,"w":195,"h":224},"pets/lemon-2":{"sheet":"petsa","x":1258,"y":680,"w":192,"h":224},"pets/lemon-2-s":{"sheet":"petsa","x":1452,"y":680,"w":192,"h":224},"pets/lemon-3":{"sheet":"petsa","x":1646,"y":680,"w":189,"h":224},"pets/lemon-3-s":{"sheet":"petsa","x":1837,"y":680,"w":189,"h":224},"pets/lemon-4":{"sheet":"petsa","x":2,"y":906,"w":184,"h":224},"pets/lemon-4-s":{"sheet":"petsa","x":188,"y":906,"w":184,"h":224},"pets/coco-1":{"sheet":"petsa","x":374,"y":906,"w":181,"h":224},"pets/coco-1-s":{"sheet":"petsa","x":557,"y":906,"w":181,"h":224},"pets/coco-2":{"sheet":"petsa","x":740,"y":906,"w":180,"h":224},"pets/coco-2-s":{"sheet":"petsa","x":922,"y":906,"w":180,"h":224},"pets/coco-3":{"sheet":"petsa","x":1104,"y":906,"w":177,"h":224},"pets/coco-3-s":{"sheet":"petsa","x":1283,"y":906,"w":177,"h":224},"pets/coco-4":{"sheet":"petsa","x":1462,"y":906,"w":185,"h":224},"pets/coco-4-s":{"sheet":"petsa","x":1649,"y":906,"w":185,"h":224},"pets/taro-1":{"sheet":"petsa","x":1836,"y":906,"w":199,"h":224},"pets/taro-1-s":{"sheet":"petsa","x":2,"y":1132,"w":199,"h":224},"pets/taro-2":{"sheet":"petsa","x":203,"y":1132,"w":199,"h":224},"pets/taro-2-s":{"sheet":"petsa","x":404,"y":1132,"w":199,"h":224},"pets/taro-3":{"sheet":"petsa","x":605,"y":1132,"w":207,"h":224},"pets/taro-3-s":{"sheet":"petsa","x":814,"y":1132,"w":207,"h":224},"pets/taro-4":{"sheet":"petsa","x":1023,"y":1132,"w":212,"h":224},"pets/taro-4-s":{"sheet":"petsa","x":1237,"y":1132,"w":212,"h":224},"pets/peach-3":{"sheet":"petsa","x":1451,"y":1132,"w":218,"h":224},"pets/peach-3-s":{"sheet":"petsa","x":1671,"y":1132,"w":218,"h":224},"pets/peach-4":{"sheet":"petsa","x":2,"y":1358,"w":223,"h":224},"pets/peach-4-s":{"sheet":"petsa","x":227,"y":1358,"w":223,"h":224},"pets/blueberry-1":{"sheet":"petsa","x":452,"y":1358,"w":220,"h":224},"pets/blueberry-1-s":{"sheet":"petsa","x":674,"y":1358,"w":220,"h":224},"pets/blueberry-2":{"sheet":"petsa","x":896,"y":1358,"w":211,"h":224},"pets/blueberry-2-s":{"sheet":"petsa","x":1109,"y":1358,"w":211,"h":224},"pets/blueberry-3":{"sheet":"petsa","x":1322,"y":1358,"w":205,"h":224},"pets/blueberry-3-s":{"sheet":"petsa","x":1529,"y":1358,"w":205,"h":224},"pets/blueberry-4":{"sheet":"petsa","x":1736,"y":1358,"w":208,"h":224},"pets/blueberry-4-s":{"sheet":"petsa","x":2,"y":1584,"w":208,"h":224},"pets/pitaya-2":{"sheet":"petsa","x":212,"y":1584,"w":222,"h":224},"pets/pitaya-2-s":{"sheet":"petsa","x":436,"y":1584,"w":222,"h":224},"pets/kiwi-1":{"sheet":"petsa","x":660,"y":1584,"w":222,"h":224},"pets/kiwi-1-s":{"sheet":"petsa","x":884,"y":1584,"w":222,"h":224},"pets/kiwi-2":{"sheet":"petsa","x":1108,"y":1584,"w":202,"h":224},"pets/kiwi-2-s":{"sheet":"petsa","x":1312,"y":1584,"w":202,"h":224},"pets/kiwi-3":{"sheet":"petsa","x":1516,"y":1584,"w":182,"h":224},"pets/kiwi-3-s":{"sheet":"petsa","x":1700,"y":1584,"w":182,"h":224},"pets/kiwi-4":{"sheet":"petsa","x":2,"y":1810,"w":174,"h":224},"pets/kiwi-4-s":{"sheet":"petsa","x":178,"y":1810,"w":174,"h":224},"pets/grape-1":{"sheet":"petsa","x":354,"y":1810,"w":222,"h":224},"pets/grape-1-s":{"sheet":"petsa","x":578,"y":1810,"w":222,"h":224},"pets/grape-2":{"sheet":"petsa","x":802,"y":1810,"w":213,"h":224},"pets/grape-2-s":{"sheet":"petsa","x":1017,"y":1810,"w":213,"h":224},"pets/grape-3":{"sheet":"petsa","x":1232,"y":1810,"w":212,"h":224},"pets/grape-3-s":{"sheet":"petsa","x":1446,"y":1810,"w":212,"h":224},"pets/grape-4":{"sheet":"petsa","x":1660,"y":1810,"w":205,"h":224},"pets/grape-4-s":{"sheet":"petsb","x":2,"y":2,"w":205,"h":224},"pets/banana-1":{"sheet":"petsb","x":209,"y":2,"w":215,"h":224},"pets/banana-1-s":{"sheet":"petsb","x":426,"y":2,"w":215,"h":224},"pets/banana-2":{"sheet":"petsb","x":643,"y":2,"w":217,"h":224},"pets/banana-2-s":{"sheet":"petsb","x":862,"y":2,"w":217,"h":224},"pets/banana-3":{"sheet":"petsb","x":1081,"y":2,"w":217,"h":224},"pets/banana-3-s":{"sheet":"petsb","x":1300,"y":2,"w":217,"h":224},"pets/banana-4":{"sheet":"petsb","x":1519,"y":2,"w":220,"h":224},"pets/banana-4-s":{"sheet":"petsb","x":1741,"y":2,"w":220,"h":224},"pets/snowpear-3":{"sheet":"petsb","x":2,"y":228,"w":223,"h":224},"pets/snowpear-3-s":{"sheet":"petsb","x":227,"y":228,"w":223,"h":224},"pets/snowpear-4":{"sheet":"petsb","x":452,"y":228,"w":222,"h":224},"pets/snowpear-4-s":{"sheet":"petsb","x":676,"y":228,"w":222,"h":224},"pets/hen-3":{"sheet":"petsb","x":900,"y":228,"w":206,"h":224},"pets/hen-3-s":{"sheet":"petsb","x":1108,"y":228,"w":206,"h":224},"pets/hen-4":{"sheet":"petsb","x":1316,"y":228,"w":215,"h":224},"pets/hen-4-s":{"sheet":"petsb","x":1533,"y":228,"w":215,"h":224},"pets/chomp-1":{"sheet":"petsb","x":1750,"y":228,"w":217,"h":224},"pets/chomp-1-s":{"sheet":"petsb","x":2,"y":454,"w":217,"h":224},"pets/chomp-2":{"sheet":"petsb","x":221,"y":454,"w":220,"h":224},"pets/chomp-2-s":{"sheet":"petsb","x":443,"y":454,"w":220,"h":224},"pets/durian-2":{"sheet":"petsb","x":665,"y":454,"w":214,"h":224},"pets/durian-2-s":{"sheet":"petsb","x":881,"y":454,"w":214,"h":224},"pets/boba_hamster-1":{"sheet":"petsb","x":1097,"y":454,"w":211,"h":224},"pets/boba_hamster-1-s":{"sheet":"petsb","x":1310,"y":454,"w":211,"h":224},"pets/lychee_bunny-1":{"sheet":"petsb","x":1523,"y":454,"w":202,"h":224},"pets/lychee_bunny-1-s":{"sheet":"petsb","x":1727,"y":454,"w":202,"h":224},"pets/blueberry_penguin-1":{"sheet":"petsb","x":2,"y":680,"w":214,"h":224},"pets/blueberry_penguin-1-s":{"sheet":"petsb","x":218,"y":680,"w":214,"h":224},"pets/mango_dragon-1":{"sheet":"petsb","x":434,"y":680,"w":219,"h":224},"pets/mango_dragon-1-s":{"sheet":"petsb","x":655,"y":680,"w":219,"h":224},"pets/dragonfruit_dino-1":{"sheet":"petsb","x":876,"y":680,"w":209,"h":224},"pets/dragonfruit_dino-1-s":{"sheet":"petsb","x":1087,"y":680,"w":209,"h":224},"pets/chili_phoenix-1":{"sheet":"petsb","x":1298,"y":680,"w":197,"h":224},"pets/chili_phoenix-1-s":{"sheet":"petsb","x":1497,"y":680,"w":197,"h":224},"pets/avocado_sloth-1":{"sheet":"petsb","x":1696,"y":680,"w":199,"h":224},"pets/avocado_sloth-1-s":{"sheet":"petsb","x":2,"y":906,"w":199,"h":224},"pets/berry_sparrow-1":{"sheet":"petsb","x":203,"y":906,"w":217,"h":224},"pets/berry_sparrow-1-s":{"sheet":"petsb","x":422,"y":906,"w":217,"h":224},"pets/citrus_raccoon-1":{"sheet":"petsb","x":641,"y":906,"w":217,"h":224},"pets/citrus_raccoon-1-s":{"sheet":"petsb","x":860,"y":906,"w":217,"h":224},"pets/corn_hamster-1":{"sheet":"petsb","x":1079,"y":906,"w":208,"h":224},"pets/corn_hamster-1-s":{"sheet":"petsb","x":1289,"y":906,"w":208,"h":224},"pets/fig_beetle-1":{"sheet":"petsb","x":1499,"y":906,"w":207,"h":224},"pets/fig_beetle-1-s":{"sheet":"petsb","x":1708,"y":906,"w":207,"h":224},"pets/golden_fig_stag-1":{"sheet":"petsb","x":2,"y":1132,"w":216,"h":224},"pets/golden_fig_stag-1-s":{"sheet":"petsb","x":220,"y":1132,"w":216,"h":224},"pets/grape_chick-1":{"sheet":"petsb","x":438,"y":1132,"w":216,"h":224},"pets/grape_chick-1-s":{"sheet":"petsb","x":656,"y":1132,"w":216,"h":224},"pets/hibiscus_mantis-1":{"sheet":"petsb","x":874,"y":1132,"w":222,"h":224},"pets/hibiscus_mantis-1-s":{"sheet":"petsb","x":1098,"y":1132,"w":222,"h":224},"pets/honeycomb_valkyrie_bee-1":{"sheet":"petsb","x":1322,"y":1132,"w":223,"h":224},"pets/honeycomb_valkyrie_bee-1-s":{"sheet":"petsb","x":1547,"y":1132,"w":223,"h":224},"pets/honeydew_frog-1":{"sheet":"petsb","x":1772,"y":1132,"w":222,"h":224},"pets/honeydew_frog-1-s":{"sheet":"petsb","x":2,"y":1358,"w":222,"h":224},"pets/inferno_durian_behemoth-1":{"sheet":"petsb","x":226,"y":1358,"w":215,"h":224},"pets/inferno_durian_behemoth-1-s":{"sheet":"petsb","x":443,"y":1358,"w":215,"h":224},"pets/matcha_crane-1":{"sheet":"petsb","x":660,"y":1358,"w":217,"h":224},"pets/matcha_crane-1-s":{"sheet":"petsb","x":879,"y":1358,"w":217,"h":224},"pets/melon_chick-1":{"sheet":"petsb","x":1098,"y":1358,"w":217,"h":224},"pets/melon_chick-1-s":{"sheet":"petsb","x":1317,"y":1358,"w":217,"h":224},"pets/oat_sparrow-1":{"sheet":"petsb","x":1536,"y":1358,"w":222,"h":224},"pets/oat_sparrow-1-s":{"sheet":"petsb","x":1760,"y":1358,"w":222,"h":224},"pets/obsidian_plum_golem-1":{"sheet":"petsb","x":2,"y":1584,"w":221,"h":224},"pets/obsidian_plum_golem-1-s":{"sheet":"petsb","x":225,"y":1584,"w":221,"h":224},"pets/pea_frog-1":{"sheet":"petsb","x":448,"y":1584,"w":220,"h":224},"pets/pea_frog-1-s":{"sheet":"petsb","x":670,"y":1584,"w":220,"h":224},"pets/peach_alpaca-1":{"sheet":"petsb","x":892,"y":1584,"w":214,"h":224},"pets/peach_alpaca-1-s":{"sheet":"petsb","x":1108,"y":1584,"w":214,"h":224},"pets/pineapple_hedgehog-1":{"sheet":"petsb","x":1324,"y":1584,"w":209,"h":224},"pets/pineapple_hedgehog-1-s":{"sheet":"petsb","x":1535,"y":1584,"w":209,"h":224},"pets/pistachio_knight_beetle-1":{"sheet":"petsb","x":1746,"y":1584,"w":205,"h":224},"pets/pistachio_knight_beetle-1-s":{"sheet":"petsb","x":2,"y":1810,"w":205,"h":224},"pets/radish_pup-1":{"sheet":"petsb","x":209,"y":1810,"w":189,"h":224},"pets/radish_pup-1-s":{"sheet":"petsb","x":400,"y":1810,"w":189,"h":224},"pets/rambutan_porcupine-1":{"sheet":"petsb","x":591,"y":1810,"w":205,"h":224},"pets/rambutan_porcupine-1-s":{"sheet":"petsb","x":798,"y":1810,"w":205,"h":224},"pets/ruby_cherry_phoenix-1":{"sheet":"petsb","x":1005,"y":1810,"w":220,"h":224},"pets/ruby_cherry_phoenix-1-s":{"sheet":"petsb","x":1227,"y":1810,"w":220,"h":224},"pets/truffle_boar-1":{"sheet":"petsb","x":1449,"y":1810,"w":219,"h":224},"pets/truffle_boar-1-s":{"sheet":"petsb","x":1670,"y":1810,"w":219,"h":224},"pets/vanilla_swan-1":{"sheet":"petsc","x":2,"y":2,"w":215,"h":224},"pets/vanilla_swan-1-s":{"sheet":"petsc","x":219,"y":2,"w":215,"h":224},"pets/yuzu_otter-1":{"sheet":"petsc","x":436,"y":2,"w":217,"h":224},"pets/yuzu_otter-1-s":{"sheet":"petsc","x":655,"y":2,"w":217,"h":224},"pets/eggtart_puffin-1":{"sheet":"petsc","x":874,"y":2,"w":211,"h":224},"pets/eggtart_puffin-1-s":{"sheet":"petsc","x":1087,"y":2,"w":211,"h":224},"pets/loquat_fawn-1":{"sheet":"petsc","x":1300,"y":2,"w":209,"h":224},"pets/loquat_fawn-1-s":{"sheet":"petsc","x":1511,"y":2,"w":209,"h":224},"pets/tanghulu_ladybug-1":{"sheet":"petsc","x":1722,"y":2,"w":208,"h":224},"pets/tanghulu_ladybug-1-s":{"sheet":"petsc","x":2,"y":228,"w":208,"h":224},"pets/soymilk_guineapig-1":{"sheet":"petsc","x":212,"y":228,"w":223,"h":224},"pets/soymilk_guineapig-1-s":{"sheet":"petsc","x":437,"y":228,"w":223,"h":224},"pets/waxapple_loris-1":{"sheet":"petsc","x":662,"y":228,"w":194,"h":224},"pets/waxapple_loris-1-s":{"sheet":"petsc","x":858,"y":228,"w":194,"h":224},"pets/sago_jellyfish-1":{"sheet":"petsc","x":1054,"y":228,"w":223,"h":224},"pets/sago_jellyfish-1-s":{"sheet":"petsc","x":1279,"y":228,"w":223,"h":224},"pets/cottoncandy_llama-1":{"sheet":"petsc","x":1504,"y":228,"w":208,"h":224},"pets/cottoncandy_llama-1-s":{"sheet":"petsc","x":1714,"y":228,"w":208,"h":224},"pets/longan_quail-1":{"sheet":"petsc","x":2,"y":454,"w":195,"h":224},"pets/longan_quail-1-s":{"sheet":"petsc","x":199,"y":454,"w":195,"h":224},"pets/mungbean_goat-1":{"sheet":"petsc","x":396,"y":454,"w":196,"h":224},"pets/mungbean_goat-1-s":{"sheet":"petsc","x":594,"y":454,"w":196,"h":224},"pets/sugarcane_donkey-1":{"sheet":"petsc","x":792,"y":454,"w":184,"h":224},"pets/sugarcane_donkey-1-s":{"sheet":"petsc","x":978,"y":454,"w":184,"h":224},"pets/wintermelon_manatee-1":{"sheet":"petsc","x":1164,"y":454,"w":217,"h":224},"pets/wintermelon_manatee-1-s":{"sheet":"petsc","x":1383,"y":454,"w":217,"h":224},"pets/guava_meerkat-1":{"sheet":"petsc","x":1602,"y":454,"w":223,"h":224},"pets/guava_meerkat-1-s":{"sheet":"petsc","x":2,"y":680,"w":223,"h":224},"pets/shaobing_yak-1":{"sheet":"petsc","x":227,"y":680,"w":199,"h":224},"pets/shaobing_yak-1-s":{"sheet":"petsc","x":428,"y":680,"w":199,"h":224},"pets/lime_pika-1":{"sheet":"petsc","x":629,"y":680,"w":211,"h":224},"pets/lime_pika-1-s":{"sheet":"petsc","x":842,"y":680,"w":211,"h":224},"pets/jianbing_quokka-1":{"sheet":"petsc","x":1055,"y":680,"w":214,"h":224},"pets/jianbing_quokka-1-s":{"sheet":"petsc","x":1271,"y":680,"w":214,"h":224},"pets/raspberry_lovebird-1":{"sheet":"petsc","x":1487,"y":680,"w":222,"h":224},"pets/raspberry_lovebird-1-s":{"sheet":"petsc","x":1711,"y":680,"w":222,"h":224},"pets/wonton_dugong-1":{"sheet":"petsc","x":2,"y":906,"w":201,"h":224},"pets/wonton_dugong-1-s":{"sheet":"petsc","x":205,"y":906,"w":201,"h":224},"pets/jiaozi_hyrax-1":{"sheet":"petsc","x":408,"y":906,"w":217,"h":224},"pets/jiaozi_hyrax-1-s":{"sheet":"petsc","x":627,"y":906,"w":217,"h":224},"pets/shaomai_seahorse-1":{"sheet":"petsc","x":846,"y":906,"w":214,"h":224},"pets/shaomai_seahorse-1-s":{"sheet":"petsc","x":1062,"y":906,"w":214,"h":224},"pets/liangpi_cicada-1":{"sheet":"petsc","x":1278,"y":906,"w":193,"h":224},"pets/liangpi_cicada-1-s":{"sheet":"petsc","x":1473,"y":906,"w":193,"h":224},"pets/haishen_camel-1":{"sheet":"petsc","x":1668,"y":906,"w":217,"h":224},"pets/haishen_camel-1-s":{"sheet":"petsc","x":2,"y":1132,"w":217,"h":224},"pets/bingfen_mola-1":{"sheet":"petsc","x":221,"y":1132,"w":187,"h":224},"pets/bingfen_mola-1-s":{"sheet":"petsc","x":410,"y":1132,"w":187,"h":224},"pets/erkuai_zebra-1":{"sheet":"petsc","x":599,"y":1132,"w":219,"h":224},"pets/erkuai_zebra-1-s":{"sheet":"petsc","x":820,"y":1132,"w":219,"h":224},"pets/ginkgo_dodo-1":{"sheet":"petsc","x":1041,"y":1132,"w":204,"h":224},"pets/ginkgo_dodo-1-s":{"sheet":"petsc","x":1247,"y":1132,"w":204,"h":224},"pets/shengjian_takin-1":{"sheet":"petsc","x":1453,"y":1132,"w":218,"h":224},"pets/shengjian_takin-1-s":{"sheet":"petsc","x":1673,"y":1132,"w":218,"h":224},"pets/guazi_skunk-1":{"sheet":"petsc","x":2,"y":1358,"w":208,"h":224},"pets/guazi_skunk-1-s":{"sheet":"petsc","x":212,"y":1358,"w":208,"h":224},"pets/aiwowo_myna-1":{"sheet":"petsc","x":422,"y":1358,"w":221,"h":224},"pets/aiwowo_myna-1-s":{"sheet":"petsc","x":645,"y":1358,"w":221,"h":224},"pets/laopobing_okapi-1":{"sheet":"petsc","x":868,"y":1358,"w":210,"h":224},"pets/laopobing_okapi-1-s":{"sheet":"petsc","x":1080,"y":1358,"w":210,"h":224},"pets/mahua_moose-1":{"sheet":"petsc","x":1292,"y":1358,"w":205,"h":224},"pets/mahua_moose-1-s":{"sheet":"petsc","x":1499,"y":1358,"w":205,"h":224},"pets/ganlan_agouti-1":{"sheet":"petsc","x":1706,"y":1358,"w":210,"h":224},"pets/ganlan_agouti-1-s":{"sheet":"petsc","x":2,"y":1584,"w":210,"h":224},"pets/wampee_tamarin-1":{"sheet":"petsc","x":214,"y":1584,"w":214,"h":224},"pets/wampee_tamarin-1-s":{"sheet":"petsc","x":430,"y":1584,"w":214,"h":224},"pets/durian-1":{"sheet":"petsc","x":646,"y":1584,"w":224,"h":223},"pets/durian-1-s":{"sheet":"petsc","x":872,"y":1584,"w":224,"h":223},"pets/cherry_fox-1":{"sheet":"petsc","x":1098,"y":1584,"w":224,"h":223},"pets/cherry_fox-1-s":{"sheet":"petsc","x":1324,"y":1584,"w":224,"h":223},"pets/mint_rabbit-1":{"sheet":"petsc","x":1550,"y":1584,"w":224,"h":223},"pets/mint_rabbit-1-s":{"sheet":"petsc","x":1776,"y":1584,"w":224,"h":223},"pets/niangao_goose-1":{"sheet":"petsc","x":2,"y":1810,"w":224,"h":223},"pets/niangao_goose-1-s":{"sheet":"petsc","x":228,"y":1810,"w":224,"h":223},"pets/longxu_firefly-1":{"sheet":"petsc","x":454,"y":1810,"w":224,"h":223},"pets/longxu_firefly-1-s":{"sheet":"petsc","x":680,"y":1810,"w":224,"h":223},"pets/springroll_sable-1":{"sheet":"petsc","x":906,"y":1810,"w":224,"h":223},"pets/springroll_sable-1-s":{"sheet":"petsc","x":1132,"y":1810,"w":224,"h":223},"pets/millet_samoyed-1":{"sheet":"petsc","x":1358,"y":1810,"w":224,"h":223},"pets/millet_samoyed-1-s":{"sheet":"petsc","x":1584,"y":1810,"w":224,"h":223},"pets/melon-4":{"sheet":"petsc","x":1810,"y":1810,"w":224,"h":222},"pets/melon-4-s":{"sheet":"petsd","x":2,"y":2,"w":224,"h":222},"pets/shavedice_starfish-1":{"sheet":"petsd","x":228,"y":2,"w":224,"h":222},"pets/shavedice_starfish-1-s":{"sheet":"petsd","x":454,"y":2,"w":224,"h":222},"pets/cucumber_axolotl-1":{"sheet":"petsd","x":680,"y":2,"w":224,"h":222},"pets/cucumber_axolotl-1-s":{"sheet":"petsd","x":906,"y":2,"w":224,"h":222},"pets/qingtuan_kingfisher-1":{"sheet":"petsd","x":1132,"y":2,"w":224,"h":222},"pets/qingtuan_kingfisher-1-s":{"sheet":"petsd","x":1358,"y":2,"w":224,"h":222},"pets/starfruit_owl-1":{"sheet":"petsd","x":1584,"y":2,"w":224,"h":221},"pets/starfruit_owl-1-s":{"sheet":"petsd","x":1810,"y":2,"w":224,"h":221},"pets/lava_berry_wyvern-1":{"sheet":"petsd","x":2,"y":226,"w":224,"h":221},"pets/lava_berry_wyvern-1-s":{"sheet":"petsd","x":228,"y":226,"w":224,"h":221},"pets/taro_octopus-1":{"sheet":"petsd","x":454,"y":226,"w":224,"h":221},"pets/taro_octopus-1-s":{"sheet":"petsd","x":680,"y":226,"w":224,"h":221},"pets/goji_jerboa-1":{"sheet":"petsd","x":906,"y":226,"w":224,"h":221},"pets/goji_jerboa-1-s":{"sheet":"petsd","x":1132,"y":226,"w":224,"h":221},"pets/lilybulb_ptarmigan-1":{"sheet":"petsd","x":1358,"y":226,"w":224,"h":221},"pets/lilybulb_ptarmigan-1-s":{"sheet":"petsd","x":1584,"y":226,"w":224,"h":221},"pets/chestnut-4":{"sheet":"petsd","x":1810,"y":226,"w":224,"h":220},"pets/chestnut-4-s":{"sheet":"petsd","x":2,"y":449,"w":224,"h":220},"pets/strawberry_cat-1":{"sheet":"petsd","x":228,"y":449,"w":224,"h":220},"pets/strawberry_cat-1-s":{"sheet":"petsd","x":454,"y":449,"w":224,"h":220},"pets/pear_duck-1":{"sheet":"petsd","x":680,"y":449,"w":224,"h":220},"pets/pear_duck-1-s":{"sheet":"petsd","x":906,"y":449,"w":224,"h":220},"pets/huamei_gerbil-1":{"sheet":"petsd","x":1132,"y":449,"w":224,"h":220},"pets/huamei_gerbil-1-s":{"sheet":"petsd","x":1358,"y":449,"w":224,"h":220},"pets/fagao_tapir-1":{"sheet":"petsd","x":1584,"y":449,"w":224,"h":219},"pets/fagao_tapir-1-s":{"sheet":"petsd","x":1810,"y":449,"w":224,"h":219},"pets/xianhuabing_flamingo-1":{"sheet":"petsd","x":2,"y":671,"w":224,"h":219},"pets/xianhuabing_flamingo-1-s":{"sheet":"petsd","x":228,"y":671,"w":224,"h":219},"pets/mango-1":{"sheet":"petsd","x":454,"y":671,"w":224,"h":218},"pets/mango-1-s":{"sheet":"petsd","x":680,"y":671,"w":224,"h":218},"pets/blackberry_wolf-1":{"sheet":"petsd","x":906,"y":671,"w":224,"h":218},"pets/blackberry_wolf-1-s":{"sheet":"petsd","x":1132,"y":671,"w":224,"h":218},"pets/plum_squirrel-1":{"sheet":"petsd","x":1358,"y":671,"w":224,"h":218},"pets/plum_squirrel-1-s":{"sheet":"petsd","x":1584,"y":671,"w":224,"h":218},"pets/custardbun_joey-1":{"sheet":"petsd","x":1810,"y":671,"w":224,"h":218},"pets/custardbun_joey-1-s":{"sheet":"petsd","x":2,"y":892,"w":224,"h":218},"pets/eggwaffle_chinchilla-1":{"sheet":"petsd","x":228,"y":892,"w":224,"h":218},"pets/eggwaffle_chinchilla-1-s":{"sheet":"petsd","x":454,"y":892,"w":224,"h":218},"pets/osmanthus_koala-1":{"sheet":"petsd","x":680,"y":892,"w":224,"h":218},"pets/osmanthus_koala-1-s":{"sheet":"petsd","x":906,"y":892,"w":224,"h":218},"pets/mango-3":{"sheet":"petsd","x":1132,"y":892,"w":224,"h":217},"pets/mango-3-s":{"sheet":"petsd","x":1358,"y":892,"w":224,"h":217},"pets/orange_otter-1":{"sheet":"petsd","x":1584,"y":892,"w":224,"h":217},"pets/orange_otter-1-s":{"sheet":"petsd","x":1810,"y":892,"w":224,"h":217},"pets/saffron_griffin-1":{"sheet":"petsd","x":2,"y":1112,"w":224,"h":217},"pets/saffron_griffin-1-s":{"sheet":"petsd","x":228,"y":1112,"w":224,"h":217},"pets/sun_mango_falcon-1":{"sheet":"petsd","x":454,"y":1112,"w":224,"h":217},"pets/sun_mango_falcon-1-s":{"sheet":"petsd","x":680,"y":1112,"w":224,"h":217},"pets/tofu_pigeon-1":{"sheet":"petsd","x":906,"y":1112,"w":224,"h":217},"pets/tofu_pigeon-1-s":{"sheet":"petsd","x":1132,"y":1112,"w":224,"h":217},"pets/babao_redpanda-1":{"sheet":"petsd","x":1358,"y":1112,"w":224,"h":217},"pets/babao_redpanda-1-s":{"sheet":"petsd","x":1584,"y":1112,"w":224,"h":217},"pets/abalone_oriole-1":{"sheet":"petsd","x":1810,"y":1112,"w":224,"h":217},"pets/abalone_oriole-1-s":{"sheet":"petsd","x":2,"y":1331,"w":224,"h":217},"pets/malagao_macaw-1":{"sheet":"petsd","x":228,"y":1331,"w":224,"h":217},"pets/malagao_macaw-1-s":{"sheet":"petsd","x":454,"y":1331,"w":224,"h":217},"pets/lvdagun_peccary-1":{"sheet":"petsd","x":680,"y":1331,"w":224,"h":217},"pets/lvdagun_peccary-1-s":{"sheet":"petsd","x":906,"y":1331,"w":224,"h":217},"pets/blood_orange_cerberus-1":{"sheet":"petsd","x":1132,"y":1331,"w":224,"h":216},"pets/blood_orange_cerberus-1-s":{"sheet":"petsd","x":1358,"y":1331,"w":224,"h":216},"pets/cheungfun_pillbug-1":{"sheet":"petsd","x":1584,"y":1331,"w":224,"h":216},"pets/cheungfun_pillbug-1-s":{"sheet":"petsd","x":1810,"y":1331,"w":224,"h":216},"pets/snowpear-1":{"sheet":"petsd","x":2,"y":1550,"w":224,"h":215},"pets/snowpear-1-s":{"sheet":"petsd","x":228,"y":1550,"w":224,"h":215},"pets/lemon_bee-1":{"sheet":"petsd","x":454,"y":1550,"w":224,"h":215},"pets/lemon_bee-1-s":{"sheet":"petsd","x":680,"y":1550,"w":224,"h":215},"pets/cinnamon_owl-1":{"sheet":"petsd","x":906,"y":1550,"w":224,"h":215},"pets/cinnamon_owl-1-s":{"sheet":"petsd","x":1132,"y":1550,"w":224,"h":215},"pets/chomp-3":{"sheet":"petsd","x":1358,"y":1550,"w":224,"h":214},"pets/chomp-3-s":{"sheet":"petsd","x":1584,"y":1550,"w":224,"h":214},"pets/thunder_roc-1":{"sheet":"petsd","x":1810,"y":1550,"w":224,"h":214},"pets/thunder_roc-1-s":{"sheet":"petsd","x":2,"y":1767,"w":224,"h":214},"pets/ginger_cat-1":{"sheet":"petsd","x":228,"y":1767,"w":224,"h":214},"pets/ginger_cat-1-s":{"sheet":"petsd","x":454,"y":1767,"w":224,"h":214},"pets/eggplant_anteater-1":{"sheet":"petsd","x":680,"y":1767,"w":224,"h":214},"pets/eggplant_anteater-1-s":{"sheet":"petsd","x":906,"y":1767,"w":224,"h":214},"pets/peach-2":{"sheet":"petsd","x":1132,"y":1767,"w":224,"h":213},"pets/peach-2-s":{"sheet":"petsd","x":1358,"y":1767,"w":224,"h":213},"pets/pitaya-3":{"sheet":"petsd","x":1584,"y":1767,"w":224,"h":213},"pets/pitaya-3-s":{"sheet":"petsd","x":1810,"y":1767,"w":224,"h":213},"pets/mango-2":{"sheet":"petse","x":2,"y":2,"w":224,"h":213},"pets/mango-2-s":{"sheet":"petse","x":228,"y":2,"w":224,"h":213},"pets/mango-4":{"sheet":"petse","x":454,"y":2,"w":224,"h":213},"pets/mango-4-s":{"sheet":"petse","x":680,"y":2,"w":224,"h":213},"pets/matcha_turtle-1":{"sheet":"petse","x":906,"y":2,"w":224,"h":213},"pets/matcha_turtle-1-s":{"sheet":"petse","x":1132,"y":2,"w":224,"h":213},"pets/huajuan_chowchow-1":{"sheet":"petse","x":1358,"y":2,"w":224,"h":213},"pets/huajuan_chowchow-1-s":{"sheet":"petse","x":1584,"y":2,"w":224,"h":213},"pets/snowpear-2":{"sheet":"petse","x":1810,"y":2,"w":224,"h":212},"pets/snowpear-2-s":{"sheet":"petse","x":2,"y":217,"w":224,"h":212},"pets/waffle_bear-1":{"sheet":"petse","x":228,"y":217,"w":224,"h":212},"pets/waffle_bear-1-s":{"sheet":"petse","x":454,"y":217,"w":224,"h":212},"pets/durian-4":{"sheet":"petse","x":680,"y":217,"w":224,"h":211},"pets/durian-4-s":{"sheet":"petse","x":906,"y":217,"w":224,"h":211},"pets/croissant_corgi-1":{"sheet":"petse","x":1132,"y":217,"w":224,"h":211},"pets/croissant_corgi-1-s":{"sheet":"petse","x":1358,"y":217,"w":224,"h":211},"pets/pomegranate_lion-1":{"sheet":"petse","x":1584,"y":217,"w":224,"h":211},"pets/pomegranate_lion-1-s":{"sheet":"petse","x":1810,"y":217,"w":224,"h":211},"pets/enoki_hummingbird-1":{"sheet":"petse","x":2,"y":431,"w":224,"h":211},"pets/enoki_hummingbird-1-s":{"sheet":"petse","x":228,"y":431,"w":224,"h":211},"pets/melon-3":{"sheet":"petse","x":454,"y":431,"w":224,"h":210},"pets/melon-3-s":{"sheet":"petse","x":680,"y":431,"w":224,"h":210},"pets/peach-1":{"sheet":"petse","x":906,"y":431,"w":224,"h":210},"pets/peach-1-s":{"sheet":"petse","x":1132,"y":431,"w":224,"h":210},"pets/jujube_wombat-1":{"sheet":"petse","x":1358,"y":431,"w":224,"h":210},"pets/jujube_wombat-1-s":{"sheet":"petse","x":1584,"y":431,"w":224,"h":210},"pets/durian-3":{"sheet":"petse","x":1810,"y":431,"w":224,"h":208},"pets/durian-3-s":{"sheet":"petse","x":2,"y":644,"w":224,"h":208},"pets/peanut_calf-1":{"sheet":"petse","x":228,"y":644,"w":224,"h":208},"pets/peanut_calf-1-s":{"sheet":"petse","x":454,"y":644,"w":224,"h":208},"pets/nuomici_dolphin-1":{"sheet":"petse","x":680,"y":644,"w":224,"h":208},"pets/nuomici_dolphin-1-s":{"sheet":"petse","x":906,"y":644,"w":224,"h":208},"pets/shuangpi_canary-1":{"sheet":"petse","x":1132,"y":644,"w":224,"h":207},"pets/shuangpi_canary-1-s":{"sheet":"petse","x":1358,"y":644,"w":224,"h":207},"pets/xingren_snail-1":{"sheet":"petse","x":1584,"y":644,"w":224,"h":207},"pets/xingren_snail-1-s":{"sheet":"petse","x":1810,"y":644,"w":224,"h":207},"pets/latiao_ibis-1":{"sheet":"petse","x":2,"y":854,"w":224,"h":207},"pets/latiao_ibis-1-s":{"sheet":"petse","x":228,"y":854,"w":224,"h":207},"pets/cashew_macaque-1":{"sheet":"petse","x":454,"y":854,"w":224,"h":207},"pets/cashew_macaque-1-s":{"sheet":"petse","x":680,"y":854,"w":224,"h":207},"pets/mint_chameleon-1":{"sheet":"petse","x":906,"y":854,"w":224,"h":206},"pets/mint_chameleon-1-s":{"sheet":"petse","x":1132,"y":854,"w":224,"h":206},"pets/redbean_capybara-1":{"sheet":"petse","x":1358,"y":854,"w":224,"h":206},"pets/redbean_capybara-1-s":{"sheet":"petse","x":1584,"y":854,"w":224,"h":206},"pets/brownsugar_elephant-1":{"sheet":"petse","x":1810,"y":854,"w":224,"h":206},"pets/brownsugar_elephant-1-s":{"sheet":"petse","x":2,"y":1063,"w":224,"h":206},"pets/ninelayer_silkworm-1":{"sheet":"petse","x":228,"y":1063,"w":224,"h":206},"pets/ninelayer_silkworm-1-s":{"sheet":"petse","x":454,"y":1063,"w":224,"h":206},"pets/hen-5":{"sheet":"petse","x":680,"y":1063,"w":224,"h":205},"pets/hen-5-s":{"sheet":"petse","x":906,"y":1063,"w":224,"h":205},"pets/jade_koi-1":{"sheet":"petse","x":1132,"y":1063,"w":224,"h":205},"pets/jade_koi-1-s":{"sheet":"petse","x":1358,"y":1063,"w":224,"h":205},"pets/kiwi_ferret-1":{"sheet":"petse","x":1584,"y":1063,"w":224,"h":205},"pets/kiwi_ferret-1-s":{"sheet":"petse","x":1810,"y":1063,"w":224,"h":205},"pets/kumquat_chipmunk-1":{"sheet":"petse","x":2,"y":1271,"w":224,"h":205},"pets/kumquat_chipmunk-1-s":{"sheet":"petse","x":228,"y":1271,"w":224,"h":205},"pets/tomato_marmoset-1":{"sheet":"petse","x":454,"y":1271,"w":224,"h":205},"pets/tomato_marmoset-1-s":{"sheet":"petse","x":680,"y":1271,"w":224,"h":205},"pets/hen-2":{"sheet":"petse","x":906,"y":1271,"w":224,"h":204},"pets/hen-2-s":{"sheet":"petse","x":1132,"y":1271,"w":224,"h":204},"pets/wasabi_gecko-1":{"sheet":"petse","x":1358,"y":1271,"w":224,"h":204},"pets/wasabi_gecko-1-s":{"sheet":"petse","x":1584,"y":1271,"w":224,"h":204},"pets/mantou_pug-1":{"sheet":"petse","x":1810,"y":1271,"w":224,"h":204},"pets/mantou_pug-1-s":{"sheet":"petse","x":2,"y":1478,"w":224,"h":204},"pets/apricot_dormouse-1":{"sheet":"petse","x":228,"y":1478,"w":224,"h":204},"pets/apricot_dormouse-1-s":{"sheet":"petse","x":454,"y":1478,"w":224,"h":204},"pets/pitaya-1":{"sheet":"petse","x":680,"y":1478,"w":224,"h":203},"pets/pitaya-1-s":{"sheet":"petse","x":906,"y":1478,"w":224,"h":203},"pets/amber_honey_bear-1":{"sheet":"petse","x":1132,"y":1478,"w":224,"h":203},"pets/amber_honey_bear-1-s":{"sheet":"petse","x":1358,"y":1478,"w":224,"h":203},"pets/matigao_snubmonkey-1":{"sheet":"petse","x":1584,"y":1478,"w":224,"h":203},"pets/matigao_snubmonkey-1-s":{"sheet":"petse","x":1810,"y":1478,"w":224,"h":203},"pets/putchaigao_grouper-1":{"sheet":"petse","x":2,"y":1684,"w":224,"h":203},"pets/putchaigao_grouper-1-s":{"sheet":"petse","x":228,"y":1684,"w":224,"h":203},"pets/pudding_shiba-1":{"sheet":"petse","x":454,"y":1684,"w":224,"h":202},"pets/pudding_shiba-1-s":{"sheet":"petse","x":680,"y":1684,"w":224,"h":202},"pets/mooncake_pony-1":{"sheet":"petse","x":906,"y":1684,"w":224,"h":202},"pets/mooncake_pony-1-s":{"sheet":"petse","x":1132,"y":1684,"w":224,"h":202},"pets/mangosteen_armadillo-1":{"sheet":"petse","x":1358,"y":1684,"w":224,"h":202},"pets/mangosteen_armadillo-1-s":{"sheet":"petse","x":1584,"y":1684,"w":224,"h":202},"pets/shanzha_manul-1":{"sheet":"petse","x":1810,"y":1684,"w":224,"h":202},"pets/papaya_toucan-1":{"sheet":"petse","x":2,"y":1889,"w":224,"h":157},"pets/papaya_toucan-1-s":{"sheet":"petse","x":228,"y":1889,"w":224,"h":157},"pets/laozao_cuttlefish-1":{"sheet":"petse","x":454,"y":1889,"w":224,"h":156},"pets/laozao_cuttlefish-1-s":{"sheet":"petse","x":680,"y":1889,"w":224,"h":156},"pets/dabaitu_beluga-1":{"sheet":"petse","x":906,"y":1889,"w":224,"h":153},"pets/dabaitu_beluga-1-s":{"sheet":"petse","x":1132,"y":1889,"w":224,"h":153},"pets/guaiweidou_boxfish-1":{"sheet":"petse","x":1358,"y":1889,"w":224,"h":148},"pets/guaiweidou_boxfish-1-s":{"sheet":"petse","x":1584,"y":1889,"w":224,"h":148},"pets/shanzha_manul-1-s":{"sheet":"petsf","x":2,"y":2,"w":224,"h":202},"pets/shiitake_possum-1":{"sheet":"petsf","x":228,"y":2,"w":224,"h":202},"pets/shiitake_possum-1-s":{"sheet":"petsf","x":454,"y":2,"w":224,"h":202},"pets/kelp_blobfish-1":{"sheet":"petsf","x":680,"y":2,"w":224,"h":202},"pets/kelp_blobfish-1-s":{"sheet":"petsf","x":906,"y":2,"w":224,"h":202},"pets/woodear_cuscus-1":{"sheet":"petsf","x":1132,"y":2,"w":224,"h":202},"pets/woodear_cuscus-1-s":{"sheet":"petsf","x":1358,"y":2,"w":224,"h":202},"pets/hen-1":{"sheet":"petsf","x":1584,"y":2,"w":224,"h":201},"pets/hen-1-s":{"sheet":"petsf","x":1810,"y":2,"w":224,"h":201},"pets/cloud_sheep-1":{"sheet":"petsf","x":2,"y":206,"w":224,"h":201},"pets/cloud_sheep-1-s":{"sheet":"petsf","x":228,"y":206,"w":224,"h":201},"pets/plum_mole-1":{"sheet":"petsf","x":454,"y":206,"w":224,"h":201},"pets/plum_mole-1-s":{"sheet":"petsf","x":680,"y":206,"w":224,"h":201},"pets/xiaolongbao_shrimp-1":{"sheet":"petsf","x":906,"y":206,"w":224,"h":200},"pets/xiaolongbao_shrimp-1-s":{"sheet":"petsf","x":1132,"y":206,"w":224,"h":200},"pets/passionfruit_platypus-1":{"sheet":"petsf","x":1358,"y":206,"w":224,"h":200},"pets/passionfruit_platypus-1-s":{"sheet":"petsf","x":1584,"y":206,"w":224,"h":200},"pets/suanlafen_skink-1":{"sheet":"petsf","x":1810,"y":206,"w":224,"h":200},"pets/suanlafen_skink-1-s":{"sheet":"petsf","x":2,"y":409,"w":224,"h":200},"pets/cocoa_panther-1":{"sheet":"petsf","x":228,"y":409,"w":224,"h":199},"pets/cocoa_panther-1-s":{"sheet":"petsf","x":454,"y":409,"w":224,"h":199},"pets/donut_hippo-1":{"sheet":"petsf","x":680,"y":409,"w":224,"h":199},"pets/donut_hippo-1-s":{"sheet":"petsf","x":906,"y":409,"w":224,"h":199},"pets/sesame_badger-1":{"sheet":"petsf","x":1132,"y":409,"w":224,"h":199},"pets/sesame_badger-1-s":{"sheet":"petsf","x":1358,"y":409,"w":224,"h":199},"pets/tangyuan_pig-1":{"sheet":"petsf","x":1584,"y":409,"w":224,"h":199},"pets/tangyuan_pig-1-s":{"sheet":"petsf","x":1810,"y":409,"w":224,"h":199},"pets/youtiao_marmot-1":{"sheet":"petsf","x":2,"y":611,"w":224,"h":199},"pets/youtiao_marmot-1-s":{"sheet":"petsf","x":228,"y":611,"w":224,"h":199},"pets/jasmine_magpie-1":{"sheet":"petsf","x":454,"y":611,"w":224,"h":199},"pets/jasmine_magpie-1-s":{"sheet":"petsf","x":680,"y":611,"w":224,"h":199},"pets/jackfruit_haishi-1":{"sheet":"petsf","x":906,"y":611,"w":224,"h":199},"pets/jackfruit_haishi-1-s":{"sheet":"petsf","x":1132,"y":611,"w":224,"h":199},"pets/sachima_cheetah-1":{"sheet":"petsf","x":1358,"y":611,"w":224,"h":199},"pets/sachima_cheetah-1-s":{"sheet":"petsf","x":1584,"y":611,"w":224,"h":199},"pets/mulberry_lemur-1":{"sheet":"petsf","x":1810,"y":611,"w":224,"h":198},"pets/mulberry_lemur-1-s":{"sheet":"petsf","x":2,"y":812,"w":224,"h":198},"pets/persimmon_tanuki-1":{"sheet":"petsf","x":228,"y":812,"w":224,"h":197},"pets/persimmon_tanuki-1-s":{"sheet":"petsf","x":454,"y":812,"w":224,"h":197},"pets/pitaya-4":{"sheet":"petsf","x":680,"y":812,"w":224,"h":196},"pets/pitaya-4-s":{"sheet":"petsf","x":906,"y":812,"w":224,"h":196},"pets/danhuangsu_ermine-1":{"sheet":"petsf","x":1132,"y":812,"w":224,"h":196},"pets/danhuangsu_ermine-1-s":{"sheet":"petsf","x":1358,"y":812,"w":224,"h":196},"pets/espresso_hawk-1":{"sheet":"petsf","x":1584,"y":812,"w":224,"h":195},"pets/espresso_hawk-1-s":{"sheet":"petsf","x":1810,"y":812,"w":224,"h":195},"pets/mochi_seal-1":{"sheet":"petsf","x":2,"y":1012,"w":224,"h":195},"pets/mochi_seal-1-s":{"sheet":"petsf","x":228,"y":1012,"w":224,"h":195},"pets/mixian_salamander-1":{"sheet":"petsf","x":454,"y":1012,"w":224,"h":195},"pets/mixian_salamander-1-s":{"sheet":"petsf","x":680,"y":1012,"w":224,"h":195},"pets/luosifen_clownfish-1":{"sheet":"petsf","x":906,"y":1012,"w":224,"h":194},"pets/luosifen_clownfish-1-s":{"sheet":"petsf","x":1132,"y":1012,"w":224,"h":194},"pets/chomp-4":{"sheet":"petsf","x":1358,"y":1012,"w":224,"h":193},"pets/chomp-4-s":{"sheet":"petsf","x":1584,"y":1012,"w":224,"h":193},"pets/pretzel_dachshund-1":{"sheet":"petsf","x":1810,"y":1012,"w":224,"h":193},"pets/pretzel_dachshund-1-s":{"sheet":"petsf","x":2,"y":1209,"w":224,"h":193},"pets/royal_lychee_peacock-1":{"sheet":"petsf","x":228,"y":1209,"w":224,"h":193},"pets/royal_lychee_peacock-1-s":{"sheet":"petsf","x":454,"y":1209,"w":224,"h":193},"pets/sorbet_narwhal-1":{"sheet":"petsf","x":680,"y":1209,"w":224,"h":193},"pets/sorbet_narwhal-1-s":{"sheet":"petsf","x":906,"y":1209,"w":224,"h":193},"pets/yangmei_swallow-1":{"sheet":"petsf","x":1132,"y":1209,"w":224,"h":193},"pets/yangmei_swallow-1-s":{"sheet":"petsf","x":1358,"y":1209,"w":224,"h":193},"pets/shanyao_waterbuffalo-1":{"sheet":"petsf","x":1584,"y":1209,"w":224,"h":193},"pets/shanyao_waterbuffalo-1-s":{"sheet":"petsf","x":1810,"y":1209,"w":224,"h":193},"pets/crimson_lychee_tiger-1":{"sheet":"petsf","x":2,"y":1404,"w":224,"h":192},"pets/crimson_lychee_tiger-1-s":{"sheet":"petsf","x":228,"y":1404,"w":224,"h":192},"pets/durian-5":{"sheet":"petsf","x":454,"y":1404,"w":224,"h":191},"pets/durian-5-s":{"sheet":"petsf","x":680,"y":1404,"w":224,"h":191},"pets/coconut_crab-1":{"sheet":"petsf","x":906,"y":1404,"w":224,"h":190},"pets/coconut_crab-1-s":{"sheet":"petsf","x":1132,"y":1404,"w":224,"h":190},"pets/lotusroot_beaver-1":{"sheet":"petsf","x":1358,"y":1404,"w":224,"h":190},"pets/lotusroot_beaver-1-s":{"sheet":"petsf","x":1584,"y":1404,"w":224,"h":190},"pets/yimi_newt-1":{"sheet":"petsf","x":1810,"y":1404,"w":224,"h":190},"pets/yimi_newt-1-s":{"sheet":"petsf","x":2,"y":1598,"w":224,"h":190},"pets/chomp-5":{"sheet":"petsf","x":228,"y":1598,"w":224,"h":189},"pets/chomp-5-s":{"sheet":"petsf","x":454,"y":1598,"w":224,"h":189},"pets/ramen_panda-1":{"sheet":"petsf","x":680,"y":1598,"w":224,"h":189},"pets/ramen_panda-1-s":{"sheet":"petsf","x":906,"y":1598,"w":224,"h":189},"pets/fishball_puffer-1":{"sheet":"petsf","x":1132,"y":1598,"w":224,"h":189},"pets/fishball_puffer-1-s":{"sheet":"petsf","x":1358,"y":1598,"w":224,"h":189},"pets/pumpkin-1":{"sheet":"petsf","x":1584,"y":1598,"w":224,"h":187},"pets/pumpkin-1-s":{"sheet":"petsf","x":1810,"y":1598,"w":224,"h":187},"pets/pumpkin-3":{"sheet":"petsf","x":2,"y":1790,"w":224,"h":187},"pets/pumpkin-3-s":{"sheet":"petsf","x":228,"y":1790,"w":224,"h":187},"pets/apple_mouse-1":{"sheet":"petsf","x":454,"y":1790,"w":224,"h":187},"pets/apple_mouse-1-s":{"sheet":"petsf","x":680,"y":1790,"w":224,"h":187},"pets/aurora_peach_kirin-1":{"sheet":"petsf","x":906,"y":1790,"w":224,"h":186},"pets/aurora_peach_kirin-1-s":{"sheet":"petsf","x":1132,"y":1790,"w":224,"h":186},"pets/melon-1":{"sheet":"petsf","x":1358,"y":1790,"w":224,"h":185},"pets/melon-1-s":{"sheet":"petsf","x":1584,"y":1790,"w":224,"h":185},"pets/pumpkin-2":{"sheet":"petsf","x":1810,"y":1790,"w":224,"h":184},"pets/pumpkin-2-s":{"sheet":"petsg","x":2,"y":2,"w":224,"h":184},"pets/astral_berry_seraph-1":{"sheet":"petsg","x":228,"y":2,"w":224,"h":184},"pets/astral_berry_seraph-1-s":{"sheet":"petsg","x":454,"y":2,"w":224,"h":184},"pets/zongzi_goldfish-1":{"sheet":"petsg","x":680,"y":2,"w":224,"h":183},"pets/zongzi_goldfish-1-s":{"sheet":"petsg","x":906,"y":2,"w":224,"h":183},"pets/supernova_starfruit_dragon-1":{"sheet":"petsg","x":1132,"y":2,"w":224,"h":181},"pets/supernova_starfruit_dragon-1-s":{"sheet":"petsg","x":1358,"y":2,"w":224,"h":181},"pets/galaxy_kitsune-1":{"sheet":"petsg","x":1584,"y":2,"w":224,"h":179},"pets/galaxy_kitsune-1-s":{"sheet":"petsg","x":1810,"y":2,"w":224,"h":179},"pets/caramel_squirrel-1":{"sheet":"petsg","x":2,"y":188,"w":224,"h":178},"pets/caramel_squirrel-1-s":{"sheet":"petsg","x":228,"y":188,"w":224,"h":178},"pets/guilinggao_whaleshark-1":{"sheet":"petsg","x":454,"y":188,"w":224,"h":178},"pets/guilinggao_whaleshark-1-s":{"sheet":"petsg","x":680,"y":188,"w":224,"h":178},"pets/lotusseed_manta-1":{"sheet":"petsg","x":906,"y":188,"w":224,"h":175},"pets/lotusseed_manta-1-s":{"sheet":"petsg","x":1132,"y":188,"w":224,"h":175},"pets/pumpkin-4":{"sheet":"petsg","x":1358,"y":188,"w":224,"h":173},"pets/pumpkin-4-s":{"sheet":"petsg","x":1584,"y":188,"w":224,"h":173},"pets/celestial_melon_leviathan-1":{"sheet":"petsg","x":1810,"y":188,"w":224,"h":160},"pets/celestial_melon_leviathan-1-s":{"sheet":"petsg","x":2,"y":368,"w":224,"h":160},"enemies/b-1":{"sheet":"mobs","x":2,"y":2,"w":203,"h":224},"enemies/b-2":{"sheet":"mobs","x":207,"y":2,"w":200,"h":224},"enemies/b-3":{"sheet":"mobs","x":409,"y":2,"w":174,"h":224},"enemies/b-4":{"sheet":"mobs","x":585,"y":2,"w":190,"h":224},"enemies/z-1":{"sheet":"mobs","x":777,"y":2,"w":182,"h":224},"enemies/z-2":{"sheet":"mobs","x":2,"y":228,"w":210,"h":224},"enemies/z-3":{"sheet":"mobs","x":214,"y":228,"w":167,"h":224},"enemies/z-4":{"sheet":"mobs","x":383,"y":228,"w":169,"h":224},"enemies/z-5":{"sheet":"mobs","x":554,"y":228,"w":204,"h":224},"enemies/z-6":{"sheet":"mobs","x":760,"y":228,"w":128,"h":224},"eggs/egg-1":{"sheet":"mobs","x":2,"y":454,"w":194,"h":224},"eggs/egg-2":{"sheet":"mobs","x":198,"y":454,"w":193,"h":224},"eggs/egg-3":{"sheet":"mobs","x":393,"y":454,"w":194,"h":224},"eggs/egg-4":{"sheet":"mobs","x":589,"y":454,"w":174,"h":224},"enemies/mob-thief":{"sheet":"mobs","x":765,"y":454,"w":224,"h":223},"enemies/mob-shield":{"sheet":"mobs","x":2,"y":680,"w":197,"h":220},"enemies/mob-mage":{"sheet":"mobs","x":201,"y":680,"w":220,"h":214},"enemies/mob-mini":{"sheet":"mobs","x":423,"y":680,"w":220,"h":204},"enemies/mob-ranged":{"sheet":"mobs","x":645,"y":680,"w":220,"h":201},"enemies/mob-split-big":{"sheet":"mobs","x":2,"y":902,"w":224,"h":192},"fx/hen-egg":{"sheet":"mobs","x":228,"y":902,"w":165,"h":192},"enemies/mob-split-small":{"sheet":"mobs","x":395,"y":902,"w":224,"h":187},"fx/hen-minion":{"sheet":"mobs","x":621,"y":902,"w":192,"h":172},"fx/charm-anvil":{"sheet":"mobs","x":815,"y":902,"w":128,"h":128},"fx/charm-bell":{"sheet":"mobs","x":2,"y":1096,"w":93,"h":128},"fx/charm-bloodgem":{"sheet":"mobs","x":97,"y":1096,"w":128,"h":128},"fx/charm-bolt":{"sheet":"mobs","x":227,"y":1096,"w":89,"h":128},"fx/charm-clover":{"sheet":"mobs","x":318,"y":1096,"w":114,"h":128},"fx/charm-comet":{"sheet":"mobs","x":434,"y":1096,"w":128,"h":128},"fx/charm-compass":{"sheet":"mobs","x":564,"y":1096,"w":102,"h":128},"fx/charm-crest":{"sheet":"mobs","x":668,"y":1096,"w":108,"h":128},"fx/charm-emberheart":{"sheet":"mobs","x":778,"y":1096,"w":128,"h":128},"fx/charm-frost":{"sheet":"mobs","x":2,"y":1226,"w":119,"h":128},"fx/charm-hourglass":{"sheet":"mobs","x":123,"y":1226,"w":85,"h":128},"fx/charm-medal":{"sheet":"mobs","x":210,"y":1226,"w":82,"h":128},"fx/charm-monarch":{"sheet":"mobs","x":294,"y":1226,"w":128,"h":128},"fx/charm-orchardleaf":{"sheet":"mobs","x":424,"y":1226,"w":128,"h":128},"fx/charm-prism":{"sheet":"mobs","x":554,"y":1226,"w":111,"h":128},"fx/charm-relic":{"sheet":"mobs","x":667,"y":1226,"w":128,"h":128},"fx/charm-scarf":{"sheet":"mobs","x":797,"y":1226,"w":127,"h":128},"fx/charm-shield":{"sheet":"mobs","x":2,"y":1356,"w":114,"h":128},"fx/charm-stardust":{"sheet":"mobs","x":118,"y":1356,"w":128,"h":128},"fx/charm-thiefbell":{"sheet":"mobs","x":248,"y":1356,"w":89,"h":128},"fx/charm-tidal":{"sheet":"mobs","x":339,"y":1356,"w":128,"h":128},"fx/charm-whisper":{"sheet":"mobs","x":469,"y":1356,"w":128,"h":128},"fx/charm-spore":{"sheet":"mobs","x":599,"y":1356,"w":128,"h":126},"fx/charm-sugar":{"sheet":"mobs","x":729,"y":1356,"w":128,"h":123},"fx/charm-ribbon":{"sheet":"mobs","x":859,"y":1356,"w":128,"h":122},"fx/charm-bow":{"sheet":"mobs","x":2,"y":1486,"w":128,"h":108},"fx/charm-crown":{"sheet":"mobs","x":132,"y":1486,"w":128,"h":98},"fx/charm-halo":{"sheet":"mobs","x":262,"y":1486,"w":128,"h":96},"fx/charm-shades":{"sheet":"mobs","x":392,"y":1486,"w":128,"h":68},"fx/charm-wings":{"sheet":"mobs","x":522,"y":1486,"w":128,"h":68}};
 /* v2.8 generated by tools/v28/pack_slimes28.py */
-var SL28_SHEETS = {"slimesa": "assets/atlas-slimesa.webp?v=2.9.0", "slimesb": "assets/atlas-slimesb.webp?v=2.9.0"};
+var SL28_SHEETS = {"slimesa": "assets/atlas-slimesa.webp?v=2.9.1", "slimesb": "assets/atlas-slimesb.webp?v=2.9.1"};
 var SL28_MAP = {"enemies/s8-aloe":["slimesa",0,0,148,148],"enemies/s8-jumpbean":["slimesa",150,0,139,148],"enemies/s8-sticky":["slimesa",291,0,146,148],"enemies/s8-cactus":["slimesa",439,0,137,148],"enemies/s8-sponge":["slimesa",578,0,148,146],"enemies/s8-dough":["slimesa",728,0,148,139],"enemies/s8-dandelion":["slimesa",878,0,145,148],"enemies/s8-pepper":["slimesa",1025,0,148,144],"enemies/s8-hopper":["slimesa",1175,0,148,147],"enemies/s8-mozhi":["slimesa",1325,0,132,148],"enemies/s8-paopao":["slimesa",1459,0,147,148],"enemies/s8-tangci":["slimesa",1608,0,148,139],"enemies/s8-lantern":["slimesa",1758,0,163,168],"enemies/s8-mirror":["slimesa",0,170,168,160],"enemies/s8-bailong":["slimesa",170,170,196,187],"enemies/s8-redboy":["slimesa",368,170,179,196],"enemies/s8-lianhua":["slimesa",549,170,148,139],"enemies/s8-bamboo":["slimesa",699,170,148,139],"enemies/s8-xitang":["slimesa",849,170,146,148],"enemies/s8-liangcha":["slimesa",997,170,148,148],"enemies/s8-youtiao":["slimesa",1147,170,137,148],"enemies/s8-jianbing":["slimesa",1286,170,148,147],"enemies/s8-tanghulu":["slimesa",1436,170,148,145],"enemies/s8-shaobing":["slimesa",1586,170,148,116],"enemies/s8-nendofu":["slimesa",1736,170,148,136],"enemies/s8-choudoufu":["slimesa",1886,170,130,148],"enemies/s8-hulatang":["slimesa",0,368,148,140],"enemies/s8-tanglizi":["slimesa",150,368,148,139],"enemies/s8-malatang":["slimesa",300,368,147,148],"enemies/s8-baozi":["slimesa",449,368,148,135],"enemies/s8-jiaozi":["slimesa",599,368,148,145],"enemies/s8-doujiang":["slimesa",749,368,148,140],"enemies/s8-huoguo":["slimesa",899,368,149,168],"enemies/s8-shaokao":["slimesa",1050,368,168,161],"enemies/s8-nianshou":["slimesa",1220,368,190,196],"enemies/s8-zaoshen":["slimesa",1412,368,173,196],"enemies/s8-congyou":["slimesa",1587,368,148,145],"enemies/s8-guoba":["slimesa",1737,368,148,140],"enemies/s8-douhua":["slimesa",1887,368,148,140],"enemies/s8-mianjin":["slimesa",0,566,148,141],"enemies/s8-xiancao":["slimesa",150,566,148,144],"enemies/s8-liangfen":["slimesa",300,566,148,138],"enemies/s8-hongdou":["slimesa",450,566,148,147],"enemies/s8-shuangpi":["slimesa",600,566,148,148],"enemies/s8-majiang":["slimesa",750,566,148,140],"enemies/s8-yuyuan":["slimesa",900,566,144,148],"enemies/s8-jiuniang":["slimesa",1046,566,148,144],"enemies/s8-bingfen":["slimesa",1196,566,146,148],"enemies/s8-yanwo":["slimesa",1344,566,144,148],"enemies/s8-yuanyang":["slimesa",1490,566,148,144],"enemies/s8-heye":["slimesa",1640,566,148,143],"enemies/s8-yezi":["slimesa",1790,566,148,146],"enemies/s8-chahu":["slimesa",0,716,149,168],"enemies/s8-zhenglong":["slimesa",151,716,168,163],"enemies/s8-longwang":["slimesa",321,716,194,196],"enemies/s8-hebo":["slimesa",517,716,183,196],"enemies/s8-guihua":["slimesa",702,716,148,140],"enemies/s8-hongcha":["slimesa",852,716,124,148],"enemies/s8-lianzi":["slimesa",978,716,148,142],"enemies/s8-doufunao":["slimesa",1128,716,148,142],"enemies/s8-yuebing":["slimesa",1278,716,148,145],"enemies/s8-zongzi":["slimesa",1428,716,148,148],"enemies/s8-tangyuan":["slimesa",1578,716,148,142],"enemies/s8-qingtuan":["slimesa",1728,716,148,142],"enemies/s8-mahua":["slimesa",1878,716,148,144],"enemies/s8-qiaoguo":["slimesa",0,914,148,148],"enemies/s8-laba":["slimesa",150,914,148,147],"enemies/s8-mizao":["slimesa",300,914,127,148],"enemies/s8-bianpao":["slimesa",429,914,136,148],"enemies/s8-dengmi":["slimesa",567,914,143,148],"enemies/s8-wushi":["slimesa",712,914,148,147],"enemies/s8-tangren":["slimesa",862,914,130,148],"enemies/s8-longdeng":["slimesa",994,914,136,168],"enemies/s8-shehuo":["slimesa",1132,914,152,168],"enemies/s8-changefe":["slimesa",1286,914,182,196],"enemies/s8-yutu":["slimesa",1470,914,188,196],"enemies/s8-yuanxiao":["slimesa",1660,914,148,139],"enemies/s8-taohua":["slimesa",1810,914,148,141],"enemies/s8-chongyang":["slimesa",0,1112,148,147],"enemies/s8-meiguit":["slimesa",150,1112,148,147],"enemies/s8-haizhe":["slimesa",300,1112,148,143],"enemies/s8-haidai":["slimesa",450,1112,144,148],"enemies/s8-luosi":["slimesa",596,1112,148,141],"enemies/s8-yuwan":["slimesa",746,1112,148,146],"enemies/s8-zicai":["slimesa",896,1112,148,142],"enemies/s8-geli":["slimesa",1046,1112,148,146],"enemies/s8-haojian":["slimesa",1196,1112,148,140],"enemies/s8-yudoufu":["slimesa",1346,1112,148,147],"enemies/s8-baoyu":["slimesa",1496,1112,144,148],"enemies/s8-duixia":["slimesa",1642,1112,147,148],"enemies/s8-haidan":["slimesa",1791,1112,148,134],"enemies/s8-pangxie":["slimesa",0,1262,148,140],"enemies/s8-longxia":["slimesa",150,1262,168,160],"enemies/s8-manaobei":["slimesa",320,1262,168,163],"enemies/s8-mazu":["slimesa",490,1262,186,196],"enemies/s8-aoyu":["slimesa",678,1262,181,196],"enemies/s8-zicaot":["slimesa",861,1262,147,148],"enemies/s8-xiabing":["slimesa",1010,1262,145,148],"enemies/s8-chengzi":["slimesa",1157,1262,148,141],"enemies/s8-yupian":["slimesa",1307,1262,148,143],"enemies/s8-gouqi":["slimesa",1457,1262,138,148],"enemies/s8-huangqi":["slimesa",1597,1262,140,148],"enemies/s8-aicao":["slimesa",1739,1262,146,148],"enemies/s8-jinyinhua":["slimesa",1887,1262,148,146],"enemies/s8-gancao":["slimesa",0,1460,144,148],"enemies/s8-fuling":["slimesa",146,1460,144,148],"enemies/s8-chenpi":["slimesa",292,1460,148,146],"enemies/s8-bohe":["slimesa",442,1460,148,145],"enemies/s8-renshen":["slimesa",592,1460,131,148],"enemies/s8-lingzhi":["slimesa",725,1460,148,145],"enemies/s8-heshouwu":["slimesa",875,1460,146,148],"enemies/s8-tianma":["slimesa",1023,1460,148,132],"enemies/s8-yaolu":["slimesa",1173,1460,168,164],"enemies/s8-shijiu":["slimesa",1343,1460,166,168],"enemies/s8-huye":["slimesa",1511,1460,184,196],"enemies/s8-yaowang":["slimesa",1697,1460,182,196],"enemies/s8-juhua":["slimesa",1881,1460,148,147],"enemies/s8-shanyao":["slimesa",0,1658,148,146],"enemies/s8-bohegao":["slimesa",150,1658,148,144],"enemies/s8-zhuyeq":["slimesa",300,1658,148,148],"enemies/s8-mianbao":["slimesa",450,1658,148,143],"enemies/s8-danta":["slimesa",600,1658,148,145],"enemies/s8-niujiao":["slimesa",750,1658,148,143],"enemies/s8-danhuangsu":["slimesa",900,1658,144,148],"enemies/s8-taosu":["slimesa",1046,1658,148,144],"enemies/s8-weihua":["slimesa",1196,1658,143,148],"enemies/s8-saqima":["slimesa",1341,1658,148,147],"enemies/s8-danjuan":["slimesa",1491,1658,147,148],"enemies/s8-naiyou":["slimesa",1640,1658,127,148],"enemies/s8-paofu":["slimesa",1769,1658,148,146],"enemies/s8-fengli":["slimesa",0,1808,148,148],"enemies/s8-laopobing":["slimesa",150,1808,148,147],"enemies/s8-kaoxiang":["slimesa",300,1808,165,168],"enemies/s8-anban":["slimesa",467,1808,164,168],"enemies/s8-luban":["slimesa",633,1808,177,196],"enemies/s8-tudi":["slimesa",812,1808,173,196],"enemies/s8-huajuan":["slimesa",987,1808,146,148],"enemies/s8-lvdougao":["slimesa",1135,1808,148,145],"enemies/s8-naihuang":["slimesa",1285,1808,143,148],"enemies/s8-xianbing":["slimesa",1430,1808,147,148],"enemies/s8-bingbang":["slimesa",1579,1808,148,148],"enemies/s8-tanggua":["slimesa",1729,1808,148,142],"enemies/s8-xuehua":["slimesa",1879,1808,148,142],"enemies/s8-dongli":["slimesb",0,0,148,147],"enemies/s8-bingtang":["slimesb",150,0,148,146],"enemies/s8-lvdagun":["slimesb",300,0,148,143],"enemies/s8-xueqiu":["slimesb",450,0,145,148],"enemies/s8-dongshi":["slimesb",597,0,148,138],"enemies/s8-xuemei":["slimesb",747,0,148,146],"enemies/s8-baobing":["slimesb",897,0,144,148],"enemies/s8-binglao":["slimesb",1043,0,140,148],"enemies/s8-xuewu":["slimesb",1185,0,147,148],"enemies/s8-bingdiao":["slimesb",1334,0,168,161],"enemies/s8-xuedui":["slimesb",1504,0,166,168],"enemies/s8-xuepo":["slimesb",1672,0,184,196],"enemies/s8-shuangshen":["slimesb",1858,0,184,196],"enemies/s8-jiangtang":["slimesb",0,198,146,148],"enemies/s8-xuegao":["slimesb",148,198,148,148],"enemies/s8-meihuag":["slimesb",298,198,143,148],"enemies/s8-hongtang":["slimesb",443,198,148,147],"enemies/s8-kaodigua":["slimesb",593,198,148,142],"enemies/s8-tianluo":["slimesb",743,198,148,136],"enemies/s8-mianhua":["slimesb",893,198,148,145],"enemies/s8-baomi":["slimesb",1043,198,148,138],"enemies/s8-mianwo":["slimesb",1193,198,148,133],"enemies/s8-suanmei":["slimesb",1343,198,145,148],"enemies/s8-zhachuan":["slimesb",1490,198,148,145],"enemies/s8-dianfen":["slimesb",1640,198,148,145],"enemies/s8-kongming":["slimesb",1790,198,148,148],"enemies/s8-tanghua":["slimesb",0,348,148,138],"enemies/s8-piying":["slimesb",150,348,148,143],"enemies/s8-tangdou":["slimesb",300,348,148,140],"enemies/s8-zoumadeng":["slimesb",450,348,150,168],"enemies/s8-yanhuo":["slimesb",602,348,168,163],"enemies/s8-yuelao":["slimesb",772,348,186,196],"enemies/s8-yeyoushen":["slimesb",960,348,192,196],"enemies/s8-naicha":["slimesb",1154,348,148,148],"enemies/s8-denghua":["slimesb",1304,348,143,148],"enemies/s8-zhimagao":["slimesb",1449,348,148,137],"enemies/s8-putaoz":["slimesb",1599,348,142,148],"enemies/s8-longxusu":["slimesb",1743,348,146,148],"enemies/s8-yunpian":["slimesb",1891,348,148,148],"enemies/s8-fotiaoqiang":["slimesb",0,546,148,145],"enemies/s8-pantao":["slimesb",150,546,148,131],"enemies/s8-hehuan":["slimesb",300,546,131,148],"enemies/s8-bazhen":["slimesb",433,546,148,139],"enemies/s8-dingsheng":["slimesb",583,546,147,148],"enemies/s8-ruyi":["slimesb",732,546,148,136],"enemies/s8-jinbo":["slimesb",882,546,148,121],"enemies/s8-yulu":["slimesb",1032,546,136,148],"enemies/s8-xiandou":["slimesb",1170,546,144,148],"enemies/s8-yaochi":["slimesb",1316,546,148,142],"enemies/s8-jiding":["slimesb",1466,546,168,150],"enemies/s8-linglong":["slimesb",1636,546,168,159],"enemies/s8-pixiu":["slimesb",1806,546,196,185],"enemies/s8-qilin":["slimesb",0,733,189,196],"enemies/s8-xianlu":["slimesb",191,733,148,140],"enemies/s8-shoutao":["slimesb",341,733,148,137],"enemies/s8-yuzhi":["slimesb",491,733,148,148],"enemies/s8-qiongj":["slimesb",641,733,137,148]};
 /* v2.9 generated by tools/v29/build_cardpack.py — approved card-pack pet atlas */
-var CP29_SHEETS = {"packa":"assets/atlas-packa.webp?v=2.9.0","packb":"assets/atlas-packb.webp?v=2.9.0"};
-var CP29_MAP = {"pets/capsule_chick-1":["packa",2,2,221,224],"pets/capsule_chick-1-s":["packa",225,2,221,224],"pets/cornbread_chick-1":["packa",448,2,215,224],"pets/cornbread_chick-1-s":["packa",665,2,215,224],"pets/maple_fawn-1":["packa",882,2,219,224],"pets/maple_fawn-1-s":["packa",1103,2,219,224],"pets/moonsalt_hare-1":["packa",1324,2,188,224],"pets/moonsalt_hare-1-s":["packa",1514,2,188,224],"pets/mooncheese_owlet-1":["packa",1704,2,218,224],"pets/mooncheese_owlet-1-s":["packa",2,228,218,224],"pets/candycorn_owl-1":["packa",222,228,223,224],"pets/candycorn_owl-1-s":["packa",447,228,223,224],"pets/lantern_bunny-1":["packa",672,228,197,224],"pets/lantern_bunny-1-s":["packa",871,228,197,224],"pets/pineapple_caique-1":["packa",1070,228,224,224],"pets/pineapple_caique-1-s":["packa",1296,228,224,224],"pets/nougat_cockatiel-1":["packa",1522,228,184,224],"pets/nougat_cockatiel-1-s":["packa",1708,228,184,224],"pets/jelly_imp-1":["packa",2,454,217,224],"pets/jelly_imp-1-s":["packa",221,454,217,224],"pets/mochi_fairy-1":["packa",440,454,222,224],"pets/mochi_fairy-1-s":["packa",664,454,222,224],"pets/candycane_reindeer-1":["packa",888,454,213,224],"pets/candycane_reindeer-1-s":["packa",1103,454,213,224],"pets/rocket_mochi-1":["packa",1318,454,208,224],"pets/rocket_mochi-1-s":["packa",1528,454,208,224],"pets/pineapple_stego-1":["packa",1738,454,223,224],"pets/pineapple_stego-1-s":["packa",2,680,223,224],"pets/lemon_pteranodon-1":["packa",227,680,221,224],"pets/lemon_pteranodon-1-s":["packa",450,680,221,224],"pets/eggcrepe_poodle-1":["packa",673,680,223,224],"pets/eggcrepe_poodle-1-s":["packa",898,680,223,224],"pets/ghostmochi_bunny-1":["packa",1123,680,224,223],"pets/ghostmochi_bunny-1-s":["packa",1349,680,224,223],"pets/croissant_corgi-1":["packa",1575,680,224,223],"pets/croissant_corgi-1-s":["packa",1801,680,224,223],"pets/constellation_deer-1":["packa",2,906,224,221],"pets/constellation_deer-1-s":["packa",228,906,224,221],"pets/licorice_kitten-1":["packa",454,906,224,221],"pets/licorice_kitten-1-s":["packa",680,906,224,221],"pets/starjelly_fox-1":["packa",906,906,224,221],"pets/starjelly_fox-1-s":["packa",1132,906,224,221],"pets/candycorn_chick-1":["packa",1358,906,224,220],"pets/candycorn_chick-1-s":["packa",1584,906,224,220],"pets/inksugar_panda-1":["packa",1810,906,224,219],"pets/inksugar_panda-1-s":["packa",2,1129,224,219],"pets/sesame_triceratops-1":["packa",228,1129,224,219],"pets/sesame_triceratops-1-s":["packa",454,1129,224,219],"pets/taro_amazon-1":["packa",680,1129,224,219],"pets/taro_amazon-1-s":["packa",906,1129,224,219],"pets/tanghulu_pomeranian-1":["packa",1132,1129,224,218],"pets/tanghulu_pomeranian-1-s":["packa",1358,1129,224,218],"pets/marshmallow_ghostpup-1":["packa",1584,1129,224,218],"pets/marshmallow_ghostpup-1-s":["packa",1810,1129,224,218],"pets/litchi_lory-1":["packa",2,1350,224,217],"pets/litchi_lory-1-s":["packa",228,1350,224,217],"pets/sesamecream_bot-1":["packa",454,1350,224,217],"pets/sesamecream_bot-1-s":["packa",680,1350,224,217],"pets/niangao_loong-1":["packa",906,1350,224,217],"pets/niangao_loong-1-s":["packa",1132,1350,224,217],"pets/cocoa_sparrow-1":["packa",1358,1350,224,217],"pets/cocoa_sparrow-1-s":["packa",1584,1350,224,217],"pets/wasabi_raptor-1":["packa",1810,1350,224,217],"pets/wasabi_raptor-1-s":["packa",2,1569,224,217],"pets/niangao_akita-1":["packa",228,1569,224,216],"pets/niangao_akita-1-s":["packa",454,1569,224,216],"pets/blacksesame_cat-1":["packa",680,1569,224,215],"pets/blacksesame_cat-1-s":["packa",906,1569,224,215],"pets/pretzel_dachshund-1":["packa",1132,1569,224,215],"pets/pretzel_dachshund-1-s":["packa",1358,1569,224,215],"pets/soda_robodog-1":["packa",1584,1569,224,214],"pets/soda_robodog-1-s":["packa",1810,1569,224,214],"pets/yam_ankylo-1":["packa",2,1788,224,214],"pets/yam_ankylo-1-s":["packa",228,1788,224,214],"pets/jelly_bronto-1":["packa",454,1788,224,214],"pets/jelly_bronto-1-s":["packa",680,1788,224,214],"pets/tangyuan_siamese-1":["packa",906,1788,224,212],"pets/tangyuan_siamese-1-s":["packa",1132,1788,224,212],"pets/mooncake_pony-1":["packa",1358,1788,224,212],"pets/mooncake_pony-1-s":["packa",1584,1788,224,212],"pets/starmilk_seal-1":["packa",1810,1788,224,211],"pets/starmilk_seal-1-s":["packb",2,2,224,211],"pets/cream_scottish-1":["packb",228,2,224,211],"pets/cream_scottish-1-s":["packb",454,2,224,211],"pets/bluehawaii_frog-1":["packb",680,2,224,211],"pets/bluehawaii_frog-1-s":["packb",906,2,224,211],"pets/tangyuan_rex-1":["packb",1132,2,224,211],"pets/tangyuan_rex-1-s":["packb",1358,2,224,211],"pets/mochi_dilopho-1":["packb",1584,2,224,211],"pets/mochi_dilopho-1-s":["packb",1810,2,224,211],"pets/candycorn_chipmunk-1":["packb",2,215,224,210],"pets/candycorn_chipmunk-1-s":["packb",228,215,224,210],"pets/peppermint_fox-1":["packb",454,215,224,210],"pets/peppermint_fox-1-s":["packb",680,215,224,210],"pets/mooncake_unicorn-1":["packb",906,215,224,210],"pets/mooncake_unicorn-1-s":["packb",1132,215,224,210],"pets/energybar_corgi-1":["packb",1358,215,224,209],"pets/energybar_corgi-1-s":["packb",1584,215,224,209],"pets/pudding_parasaur-1":["packb",1810,215,224,208],"pets/pudding_parasaur-1-s":["packb",2,427,224,208],"pets/sesameink_wolf-1":["packb",228,427,224,206],"pets/sesameink_wolf-1-s":["packb",454,427,224,206],"pets/yam_pup-1":["packb",680,427,224,205],"pets/yam_pup-1-s":["packb",906,427,224,205],"pets/snowman_mochi-1":["packb",1132,427,224,205],"pets/snowman_mochi-1-s":["packb",1358,427,224,205],"pets/milkcustard_ragdoll-1":["packb",1584,427,224,205],"pets/milkcustard_ragdoll-1-s":["packb",1810,427,224,205],"pets/hawthorn_budgie-1":["packb",2,637,224,205],"pets/hawthorn_budgie-1-s":["packb",228,637,224,205],"pets/rouqiamo_beagle-1":["packb",454,637,224,202],"pets/rouqiamo_beagle-1-s":["packb",680,637,224,202],"pets/cookie_pup-1":["packb",906,637,224,202],"pets/cookie_pup-1-s":["packb",1132,637,224,202],"pets/spacericecracker_owl-1":["packb",1358,637,224,200],"pets/spacericecracker_owl-1-s":["packb",1584,637,224,200],"pets/jellytube_axolotl-1":["packb",1810,637,224,199],"pets/jellytube_axolotl-1-s":["packb",2,844,224,199],"pets/freezedry_mango_fox-1":["packb",228,844,224,199],"pets/freezedry_mango_fox-1-s":["packb",454,844,224,199],"pets/cranberry_fox-1":["packb",680,844,224,199],"pets/cranberry_fox-1-s":["packb",906,844,224,199],"pets/pumpkinpie_turkey-1":["packb",1132,844,224,199],"pets/pumpkinpie_turkey-1-s":["packb",1358,844,224,199],"pets/gingerbread_bear-1":["packb",1584,844,224,199],"pets/gingerbread_bear-1-s":["packb",1810,844,224,199],"pets/driedfish_kitten-1":["packb",2,1045,224,199],"pets/driedfish_kitten-1-s":["packb",228,1045,224,199],"pets/capsule_turtle-1":["packb",454,1045,224,195],"pets/capsule_turtle-1-s":["packb",680,1045,224,195],"pets/yangzhi_calico-1":["packb",906,1045,224,188],"pets/yangzhi_calico-1-s":["packb",1132,1045,224,188]};
+var CP29_SHEETS = {"packa":"assets/atlas-packa.webp?v=2.9.1","packb":"assets/atlas-packb.webp?v=2.9.1"};
+var CP29_MAP = {"pets/capsule_chick-1":["packa",2,2,221,224],"pets/capsule_chick-1-s":["packa",225,2,221,224],"pets/cornbread_chick-1":["packa",448,2,215,224],"pets/cornbread_chick-1-s":["packa",665,2,215,224],"pets/maple_fawn-1":["packa",882,2,219,224],"pets/maple_fawn-1-s":["packa",1103,2,219,224],"pets/moonsalt_hare-1":["packa",1324,2,188,224],"pets/moonsalt_hare-1-s":["packa",1514,2,188,224],"pets/mooncheese_owlet-1":["packa",1704,2,218,224],"pets/mooncheese_owlet-1-s":["packa",2,228,218,224],"pets/candycorn_owl-1":["packa",222,228,223,224],"pets/candycorn_owl-1-s":["packa",447,228,223,224],"pets/lantern_bunny-1":["packa",672,228,197,224],"pets/lantern_bunny-1-s":["packa",871,228,197,224],"pets/pineapple_caique-1":["packa",1070,228,224,224],"pets/pineapple_caique-1-s":["packa",1296,228,224,224],"pets/nougat_cockatiel-1":["packa",1522,228,184,224],"pets/nougat_cockatiel-1-s":["packa",1708,228,184,224],"pets/jelly_imp-1":["packa",2,454,217,224],"pets/jelly_imp-1-s":["packa",221,454,217,224],"pets/mochi_fairy-1":["packa",440,454,222,224],"pets/mochi_fairy-1-s":["packa",664,454,222,224],"pets/candycane_reindeer-1":["packa",888,454,213,224],"pets/candycane_reindeer-1-s":["packa",1103,454,213,224],"pets/rocket_mochi-1":["packa",1318,454,208,224],"pets/rocket_mochi-1-s":["packa",1528,454,208,224],"pets/pineapple_stego-1":["packa",1738,454,223,224],"pets/pineapple_stego-1-s":["packa",2,680,223,224],"pets/lemon_pteranodon-1":["packa",227,680,221,224],"pets/lemon_pteranodon-1-s":["packa",450,680,221,224],"pets/eggcrepe_poodle-1":["packa",673,680,223,224],"pets/eggcrepe_poodle-1-s":["packa",898,680,223,224],"pets/ghostmochi_bunny-1":["packa",1123,680,224,223],"pets/ghostmochi_bunny-1-s":["packa",1349,680,224,223],"pets/croissant_corgi-1":["packa",1575,680,224,223],"pets/croissant_corgi-1-s":["packa",1801,680,224,223],"pets/constellation_deer-1":["packa",2,906,224,221],"pets/constellation_deer-1-s":["packa",228,906,224,221],"pets/licorice_kitten-1":["packa",454,906,224,221],"pets/licorice_kitten-1-s":["packa",680,906,224,221],"pets/starjelly_fox-1":["packa",906,906,224,221],"pets/starjelly_fox-1-s":["packa",1132,906,224,221],"pets/candycorn_chick-1":["packa",1358,906,224,220],"pets/candycorn_chick-1-s":["packa",1584,906,224,220],"pets/inksugar_panda-1":["packa",1810,906,224,219],"pets/inksugar_panda-1-s":["packa",2,1129,224,219],"pets/sesame_triceratops-1":["packa",228,1129,224,219],"pets/sesame_triceratops-1-s":["packa",454,1129,224,219],"pets/taro_amazon-1":["packa",680,1129,224,219],"pets/taro_amazon-1-s":["packa",906,1129,224,219],"pets/tanghulu_pomeranian-1":["packa",1132,1129,224,218],"pets/tanghulu_pomeranian-1-s":["packa",1358,1129,224,218],"pets/marshmallow_ghostpup-1":["packa",1584,1129,224,218],"pets/marshmallow_ghostpup-1-s":["packa",1810,1129,224,218],"pets/litchi_lory-1":["packa",2,1350,224,217],"pets/litchi_lory-1-s":["packa",228,1350,224,217],"pets/sesamecream_bot-1":["packa",454,1350,224,217],"pets/sesamecream_bot-1-s":["packa",680,1350,224,217],"pets/niangao_loong-1":["packa",906,1350,224,217],"pets/niangao_loong-1-s":["packa",1132,1350,224,217],"pets/cocoa_sparrow-1":["packa",1358,1350,224,217],"pets/cocoa_sparrow-1-s":["packa",1584,1350,224,217],"pets/lvdagun_peccary-1":["packa",1810,1350,224,217],"pets/lvdagun_peccary-1-s":["packa",2,1569,224,217],"pets/wasabi_raptor-1":["packa",228,1569,224,217],"pets/wasabi_raptor-1-s":["packa",454,1569,224,217],"pets/niangao_akita-1":["packa",680,1569,224,216],"pets/niangao_akita-1-s":["packa",906,1569,224,216],"pets/blacksesame_cat-1":["packa",1132,1569,224,215],"pets/blacksesame_cat-1-s":["packa",1358,1569,224,215],"pets/pretzel_dachshund-1":["packa",1584,1569,224,215],"pets/pretzel_dachshund-1-s":["packa",1810,1569,224,215],"pets/soda_robodog-1":["packa",2,1788,224,214],"pets/soda_robodog-1-s":["packa",228,1788,224,214],"pets/yam_ankylo-1":["packa",454,1788,224,214],"pets/yam_ankylo-1-s":["packa",680,1788,224,214],"pets/jelly_bronto-1":["packa",906,1788,224,214],"pets/jelly_bronto-1-s":["packa",1132,1788,224,214],"pets/tangyuan_siamese-1":["packa",1358,1788,224,212],"pets/tangyuan_siamese-1-s":["packa",1584,1788,224,212],"pets/mooncake_pony-1":["packa",1810,1788,224,212],"pets/mooncake_pony-1-s":["packb",2,2,224,212],"pets/starmilk_seal-1":["packb",228,2,224,211],"pets/starmilk_seal-1-s":["packb",454,2,224,211],"pets/cream_scottish-1":["packb",680,2,224,211],"pets/cream_scottish-1-s":["packb",906,2,224,211],"pets/bluehawaii_frog-1":["packb",1132,2,224,211],"pets/bluehawaii_frog-1-s":["packb",1358,2,224,211],"pets/tangyuan_rex-1":["packb",1584,2,224,211],"pets/tangyuan_rex-1-s":["packb",1810,2,224,211],"pets/mochi_dilopho-1":["packb",2,216,224,211],"pets/mochi_dilopho-1-s":["packb",228,216,224,211],"pets/candycorn_chipmunk-1":["packb",454,216,224,210],"pets/candycorn_chipmunk-1-s":["packb",680,216,224,210],"pets/peppermint_fox-1":["packb",906,216,224,210],"pets/peppermint_fox-1-s":["packb",1132,216,224,210],"pets/mooncake_unicorn-1":["packb",1358,216,224,210],"pets/mooncake_unicorn-1-s":["packb",1584,216,224,210],"pets/energybar_corgi-1":["packb",1810,216,224,209],"pets/energybar_corgi-1-s":["packb",2,429,224,209],"pets/pudding_parasaur-1":["packb",228,429,224,208],"pets/pudding_parasaur-1-s":["packb",454,429,224,208],"pets/sesameink_wolf-1":["packb",680,429,224,206],"pets/sesameink_wolf-1-s":["packb",906,429,224,206],"pets/yam_pup-1":["packb",1132,429,224,205],"pets/yam_pup-1-s":["packb",1358,429,224,205],"pets/snowman_mochi-1":["packb",1584,429,224,205],"pets/snowman_mochi-1-s":["packb",1810,429,224,205],"pets/milkcustard_ragdoll-1":["packb",2,640,224,205],"pets/milkcustard_ragdoll-1-s":["packb",228,640,224,205],"pets/hawthorn_budgie-1":["packb",454,640,224,205],"pets/hawthorn_budgie-1-s":["packb",680,640,224,205],"pets/rouqiamo_beagle-1":["packb",906,640,224,202],"pets/rouqiamo_beagle-1-s":["packb",1132,640,224,202],"pets/cookie_pup-1":["packb",1358,640,224,202],"pets/cookie_pup-1-s":["packb",1584,640,224,202],"pets/spacericecracker_owl-1":["packb",1810,640,224,200],"pets/spacericecracker_owl-1-s":["packb",2,847,224,200],"pets/jellytube_axolotl-1":["packb",228,847,224,199],"pets/jellytube_axolotl-1-s":["packb",454,847,224,199],"pets/freezedry_mango_fox-1":["packb",680,847,224,199],"pets/freezedry_mango_fox-1-s":["packb",906,847,224,199],"pets/cranberry_fox-1":["packb",1132,847,224,199],"pets/cranberry_fox-1-s":["packb",1358,847,224,199],"pets/pumpkinpie_turkey-1":["packb",1584,847,224,199],"pets/pumpkinpie_turkey-1-s":["packb",1810,847,224,199],"pets/gingerbread_bear-1":["packb",2,1049,224,199],"pets/gingerbread_bear-1-s":["packb",228,1049,224,199],"pets/driedfish_kitten-1":["packb",454,1049,224,199],"pets/driedfish_kitten-1-s":["packb",680,1049,224,199],"pets/capsule_turtle-1":["packb",906,1049,224,195],"pets/capsule_turtle-1-s":["packb",1132,1049,224,195],"pets/yangzhi_calico-1":["packb",1358,1049,224,188],"pets/yangzhi_calico-1-s":["packb",1584,1049,224,188],"pets/springroll_sable-1":["packb",1810,1049,224,181],"pets/springroll_sable-1-s":["packb",2,1250,224,181]};
 if (typeof ATLAS_SHEETS !== "undefined") { for (const k in CP29_SHEETS) ATLAS_SHEETS[k] = CP29_SHEETS[k]; }
 if (typeof ATLAS_MAP !== "undefined") { for (const k in CP29_MAP) { const m = CP29_MAP[k]; ATLAS_MAP[k] = { sheet: m[0], x: m[1], y: m[2], w: m[3], h: m[4] }; } }
 
@@ -2834,7 +2930,7 @@ function crown(c, x, y, w, col, gem) {
 /* ================= image assets (atlases first, then leftover backgrounds) ================= */
 const IMG = {};
 const ATLAS_IMG = {};
-function assetUrl(k) { return "assets/" + k + (String(k).includes(".") ? "" : ".webp") + "?v=2.9.0"; }
+function assetUrl(k) { return "assets/" + k + (String(k).includes(".") ? "" : ".webp") + "?v=2.9.1"; }
 function loadImage(src) {
   return new Promise((res) => {
     const im = new Image();
@@ -3599,7 +3695,7 @@ let uidSeq = 1;
 const CLIENT_KEY = "mengchong-td-client-id";
 const NAME_KEY = "mengchong-td-player-name";
 const LB_URL = "https://pet-td-leaderboard.carden1218.workers.dev";
-const GAME_VERSION = '2.9.0';
+const GAME_VERSION = '2.9.1';
 let lastSeasonInfo = null;   // tournament build — the leaderboard rejects any other clientVersion
 const LB_CACHE_KEY = "mengchong-td-board-cache";
 function getClientId() {
@@ -10712,23 +10808,27 @@ startRun = function (a, b) { const r = _startRun26(a, b); try { P26.sig = ""; B.
     html.land #home .panel { row-gap:0; }
     html.land #home .topbar { margin-bottom:2px !important; min-height:0; }
     html.land #home .topbar .ribbon { font-size:14px !important; padding:0 8px !important; }
-    html.land #home .topbar > div { gap:4px !important; flex-wrap:nowrap; }
+    html.land #home .topbar > div { gap:4px !important; flex-wrap:wrap; }
     html.land #home .topbar .pill { font-size:11px !important; padding:0 6px !important; }
     html.land #home .topbar button, html.land #home .audio-bar button { font-size:11px !important; padding:1px 7px !important; min-height:0; line-height:1.3; }
-    html.land #home .audio-bar { gap:3px !important; flex-wrap:nowrap; margin:0 0 2px !important; }
-    html.land #home .audio-bar .bgm-vol input { width:44px !important; }
-    html.land #home .audio-bar .bgm-vol b { display:none; }
+    html.land #home .audio-bar { gap:3px !important; flex-wrap:wrap; margin:0 0 2px !important; }
+    html.land #home .audio-bar .bgm-vol, html.land #home .audio-bar .s9-vol { display:none !important; }
     html.land #home .audio-bar #btn-board-home, html.land #home .audio-bar #btn-save-home, html.land #home .audio-bar #btn-tut-home { font-size:0 !important; padding:1px 6px !important; }
     html.land #home .audio-bar #btn-board-home::before { content:"🏆"; font-size:13px; } html.land #home .audio-bar #btn-save-home::before { content:"💾"; font-size:13px; } html.land #home .audio-bar #btn-tut-home::before { content:"❓"; font-size:13px; }
     html.land #home .audio-bar .ver-badge { display:none; }
     html.land #home .topbar .ribbon { display:none !important; }
     html.land #home .pk26-lab { display:none; }
-    html.land #home .audio-bar .bgm-vol { display:none !important; }
-    html.land #home #btn-lang-home, html.land #home #btn-help { font-size:0 !important; padding:1px 6px !important; }
+    html.land #home #btn-lang-home, html.land #home #btn-help, html.land #home #btn-news { font-size:0 !important; padding:1px 6px !important; }
     html.land #home #btn-help::before { content:"ℹ️"; font-size:13px; }
-    html.land #home .audio-bar .audio-btn { font-size:10px !important; padding:1px 5px !important; }
-    html.land #home #btn-lang-home::before { content:"🌐 中/EN"; font-size:11px; }
-    html.land #home .panel { grid-template-columns: minmax(0,1fr) auto !important; }
+    html.land #home #btn-news::before { content:"📢"; font-size:13px; }
+    html.land #home .audio-bar .audio-btn { font-size:0 !important; padding:1px 5px !important; min-width:26px !important; }
+    html.land #home .audio-bar .audio-btn[data-audio="bgm"]::before { content:"🎵"; font-size:14px; }
+    html.land #home .audio-bar .audio-btn[data-audio="sfx"]::before { content:"🔊"; font-size:14px; }
+    html.land #home .audio-bar .audio-btn[data-audio="sfx"].is-off::before { content:"🔇"; font-size:14px; }
+    html.land #home .audio-bar .audio-btn[data-audio="sfx"].is-off::after { display:none; }
+    html.land #home #btn-lang-home::before { content:"🌐"; font-size:13px; }
+    html.land #home .fx8-btn { font-size:14px !important; padding:1px 6px !important; min-width:28px; }
+    html.land #home .panel { grid-template-columns: 1fr !important; }
     html.land #home .tabs { margin-bottom:3px !important; }
     html.land #home .tabs button { font-size:11px !important; padding:1px 2px !important; min-height:0; line-height:1.4; }
     html.land #home-body { overflow-y:auto !important; }
@@ -11932,7 +12032,10 @@ Object.assign(STR.zh, {
   v29_news_1: "新增卡包页面：从首页就能浏览全部卡包，查看每只宠物、稀有度和保底进度。",
   v29_news_2: "战斗特效和音效更丰富了，还可以调节特效高低和音量。",
   v29_news_3: "功能性史莱姆更有威胁：会瞄准后排，伤害更高，无尽模式从前中期就会出现。",
-  v29_news_4: "新手引导可以跳过了，也不会再挡住暂停和结算。"
+  v29_news_4: "新手引导可以跳过了，也不会再挡住暂停和结算。",
+  v291_news_title: "萌宠防线 v2.9.1 更新",
+  v291_news_1: "菜单、按钮和浅色卡片上的字改成深色，浅底上也能看清。",
+  v291_news_2: "新手在第 6–8 波面对技能史莱姆会轻松一些，后面波次还是会有压力。"
 });
 Object.assign(STR.en, {
   pp_title: "Card Packs", pp_back: "Back", pp_gallery: "Pack Hall",
@@ -11959,7 +12062,10 @@ Object.assign(STR.en, {
   v29_news_1: "A new Card Packs page: browse every pack from the home screen, with each pet, rarity and pity progress.",
   v29_news_2: "Richer battle effects and sound, with High/Low FX and volume controls.",
   v29_news_3: "Ability slimes are a real threat: they can aim at the back row, deal more damage, and show up from the early-middle waves in Endless.",
-  v29_news_4: "The tutorial can be skipped, and it no longer covers pause or the results screen."
+  v29_news_4: "The tutorial can be skipped, and it no longer covers pause or the results screen.",
+  v291_news_title: "Pet Pals Defense v2.9.1",
+  v291_news_1: "Menu, button and card text is now dark, so it stays readable on light backgrounds.",
+  v291_news_2: "Ability slimes are gentler on waves 6–8 for new players, and still hit hard later."
 });
 
 const PACKS_PP = [{"id":"cat","zh":"猫咪卡包","en":"Cat Pack","theme_zh":"各种圆滚滚的猫咪：家猫、兔狲、豹和虎。","theme_en":"Round chubby cats: house cats, a manul, a panther and a tiger.","avail":"permanent","window":null,"featured":"yangzhi_calico","featuredRar":5,"featuredEpics":["cocoa_panther","tangyuan_siamese"],"oddsKey":"featuredIsR5","palette":["#f4c6c0","#fff4e8","#e8a050","#7a4a32","#3a2a28"],"icon":"🐱","pets":[{"id":"strawberry_cat","rar":1},{"id":"driedfish_kitten","rar":1,"zh":"小鱼干猫","en":"Dried-Fish Kitten"},{"id":"milkcustard_ragdoll","rar":2,"zh":"奶糕布偶","en":"Milk-Custard Ragdoll"},{"id":"shanzha_manul","rar":2},{"id":"cream_scottish","rar":2,"zh":"奶油折耳","en":"Cream Scottish Fold"},{"id":"cocoa_panther","rar":3},{"id":"tangyuan_siamese","rar":3,"zh":"汤圆暹罗","en":"Tangyuan Siamese"},{"id":"crimson_lychee_tiger","rar":4},{"id":"yangzhi_calico","rar":5,"zh":"杨枝甘露三花","en":"Mango Pomelo Calico"}]},{"id":"parrot","zh":"鹦鹉卡包","en":"Parrot Pack","theme_zh":"圆滚滚的鹦鹉和小鹦鹉：虎皮、情侣鹦、凯克、玄凤、亚马逊、吸蜜鹦、金刚鹦和鹩哥，主打一只甜蜜的牛轧糖玄凤。","theme_en":"Round parrot pals: budgie, lovebird, caique, cockatiel, Amazon, lory, macaw and myna, led by a sweet nougat cockatiel.","avail":"permanent","window":null,"featured":"nougat_cockatiel","featuredRar":5,"featuredEpics":["taro_amazon","litchi_lory"],"oddsKey":"featuredIsR5","palette":["#5cbf5a","#ffe14a","#ff6a6a","#7ac8ff","#3a2a28"],"icon":"🦜","pets":[{"id":"hawthorn_budgie","rar":1,"zh":"山楂虎皮鹦","en":"Hawthorn Budgie"},{"id":"raspberry_lovebird","rar":2},{"id":"pineapple_caique","rar":2,"zh":"菠萝凯克鹦","en":"Pineapple Caique"},{"id":"taro_amazon","rar":3,"zh":"芋泥亚马逊鹦","en":"Taro Amazon"},{"id":"litchi_lory","rar":3,"zh":"荔枝吸蜜鹦","en":"Lychee Lory"},{"id":"malagao_macaw","rar":4},{"id":"nougat_cockatiel","rar":5,"zh":"牛轧糖玄凤","en":"Nougat Cockatiel"},{"id":"aiwowo_myna","rar":5}]},{"id":"dog","zh":"狗狗卡包","en":"Dog Pack","theme_zh":"圆滚滚的狗狗：柴犬、柯基、巴哥、松狮、萨摩耶、腊肠、香蕉犬，主打一只毛茸茸的糖葫芦博美。","theme_en":"Round dog pals: shiba, corgi, pug, chow chow, samoyed, dachshund and banana dog, led by a fluffy candied-hawthorn Pomeranian.","avail":"permanent","window":null,"featured":"tanghulu_pomeranian","featuredRar":5,"featuredEpics":["rouqiamo_beagle","eggcrepe_poodle"],"oddsKey":"featuredIsR5","palette":["#f2c87a","#e85a3a","#fff4e0","#8a5a32","#3a2a28"],"icon":"🐶","pets":[{"id":"pudding_shiba","rar":1},{"id":"pretzel_dachshund","rar":1},{"id":"radish_pup","rar":1},{"id":"mantou_pug","rar":1},{"id":"huajuan_chowchow","rar":1},{"id":"millet_samoyed","rar":1},{"id":"banana","rar":2},{"id":"croissant_corgi","rar":2},{"id":"rouqiamo_beagle","rar":3,"zh":"肉夹馍比格","en":"Roujiamo Beagle"},{"id":"eggcrepe_poodle","rar":3,"zh":"鸡蛋饼贵宾","en":"Egg-Crepe Poodle"},{"id":"niangao_akita","rar":4,"zh":"年糕秋田","en":"Nian-Gao Akita"},{"id":"tanghulu_pomeranian","rar":5,"zh":"糖葫芦博美","en":"Candied-Hawthorn Pomeranian"},{"id":"blood_orange_cerberus","rar":5},{"id":"sachima_cheetah","rar":5}]},{"id":"newyear","zh":"新年卡包","en":"New Year Pack","theme_zh":"春节食物和喜庆红金：饺子、年糕、汤圆、糖葫芦、春卷、发糕、灯笼兔，主打限定彩虹年糕小龙。","theme_en":"Chinese New Year foods and festive red-gold: dumplings, nian gao, tangyuan, candied hawthorn, spring rolls, fa gao, a lantern bunny, and a limited prismatic nian-gao loong.","avail":"limited","window":{"kind":"lunar_new_year","firstStart":"2027-02-05T00:00:00-06:00","firstEnd":"2027-02-20T23:59:59-06:00"},"featured":"niangao_loong","featuredRar":6,"featuredEpics":["jiaozi_hyrax","fagao_tapir"],"oddsKey":"featuredIsR6","palette":["#d13a3a","#f2c14a","#fff0d0","#2e8a4a","#3a2a28"],"icon":"🧧","pets":[{"id":"tangyuan_pig","rar":1},{"id":"niangao_goose","rar":1},{"id":"jujube_wombat","rar":1},{"id":"tanghulu_ladybug","rar":2},{"id":"kumquat_chipmunk","rar":2},{"id":"springroll_sable","rar":2},{"id":"redbean_capybara","rar":2},{"id":"jiaozi_hyrax","rar":3},{"id":"fagao_tapir","rar":3},{"id":"jasmine_magpie","rar":3},{"id":"lantern_bunny","rar":4,"zh":"灯笼兔","en":"Lantern Bunny"},{"id":"babao_redpanda","rar":5},{"id":"niangao_loong","rar":6,"zh":"年糕小龙","en":"Nian-Gao Loong"},{"id":"ninelayer_silkworm","rar":6}]},{"id":"ocean","zh":"海底卡包","en":"Ocean Pack","theme_zh":"海里的圆滚滚：锦鲤、海马、儒艮、白鲸、鲸鲨、章鱼、小丑鱼、海豚、海牛。","theme_en":"Round sea pals: koi, seahorse, dugong, beluga, whale shark, octopus, clownfish, dolphin, manatee.","avail":"permanent","window":null,"featured":"dabaitu_beluga","featuredRar":6,"featuredEpics":["jade_koi","shaomai_seahorse"],"oddsKey":"featuredIsR6","palette":["#3a8ad8","#bfe6ff","#ff8aa8","#5cbf5a","#3a2a28"],"icon":"🐋","pets":[{"id":"mochi_seal","rar":1},{"id":"taro_octopus","rar":1},{"id":"coconut_crab","rar":1},{"id":"cucumber_axolotl","rar":1},{"id":"kelp_blobfish","rar":1},{"id":"yuzu_otter","rar":1},{"id":"wonton_dugong","rar":2},{"id":"guaiweidou_boxfish","rar":2},{"id":"coco","rar":2},{"id":"jade_koi","rar":3},{"id":"shaomai_seahorse","rar":3},{"id":"sorbet_narwhal","rar":3},{"id":"fishball_puffer","rar":3},{"id":"sago_jellyfish","rar":3},{"id":"wintermelon_manatee","rar":3},{"id":"luosifen_clownfish","rar":4},{"id":"lotusseed_manta","rar":4},{"id":"jackfruit_haishi","rar":4},{"id":"nuomici_dolphin","rar":5},{"id":"shavedice_starfish","rar":5},{"id":"dabaitu_beluga","rar":6},{"id":"guilinggao_whaleshark","rar":6}]},{"id":"halloween","zh":"万圣节卡包","en":"Halloween Pack","theme_zh":"可爱的万圣节小伙伴：南瓜、玉米糖、蝙蝠、黑芝麻猫和白色麻薯小鬼，轻松不吓人。","theme_en":"Cute Halloween pals: pumpkins, candy corn, bats, a black-sesame cat and a white mochi ghost bunny. Sweet, never scary.","avail":"limited","window":{"kind":"fixed_annual","days":7,"firstStart":"2027-10-25T00:00:00-06:00","firstEnd":"2027-10-31T23:59:59-06:00"},"featured":"ghostmochi_bunny","featuredRar":5,"featuredEpics":["blacksesame_cat","candycorn_owl"],"oddsKey":"featuredIsR5","palette":["#f08a2a","#4a2a3a","#fff4d0","#5cbf5a","#3a2a28"],"icon":"🎃","pets":[{"id":"candycorn_chick","rar":1,"zh":"玉米糖小鸡","en":"Candy-Corn Chick"},{"id":"licorice_kitten","rar":1,"zh":"甘草糖小猫","en":"Licorice Kitten"},{"id":"caramel_squirrel","rar":2},{"id":"marshmallow_ghostpup","rar":2,"zh":"棉花糖幽灵狗","en":"Marshmallow Ghost Pup"},{"id":"candycorn_chipmunk","rar":2,"zh":"玉米糖花栗鼠","en":"Candy-Corn Chipmunk"},{"id":"blacksesame_cat","rar":3,"zh":"黑芝麻猫","en":"Black-Sesame Cat"},{"id":"candycorn_owl","rar":3,"zh":"玉米糖鸮","en":"Candy-Corn Owl"},{"id":"pumpkin","rar":4},{"id":"ghostmochi_bunny","rar":5,"zh":"幽灵麻薯兔","en":"Ghost Mochi Bunny"}]},{"id":"christmas","zh":"圣诞节卡包","en":"Christmas Pack","theme_zh":"姜饼、拐杖糖、驯鹿、企鹅、雪人麻薯、圣诞饼干。","theme_en":"Gingerbread, candy canes, reindeer, penguins, a snowman mochi and Christmas cookies.","avail":"limited","window":{"kind":"fixed_annual","days":15,"firstStart":"2026-12-18T00:00:00-06:00","firstEnd":"2027-01-01T23:59:59-06:00"},"featured":"candycane_reindeer","featuredRar":5,"featuredEpics":["gingerbread_bear","mahua_moose"],"oddsKey":"featuredIsR5","palette":["#d13a3a","#2e8a4a","#fff4e0","#f2c14a","#3a2a28"],"icon":"🎄","pets":[{"id":"cookie_pup","rar":1,"zh":"饼干小狗","en":"Cookie Pup"},{"id":"cocoa_sparrow","rar":1,"zh":"热可可雀","en":"Hot-Cocoa Sparrow"},{"id":"ginger_cat","rar":2},{"id":"lilybulb_ptarmigan","rar":2},{"id":"snowman_mochi","rar":2,"zh":"雪人麻薯","en":"Snowman Mochi"},{"id":"blueberry_penguin","rar":3},{"id":"snowpear","rar":3},{"id":"mahua_moose","rar":3},{"id":"gingerbread_bear","rar":3,"zh":"姜饼熊","en":"Gingerbread Bear"},{"id":"peppermint_fox","rar":4,"zh":"薄荷糖狐","en":"Peppermint Fox"},{"id":"candycane_reindeer","rar":5,"zh":"拐杖糖驯鹿","en":"Candy-Cane Reindeer"}]},{"id":"fantasy","zh":"奇幻生物卡包","en":"Fantasy Pack","theme_zh":"圆滚滚的奇幻伙伴：天使、凤凰、翼龙、狮鹫、独角兽、魔像和仙鹤。","theme_en":"Round fantasy pals: a seraph, phoenixes, a wyvern, a griffin, a unicorn, a golem and a crane.","avail":"permanent","window":null,"featured":"astral_berry_seraph","featuredRar":6,"featuredEpics":["matcha_crane","mooncake_unicorn"],"oddsKey":"featuredIsR6","palette":["#8a6ad8","#ffe7a0","#ff8ac0","#4aa8ff","#3a2a28"],"icon":"✨","pets":[{"id":"jelly_imp","rar":1,"zh":"果冻小妖","en":"Jelly Imp"},{"id":"mochi_fairy","rar":2,"zh":"麻薯小仙","en":"Mochi Fairy"},{"id":"starjelly_fox","rar":2,"zh":"星果冻狐","en":"Star-Jelly Fox"},{"id":"matcha_crane","rar":3},{"id":"peach","rar":3},{"id":"mooncake_unicorn","rar":3,"zh":"月饼独角兽","en":"Mooncake Unicorn"},{"id":"saffron_griffin","rar":4},{"id":"golden_fig_stag","rar":4},{"id":"obsidian_plum_golem","rar":4},{"id":"pitaya","rar":4},{"id":"galaxy_kitsune","rar":5},{"id":"lava_berry_wyvern","rar":5},{"id":"ruby_cherry_phoenix","rar":5},{"id":"mango_dragon","rar":5},{"id":"honeycomb_valkyrie_bee","rar":5},{"id":"inferno_durian_behemoth","rar":5},{"id":"astral_berry_seraph","rar":6},{"id":"chili_phoenix","rar":6},{"id":"supernova_starfruit_dragon","rar":6}]},{"id":"dino","zh":"恐龙卡包","en":"Dinosaur Pack","theme_zh":"圆滚滚的食物恐龙：汤圆暴龙、芥末迅猛龙、菠萝剑龙、芝麻三角龙、柠檬翼龙，还有火龙果恐龙。","theme_en":"Round food dinosaurs: a tangyuan T. rex, wasabi raptor, pineapple stego, sesame triceratops, lemon pteranodon, and a dragonfruit dino.","avail":"permanent","window":null,"featured":"tangyuan_rex","featuredRar":5,"featuredEpics":["wasabi_raptor","jelly_bronto"],"oddsKey":"featuredIsR5","palette":["#5cbf5a","#c08a5a","#fff4e0","#e8c04a","#3a2a28"],"icon":"🦕","pets":[{"id":"yam_ankylo","rar":1,"zh":"红薯甲龙","en":"Yam Ankylo"},{"id":"mochi_dilopho","rar":1,"zh":"麻薯双冠龙","en":"Mochi Dilopho"},{"id":"pudding_parasaur","rar":1,"zh":"布丁副栉龙","en":"Pudding Parasaur"},{"id":"pineapple_stego","rar":2,"zh":"菠萝剑龙","en":"Pineapple Stego"},{"id":"sesame_triceratops","rar":2,"zh":"芝麻三角龙","en":"Sesame Triceratops"},{"id":"wasabi_raptor","rar":3,"zh":"芥末迅猛龙","en":"Wasabi Raptor"},{"id":"jelly_bronto","rar":3,"zh":"果冻雷龙","en":"Jelly Bronto"},{"id":"lemon_pteranodon","rar":4,"zh":"柠檬翼龙","en":"Lemon Pteranodon"},{"id":"tangyuan_rex","rar":5,"zh":"汤圆暴龙","en":"Tangyuan Rex"},{"id":"dragonfruit_dino","rar":5}]},{"id":"future","zh":"未来卡包","en":"Future Pack","theme_zh":"未来零食和圆机器伙伴：汽水机器狗、冻干水果、管装果冻、能量棒和胶囊糖。","theme_en":"Future snacks and round robot pals: a soda robo-dog, freeze-dried fruit, jelly tubes, energy bars and capsule candy.","avail":"permanent","window":null,"featured":"soda_robodog","featuredRar":5,"featuredEpics":["spacericecracker_owl","freezedry_mango_fox"],"oddsKey":"featuredIsR5","palette":["#7ac8ff","#c8d0d8","#ff6a6a","#ffe14a","#3a2a28"],"icon":"🚀","pets":[{"id":"bluehawaii_frog","rar":1,"zh":"蓝橙汽水蛙","en":"Blue-Hawaii Frog"},{"id":"capsule_chick","rar":1,"zh":"胶囊小鸡","en":"Capsule Chick"},{"id":"jellytube_axolotl","rar":2,"zh":"果冻管六角螈","en":"Jelly-Tube Axolotl"},{"id":"energybar_corgi","rar":2,"zh":"能量棒柯基","en":"Energy-Bar Corgi"},{"id":"spacericecracker_owl","rar":3,"zh":"太空米饼鸮","en":"Space Rice-Cracker Owl"},{"id":"freezedry_mango_fox","rar":3,"zh":"冻干芒果狐","en":"Freeze-Dry Mango Fox"},{"id":"capsule_turtle","rar":4,"zh":"胶囊龟","en":"Capsule Turtle"},{"id":"soda_robodog","rar":5,"zh":"汽水机器狗","en":"Soda Robo-Dog"}]},{"id":"thanksgiving","zh":"感恩节卡包","en":"Thanksgiving Pack","theme_zh":"丰收食物：南瓜派火鸡、玉米、蔓越莓、枫糖、烤红薯和板栗，还有农场里的草窝鸡宝。","theme_en":"Harvest foods: a pumpkin-pie turkey, corn, cranberry, maple sugar, roast yam, chestnut, and the farm's Nest Hen.","avail":"limited","window":{"kind":"us_thanksgiving_week","days":7},"featured":"pumpkinpie_turkey","featuredRar":5,"featuredEpics":["cranberry_fox","amber_honey_bear"],"oddsKey":"featuredIsR5","palette":["#e07a2a","#b03a2a","#f2c87a","#5c8a3a","#3a2a28"],"icon":"🦃","pets":[{"id":"chestnut","rar":1},{"id":"cornbread_chick","rar":1,"zh":"玉米面包小鸡","en":"Cornbread Chick"},{"id":"yam_pup","rar":1,"zh":"烤红薯小狗","en":"Roast-Yam Pup"},{"id":"corn_hamster","rar":2},{"id":"maple_fawn","rar":2,"zh":"枫糖小鹿","en":"Maple Fawn"},{"id":"cranberry_fox","rar":3,"zh":"蔓越莓狐","en":"Cranberry Fox"},{"id":"amber_honey_bear","rar":3},{"id":"hen","rar":4},{"id":"pumpkinpie_turkey","rar":5,"zh":"南瓜派火鸡","en":"Pumpkin-Pie Turkey"}]},{"id":"grok","zh":"Grok卡包","en":"Grok Pack","theme_zh":"纪念一只圆圆的、爱帮忙的小助手。黑白芝麻与奶霜、星星、火箭、月亮奶酪。","theme_en":"A commemorative pack for a round, helpful little pal. Black-and-white sesame and cream, stars, rockets and moon cheese.","avail":"permanent","window":null,"featured":"sesamecream_bot","featuredRar":6,"featuredEpics":["starmilk_seal","mooncheese_owlet"],"oddsKey":"featuredIsR6","palette":["#2a2a2a","#f4f0e6","#c8c0b4","#ffe14a","#6a6a6a"],"icon":"⭐","pets":[{"id":"inksugar_panda","rar":1,"zh":"黑白糖熊猫","en":"Ink-Sugar Panda"},{"id":"sesame_badger","rar":1},{"id":"moonsalt_hare","rar":1,"zh":"月盐兔","en":"Moon-Salt Hare"},{"id":"rocket_mochi","rar":2,"zh":"火箭麻薯","en":"Rocket Mochi"},{"id":"starmilk_seal","rar":3,"zh":"星星牛奶海豹","en":"Star-Milk Seal"},{"id":"mooncheese_owlet","rar":3,"zh":"月亮奶酪鸮","en":"Moon-Cheese Owlet"},{"id":"vanilla_swan","rar":3},{"id":"sesameink_wolf","rar":4,"zh":"芝麻墨小狼","en":"Sesame-Ink Wolf"},{"id":"constellation_deer","rar":5,"zh":"星座小鹿","en":"Constellation Deer"},{"id":"sesamecream_bot","rar":6,"zh":"芝麻奶霜星宝","en":"Sesame-Cream Star Pal"}]}];
@@ -11996,7 +12102,7 @@ function injectCssPP() {
   #pp-page .pp-card .pp-meta { display:flex; flex-wrap:wrap; gap:4px; align-items:center; font-size:11px; font-weight:800; }
   #pp-page .pp-badge { font-style:normal; font-size:10px; font-weight:900; border:2px solid var(--ol); border-radius:8px; padding:0 6px; line-height:1.5; }
   #pp-page .pp-badge.open { background:#7fe07a; } #pp-page .pp-badge.soon { background:#ffe14a; }
-  #pp-page .pp-badge.wait { background:#e8dcc4; } #pp-page .pp-badge.lim { background:#e0602a; color:#fff; }
+  #pp-page .pp-badge.wait { background:#e8dcc4; } #pp-page .pp-badge { color:#2b1b22; } #pp-page .pp-badge.lim { background:#e0602a; color:#2b1b22; }
   #pp-page .pp-badge.cos { background:#f2c87a; } #pp-page .pp-badge.perm { background:#c8e8ff; }
   #pp-page .pp-card.pp-locked { cursor:pointer; }
   #pp-page .pp-card.pp-locked canvas.pp-cov { filter:saturate(.85); }
@@ -12022,7 +12128,7 @@ function injectCssPP() {
   #pp-page .pp-pet .rg { display:inline-block; font-size:9px; font-weight:900; border:2px solid var(--ol); border-radius:7px; padding:0 5px; margin-top:2px; }
   #pp-page .pp-pet.r1 .rg { background:#a6e87e; } #pp-page .pp-pet.r2 .rg { background:#8cc6ff; }
   #pp-page .pp-pet.r3 .rg { background:#e0c0ff; } #pp-page .pp-pet.r4 .rg { background:#ffd84a; }
-  #pp-page .pp-pet.r5 .rg { background:#e8282a; color:#fff; } #pp-page .pp-pet.r6 .rg { background:linear-gradient(90deg,#ff5a5a,#ffe14a,#6ae06a,#4ac8ff,#c86aff); }
+  #pp-page .pp-pet.r5 .rg { background:#b01018; color:#fff; } #pp-page .pp-pet.r6 .rg { background:linear-gradient(90deg,#ff5a5a,#ffe14a,#6ae06a,#4ac8ff,#c86aff); }
   #pp-page .pp-cos { display:grid; grid-template-columns:repeat(auto-fill, minmax(88px, 1fr)); gap:6px; }
   #pp-page .pp-odds { font-size:12px; font-weight:800; background:rgba(0,0,0,.14); border-radius:10px; padding:8px 10px; line-height:1.55; }
   #pp-reveal { z-index:80; }
@@ -12596,7 +12702,8 @@ showNewsModal = function (force) {
   _showNewsModal29(force);
   const b = el("news-body"); if (!b) return;
   b.insertAdjacentHTML("afterbegin", "<h3>" + tr("v29_news_title") + "</h3><ul class='news-list'>" + [1, 2, 3, 4].map(i => "<li>" + tr("v29_news_" + i) + "</li>").join("") + "</ul>");
-  if (!force) { try { V25().seenNews29 = 1; persist(); } catch (e) {} }
+  b.insertAdjacentHTML("afterbegin", "<h3>" + tr("v291_news_title") + "</h3><ul class='news-list'>" + [1, 2].map(i => "<li>" + tr("v291_news_" + i) + "</li>").join("") + "</ul>");
+  if (!force) { try { V25().seenNews29 = 1; V25().seenNews291 = 1; persist(); } catch (e) {} }
 };
 function bootPacksPage() {
   hookPacksPage();
@@ -12609,8 +12716,8 @@ function bootPacksPage() {
       _oh29(tab);
       try {
         const v = V25();
-        if (v.seenNews28 && !v.seenNews29 && save.started && save.tutorialDone && save.pets.length > 3) {
-          v.seenNews29 = 1; persist(); setTimeout(() => showNewsModal(true), 1100);
+        if (save.started && save.tutorialDone && save.pets.length > 3 && ((v.seenNews28 && !v.seenNews29) || (v.seenNews29 && !v.seenNews291))) {
+          v.seenNews29 = 1; v.seenNews291 = 1; persist(); setTimeout(() => showNewsModal(true), 1100);
         }
       } catch (e) {}
     };
@@ -13104,10 +13211,12 @@ function bootPacksPage() {
 
   /* ---------- settings toggle ---------- */
   function fx8Label() {
+    try { if (document.documentElement.classList.contains("tight-land")) return "✨"; } catch (e) {}
     const high = fx8Q === "high";
     try { if (typeof tr === "function") return tr(high ? "fx_high" : "fx_low"); } catch (e) {}
     return high ? (typeof LANG !== "undefined" && LANG === "en" ? "Effects: High" : "特效：高") : (typeof LANG !== "undefined" && LANG === "en" ? "Effects: Low" : "特效：低");
   }
+  window.fx8SyncToggle = fx8SyncToggle;
   function fx8SyncToggle() {
     document.querySelectorAll(".fx8-btn").forEach(b => { b.textContent = fx8Label(); b.setAttribute("data-q", fx8Q); b.classList.toggle("is-low", fx8Q === "low"); });
   }
@@ -13115,7 +13224,9 @@ function bootPacksPage() {
     if (document.getElementById("fx8-style")) { fx8SyncToggle(); return; }
     const st = document.createElement("style");
     st.id = "fx8-style";
-    st.textContent = ".fx8-btn{display:inline-flex;align-items:center;gap:4px;background:#fff;border:3px solid var(--ol,#2b1b22);border-radius:14px;padding:2px 10px;box-shadow:0 3px 0 var(--ol,#2b1b22);font-size:12px;font-weight:900;color:var(--ink,#2b1b22);cursor:pointer}.fx8-btn.is-low{opacity:.8;background:#f4efe6}";
+    st.textContent = ".fx8-btn{display:inline-flex;align-items:center;gap:4px;background:#fff;border:3px solid var(--ol,#2b1b22);border-radius:14px;padding:2px 10px;box-shadow:0 3px 0 var(--ol,#2b1b22);font-size:12px;font-weight:900;color:var(--ink,#2b1b22);cursor:pointer}.fx8-btn.is-low{opacity:.8;background:#f4efe6}"
+      + "html.tight-land #home .fx8-btn,html.tight-land .audio-bar .fx8-btn,html.tight-land .audio-row .fx8-btn{font-size:14px !important;padding:1px 5px !important;min-width:28px !important;width:auto !important;}"
+      
     document.head.appendChild(st);
     const rows = document.querySelectorAll(".audio-row, .audio-bar");
     rows.forEach((row, i) => {
@@ -13683,9 +13794,9 @@ function bootPacksPage() {
     w = w | 0;
     if (w <= 3) return 0.3;
     if (w >= 10) return 1;
-    /* 30% at wave 3, 40% through wave 6 (new-player 1-star pets aren't one-shot), then up to full at 10 */
-    if (w <= 6) return 0.3 + 0.1 * (w - 3) / 3;
-    return 0.4 + 0.6 * (w - 6) / 4;
+    /* v2.9.1: keep ~40–45% through waves 6–8 so a fresh 1-star lineup isn't wiped, then rise to full at 10 */
+    if (w <= 8) return 0.3 + 0.15 * (w - 3) / 5;
+    return 0.45 + 0.55 * (w - 8) / 2;
   }
   function as10DmgOf(e, kind) {
     const w = (typeof B !== "undefined" && B && B.wave) | 0;
@@ -14200,14 +14311,44 @@ function bootPacksPage() {
     } catch (e) {}
   }
 
+  function ui11Tight() {
+    try {
+      const land = document.documentElement.classList.contains("land") || (typeof window !== "undefined" && window.innerWidth > window.innerHeight);
+      const tight = !!(land && (window.innerHeight <= 500 || window.innerWidth <= 960));
+      document.documentElement.classList.toggle("tight-land", tight);
+      try { if (typeof window.fx8SyncToggle === "function") window.fx8SyncToggle(); } catch (e) {}
+      return tight;
+    } catch (e) { return false; }
+  }
+  function ui11FitMenu() {
+    ui11Tight();
+    ["title-ui", "lang-ui"].forEach(function (id) {
+      const box = document.getElementById(id);
+      const root = box && box.parentElement;
+      if (!box || !root || root.classList.contains("hidden")) {
+        if (box) box.style.transform = "";
+        return;
+      }
+      box.style.transform = "none";
+      const pad = 16;
+      const rw = Math.max(0, root.clientWidth - pad), rh = Math.max(0, root.clientHeight - pad);
+      const bw = Math.max(box.scrollWidth, box.offsetWidth);
+      const bh = Math.max(box.scrollHeight, box.offsetHeight);
+      if (!(rw > 0 && rh > 0 && bw > 0 && bh > 0)) return;
+      const s = Math.min(rw / bw, rh / bh, 1);
+      box.style.transform = s < 0.995 ? ("scale(" + s.toFixed(4) + ")") : "";
+    });
+  }
+
   function ui11Install() {
     try {
       const st = document.createElement("style");
       st.id = "ui11-css";
       st.textContent = [
-        "/* landscape title/lang: full-bleed stage, no mid-screen paper seam */",
-        "html.land.ui11-menu #app { display:block !important; }",
-        "html.land.ui11-menu #stage { position:absolute !important; inset:0 !important; width:100% !important; height:100% !important; flex:none !important; box-shadow:none !important; }",
+        "/* landscape title/lang: full-bleed stage, uniform cover-crop (no x/y stretch) */",
+        "html.land.ui11-menu #app { display:block !important; overflow:hidden !important; background:#1a1020; }",
+        "html.land.ui11-menu #stage { position:absolute !important; inset:0 !important; width:100% !important; height:100% !important; flex:none !important; box-shadow:none !important; overflow:hidden !important; }",
+        "html.land.ui11-menu #cv { width:540px !important; height:960px !important; position:absolute !important; left:50% !important; top:50% !important; transform:translate(-50%,-50%) scale(max(100vw / 540px, 100vh / 960px)) !important; transform-origin:center center !important; }",
         "html.land.ui11-menu #dock { display:none !important; }",
         "/* keep title buttons above the walking mascots */",
         "#title-screen .btn-row, #lang-screen .btn-row { position:relative; z-index:8; }",
@@ -14217,7 +14358,51 @@ function bootPacksPage() {
         "#t24 .t24-skip { float:left; }",
         "/* only one tutorial box at a time: hide the old #tut and the tray all-out tip while v2.4 is open */",
         "html.t24-on #tut { display:none !important; }",
-        "html.t24-on #tray .empty { display:none !important; }"
+        "html.t24-on #tray .empty { display:none !important; }",
+        "/* v2.9.1: short/narrow landscape home header — wrap, no overlap, icon-only extras */",
+        "html.tight-land #home .home-head { display:flex !important; flex-wrap:wrap !important; align-items:center; justify-content:space-between; gap:4px 6px; width:100%; min-width:0; }",
+        "html.tight-land #home .topbar, html.tight-land #home .audio-bar { flex-wrap:wrap !important; min-width:0; }",
+        "html.tight-land #home .topbar .ribbon { display:none !important; }",
+        "html.tight-land #home .audio-bar .bgm-vol, html.tight-land #home .audio-bar .s9-vol { display:none !important; }",
+        "html.tight-land #home .audio-bar .ver-badge, html.tight-land #home .pk26-lab { display:none !important; }",
+        "html.tight-land #home #btn-board-home, html.tight-land #home #btn-save-home, html.tight-land #home #btn-tut-home, html.tight-land #home #btn-news, html.tight-land #home #btn-help, html.tight-land #home #btn-lang-home { font-size:0 !important; padding:1px 4px !important; min-width:26px !important; line-height:1.2; }",
+        "html.tight-land #home #btn-board-home::before { content:\"🏆\"; font-size:13px; }",
+        "html.tight-land #home #btn-save-home::before { content:\"💾\"; font-size:13px; }",
+        "html.tight-land #home #btn-tut-home::before { content:\"❓\"; font-size:13px; }",
+        "html.tight-land #home #btn-news::before { content:\"📢\"; font-size:13px; }",
+        "html.tight-land #home #btn-help::before { content:\"ℹ️\"; font-size:13px; }",
+        "html.tight-land #home #btn-lang-home::before { content:\"🌐\"; font-size:13px; }",
+        "html.tight-land #home .home-head { flex-wrap:wrap !important; align-items:center; gap:2px 4px; }",
+        "html.tight-land #home .topbar, html.tight-land #home .topbar > div, html.tight-land #home .audio-bar { flex-wrap:nowrap !important; min-width:0; }",
+        "html.tight-land #home .audio-bar .audio-btn { font-size:0 !important; min-width:26px !important; padding:1px 5px !important; line-height:1; }",
+        "html.tight-land #home .audio-bar .audio-btn::before { font-size:14px; line-height:1; }",
+        "html.tight-land #home .audio-bar .audio-btn[data-audio=\"bgm\"]::before { content:\"🎵\"; }",
+        "html.tight-land #home .audio-bar .audio-btn[data-audio=\"sfx\"]::before { content:\"🔊\"; }",
+        "html.tight-land #home .audio-bar .audio-btn[data-audio=\"sfx\"].is-off::before { content:\"🔇\"; }",
+        "html.tight-land #home .audio-bar .audio-btn[data-audio=\"sfx\"].is-off::after { display:none; }",
+        "html.tight-land #home .audio-bar .audio-btn.is-off::after { left:18%; right:18%; top:46%; height:2px; }",
+        "html.tight-land #home .fx8-btn { font-size:14px !important; padding:1px 5px !important; min-width:26px !important; }",
+        "html.tight-land #home .home-head button, html.tight-land #home .home-head .pill, html.tight-land #home .home-head .pk26-btn { flex:0 0 auto; position:relative; z-index:3; }",
+        "html.tight-land #home .tabs { margin-bottom:2px !important; }",
+        "html.tight-land #home .tabs button { font-size:11px !important; padding:1px 2px !important; }",
+        "html.tight-land [data-tab=\"play\"] .sp-l { overflow:hidden !important; display:flex !important; flex-direction:column !important; justify-content:flex-start !important; min-height:0; }",
+        "html.tight-land [data-tab=\"play\"] .play-hero { flex:0 1 auto; min-height:0; overflow:visible; margin-bottom:2px !important; }",
+        "html.tight-land [data-tab=\"play\"] .play-hero canvas { display:none !important; }",
+        "html.tight-land [data-tab=\"play\"] .play-hero .ph-txt { padding:0 2px !important; }",
+        "html.tight-land [data-tab=\"play\"] .play-hero h3 { font-size:15px !important; margin:0 !important; }",
+        "html.tight-land [data-tab=\"play\"] .play-hero p { font-size:11px !important; margin:0 0 2px !important; line-height:1.25 !important; max-height:2.6em; overflow:hidden; }",
+        "html.tight-land [data-tab=\"play\"] .play-hero .chip { font-size:10px; padding:0 4px; }",
+        "html.tight-land [data-tab=\"play\"] .mode-row { flex:0 0 auto; display:flex; align-items:center; gap:6px; margin:2px 0; min-height:0; }",
+        "html.tight-land [data-tab=\"play\"] .mode-row .mode-note { font-size:10px; line-height:1.2; }",
+        "html.tight-land [data-tab=\"play\"] .hard-tg { font-size:11px; padding:3px 8px; }",
+        "html.tight-land [data-tab=\"play\"] #btn-play, html.tight-land [data-tab=\"play\"] .b-go { flex:0 0 auto !important; margin:4px 0 0 !important; padding:4px 8px !important; font-size:16px !important; min-height:32px; width:100%; }",
+        "html.tight-land #title-ui > div[style*=\"flex:1\"], html.tight-land #lang-ui > div[style*=\"flex:1\"] { flex:0 0 2px !important; max-height:8px; min-height:0; }",
+        "html.tight-land #title-screen h1, html.tight-land #lang-screen h1 { font-size:28px !important; margin:0; }",
+        "html.tight-land #title-screen .subtitle { margin:2px 0 4px !important; font-size:12px !important; }",
+        "html.tight-land #title-screen .audio-row { margin-top:4px !important; }",
+        "html.tight-land #title-screen .bgm-vol b, html.tight-land #title-screen .s9-vol b { display:none; }",
+        "html.tight-land #title-screen .bgm-vol input, html.tight-land #title-screen .s9-vol input { width:48px; }",
+        "#title-ui, #lang-ui { transform-origin:center center; }"
       ].join("\n");
       document.head.appendChild(st);
     } catch (e) {}
@@ -14229,6 +14414,7 @@ function bootPacksPage() {
       applyLang = function (l, rerender) {
         const r = _al(l, rerender);
         ui11LangifyTut();
+        try { ui11FitMenu(); } catch (e) {}
         return r;
       };
     }
@@ -14315,6 +14501,16 @@ function bootPacksPage() {
       };
     }
     ui11MenuClass();
+    ui11FitMenu();
+    if (typeof fit === "function" && !fit._ui11t) {
+      const _fit = fit;
+      fit = function () {
+        const r = _fit.apply(this, arguments);
+        try { ui11FitMenu(); } catch (e) {}
+        return r;
+      };
+      fit._ui11t = 1;
+    }
   }
 
   function bootUIFixes() {
@@ -14327,12 +14523,214 @@ function bootPacksPage() {
         startTut: typeof t24Start === "function" ? t24Start : null,
         finishTut: typeof t24Finish === "function" ? t24Finish : null,
         setLang: (l) => applyLang(l, true),
-        showTitle() { screen = "title"; hideAll(); ["news-modal","update-modal","name-screen"].forEach(id => { const n = el(id); if (n) n.classList.add("hidden"); }); el("title-screen").classList.remove("hidden"); ui11MenuClass(); }
+        showTitle() { screen = "title"; hideAll(); ["news-modal","update-modal","name-screen"].forEach(id => { const n = el(id); if (n) n.classList.add("hidden"); }); el("title-screen").classList.remove("hidden"); ui11MenuClass(); try { ui11FitMenu(); } catch (e) {} }
       };
     try { if (window.__PETTD__) window.__PETTD__.ui11 = window.__ui11; } catch (e) {}
   }
   window.bootUIFixes = bootUIFixes;
 })();
+
+/* ================= CrazyGames SDK v3 (src/12-crazygames.js) =================
+   Safe no-op when the SDK is missing or environment is "disabled" (GitHub Pages).
+   Gift redeem is disabled only inside the CrazyGames environment.
+   Nest Hen and lives are untouched. bootCrazyGames() last.
+*/
+function bootCrazyGames() {
+  if (bootCrazyGames._on) return;
+  bootCrazyGames._on = true;
+  window.__cgMute = false;
+  window.__cgSdkMute = false;
+  window.__cgEnv = "disabled";
+  window.__cgActive = false;
+  window.__cgPublic = false;
+
+  function safe(fn) {
+    try { return fn(); } catch (e) { return undefined; }
+  }
+  function sdk() {
+    return (typeof window !== "undefined" && window.CrazyGames && window.CrazyGames.SDK) || null;
+  }
+  function syncMute() {
+    window.__cgMute = !!(window.__cgSdkMute || window.__cgAdMute);
+    try { if (typeof applyAudioGains === "function") applyAudioGains(); } catch (e) {}
+  }
+
+  if (typeof applyAudioGains === "function" && !applyAudioGains._cg) {
+    const _ag = applyAudioGains;
+    applyAudioGains = function () {
+      const forced = !!window.__cgMute;
+      let rec = null;
+      if (forced && typeof save === "object" && save) {
+        rec = { muteBgm: save.muteBgm, muteSfx: save.muteSfx, muted: save.muted };
+        save.muteBgm = true;
+        save.muteSfx = true;
+        save.muted = true;
+      }
+      try { return _ag.apply(this, arguments); }
+      finally {
+        if (rec && typeof save === "object" && save) {
+          save.muteBgm = rec.muteBgm;
+          save.muteSfx = rec.muteSfx;
+          save.muted = rec.muted;
+        }
+      }
+    };
+    applyAudioGains._cg = 1;
+  }
+
+  function gameplayStart() {
+    if (!window.__cgActive) return;
+    const s = sdk();
+    if (s && s.game && typeof s.game.gameplayStart === "function") safe(() => s.game.gameplayStart());
+  }
+  function gameplayStop() {
+    if (!window.__cgActive) return;
+    const s = sdk();
+    if (s && s.game && typeof s.game.gameplayStop === "function") safe(() => s.game.gameplayStop());
+  }
+
+  if (typeof startRun === "function" && !startRun._cg) {
+    const _s = startRun;
+    startRun = function () {
+      const r = _s.apply(this, arguments);
+      gameplayStart();
+      return r;
+    };
+    startRun._cg = 1;
+  }
+  if (typeof endRun === "function" && !endRun._cg) {
+    const _e = endRun;
+    endRun = function () {
+      gameplayStop();
+      return _e.apply(this, arguments);
+    };
+    endRun._cg = 1;
+  }
+  try {
+    const bp = el("btn-pause"), br = el("btn-resume");
+    if (bp) bp.addEventListener("click", function () { gameplayStop(); });
+    if (br) br.addEventListener("click", function () { gameplayStart(); });
+  } catch (e) {}
+
+  function requestMidgame() {
+    if (!window.__cgActive) return;
+    const s = sdk();
+    if (!s || !s.ad || typeof s.ad.requestAd !== "function") return;
+    let done = false;
+    const finish = function () {
+      if (done) return;
+      done = true;
+      window.__cgAdMute = false;
+      syncMute();
+    };
+    try {
+      s.ad.requestAd("midgame", {
+        adStarted: function () { window.__cgAdMute = true; syncMute(); },
+        adFinished: finish,
+        adError: finish
+      });
+    } catch (e) { finish(); }
+  }
+  if (typeof showSummary === "function" && !showSummary._cg) {
+    const _ss = showSummary;
+    showSummary = function () {
+      const r = _ss.apply(this, arguments);
+      try { requestMidgame(); } catch (e) {}
+      return r;
+    };
+    showSummary._cg = 1;
+  }
+
+  if (typeof redeemGift27 === "function" && !redeemGift27._cg) {
+    const _g = redeemGift27;
+    redeemGift27 = function (code) {
+      if (window.__cgPublic) return Promise.resolve(false);
+      return _g(code);
+    };
+    redeemGift27._cg = 1;
+  }
+
+  if (typeof revealGame === "function" && !revealGame._cg) {
+    const _r = revealGame;
+    revealGame = function () {
+      const r = _r.apply(this, arguments);
+      window.__cgLoadStopped = true;
+      if (window.__cgActive) {
+        const s = sdk();
+        if (s && s.game && typeof s.game.loadingStop === "function") safe(() => s.game.loadingStop());
+      }
+      return r;
+    };
+    revealGame._cg = 1;
+  }
+
+  function skipFirstLang(s) {
+    try {
+      if (typeof firstLaunch === "undefined" || !firstLaunch) return;
+      if (typeof localStorage !== "undefined" && localStorage.getItem("mengchong-td-lang")) return;
+      let loc = "";
+      try { loc = (s.user && s.user.systemInfo && s.user.systemInfo.locale) || ""; } catch (e) {}
+      const lang = String(loc).toLowerCase().indexOf("zh") === 0 ? "zh" : "en";
+      if (typeof applyLang === "function") applyLang(lang, false);
+      try { localStorage.setItem("mengchong-td-lang", lang); } catch (e) {}
+      const ls = typeof el === "function" ? el("lang-screen") : document.getElementById("lang-screen");
+      const ts = typeof el === "function" ? el("title-screen") : document.getElementById("title-screen");
+      if (ls) ls.classList.add("hidden");
+      if (ts) ts.classList.remove("hidden");
+      try { if (typeof ui11MenuClass === "function") ui11MenuClass(); } catch (e) {}
+      try { if (typeof refreshTitleButtons === "function") refreshTitleButtons(); } catch (e) {}
+    } catch (e) {}
+  }
+
+  async function waitSdk(ms) {
+    const t0 = Date.now();
+    while (!sdk() && Date.now() - t0 < (ms || 2000)) {
+      await new Promise(function (r) { setTimeout(r, 50); });
+    }
+    return sdk();
+  }
+
+  async function init() {
+    const s = await waitSdk(2000);
+    if (!s || typeof s.init !== "function") return;
+    try { await s.init(); } catch (e) { return; }
+    const env = safe(function () { return s.environment; }) || "disabled";
+    window.__cgEnv = env;
+    /* "local" is returned on any localhost preview and would fire placeholder ads; only the live portal is active. */
+    window.__cgActive = env === "crazygames";
+    window.__cgPublic = env === "crazygames";
+    if (!window.__cgActive) return;
+
+    if (s.game && typeof s.game.loadingStart === "function") safe(() => s.game.loadingStart());
+    if (window.__cgLoadStopped || (typeof bootRevealed !== "undefined" && bootRevealed)) {
+      if (s.game && typeof s.game.loadingStop === "function") safe(() => s.game.loadingStop());
+    }
+
+    try {
+      const settings = (s.game && s.game.settings) || {};
+      window.__cgSdkMute = !!settings.muteAudio;
+      syncMute();
+      if (s.game && typeof s.game.addSettingsChangeListener === "function") {
+        s.game.addSettingsChangeListener(function (st) {
+          if (st && Object.prototype.hasOwnProperty.call(st, "muteAudio")) {
+            window.__cgSdkMute = !!st.muteAudio;
+            syncMute();
+          }
+        });
+      }
+    } catch (e) {}
+
+    skipFirstLang(s);
+  }
+
+  init().catch(function () {});
+  if (typeof window !== "undefined") {
+    window.__cg = {
+      env: function () { return window.__cgEnv; },
+      active: function () { return !!window.__cgActive; }
+    };
+  }
+}
 
 /* ================= test / debug hooks ================= */
 window.__PETTD__ = {
@@ -14472,6 +14870,7 @@ try { bootFX(); } catch (e) { console.warn(e); }
 try { bootSFX(); } catch (e) { console.warn(e); }
 try { bootAbilitySlimes(); } catch (e) { console.warn(e); }
 try { bootUIFixes(); } catch (e) { console.warn(e); }
+try { bootCrazyGames(); } catch (e) { console.warn(e); }
 })();
 </script>
 </body>
