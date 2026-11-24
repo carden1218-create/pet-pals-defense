@@ -939,6 +939,49 @@
   .charm-row.sp.locked { background: repeating-linear-gradient(135deg, #f2eef6, #f2eef6 8px, #e8e2f0 8px, #e8e2f0 16px) !important; }
   .sp-tag { font-size: 10px; padding: 0 5px; border-radius: 6px; background: #ff4f9a; color: #fff; vertical-align: middle; }
   .evo-direct.ready { animation: redpulse 1.4s ease-in-out infinite; }
+
+  /* ===== v2.2 skill bar, tray fold, champion rarity, news ===== */
+  #skill-bar { display:flex; align-items:center; gap:6px; padding:4px 8px 6px; min-height:42px; max-height:52px;
+    overflow-x:auto; overflow-y:hidden; flex-shrink:0; background:rgba(30,16,50,.55); border-top:2px solid var(--ol); }
+  #skill-bar .en-wrap { position:relative; flex:0 0 88px; height:18px; border:2px solid var(--ol); border-radius:10px; background:#2a1c3c; overflow:hidden; }
+  #skill-bar .en-fill { height:100%; background:linear-gradient(90deg,#7ae0ff,#ffe14a 70%,#ff9ad8); width:0; }
+  #skill-bar .en-num { position:absolute; inset:0; text-align:center; font-size:11px; font-weight:900; color:#fff; line-height:16px; text-shadow:0 1px 0 #000; }
+  #skill-bar .sk-auto { flex:0 0 auto; font-size:11px; font-weight:900; padding:2px 8px; border-radius:10px; border:2px solid var(--ol); background:#fff8e6; }
+  #skill-bar .sk-auto.on { background:#ffe14a; }
+  #skill-bar .sk-cmds, #skill-bar .sk-ults { display:flex; gap:4px; flex:0 0 auto; }
+  #skill-bar .sk-ults { overflow-x:auto; }
+  #skill-bar .sk-btn { flex:0 0 40px; height:36px; border:2px solid var(--ol); border-radius:10px; background:#fff; font-weight:900; font-size:14px; padding:0; line-height:1; display:flex; flex-direction:column; align-items:center; justify-content:center; }
+  #skill-bar .sk-btn small { font-size:9px; color:#5a3060; }
+  #skill-bar .sk-btn.cmd { background:#d8f0ff; }
+  #skill-bar .sk-btn.off { opacity:.42; }
+  #btn-tray-fold { display:none; }
+  html.land #btn-tray-fold { display:inline-flex; position:absolute; left:-2px; top:46%; z-index:8; width:26px; height:48px; padding:0; border:3px solid var(--ol); border-radius:10px 0 0 10px; background:#ffe14a; font-weight:900; font-size:16px; align-items:center; justify-content:center; }
+  html.land #dock { position:relative; }
+  html.land #dock.folded { flex:0 0 36px !important; min-width:36px !important; width:36px !important; overflow:hidden; }
+  html.land #dock.folded #tray, html.land #dock.folded #team-bar, html.land #dock.folded #dock-bar span, html.land #dock.folded #skill-bar { display:none !important; }
+  html.land #dock.folded #btn-tray-fold { left:4px; border-radius:10px; }
+  .card.r7, #tray .tcard.r7 { border-image:none !important; border:4px solid #c8a018; background:
+    linear-gradient(180deg,#fff6c0,#ffd24a 40%,#ff9a3a 70%,#c060ff) padding-box,
+    linear-gradient(90deg,#ffe14a,#fff,#ffd24a,#ff6ad8,#7ae0ff,#ffe14a) border-box !important;
+    background-size:100% 100%, 300% 100% !important; animation: rbshift 3.5s linear infinite; box-shadow:0 0 0 2px #7a4a00, 0 0 14px #ffe14a; }
+  .card.r7 .rtag, #tray .tcard.v13.r7 .tc-rar { background:linear-gradient(90deg,#ffe14a,#fff6c0,#ffd24a,#ffb0f0) !important; background-size:300% 100% !important; animation:rbshift 3s linear infinite; color:#5a3000 !important; border:2px solid #7a4a00; }
+  .card.r7 .rtag::before, .lim-tag.champ::before { content:"👑 "; }
+  .lim-tag.champ, .s1-tag { display:inline-block; font-size:10px; font-weight:900; padding:1px 6px; border-radius:8px; background:linear-gradient(90deg,#ffe14a,#fff,#ffd24a,#ff9ad8); color:#4a2000; border:2px solid #7a4a00; }
+  #s1-showcase { margin:6px 0 8px; }
+  .s1-banner { display:flex; align-items:center; gap:8px; padding:6px 8px; border:3px solid #c8a018; border-radius:14px; background:linear-gradient(90deg,#fff8d0,#ffe9a0 40%,#ffd0f0); }
+  .s1-banner canvas { width:58px; height:58px; flex:0 0 58px; }
+  .s1-i { flex:1; min-width:0; display:flex; flex-direction:column; gap:2px; }
+  .s1-i b { font-size:14px; }
+  .s1-i small { font-size:11px; font-weight:800; opacity:.85; }
+  .s1-state { font-size:11px; font-weight:900; white-space:nowrap; }
+  #news-modal, #update-modal { z-index:40; }
+  .news-list { text-align:left; font-weight:800; font-size:14px; line-height:1.45; padding-left:18px; margin:8px 0 0; }
+  .bond-line { font-size:12px; font-weight:900; color:#8a4a00; margin:2px 0; }
+  @media (max-height: 500px) and (orientation: landscape) {
+    #skill-bar { min-height:34px; max-height:38px; padding:2px 6px; }
+    #skill-bar .sk-btn { flex-basis:32px; height:30px; font-size:12px; }
+  }
+
 </style>
 </head>
 <body>
@@ -980,7 +1023,9 @@
       <button type="button" class="b-go-s hidden" id="btn-next" data-i18n="fight">开战！</button>
     </div>
     <div id="team-bar"><div id="syn-chips"></div><div class="adv-row"><span id="advisor"></span><button type="button" class="mini b-mint" id="btn-suggest" data-i18n="suggest_team">Suggest Team</button></div></div>
+    <div id="skill-bar"></div>
     <div id="tray"></div>
+    <button type="button" id="btn-tray-fold" title="Fold">»</button>
   </div>
 
   <div id="lang-screen" class="overlay hidden" data-lang-choice="1">
@@ -998,7 +1043,7 @@
 
   <div id="title-screen" class="overlay">
     <div style="flex:1"></div>
-    <h1 data-i18n="game_title">萌宠防线</h1><span class="ver-badge" id="ver-badge">v2.1</span>
+    <h1 data-i18n="game_title">萌宠防线</h1><span class="ver-badge" id="ver-badge">v2.2</span>
     <p class="subtitle" style="color:#fff;text-shadow:0 2px 0 #2b1b22;font-size:17px" data-i18n="tagline">抓萌宠 · 孵蛋进化 · 无尽打史莱姆</p>
     <div style="flex:1.2"></div>
     <div class="btn-row" style="flex-direction:column;align-items:center">
@@ -1031,6 +1076,7 @@
         <div style="display:flex;gap:6px;align-items:center">
           <span class="pill" id="home-gems">0</span>
           <span class="pill" id="home-power">⚔ 0</span>
+          <button type="button" class="b-gold" id="btn-news" data-i18n="news_btn">公告</button>
           <button type="button" id="btn-help" style="padding:4px 10px;font-size:14px" data-i18n="help">Help</button>
           <button type="button" class="lang-toggle" id="btn-lang-home" style="padding:4px 10px;font-size:14px" data-i18n="lang_toggle">Language</button>
         </div>
@@ -1041,7 +1087,7 @@
         <button type="button" class="audio-btn" data-audio="sfx" data-i18n="sfx">SFX</button>
         <button type="button" class="b-lav" id="btn-board-home" data-i18n="board_btn">Leaderboard</button>
         <button type="button" id="btn-save-home" data-i18n="save_code">Save Code</button>
-        <button type="button" id="btn-tut-home" class="b-sky" data-i18n="tut_btn">Tutorial</button><span class="ver-badge sm">v2.1</span>
+        <button type="button" id="btn-tut-home" class="b-sky" data-i18n="tut_btn">Tutorial</button><span class="ver-badge sm">v2.2</span>
       </div>
       <div class="tabs">
         <button type="button" class="on" data-tab="play" data-i18n="tab_play">冒险</button>
@@ -1131,6 +1177,7 @@
   <div id="board-screen" class="overlay dim-bg hidden">
     <div class="panel board-panel">
       <div class="center" style="margin-top:-40px"><span class="ribbon lav" data-i18n="board_title">Leaderboard</span></div>
+      <div id="s1-showcase"></div>
       <div class="board-mebar">
         <button type="button" class="mini b-sky" id="btn-board-name" data-i18n="name_edit">Edit name</button>
         <span class="pill" id="board-mypower">⚔ 0</span>
@@ -1192,6 +1239,24 @@
     </div>
   </div>
 </div>
+
+  <div id="news-modal" class="overlay dim-bg hidden">
+    <div class="panel center" style="max-width:420px">
+      <div style="margin-top:-38px"><span class="ribbon gold" data-i18n="news_btn">公告</span></div>
+      <div id="news-body"></div>
+      <div class="btn-row"><button type="button" class="b-pink" id="btn-news-ok" data-i18n="got_it">OK</button></div>
+    </div>
+  </div>
+  <div id="update-modal" class="overlay dim-bg hidden">
+    <div class="panel center" style="max-width:380px">
+      <div style="margin-top:-38px"><span class="ribbon pink">v2.2</span></div>
+      <div id="update-body"></div>
+      <div class="btn-row">
+        <button type="button" class="b-pink b-big" id="btn-update-reload" data-i18n="update_reload">Refresh now</button>
+        <button type="button" class="b-sky" id="btn-update-later" data-i18n="update_later">Later</button>
+      </div>
+    </div>
+  </div>
 <script>
 (() => {
 "use strict";
@@ -1213,10 +1278,10 @@ const ADV = { 火:"草", 草:"水", 水:"火", 雷:"水", 土:"雷", 光:"土" }
 function elemMul(a, d) { if (ADV[a] === d) return 1.5; if (ADV[d] === a) return 0.75; return 1; }
 const ELEM_COL = { 火:"#ff6a3a", 水:"#4aa8ff", 草:"#5ccf5a", 雷:"#ffd23a", 土:"#c08a5a", 光:"#fff59a" };
 const ROLE_NAME = { tank:"坦克", dps:"单体输出", aoe:"群体输出", sup:"辅助" };
-const RAR_NAME = ["", "普通", "稀有", "史诗", "传说", "神话", "彩虹"];
-const RAR_KEY = ["", "common", "rare", "epic", "legendary", "mythic", "prismatic"];
-const RAR_MUL = [0, 1.0, 1.2, 1.45, 1.75, 2.15, 2.65];   // v13 strict rarity ladder (combat value at equal star / level / aptitude)
-const MAX_RAR = 6;
+const RAR_NAME = ["", "普通", "稀有", "史诗", "传说", "神话", "彩虹", "至尊"];
+const RAR_KEY = ["", "common", "rare", "epic", "legendary", "mythic", "prismatic", "champion"];
+const RAR_MUL = [0, 1.0, 1.2, 1.45, 1.75, 2.15, 2.65, 3.2];   // v13 + v2.2 champion
+const MAX_RAR = 7;
 const EGG_NAME = ["", "普通蛋", "稀有蛋", "史诗蛋", "金蛋"];
 const LOOT_NAME = ["普通", "优良", "稀有", "史诗", "传说", "神话"];
 
@@ -1262,11 +1327,11 @@ const PETS = [
     desc:"超远距离狙击，偶尔打出会心暴击。", hp:130, dmg:58, rate:1.4, range:640, typ:"snipe", crit:0.28, critM:2.2,
     pal:{ main:"#4f68dc", dark:"#2f3f9a", face:"#c4d6ff", calyx:"#253470", beak:"#ffb43a" },
     spal:{ main:"#9a5ae0", dark:"#5a2a9a", face:"#f0dcff", calyx:"#3a1a60", beak:"#ffe14a" } },
-  { id:"pitaya", el:"火", role:"aoe", rar:5, names:["龙果宝","火龙果龙","赤鳞果龙","炎皇果龙"],
+  { id:"pitaya", el:"火", role:"aoe", rar:4, names:["龙果宝","火龙果龙","赤鳞果龙","炎皇果龙"],
     desc:"吐出火龙果火球，炸开还会持续灼烧。", hp:260, dmg:42, rate:1.0, range:390, typ:"fireball", splash:88, burn:10,
     pal:{ main:"#ff4f9a", scale:"#7fd05a", belly:"#ffffff", flame:"#ffb02e" },
     spal:{ main:"#ffd23a", scale:"#ff7ab0", belly:"#ffffff", flame:"#7ae0ff" } },
-  { id:"mango", el:"光", role:"dps", rar:5, names:["芒仔狮","芒鬃狮","金芒狮","耀阳芒狮王"],
+  { id:"mango", el:"光", role:"dps", rar:4, names:["芒仔狮","芒鬃狮","金芒狮","耀阳芒狮王"],
     desc:"芒果光束一击把史莱姆打晕，最强单体之一。", hp:280, dmg:80, rate:1.05, range:390, typ:"stun", stun:0.6,
     pal:{ fur:"#ffb42e", mane:"#ff7a1a", face:"#ffe7a0", leaf:"#4fbf5a", sun:"#ffe14a" },
     spal:{ fur:"#a8e05a", mane:"#3faa5a", face:"#efffc8", leaf:"#ff8a3a", sun:"#ffc0e0" } },
@@ -1281,7 +1346,7 @@ const PETS = [
     desc:"", hp:560, dmg:30, rate:1.6, range:235, typ:"chomp", splash:70 },
   { id:"durian", el:"土", role:"tank", rar:3, stages:5, names:["榴榴犀","皮带榴犀","刺甲榴犀","金冠榴犀","榴莲盾堡犀王"],
     desc:"", hp:620, dmg:26, rate:2.0, range:150, typ:"spikequake", splash:95, knock:30, thorns:0.25 },
-  { id:"snowpear", el:"水", role:"sup", rar:6, names:["雪梨狐","冰梨狐","霜梨狐","冰晶梨狐王"],
+  { id:"snowpear", el:"水", role:"sup", rar:3, names:["雪梨狐","冰梨狐","霜梨狐","冰晶梨狐王"],
     desc:"", hp:150, dmg:14, rate:0.9, range:340, typ:"frost", chill:3, freeze:1.0 },
   { id:"hen", el:"光", role:"tank", rar:4, stages:5, names:["草窝鸡宝","盾徽巢鸡","堡垒巢鸡","金冠翼盾鸡","圣光城堡母鸡"],
     desc:"", hp:420, dmg:12, rate:4.2, range:260, typ:"layegg" },
@@ -1321,6 +1386,73 @@ const PETS = [
     desc:"", hp:200, dmg:30, rate:1.0, range:420, typ:"thunder", chain:4, fall:0.82,
     pal:{ main:"#2a3a9a", dark:"#16205a", beak:"#ffb02e", bolt:"#ffe14a" }, spal:{ main:"#9a2a9a", dark:"#5a165a", beak:"#ffb02e", bolt:"#7ae0ff" } }
 ];
+PETS.push(
+  { id:"aurora_peach_kirin", el:"光", role:"dps", rar:7, stages:1, art:"team", limited:true, seasonExclusive:"S1", names:["至尊桃麟", "金辉麒麟", "皇冠圣麟", "赛季至尊麒麟"], desc:"", typ:"thunder", hp:240, dmg:42, rate:0.9, range:460, chain:5, fall:0.85 },
+  { id:"astral_berry_seraph", el:"光", role:"dps", rar:6, stages:1, art:"team", names:["星莓天使", "星莓炽天使", "虹莓炽天使", "星河莓果炽天使"], desc:"", typ:"berrypop", hp:220, dmg:0, rate:1.6, range:280, heal:0.18, buff:0.2, aura:280 },
+  { id:"celestial_melon_leviathan", el:"水", role:"dps", rar:6, stages:1, art:"team", names:["天瓜巨鲸", "星洋瓜鲸", "天河瓜鲸", "天穹蜜瓜利维坦"], desc:"", typ:"meteor", hp:340, dmg:52, rate:1.05, range:400, splash:110, burn:0 },
+  { id:"supernova_starfruit_dragon", el:"光", role:"dps", rar:6, stages:1, art:"team", names:["超新星杨桃龙", "星爆杨桃龙", "虹核杨桃龙", "超新星杨桃龙王"], desc:"", typ:"meteor", hp:300, dmg:56, rate:1.0, range:430, splash:108, burn:12 },
+  { id:"blood_orange_cerberus", el:"火", role:"dps", rar:5, stages:1, art:"team", names:["血橙三头犬", "血橙狱犬", "赤橙三首犬", "血橙冥府犬王"], desc:"", typ:"roar", hp:280, dmg:48, rate:1.0, range:360, stun:0.7 },
+  { id:"inferno_durian_behemoth", el:"火", role:"dps", rar:5, stages:1, art:"team", names:["炎榴巨兽", "火榴荒兽", "炼狱榴兽", "炎榴毁灭巨兽"], desc:"", typ:"spikequake", hp:820, dmg:40, rate:1.8, range:180, splash:100, knock:28, thorns:0.28 },
+  { id:"honeycomb_valkyrie_bee", el:"光", role:"dps", rar:5, stages:1, art:"team", names:["蜂巢女武神", "蜜铠女武神", "金翼女武神蜂", "圣蜜女武神蜂"], desc:"", typ:"chain", hp:200, dmg:36, rate:0.9, range:380, chain:4, fall:0.78 },
+  { id:"lava_berry_wyvern", el:"火", role:"dps", rar:5, stages:1, art:"team", names:["熔莓飞龙", "熔岩莓龙", "炎莓翼龙", "熔莓天翼龙"], desc:"", typ:"meteor", hp:260, dmg:46, rate:1.0, range:410, splash:96, burn:12 },
+  { id:"ruby_cherry_phoenix", el:"火", role:"dps", rar:5, stages:1, art:"team", names:["红宝石樱桃凤", "赤樱火凤", "宝石樱凤", "红宝石樱焰凤凰"], desc:"", typ:"meteor", hp:240, dmg:50, rate:0.95, range:420, splash:90, burn:14 },
+  { id:"galaxy_kitsune", el:"光", role:"dps", rar:5, stages:1, art:"team", names:["星河狐", "银河九尾", "星穹狐仙", "星河九尾天狐"], desc:"", typ:"hex", hp:200, dmg:38, rate:1.05, range:400, hex:0.28 },
+  { id:"crimson_lychee_tiger", el:"火", role:"dps", rar:4, stages:1, art:"team", names:["赤荔虎", "红荔猛虎", "绯红荔枝虎", "赤荔虎王"], desc:"", typ:"roar", hp:220, dmg:40, rate:1.0, range:350, stun:0.55 },
+  { id:"pistachio_knight_beetle", el:"土", role:"dps", rar:4, stages:1, art:"team", names:["开心果骑士甲", "pistachio骑士甲虫", "坚果铠甲虫", "开心果圣骑甲"], desc:"", typ:"shell", hp:700, dmg:22, rate:1.1, range:230, shield:0.22 },
+  { id:"pomegranate_lion", el:"火", role:"dps", rar:4, stages:1, art:"team", names:["石榴狮", "红籽狮", "宝石榴狮", "石榴狮王"], desc:"", typ:"snipe", hp:200, dmg:44, rate:1.15, range:520, crit:0.22, critM:2.2 },
+  { id:"golden_fig_stag", el:"土", role:"dps", rar:4, stages:1, art:"team", names:["金无花果鹿", "金果鹿王", "黄金无花果鹿", "金果圣鹿"], desc:"", typ:"slam", hp:680, dmg:32, rate:1.5, range:220, splash:80 },
+  { id:"royal_lychee_peacock", el:"水", role:"dps", rar:4, stages:1, art:"team", names:["皇家荔枝孔雀", "荔冠孔雀", "王荔孔雀", "皇家荔枝孔雀王"], desc:"", typ:"peachlob", hp:190, dmg:16, rate:1.0, range:320, haste:0.22, aura:240 },
+  { id:"saffron_griffin", el:"光", role:"dps", rar:4, stages:1, art:"team", names:["藏红花狮鹫", "金蕊狮鹫", "藏红狮鹫", "藏红花狮鹫王"], desc:"", typ:"snipe", hp:200, dmg:42, rate:1.2, range:560, crit:0.2, critM:2.15 },
+  { id:"sun_mango_falcon", el:"火", role:"dps", rar:4, stages:1, art:"team", names:["日芒猎鹰", "太阳芒果鹰", "炎芒猎鹰", "日芒猎鹰王"], desc:"", typ:"meteor", hp:210, dmg:38, rate:1.0, range:390, splash:88, burn:9 },
+  { id:"obsidian_plum_golem", el:"土", role:"dps", rar:4, stages:1, art:"team", names:["黑曜李魔像", "黑李石像", "曜李巨像", "黑曜李岩魔像"], desc:"", typ:"spikequake", hp:760, dmg:30, rate:2.0, range:170, splash:95, knock:22, thorns:0.22 },
+  { id:"amber_honey_bear", el:"土", role:"dps", rar:3, stages:1, art:"team", names:["蜜琥珀熊", "琥珀蜜熊", "金蜜熊", "蜜琥珀熊王"], desc:"", typ:"slam", hp:620, dmg:26, rate:1.7, range:200, splash:75 },
+  { id:"matcha_crane", el:"草", role:"dps", rar:3, stages:1, art:"team", names:["抹茶鹤", "翠茶鹤", "雾抹茶鹤", "抹茶仙鹤"], desc:"", typ:"frost", hp:170, dmg:18, rate:0.95, range:360, chill:3, freeze:1.1 },
+  { id:"espresso_hawk", el:"火", role:"dps", rar:3, stages:1, art:"team", names:["浓缩鹰", "咖啡鹰", "焦香浓缩鹰", "浓缩鹰隼"], desc:"", typ:"snipe", hp:150, dmg:36, rate:1.25, range:500, crit:0.18, critM:2.1 },
+  { id:"cocoa_panther", el:"土", role:"dps", rar:3, stages:1, art:"team", names:["可可豹", "巧克力豹", "暗可可豹", "可可豹王"], desc:"", typ:"fireseed", hp:180, dmg:28, rate:0.7, range:340, burn:5 },
+  { id:"blackberry_wolf", el:"草", role:"dps", rar:3, stages:1, art:"team", names:["黑莓狼", "暗莓狼", "紫黑莓狼", "黑莓狼王"], desc:"", typ:"poison", hp:180, dmg:16, rate:1.2, range:330, splash:70, poison:8 },
+  { id:"jade_koi", el:"水", role:"dps", rar:3, stages:1, art:"team", names:["翡翠锦鲤", "翠玉鲤", "碧玉锦鲤", "翡翠锦鲤王"], desc:"", typ:"bubble", hp:170, dmg:18, rate:0.95, range:350, splash:72, slow:0.5, slowT:2.2 },
+  { id:"vanilla_swan", el:"光", role:"dps", rar:3, stages:1, art:"team", names:["香草天鹅", "奶油天鹅", "香草白天鹅", "香草天鹅女王"], desc:"", typ:"berrypop", hp:170, dmg:0, rate:1.8, range:250, heal:0.14, buff:0.12, aura:250 },
+  { id:"cinnamon_owl", el:"火", role:"dps", rar:3, stages:1, art:"team", names:["肉桂鸮", "桂皮鸮", "暖香肉桂鸮", "肉桂夜鸮"], desc:"", typ:"snipe", hp:150, dmg:32, rate:1.3, range:480, crit:0.16, critM:2.1 },
+  { id:"rambutan_porcupine", el:"土", role:"dps", rar:3, stages:1, art:"team", names:["红毛丹豪猪", "毛丹刺猪", "红毛豪猪", "红毛丹刺甲猪"], desc:"", typ:"spikeroll", hp:540, dmg:24, rate:0.95, range:250, thorns:0.2 },
+  { id:"hibiscus_mantis", el:"草", role:"dps", rar:3, stages:1, art:"team", names:["扶桑螳螂", "花螳螂", "朱槿螳螂", "扶桑花螳螂"], desc:"", typ:"hex", hp:140, dmg:22, rate:1.0, range:330, hex:0.2 },
+  { id:"papaya_toucan", el:"草", role:"dps", rar:3, stages:1, art:"team", names:["木瓜巨嘴鸟", "木瓜鹈鹕鸟", "香木瓜巨嘴", "木瓜巨嘴鸟王"], desc:"", typ:"boomerang", hp:160, dmg:20, rate:1.0, range:340 },
+  { id:"sorbet_narwhal", el:"水", role:"dps", rar:3, stages:1, art:"team", names:["雪芭独角鲸", "冰沙独角鲸", "彩虹雪芭鲸", "雪芭独角鲸王"], desc:"", typ:"frost", hp:180, dmg:20, rate:1.0, range:350, chill:3, freeze:1.1 },
+  { id:"truffle_boar", el:"土", role:"dps", rar:3, stages:1, art:"team", names:["松露野猪", "黑松露猪", "珍馐松露猪", "松露野猪王"], desc:"", typ:"coinpeck", hp:200, dmg:16, rate:0.9, range:280, gold:3 },
+  { id:"ramen_panda", el:"土", role:"dps", rar:3, stages:1, art:"team", names:["拉面熊猫", "热汤熊猫", "叉烧拉面熊猫", "拉面熊猫师傅"], desc:"", typ:"berrypop", hp:200, dmg:8, rate:1.9, range:250, heal:0.13, buff:0.1, aura:240 },
+  { id:"apple_mouse", el:"草", role:"dps", rar:2, stages:1, art:"team", names:["苹果鼠", "青苹鼠", "蜜苹鼠", "苹果鼠宝"], desc:"", typ:"coinpeck", hp:120, dmg:12, rate:0.85, range:300, gold:2 },
+  { id:"avocado_sloth", el:"草", role:"dps", rar:2, stages:1, art:"team", names:["牛油果树懒", "酪梨树懒", "厚酪梨树懒", "牛油果树懒卫"], desc:"", typ:"shell", hp:500, dmg:14, rate:1.3, range:210, shield:0.16, regen:0.02 },
+  { id:"berry_sparrow", el:"草", role:"dps", rar:2, stages:1, art:"team", names:["莓果雀", "浆果雀", "红莓雀", "莓果雀宝"], desc:"", typ:"snipe", hp:120, dmg:22, rate:1.2, range:420, crit:0.12, critM:2.0 },
+  { id:"caramel_squirrel", el:"土", role:"dps", rar:2, stages:1, art:"team", names:["焦糖松鼠", "奶糖松鼠", "焦香松鼠", "焦糖松鼠宝"], desc:"", typ:"coinpeck", hp:130, dmg:13, rate:0.85, range:290, gold:2 },
+  { id:"citrus_raccoon", el:"雷", role:"dps", rar:2, stages:1, art:"team", names:["柑橘浣熊", "香柑浣熊", "酸柑浣熊", "柑橘浣熊宝"], desc:"", typ:"chain", hp:130, dmg:16, rate:1.0, range:340, chain:3, fall:0.72 },
+  { id:"corn_hamster", el:"光", role:"dps", rar:2, stages:1, art:"team", names:["玉米仓鼠", "金玉米仓鼠", "爆米花仓鼠", "玉米仓鼠宝"], desc:"", typ:"coinpeck", hp:130, dmg:11, rate:0.9, range:280, gold:2 },
+  { id:"croissant_corgi", el:"土", role:"dps", rar:2, stages:1, art:"team", names:["可颂柯基", "黄油可颂柯基", "酥皮柯基", "可颂柯基卫"], desc:"", typ:"slam", hp:480, dmg:18, rate:1.4, range:210, splash:55 },
+  { id:"donut_hippo", el:"土", role:"dps", rar:2, stages:1, art:"team", names:["甜甜圈河马", "糖霜河马", "巧克力甜甜圈河马", "甜甜圈河马卫"], desc:"", typ:"shell", hp:520, dmg:15, rate:1.4, range:200, shield:0.16 },
+  { id:"fig_beetle", el:"土", role:"dps", rar:2, stages:1, art:"team", names:["无花果甲虫", "紫无花果甲", "厚壳果甲", "无花果甲虫卫"], desc:"", typ:"spikeroll", hp:460, dmg:18, rate:1.0, range:230, thorns:0.14 },
+  { id:"ginger_cat", el:"火", role:"dps", rar:2, stages:1, art:"team", names:["姜饼猫", "暖姜猫", "姜糖猫", "姜饼猫宝"], desc:"", typ:"fireseed", hp:130, dmg:16, rate:0.7, range:330, burn:4 },
+  { id:"grape_chick", el:"草", role:"dps", rar:2, stages:1, art:"team", names:["葡萄鸡", "紫葡萄鸡", "酸葡萄鸡", "葡萄鸡宝"], desc:"", typ:"poison", hp:130, dmg:12, rate:1.25, range:320, splash:58, poison:6 },
+  { id:"honeydew_frog", el:"水", role:"dps", rar:2, stages:1, art:"team", names:["蜜瓜蛙", "哈蜜瓜蛙", "翠蜜瓜蛙", "蜜瓜蛙宝"], desc:"", typ:"bubble", hp:140, dmg:14, rate:1.0, range:330, splash:62, slow:0.45, slowT:2.0 },
+  { id:"kiwi_ferret", el:"草", role:"dps", rar:2, stages:1, art:"team", names:["奇异果雪貂", "猕猴桃貂", "绿果雪貂", "奇异果雪貂宝"], desc:"", typ:"boomerang", hp:130, dmg:16, rate:0.95, range:340 },
+  { id:"melon_chick", el:"草", role:"dps", rar:2, stages:1, art:"team", names:["甜瓜鸡", "香瓜鸡", "蜜甜瓜鸡", "甜瓜鸡宝"], desc:"", typ:"peachlob", hp:140, dmg:10, rate:1.1, range:300, haste:0.16, aura:220 },
+  { id:"mint_chameleon", el:"草", role:"dps", rar:2, stages:1, art:"team", names:["薄荷变色龙", "凉薄荷蜥", "翠薄荷变色龙", "薄荷变色龙宝"], desc:"", typ:"frost", hp:140, dmg:14, rate:1.0, range:330, chill:3, freeze:0.9 },
+  { id:"mint_rabbit", el:"草", role:"dps", rar:2, stages:1, art:"team", names:["薄荷兔", "凉薄荷兔", "翠薄荷兔", "薄荷兔宝"], desc:"", typ:"berrypop", hp:140, dmg:0, rate:2.0, range:240, heal:0.11, buff:0.1, aura:230 },
+  { id:"mochi_seal", el:"水", role:"dps", rar:1, stages:1, art:"team", names:["麻薯海豹", "糯米海豹", "芋泥麻薯海豹", "麻薯海豹宝"], desc:"", typ:"berrypop", hp:140, dmg:0, rate:2.1, range:230, heal:0.1, buff:0.08, aura:220 },
+  { id:"oat_sparrow", el:"土", role:"dps", rar:1, stages:1, art:"team", names:["燕麦雀", "麦香雀", "燕麦小鸟", "燕麦雀宝"], desc:"", typ:"coinpeck", hp:110, dmg:10, rate:0.9, range:280, gold:2 },
+  { id:"orange_otter", el:"水", role:"dps", rar:1, stages:1, art:"team", names:["橙香獭", "香橙獭", "果汁橙獭", "橙香獭宝"], desc:"", typ:"squirt", hp:120, dmg:13, rate:0.65, range:330 },
+  { id:"pea_frog", el:"草", role:"dps", rar:1, stages:1, art:"team", names:["豌豆蛙", "青豆蛙", "甜豌豆蛙", "豌豆蛙宝"], desc:"", typ:"slam", hp:140, dmg:12, rate:1.2, range:240, splash:48 },
+  { id:"peach_alpaca", el:"光", role:"dps", rar:1, stages:1, art:"team", names:["蜜桃羊驼", "桃绒羊驼", "蜜桃驼驼", "蜜桃羊驼宝"], desc:"", typ:"peachlob", hp:140, dmg:9, rate:1.15, range:290, haste:0.14, aura:210 },
+  { id:"pear_duck", el:"草", role:"dps", rar:1, stages:1, art:"team", names:["梨鸭", "香梨鸭", "雪梨鸭", "梨鸭宝"], desc:"", typ:"bubble", hp:130, dmg:12, rate:1.1, range:320, splash:55, slow:0.35, slowT:1.6 },
+  { id:"persimmon_tanuki", el:"土", role:"dps", rar:1, stages:1, art:"team", names:["柿子狸", "甜柿狸", "红柿狸", "柿子狸宝"], desc:"", typ:"hex", hp:130, dmg:13, rate:1.15, range:310, hex:0.16 },
+  { id:"pineapple_hedgehog", el:"草", role:"dps", rar:1, stages:1, art:"team", names:["菠萝刺猬", "凤梨刺猬", "金菠萝刺猬", "菠萝刺猬宝"], desc:"", typ:"spikeroll", hp:400, dmg:14, rate:0.95, range:230, thorns:0.14 },
+  { id:"plum_mole", el:"土", role:"dps", rar:1, stages:1, art:"team", names:["李子鼹", "紫李鼹", "甜李子鼹", "李子鼹宝"], desc:"", typ:"coinpeck", hp:120, dmg:11, rate:0.95, range:260, gold:2 },
+  { id:"plum_squirrel", el:"草", role:"dps", rar:1, stages:1, art:"team", names:["李子松鼠", "紫李松鼠", "甜李松鼠", "李子松鼠宝"], desc:"", typ:"fireseed", hp:110, dmg:13, rate:0.7, range:320 },
+  { id:"pretzel_dachshund", el:"土", role:"dps", rar:1, stages:1, art:"team", names:["蝴蝶结腊肠", "盐粒蝴蝶结犬", "脆饼腊肠", "蝴蝶结腊肠宝"], desc:"", typ:"slam", hp:380, dmg:14, rate:1.3, range:200, splash:48 },
+  { id:"radish_pup", el:"草", role:"dps", rar:1, stages:1, art:"team", names:["萝卜小狗", "红萝卜犬", "水萝卜小狗", "萝卜小狗宝"], desc:"", typ:"shell", hp:360, dmg:11, rate:1.2, range:200, shield:0.12 },
+  { id:"sesame_badger", el:"土", role:"dps", rar:1, stages:1, art:"team", names:["芝麻獾", "黑芝麻獾", "香芝麻獾", "芝麻獾宝"], desc:"", typ:"boomerang", hp:130, dmg:14, rate:1.0, range:320 },
+  { id:"taro_octopus", el:"水", role:"dps", rar:1, stages:1, art:"team", names:["芋泥章鱼", "香芋章鱼", "紫芋章鱼", "芋泥章鱼宝"], desc:"", typ:"slam", hp:150, dmg:13, rate:1.3, range:230, splash:58 },
+  { id:"wasabi_gecko", el:"草", role:"dps", rar:1, stages:1, art:"team", names:["芥末壁虎", "辣芥末蜥", "青芥末壁虎", "芥末壁虎宝"], desc:"", typ:"poison", hp:110, dmg:10, rate:1.2, range:300, splash:50, poison:5 },
+  { id:"yuzu_otter", el:"水", role:"dps", rar:1, stages:1, art:"team", names:["柚子獭", "香柚獭", "蜜柚獭", "柚子獭宝"], desc:"", typ:"bubble", hp:120, dmg:12, rate:1.0, range:330, splash:58, slow:0.4, slowT:1.8 }
+);
+
 
 /* Every pet has its OWN attack (typ is unique per pet). sk = skill name, skd = what it does, up = stage 3/4 upgrade. fx = [normal, shiny] effect colour */
 const SKILL = {
@@ -1361,6 +1493,72 @@ const SKILL = {
   thunder_roc: { typ:"thunder", sk:"雷公天罚", skd:"普攻连锁闪电在 4 只史莱姆间跳跃；每隔几秒召唤一朵发光雷云，劈下天雷击晕史莱姆，对首领造成巨额爆发伤害。", up:"3 阶起雷云多劈 2 道，4 阶雷云更大更频繁", fx:["#ffe14a","#7ae0ff"] },
   pumpkin:  { typ:"hex", sk:"南瓜咒印", skd:"射出发光的南瓜籽给史莱姆打上咒印，被咒的史莱姆受到所有伙伴的伤害提高 25%。", up:"3 阶起咒印会传给附近 1 只，4 阶被咒的史莱姆倒下时会爆炸", fx:["#ff9a2e","#b07aff"] }
 };
+Object.assign(SKILL, {
+  aurora_peach_kirin: { typ:"thunder", sk:"至尊虹辉", skd:"降下金色虹光雷链，在史莱姆之间跳跃并短暂晕眩。", up:"星级越高伤害越高", fx:["#ffe14a","#ff9ad8"] },
+  astral_berry_seraph: { typ:"berrypop", sk:"星莓圣咏", skd:"洒下星莓光雨，给附近伙伴大量回血并加攻。", up:"星级越高伤害越高", fx:["#ffe14a","#ff9ad8"] },
+  celestial_melon_leviathan: { typ:"meteor", sk:"天河瓜爆", skd:"从天落下巨大蜜瓜流星，炸开整片水域。", up:"星级越高伤害越高", fx:["#ffe14a","#ff9ad8"] },
+  supernova_starfruit_dragon: { typ:"meteor", sk:"超新星杨桃", skd:"杨桃龙引爆超新星，大范围灼烧并留下星光火环。", up:"星级越高伤害越高", fx:["#ffe14a","#ff9ad8"] },
+  blood_orange_cerberus: { typ:"roar", sk:"血橙三重吼", skd:"三头同时咆哮，打晕并撕裂面前的史莱姆。", up:"星级越高伤害越高", fx:["#ffe14a","#ff9ad8"] },
+  inferno_durian_behemoth: { typ:"spikequake", sk:"炎榴灭震", skd:"灼热榴刺砸地，震退并灼烧周围的史莱姆。", up:"星级越高伤害越高", fx:["#ffe14a","#ff9ad8"] },
+  honeycomb_valkyrie_bee: { typ:"chain", sk:"圣蜜蜂枪", skd:"金色蜂针在敌人间跳跃，越跳越耀眼。", up:"星级越高伤害越高", fx:["#ffe14a","#ff9ad8"] },
+  lava_berry_wyvern: { typ:"meteor", sk:"熔莓火雨", skd:"投下熔岩莓果，炸开后留下火海。", up:"星级越高伤害越高", fx:["#ffe14a","#ff9ad8"] },
+  ruby_cherry_phoenix: { typ:"meteor", sk:"宝石樱焰", skd:"樱桃凤凰俯冲，投下红宝石火焰。", up:"星级越高伤害越高", fx:["#ffe14a","#ff9ad8"] },
+  galaxy_kitsune: { typ:"hex", sk:"星河咒纹", skd:"用星河咒印标记史莱姆，让它们受到更多伤害。", up:"星级越高伤害越高", fx:["#ffe14a","#ff9ad8"] },
+  crimson_lychee_tiger: { typ:"roar", sk:"赤荔虎啸", skd:"一声虎啸震晕目标，利爪紧随其后。", up:"星级越高伤害越高", fx:["#ffe14a","#ff9ad8"] },
+  pistachio_knight_beetle: { typ:"shell", sk:"坚果圣盾", skd:"给自己和左右伙伴套上开心果硬壳盾。", up:"星级越高伤害越高", fx:["#ffe14a","#ff9ad8"] },
+  pomegranate_lion: { typ:"snipe", sk:"榴籽穿射", skd:"喷出宝石榴籽，远距离穿透一整排。", up:"星级越高伤害越高", fx:["#ffe14a","#ff9ad8"] },
+  golden_fig_stag: { typ:"slam", sk:"金果冲撞", skd:"金色鹿角猛撞地面，震伤一圈敌人。", up:"星级越高伤害越高", fx:["#ffe14a","#ff9ad8"] },
+  royal_lychee_peacock: { typ:"peachlob", sk:"荔羽华光", skd:"展开荔枝羽屏，让附近伙伴攻速大增。", up:"星级越高伤害越高", fx:["#ffe14a","#ff9ad8"] },
+  saffron_griffin: { typ:"snipe", sk:"金蕊俯冲", skd:"从高空射出藏红花光羽，精准暴击。", up:"星级越高伤害越高", fx:["#ffe14a","#ff9ad8"] },
+  sun_mango_falcon: { typ:"meteor", sk:"日芒轰炸", skd:"投下芒果太阳火球，炸开一片热浪。", up:"星级越高伤害越高", fx:["#ffe14a","#ff9ad8"] },
+  obsidian_plum_golem: { typ:"spikequake", sk:"曜岩震击", skd:"黑曜石身躯砸地，尖刺冲击波震退敌人。", up:"星级越高伤害越高", fx:["#ffe14a","#ff9ad8"] },
+  amber_honey_bear: { typ:"slam", sk:"蜜琥珀拍击", skd:"蜂蜜熊掌拍地，黏住并震伤周围。", up:"星级越高伤害越高", fx:["#ffe14a","#ff9ad8"] },
+  matcha_crane: { typ:"frost", sk:"抹茶霜舞", skd:"挥洒冰抹茶，三次后把史莱姆冻住。", up:"星级越高伤害越高", fx:["#ffe14a","#ff9ad8"] },
+  espresso_hawk: { typ:"snipe", sk:"浓缩穿射", skd:"射出超浓咖啡羽箭，远距离暴击。", up:"星级越高伤害越高", fx:["#ffe14a","#ff9ad8"] },
+  cocoa_panther: { typ:"fireseed", sk:"可可利爪", skd:"迅捷抓击，可可残渣会让史莱姆持续受伤。", up:"星级越高伤害越高", fx:["#ffe14a","#ff9ad8"] },
+  blackberry_wolf: { typ:"poison", sk:"黑莓毒雾", skd:"甩出黑莓，炸成毒雾水洼。", up:"星级越高伤害越高", fx:["#ffe14a","#ff9ad8"] },
+  jade_koi: { typ:"bubble", sk:"翠玉水泡", skd:"吐出翡翠泡泡，炸开后大幅减速。", up:"星级越高伤害越高", fx:["#ffe14a","#ff9ad8"] },
+  vanilla_swan: { typ:"berrypop", sk:"香草祝福", skd:"扬起香草羽雪，为伙伴回血加攻。", up:"星级越高伤害越高", fx:["#ffe14a","#ff9ad8"] },
+  cinnamon_owl: { typ:"snipe", sk:"肉桂羽箭", skd:"射出暖香肉桂羽，远程点名。", up:"星级越高伤害越高", fx:["#ffe14a","#ff9ad8"] },
+  rambutan_porcupine: { typ:"spikeroll", sk:"毛丹刺滚", skd:"滚出红毛丹刺球，沿路扎穿史莱姆。", up:"星级越高伤害越高", fx:["#ffe14a","#ff9ad8"] },
+  hibiscus_mantis: { typ:"hex", sk:"花刃咒切", skd:"花刃一斩，给史莱姆打上虚弱咒。", up:"星级越高伤害越高", fx:["#ffe14a","#ff9ad8"] },
+  papaya_toucan: { typ:"boomerang", sk:"木瓜回旋", skd:"甩出木瓜喙刃，去回各打一次。", up:"星级越高伤害越高", fx:["#ffe14a","#ff9ad8"] },
+  sorbet_narwhal: { typ:"frost", sk:"雪芭冰锥", skd:"螺旋角喷出冰沙，三次冻结目标。", up:"星级越高伤害越高", fx:["#ffe14a","#ff9ad8"] },
+  truffle_boar: { typ:"coinpeck", sk:"寻宝拱拱", skd:"拱开史莱姆并留下松露印，倒下时多掉金币。", up:"星级越高伤害越高", fx:["#ffe14a","#ff9ad8"] },
+  ramen_panda: { typ:"berrypop", sk:"热汤补给", skd:"甩出热汤碗，给伙伴回血暖身。", up:"星级越高伤害越高", fx:["#ffe14a","#ff9ad8"] },
+  apple_mouse: { typ:"coinpeck", sk:"苹果啄金", skd:"咬一口史莱姆并留下苹果印，多掉金币。", up:"星级越高伤害越高", fx:["#ffe14a","#ff9ad8"] },
+  avocado_sloth: { typ:"shell", sk:"酪梨厚盾", skd:"慢慢套上厚实的牛油果壳盾，还会回血。", up:"星级越高伤害越高", fx:["#ffe14a","#ff9ad8"] },
+  berry_sparrow: { typ:"snipe", sk:"莓籽弹射", skd:"远程啄出莓籽，专打一个。", up:"星级越高伤害越高", fx:["#ffe14a","#ff9ad8"] },
+  caramel_squirrel: { typ:"coinpeck", sk:"焦糖藏金", skd:"把焦糖粘在史莱姆上，倒下时多掉金币。", up:"星级越高伤害越高", fx:["#ffe14a","#ff9ad8"] },
+  citrus_raccoon: { typ:"chain", sk:"柑橘电爪", skd:"酸甜电流在史莱姆之间跳跃。", up:"星级越高伤害越高", fx:["#ffe14a","#ff9ad8"] },
+  corn_hamster: { typ:"coinpeck", sk:"金玉米收藏", skd:"啃一口留下金玉米印，多掉金币。", up:"星级越高伤害越高", fx:["#ffe14a","#ff9ad8"] },
+  croissant_corgi: { typ:"slam", sk:"可颂扑击", skd:"用松脆可颂身子扑上去震伤一小圈。", up:"星级越高伤害越高", fx:["#ffe14a","#ff9ad8"] },
+  donut_hippo: { typ:"shell", sk:"甜甜圈护盾", skd:"给自己套上甜甜圈圈盾。", up:"星级越高伤害越高", fx:["#ffe14a","#ff9ad8"] },
+  fig_beetle: { typ:"spikeroll", sk:"果壳翻滚", skd:"蜷成无花果壳滚过去扎人。", up:"星级越高伤害越高", fx:["#ffe14a","#ff9ad8"] },
+  ginger_cat: { typ:"fireseed", sk:"姜辣爪", skd:"抓出带姜香的火花，持续灼烧。", up:"星级越高伤害越高", fx:["#ffe14a","#ff9ad8"] },
+  grape_chick: { typ:"poison", sk:"葡萄喷雾", skd:"喷出紫葡萄雾，让一片中毒。", up:"星级越高伤害越高", fx:["#ffe14a","#ff9ad8"] },
+  honeydew_frog: { typ:"bubble", sk:"蜜瓜泡泡", skd:"吐出蜜瓜泡，炸开后减速。", up:"星级越高伤害越高", fx:["#ffe14a","#ff9ad8"] },
+  kiwi_ferret: { typ:"boomerang", sk:"奇异回旋", skd:"甩出奇异果片，去回各打一次。", up:"星级越高伤害越高", fx:["#ffe14a","#ff9ad8"] },
+  melon_chick: { typ:"peachlob", sk:"甜瓜弹跳", skd:"扔出弹跳甜瓜，身边伙伴攻速变快。", up:"星级越高伤害越高", fx:["#ffe14a","#ff9ad8"] },
+  mint_chameleon: { typ:"frost", sk:"薄荷冰舌", skd:"吐出冰薄荷，三次冻结。", up:"星级越高伤害越高", fx:["#ffe14a","#ff9ad8"] },
+  mint_rabbit: { typ:"berrypop", sk:"薄荷清风", skd:"撒下薄荷叶，给伙伴回血。", up:"星级越高伤害越高", fx:["#ffe14a","#ff9ad8"] },
+  mochi_seal: { typ:"berrypop", sk:"麻薯软糖", skd:"把软软的麻薯抛给伙伴回血。", up:"星级越高伤害越高", fx:["#ffe14a","#ff9ad8"] },
+  oat_sparrow: { typ:"coinpeck", sk:"燕麦拾穗", skd:"啄一下留下麦穗印，多掉一点点金币。", up:"星级越高伤害越高", fx:["#ffe14a","#ff9ad8"] },
+  orange_otter: { typ:"squirt", sk:"橙汁连射", skd:"超快连射橙汁，打同一个会叠伤。", up:"星级越高伤害越高", fx:["#ffe14a","#ff9ad8"] },
+  pea_frog: { typ:"slam", sk:"豌豆弹跳砸", skd:"一蹦砸出一圈豌豆。", up:"星级越高伤害越高", fx:["#ffe14a","#ff9ad8"] },
+  peach_alpaca: { typ:"peachlob", sk:"桃绒弹弹", skd:"扔出软桃，附近伙伴攻速变快。", up:"星级越高伤害越高", fx:["#ffe14a","#ff9ad8"] },
+  pear_duck: { typ:"bubble", sk:"梨汁水花", skd:"喷出梨汁水花，稍微减速一片。", up:"星级越高伤害越高", fx:["#ffe14a","#ff9ad8"] },
+  persimmon_tanuki: { typ:"hex", sk:"柿子戏法", skd:"扔出柿子咒，让史莱姆更怕打。", up:"星级越高伤害越高", fx:["#ffe14a","#ff9ad8"] },
+  pineapple_hedgehog: { typ:"spikeroll", sk:"菠萝刺滚", skd:"卷成菠萝滚过去扎人。", up:"星级越高伤害越高", fx:["#ffe14a","#ff9ad8"] },
+  plum_mole: { typ:"coinpeck", sk:"掘宝拱拱", skd:"从地里拱一下，给史莱姆打上金币印。", up:"星级越高伤害越高", fx:["#ffe14a","#ff9ad8"] },
+  plum_squirrel: { typ:"fireseed", sk:"李子弹射", skd:"弹出李子打一个敌人。", up:"星级越高伤害越高", fx:["#ffe14a","#ff9ad8"] },
+  pretzel_dachshund: { typ:"slam", sk:"脆饼冲撞", skd:"长长的身子一甩，撞伤面前一小圈。", up:"星级越高伤害越高", fx:["#ffe14a","#ff9ad8"] },
+  radish_pup: { typ:"shell", sk:"萝卜护盾", skd:"顶着萝卜缨给自己套一层薄盾。", up:"星级越高伤害越高", fx:["#ffe14a","#ff9ad8"] },
+  sesame_badger: { typ:"boomerang", sk:"芝麻回旋", skd:"甩出芝麻饼，去回各打一次。", up:"星级越高伤害越高", fx:["#ffe14a","#ff9ad8"] },
+  taro_octopus: { typ:"slam", sk:"芋泥拍打", skd:"八爪拍出一圈芋泥浪。", up:"星级越高伤害越高", fx:["#ffe14a","#ff9ad8"] },
+  wasabi_gecko: { typ:"poison", sk:"芥末喷雾", skd:"喷出呛人的芥末雾，让史莱姆又辣又毒。", up:"星级越高伤害越高", fx:["#ffe14a","#ff9ad8"] },
+  yuzu_otter: { typ:"bubble", sk:"柚子泡泡", skd:"吐出柚子泡，炸开后减速。", up:"星级越高伤害越高", fx:["#ffe14a","#ff9ad8"] }
+});
 for (const p of PETS) { Object.assign(p, SKILL[p.id]); p.desc = p.skd; }
 const PET = Object.fromEntries(PETS.map(p => [p.id, p]));
 /* v13 7-day limited banner: Thunderlord Roc (prismatic, limited). Ends Nov 30, 2026 23:59 (America/Resolute, UTC-6) */
@@ -1395,6 +1593,7 @@ function combatValueOf(d) {
     * (1 + (d.regen || 0) * 5) * (1 + (d.hex || 0) * 1.5) * (d.chill ? 1.3 : 1) * (1 + (d.shield || 0)) * (d.gold ? 1.1 : 1);
   return (off + sus) * util;
 }
+Object.assign(ROLE5, {aurora_peach_kirin:"carry", astral_berry_seraph:"support", celestial_melon_leviathan:"aoe", supernova_starfruit_dragon:"aoe", blood_orange_cerberus:"carry", inferno_durian_behemoth:"summon", honeycomb_valkyrie_bee:"aoe", lava_berry_wyvern:"aoe", ruby_cherry_phoenix:"carry", galaxy_kitsune:"control", crimson_lychee_tiger:"carry", pistachio_knight_beetle:"summon", pomegranate_lion:"carry", golden_fig_stag:"summon", royal_lychee_peacock:"support", saffron_griffin:"carry", sun_mango_falcon:"aoe", obsidian_plum_golem:"summon", amber_honey_bear:"summon", matcha_crane:"control", espresso_hawk:"carry", cocoa_panther:"carry", blackberry_wolf:"aoe", jade_koi:"control", vanilla_swan:"support", cinnamon_owl:"carry", rambutan_porcupine:"summon", hibiscus_mantis:"control", papaya_toucan:"aoe", sorbet_narwhal:"control", truffle_boar:"econ", ramen_panda:"support", apple_mouse:"econ", avocado_sloth:"summon", berry_sparrow:"carry", caramel_squirrel:"econ", citrus_raccoon:"aoe", corn_hamster:"econ", croissant_corgi:"summon", donut_hippo:"summon", fig_beetle:"summon", ginger_cat:"carry", grape_chick:"aoe", honeydew_frog:"control", kiwi_ferret:"carry", melon_chick:"support", mint_chameleon:"control", mint_rabbit:"support", mochi_seal:"support", oat_sparrow:"econ", orange_otter:"carry", pea_frog:"aoe", peach_alpaca:"support", pear_duck:"aoe", persimmon_tanuki:"control", pineapple_hedgehog:"summon", plum_mole:"econ", plum_squirrel:"carry", pretzel_dachshund:"summon", radish_pup:"summon", sesame_badger:"carry", taro_octopus:"aoe", wasabi_gecko:"control", yuzu_otter:"control"});
 (function balanceRoster() {
   for (const d of PETS) {
     const r = role5(d.id); d.r5 = r;
@@ -1403,6 +1602,7 @@ function combatValueOf(d) {
     else if (r === "control") { d.slow = Math.max(d.slow || 0, 0.3); d.slowT = Math.max(d.slowT || 0, 1.6) * 1.3; }
     else if (r === "support") { d.buff = (d.buff || 0) + 0.06; d.haste = (d.haste || 0) + 0.04; d.shred = 0.12; }
     else if (r === "summon") { d.hp = Math.round(d.hp * 1.25); d.thorns = (d.thorns || 0) + 0.1; }
+    else if (r === "econ") { d.gold = (d.gold || 0) + 2; d.range = Math.round(d.range * 1.04); }
   }
   const raw = PETS.map(d => combatValueOf(d) / RAR_MUL[d.rar]);
   const REF = Math.exp(raw.reduce((s, v) => s + Math.log(v), 0) / raw.length);
@@ -1578,7 +1778,7 @@ function rollEggQ(lv, minQ) {
   return 3;
 }
 /* v13 hatch odds by rarity [-, common, rare, epic, legendary, mythic, prismatic] (each row sums to 100) */
-const HATCH_W = { 1:[0,61,27,8.5,2.5,0.8,0.2], 2:[0,38,40,15,5,1.6,0.4], 3:[0,12,40,32,12,3,1], 4:[0,0,47,30,15,6,2] };
+const HATCH_W = { 1:[0,61,27,8.5,2.5,0.8,0.2,0], 2:[0,38,40,15,5,1.6,0.4,0], 3:[0,12,40,32,12,3,1,0], 4:[0,0,47,30,15,6,2,0] };
 
 function stageOf(star) { return Math.min(4, Math.max(1, star | 0)); }           // skill stage (1..4); 5★ keeps the 4-stage skill + 5★ bonuses
 function spriteStage(id, star) { return Math.min((PET[id] && PET[id].stages) || 4, Math.max(1, star | 0)); }
@@ -1623,6 +1823,21 @@ CHARMS.push(
   { id:"thiefbell", rar:3, special:true, eff:{ gold:0.25, spd:0.08 }, cond:"thief" }
 );
 for (const c of CHARMS) { if (c.special) c.specialOnly = true; CHARM[c.id] = c; }
+
+CHARMS.push(
+  { id:"emberheart", rar:3, special:true, eff:{ atk:0.16, burn:0.3 }, cond:"map_volcano" },
+  { id:"tidal",      rar:3, special:true, eff:{ slow:0.3, hp:0.18 }, cond:"map_beach" },
+  { id:"orchardleaf",rar:3, special:true, eff:{ regen:0.02, hp:0.12 }, cond:"map_orchard" },
+  { id:"anvil",      rar:4, special:true, eff:{ hp:0.3, thorns:0.12 }, cond:"endless_60" },
+  { id:"comet",      rar:4, special:true, eff:{ splash:0.28, crit:0.1 }, cond:"endless_80" },
+  { id:"monarch",    rar:5, special:true, eff:{ atk:0.22, boss:0.3 }, cond:"endless_100" },
+  { id:"whisper",    rar:4, special:true, eff:{ range:0.18, crit:0.08 }, cond:"hard_sky" },
+  { id:"relic",      rar:5, special:true, eff:{ gold:0.2, spd:0.12 }, cond:"all_maps" },
+  { id:"bloodgem",   rar:4, special:true, eff:{ atk:0.18, regen:0.015 }, cond:"hard_3" },
+  { id:"stardust",   rar:5, special:true, eff:{ crit:0.14, range:0.12 }, cond:"dex_50" }
+);
+for (const c of CHARMS) { if (c.special) c.specialOnly = true; CHARM[c.id] = c; }
+
 const SHOP_CHARMS = CHARMS.filter(c => !c.specialOnly);
 function specialCharmMet(c, s) {
   const m = s.maps || {};
@@ -1634,6 +1849,16 @@ function specialCharmMet(c, s) {
     case "shiny": return (s.pets || []).some(p => p.shiny) || Object.keys(s.seenShiny || {}).length > 0;
     case "star5": return (s.pets || []).some(p => (p.star | 0) >= 5);
     case "thief": return (s.thiefKills | 0) > 0;
+    case "map_volcano": return !!(m.volcano && m.volcano.c);
+    case "map_beach": return !!(m.beach && m.beach.c);
+    case "map_orchard": return !!(m.orchard && m.orchard.c);
+    case "endless_60": return (s.endlessBest | 0) >= 60;
+    case "endless_80": return (s.endlessBest | 0) >= 80;
+    case "endless_100": return (s.endlessBest | 0) >= 100;
+    case "hard_sky": return !!(m.sky && m.sky.h);
+    case "all_maps": return MAPS.every(x => m[x.id] && m[x.id].c);
+    case "hard_3": return Object.values(m).filter(r => r && r.h).length >= 3;
+    case "dex_50": return Object.keys(s.seen || {}).length >= 50;
   }
   return false;
 }
@@ -1652,8 +1877,8 @@ charmEff = function (p) {
   if (!t) return base;
   const o = Object.assign({}, base); for (const k in t.eff) o[k] = (o[k] || 0) + t.eff[k]; return o;
 };
-const ROLE5_ICON = { carry:"🎯", aoe:"💥", control:"❄", support:"✚", summon:"🛡" };
-const ROLE5_COL = { carry:"#ff8a6a", aoe:"#ffb03a", control:"#7ac8ff", support:"#8ae08a", summon:"#c8a0ff" };
+const ROLE5_ICON = { carry:"🎯", aoe:"💥", control:"❄", support:"✚", summon:"🛡", econ:"💰" };
+const ROLE5_COL = { carry:"#ff8a6a", aoe:"#ffb03a", control:"#7ac8ff", support:"#8ae08a", summon:"#c8a0ff", econ:"#ffe14a" };
 function role5(id) { return ROLE5[id] || "carry"; }
 /* team synergies from the deployed lineup */
 const ELEM_RES = { 火:"burn", 水:"slow", 草:"gold", 雷:"crit", 土:"hp", 光:"atk" };
@@ -2015,7 +2240,37 @@ Object.assign(STR.zh, {
   limited:"限时", banner_title:"限时彩虹限定池", banner_over:"已结束", t_d:"天",
   banner_rates:"雷公圣鸟 {0}% · 神话 {1}% · 传说 {2}% · 史诗 {3}% · 稀有 {4}% · 普通 {5}%", banner_pull:"单抽 💎{0}", banner_got:"限定池结果", banner_jackpot:"⚡ 抽到雷公圣鸟！⚡",
   gold_egg_info:"金蛋：无尽模式 100 波以上才有概率掉落（首领 10% · 每波 3%）；普通掉蛋约 10%/波", lb_outdated:"请刷新到 v2.1 才能提交排行榜成绩",
-  season_v21:"欢迎来到 v2.1 比赛新赛季！已保留你的图鉴，星级已统一归回 1★，公平开赛！",
+      slot_locked:"这只萌宠被控制了，不能换下或替换！", energy_need:"团队能量不足", energy_pool:"团队能量",
+    skill_manual:"手动", skill_auto:"自动", ult_cast:"{0} 发动大招！",
+    cmd_freeze_bomb:"冰冻炸弹", cmd_rally_horn:"战鼓号角", cmd_star_strike:"星辰轰炸",
+    tray_collapse:"收起宠物栏", tray_expand:"展开宠物栏",
+    v22_news_title:"萌宠防线 v2.2 更新", v22_news_1:"满编 100 只手绘萌宠！图鉴全面开放",
+    v22_news_2:"战斗底部技能栏：宠物大招 + 3 个指挥官技能，共用一条稀有团队能量",
+    v22_news_3:"挂件扩充至 30 种（20 种隐藏掉落），培养中新增战斗羁绊与挂件强化",
+    v22_news_4:"桌面端可折叠宠物栏，被控制的萌宠不能再被换下来钻空子",
+    v22_news_5:"🏆 赛季 1 排行榜前三专属「至尊」萌宠：至尊桃麟（结算后可领取）",
+    update_live:"发现新版本 v{0} 已上线！", update_live_d:"点击立即刷新，即可更新到最新版。",
+    update_reload:"立即刷新", update_later:"稍后", news_btn:"公告",
+    s1_badge:"S1 排行榜前三专属 · 至尊限定", s1_hint:"赛季结算后，排行榜前三名可领取这只最高级萌宠。",
+    s1_claim:"领取至尊萌宠", s1_not_yet:"赛季尚未结算", s1_already:"你已经拥有了！", s1_claimed:"获得赛季至尊：{0}！",
+    bond:"战斗羁绊", bond_d:"上场作战会慢慢提升羁绊，最多 +15% 攻击与生命。", bond_n:"羁绊 {0}/100",
+    charm_enhance:"强化", charm_enhance_d:"用宝石强化已有挂件（最高 5 级，每级效果 +12%）。",
+    charm_lv:"强化 Lv.{0}", charm_upgraded:"{0} 强化到 Lv.{1}！", charm_max_lv:"已经强化到最高级啦", no_gems_charm:"宝石不够，强化失败",
+    charm_emberheart:"熔心徽章", charm_emberheart_d:"攻击 +16% · 命中灼烧",
+    charm_tidal:"潮汐贝", charm_tidal_d:"减速 +30% · 生命 +18%",
+    charm_orchardleaf:"果园嫩叶", charm_orchardleaf_d:"持续回血 · 生命 +12%",
+    charm_anvil:"无尽铁砧", charm_anvil_d:"生命 +30% · 反伤 +12%",
+    charm_comet:"彗星碎片", charm_comet_d:"溅射 +28% · 暴击 +10%",
+    charm_monarch:"君主徽记", charm_monarch_d:"攻击 +22% · 对首领 +30%",
+    charm_whisper:"天语羽毛", charm_whisper_d:"射程 +18% · 暴击 +8%",
+    charm_relic:"七图遗物", charm_relic_d:"金币 +20% · 攻速 +12%",
+    charm_bloodgem:"血晶石", charm_bloodgem_d:"攻击 +18% · 持续回血",
+    charm_stardust:"星尘宝石", charm_stardust_d:"暴击 +14% · 射程 +12%",
+    cond_map_volcano:"通关火山地图", cond_map_beach:"通关海滩地图", cond_map_orchard:"通关果园地图",
+    cond_endless_60:"无尽模式达到 60 波", cond_endless_80:"无尽模式达到 80 波", cond_endless_100:"无尽模式达到 100 波",
+    cond_hard_sky:"精英通关星光浮岛", cond_all_maps:"通关全部 7 张地图", cond_hard_3:"精英通关任意 3 张地图", cond_dex_50:"图鉴收集 50 种萌宠",
+    r5_econ:"寻宝经济",
+    season_v21:"欢迎来到 v2.1 比赛新赛季！已保留你的图鉴，星级已统一归回 1★，公平开赛！",
   evo_direct:"直接进化 → {0}★", evo_direct_need:"还差 {0} 个碎片"
 });
 Object.assign(STR.en, {
@@ -2025,7 +2280,37 @@ Object.assign(STR.en, {
   limited:"LIMITED", banner_title:"Limited Prismatic Banner", banner_over:"Ended", t_d:"d",
   banner_rates:"Thunderlord Roc {0}% · Mythic {1}% · Legendary {2}% · Epic {3}% · Rare {4}% · Common {5}%", banner_pull:"Pull 💎{0}", banner_got:"Banner result", banner_jackpot:"⚡ THUNDERLORD ROC! ⚡",
   gold_egg_info:"Gold Egg: chance to drop at Endless Wave 100+ (boss 10% · wave 3%). Normal egg drop ≈10% per wave", lb_outdated:"Please refresh to v2.1 to submit scores",
-  season_v21:"Welcome to v2.1 Tournament Season! Your pets are preserved and reset to 1★ for a fair start.",
+      slot_locked:"This pal is disabled — you can't swap or recall it!", energy_need:"Not enough Team Energy", energy_pool:"Team Energy",
+    skill_manual:"Manual", skill_auto:"Auto", ult_cast:"{0} used its Ultimate!",
+    cmd_freeze_bomb:"Freeze Bomb", cmd_rally_horn:"Rally Horn", cmd_star_strike:"Star Strike",
+    tray_collapse:"Fold pet tray", tray_expand:"Expand pet tray",
+    v22_news_title:"Pet Pals Defense v2.2 Update", v22_news_1:"Full 100-pet hand-drawn roster is here!",
+    v22_news_2:"Bottom skill bar: pet Ultimates + 3 Commander Skills, all sharing one scarce Team Energy pool",
+    v22_news_3:"30 Charms now (20 drop-only), plus Battle Bond and Charm Enhancement in Training & Charms",
+    v22_news_4:"Desktop tray can fold away; disabled pals can no longer be swapped out to cheese CC",
+    v22_news_5:"🏆 Season 1 Top 3 Exclusive Champion pal: Crownlight Kirin (claimable when the season ends)",
+    update_live:"New update v{0} is live!", update_live_d:"Tap to refresh and jump to the latest version.",
+    update_reload:"Refresh now", update_later:"Later", news_btn:"News",
+    s1_badge:"S1 Top 3 Exclusive · Champion Limited", s1_hint:"When Season 1 ends, the Top 3 on the leaderboard can claim this highest-tier pal.",
+    s1_claim:"Claim Champion Pal", s1_not_yet:"Season not finalized yet", s1_already:"You already have it!", s1_claimed:"Season Champion unlocked: {0}!",
+    bond:"Battle Bond", bond_d:"Fighting waves raises Bond, up to +15% ATK and HP.", bond_n:"Bond {0}/100",
+    charm_enhance:"Enhance", charm_enhance_d:"Spend gems to enhance a charm you own (max Lv.5, +12% effect per level).",
+    charm_lv:"Enhance Lv.{0}", charm_upgraded:"{0} enhanced to Lv.{1}!", charm_max_lv:"Already at max enhance level", no_gems_charm:"Not enough gems to enhance",
+    charm_emberheart:"Emberheart", charm_emberheart_d:"ATK +16% · Hits burn",
+    charm_tidal:"Tidal Shell", charm_tidal_d:"Slow +30% · HP +18%",
+    charm_orchardleaf:"Orchard Leaf", charm_orchardleaf_d:"Regen · HP +12%",
+    charm_anvil:"Endless Anvil", charm_anvil_d:"HP +30% · Thorns +12%",
+    charm_comet:"Comet Shard", charm_comet_d:"Splash +28% · Crit +10%",
+    charm_monarch:"Monarch Crest", charm_monarch_d:"ATK +22% · Boss +30%",
+    charm_whisper:"Skyfeather", charm_whisper_d:"Range +18% · Crit +8%",
+    charm_relic:"Seven-Map Relic", charm_relic_d:"Gold +20% · Speed +12%",
+    charm_bloodgem:"Bloodgem", charm_bloodgem_d:"ATK +18% · Regen",
+    charm_stardust:"Stardust Gem", charm_stardust_d:"Crit +14% · Range +12%",
+    cond_map_volcano:"Clear Volcano", cond_map_beach:"Clear Beach", cond_map_orchard:"Clear Orchard",
+    cond_endless_60:"Reach Endless Wave 60", cond_endless_80:"Reach Endless Wave 80", cond_endless_100:"Reach Endless Wave 100",
+    cond_hard_sky:"Clear Starlight Sky on Hard", cond_all_maps:"Clear all 7 maps", cond_hard_3:"Clear any 3 maps on Hard", cond_dex_50:"Collect 50 species in the Dex",
+    r5_econ:"Treasure Econ",
+    season_v21:"Welcome to v2.1 Tournament Season! Your pets are preserved and reset to 1★ for a fair start.",
   evo_direct:"Evolve Now → {0}★", evo_direct_need:"Need {0} more shards"
 });
 function tr(key, ...a) { const s = (STR[LANG] && STR[LANG][key]) ?? STR.zh[key] ?? key; return s.replace(/\{(\d)\}/g, (_, i) => a[+i]); }
@@ -2035,7 +2320,7 @@ function elName(e) { return LANG === "en" ? EL_EN[e] : e; }
 function elShort(e) { return LANG === "en" ? EL_SHORT_EN[e] : e; }
 const EN = {
   role: { tank:"Tank", dps:"Attacker", aoe:"Splash", sup:"Support" },
-  rar: ["", "Common", "Rare", "Epic", "Legendary", "Mythic", "Prismatic"],
+  rar: ["", "Common", "Rare", "Epic", "Legendary", "Mythic", "Prismatic", "Champion"],
   egg: ["", "Common Egg", "Rare Egg", "Epic Egg", "Gold Egg"],
   loot: ["Common", "Good", "Rare", "Epic", "Legendary", "Mythic"],
   zones: ["Orchard", "Beach", "Volcano", "Snowy Glade", "Mushroom Swamp", "Candy Castle", "Starlight Sky", "Dreamland"],
@@ -2082,6 +2367,72 @@ const EN = {
     mango:    { names:["Mango Cub","Mango Mane Lion","Golden Mango Lion","Sunburst Lion King"], sk:"Mango Roar", skd:"A glowing claw swipe that stuns a slime.", up:"Stage 3+: the roar also stuns slimes nearby" }
   }
 };
+Object.assign(EN.pets, {
+  aurora_peach_kirin: { names:["Peachlight Kirin", "Gilded Kirin", "Crownlight Kirin", "Season Sovereign Kirin"], sk:"Crownlight Burst", skd:"Drops golden rainbow lightning that chains between slimes and briefly stuns them.", up:"Higher stars hit harder" },
+  astral_berry_seraph: { names:["Astral Berry Cherub", "Astral Berry Angel", "Rainbow Berry Seraph", "Astral Berry Seraph"], sk:"Star Berry Hymn", skd:"Rains star-berries that heal nearby pals and raise their attack.", up:"Higher stars hit harder" },
+  celestial_melon_leviathan: { names:["Melon Whale", "Star-Sea Leviathan", "Celestial Melon Whale", "Celestial Melon Leviathan"], sk:"Celestial Melon Fall", skd:"A huge melon meteor crashes down and soaks a wide area.", up:"Higher stars hit harder" },
+  supernova_starfruit_dragon: { names:["Starfruit Drake", "Nova Starfruit Dragon", "Prism-Core Dragon", "Supernova Starfruit Dragon"], sk:"Supernova Starfruit", skd:"The dragon detonates a starfruit supernova that burns a huge ring.", up:"Higher stars hit harder" },
+  blood_orange_cerberus: { names:["Blood Orange Pup", "Blood Orange Hound", "Crimson Cerberus", "Blood Orange Cerberus"], sk:"Triple Blood Howl", skd:"All three heads roar, stunning and shredding slimes in front.", up:"Higher stars hit harder" },
+  inferno_durian_behemoth: { names:["Inferno Durian Brute", "Lava Durian Beast", "Hellspine Behemoth", "Inferno Durian Behemoth"], sk:"Inferno Quake", skd:"Slams burning durian spikes that knock back and scorch nearby slimes.", up:"Higher stars hit harder" },
+  honeycomb_valkyrie_bee: { names:["Honeycomb Valkyrie", "Honey-Armor Valkyrie", "Goldwing Valkyrie Bee", "Honeycomb Valkyrie Bee"], sk:"Sacred Honey Lance", skd:"Golden stingers hop between slimes in a shining chain.", up:"Higher stars hit harder" },
+  lava_berry_wyvern: { names:["Lava Berry Drake", "Magma Berry Wyvern", "Ember Berry Wyvern", "Lava Berry Wyvern"], sk:"Lava Berry Rain", skd:"Drops magma berries that burst into a lingering fire field.", up:"Higher stars hit harder" },
+  ruby_cherry_phoenix: { names:["Ruby Cherry Chick", "Ruby Cherry Phoenix", "Gem Cherry Phoenix", "Ruby Cherry Phoenix Queen"], sk:"Ruby Cherry Blaze", skd:"The phoenix dives and drops ruby-cherry flames.", up:"Higher stars hit harder" },
+  galaxy_kitsune: { names:["Galaxy Fox", "Galaxy Kitsune", "Star-Vault Kitsune", "Galaxy Nine-Tail"], sk:"Galaxy Hex", skd:"Marks slimes with a star-hex so they take extra damage.", up:"Higher stars hit harder" },
+  crimson_lychee_tiger: { names:["Crimson Lychee Cub", "Crimson Lychee Tiger", "Ruby Lychee Tiger", "Crimson Lychee Tiger King"], sk:"Crimson Roar", skd:"A tiger roar stuns the target, then the claws follow.", up:"Higher stars hit harder" },
+  pistachio_knight_beetle: { names:["Pistachio Knight", "Pistachio Knight Beetle", "Nutshell Paladin Beetle", "Pistachio Knight Beetle"], sk:"Nutshell Aegis", skd:"Wraps itself and side pals in a pistachio shell shield.", up:"Higher stars hit harder" },
+  pomegranate_lion: { names:["Pomegranate Cub", "Pomegranate Lion", "Jewel Seed Lion", "Pomegranate Lion King"], sk:"Seed Pierce", skd:"Fires jewel pomegranate seeds that pierce a whole row.", up:"Higher stars hit harder" },
+  golden_fig_stag: { names:["Golden Fig Fawn", "Golden Fig Stag", "Goldfruit Stag", "Golden Fig Stag King"], sk:"Golden Antler Slam", skd:"Gold antlers slam the ground, shaking a whole circle.", up:"Higher stars hit harder" },
+  royal_lychee_peacock: { names:["Royal Lychee Peafowl", "Royal Lychee Peacock", "Crown Lychee Peacock", "Royal Lychee Peacock"], sk:"Lychee Fanfare", skd:"Opens a lychee feather fan that greatly hastes nearby pals.", up:"Higher stars hit harder" },
+  saffron_griffin: { names:["Saffron Griff", "Saffron Griffin", "Golden Saffron Griffin", "Saffron Griffin King"], sk:"Saffron Dive", skd:"Dives and fires a saffron light-quill that crits from afar.", up:"Higher stars hit harder" },
+  sun_mango_falcon: { names:["Sun Mango Hawk", "Sun Mango Falcon", "Solar Mango Falcon", "Sun Mango Falcon"], sk:"Solar Mango Bomb", skd:"Drops sun-mango fireballs that burst into a heat wave.", up:"Higher stars hit harder" },
+  obsidian_plum_golem: { names:["Obsidian Plum Golem", "Black Plum Golem", "Obsidian Plum Colossus", "Obsidian Plum Golem"], sk:"Obsidian Quake", skd:"The golem slams down, sending a spike shockwave that knocks slimes back.", up:"Higher stars hit harder" },
+  amber_honey_bear: { names:["Amber Honey Cub", "Amber Honey Bear", "Golden Honey Bear", "Amber Honey Bear"], sk:"Honey Amber Slam", skd:"A honey-amber paw slam that hurts and sticks nearby slimes.", up:"Higher stars hit harder" },
+  matcha_crane: { names:["Matcha Crane", "Jade Tea Crane", "Misty Matcha Crane", "Matcha Crane Sage"], sk:"Matcha Frost Dance", skd:"Sprays iced matcha; three chills freeze a slime solid.", up:"Higher stars hit harder" },
+  espresso_hawk: { names:["Espresso Hawk", "Coffee Hawk", "Roast Espresso Hawk", "Espresso Hawk"], sk:"Espresso Pierce", skd:"Fires a shot of espresso quill that crits from long range.", up:"Higher stars hit harder" },
+  cocoa_panther: { names:["Cocoa Panther", "Chocolate Panther", "Dark Cocoa Panther", "Cocoa Panther"], sk:"Cocoa Claw", skd:"A swift claw swipe; cocoa residue keeps slimes hurting.", up:"Higher stars hit harder" },
+  blackberry_wolf: { names:["Blackberry Wolf", "Dark Berry Wolf", "Night Blackberry Wolf", "Blackberry Wolf"], sk:"Blackberry Fog", skd:"Flings blackberries that burst into a poison fog.", up:"Higher stars hit harder" },
+  jade_koi: { names:["Jade Koi", "Jade Carp", "Emerald Jade Koi", "Jade Koi"], sk:"Jade Bubbles", skd:"Blows jade bubbles that pop and greatly slow a group.", up:"Higher stars hit harder" },
+  vanilla_swan: { names:["Vanilla Swan", "Cream Swan", "Vanilla White Swan", "Vanilla Swan Queen"], sk:"Vanilla Blessing", skd:"Scatters vanilla-feather snow that heals and buffs pals.", up:"Higher stars hit harder" },
+  cinnamon_owl: { names:["Cinnamon Owl", "Spice Owl", "Warm Cinnamon Owl", "Cinnamon Owl"], sk:"Cinnamon Quill", skd:"Fires a warm cinnamon quill at a far-off slime.", up:"Higher stars hit harder" },
+  rambutan_porcupine: { names:["Rambutan Porcupup", "Rambutan Porcupine", "Hairy Rambutan Porcupine", "Rambutan Porcupine"], sk:"Rambutan Roll", skd:"Rolls a hairy rambutan spike-ball that pierces down the lane.", up:"Higher stars hit harder" },
+  hibiscus_mantis: { names:["Hibiscus Mantis", "Blossom Mantis", "Hibiscus Blade Mantis", "Hibiscus Mantis"], sk:"Blossom Hex Cut", skd:"A flower-blade slash that hexes the slime.", up:"Higher stars hit harder" },
+  papaya_toucan: { names:["Papaya Toucan", "Papaya Beak", "Ripe Papaya Toucan", "Papaya Toucan"], sk:"Papaya Boomerang", skd:"Throws a papaya beak-boomerang that hits going and coming.", up:"Higher stars hit harder" },
+  sorbet_narwhal: { names:["Sorbet Narwhal", "Iced Sorbet Narwhal", "Rainbow Sorbet Narwhal", "Sorbet Narwhal"], sk:"Sorbet Spiral", skd:"Its horn sprays sorbet; three chills freeze the target.", up:"Higher stars hit harder" },
+  truffle_boar: { names:["Truffle Boar", "Black Truffle Boar", "Gourmet Truffle Boar", "Truffle Boar"], sk:"Truffle Trove", skd:"Root a slime and mark it so it drops extra gold.", up:"Higher stars hit harder" },
+  ramen_panda: { names:["Ramen Panda", "Hot Broth Panda", "Chashu Ramen Panda", "Ramen Panda Chef"], sk:"Broth Boost", skd:"Tosses ramen broth that heals and warms nearby pals.", up:"Higher stars hit harder" },
+  apple_mouse: { names:["Apple Mouse", "Green Apple Mouse", "Honey Apple Mouse", "Apple Mouse"], sk:"Apple Mark", skd:"Nibbles a slime and marks it for extra gold.", up:"Higher stars hit harder" },
+  avocado_sloth: { names:["Avocado Sloth", "Ripe Avocado Sloth", "Thick Avocado Sloth", "Avocado Sloth"], sk:"Avocado Shell", skd:"Wraps on a thick avocado shield and slowly heals.", up:"Higher stars hit harder" },
+  berry_sparrow: { names:["Berry Sparrow", "Juice Berry Sparrow", "Red Berry Sparrow", "Berry Sparrow"], sk:"Berry Seed Shot", skd:"Pecks a berry seed at one far slime.", up:"Higher stars hit harder" },
+  caramel_squirrel: { names:["Caramel Squirrel", "Butterscotch Squirrel", "Toffee Squirrel", "Caramel Squirrel"], sk:"Caramel Stash", skd:"Sticks caramel on a slime so it drops extra gold.", up:"Higher stars hit harder" },
+  citrus_raccoon: { names:["Citrus Raccoon", "Orange Citrus Raccoon", "Zesty Raccoon", "Citrus Raccoon"], sk:"Citrus Spark", skd:"A zesty spark hops between slimes.", up:"Higher stars hit harder" },
+  corn_hamster: { names:["Corn Hamster", "Golden Corn Hamster", "Popcorn Hamster", "Corn Hamster"], sk:"Corn Cache", skd:"Nibble-marks a slime for bonus gold.", up:"Higher stars hit harder" },
+  croissant_corgi: { names:["Croissant Corgi", "Buttery Corgi", "Flaky Croissant Corgi", "Croissant Corgi"], sk:"Croissant Pounce", skd:"Pounces with a flaky croissant body, hitting a small circle.", up:"Higher stars hit harder" },
+  donut_hippo: { names:["Donut Hippo", "Frosted Hippo", "Chocolate Donut Hippo", "Donut Hippo"], sk:"Donut Guard", skd:"Slips on a donut-ring shield.", up:"Higher stars hit harder" },
+  fig_beetle: { names:["Fig Beetle", "Purple Fig Beetle", "Thick-Shell Fig Beetle", "Fig Beetle"], sk:"Fig Roll", skd:"Rolls up in a fig shell and barrels down the lane.", up:"Higher stars hit harder" },
+  ginger_cat: { names:["Ginger Cat", "Warm Ginger Cat", "Gingerbread Cat", "Ginger Cat"], sk:"Ginger Scratch", skd:"A spicy ginger scratch that keeps burning.", up:"Higher stars hit harder" },
+  grape_chick: { names:["Grape Chick", "Purple Grape Chick", "Tart Grape Chick", "Grape Chick"], sk:"Grape Mist", skd:"Sprays a grape mist that poisons a small group.", up:"Higher stars hit harder" },
+  honeydew_frog: { names:["Honeydew Frog", "Melon Honeydew Frog", "Jade Honeydew Frog", "Honeydew Frog"], sk:"Honeydew Bubbles", skd:"Blows honeydew bubbles that pop and slow slimes.", up:"Higher stars hit harder" },
+  kiwi_ferret: { names:["Kiwi Ferret", "Green Kiwi Ferret", "Kiwi Sable", "Kiwi Ferret"], sk:"Kiwi Boomerang", skd:"Throws a kiwi slice that hits out and back.", up:"Higher stars hit harder" },
+  melon_chick: { names:["Melon Chick", "Musk Melon Chick", "Honey Melon Chick", "Melon Chick"], sk:"Melon Bounce", skd:"Lobs a bouncing melon; nearby pals attack faster.", up:"Higher stars hit harder" },
+  mint_chameleon: { names:["Mint Chameleon", "Cool Mint Chameleon", "Jade Mint Chameleon", "Mint Chameleon"], sk:"Mint Chill Tongue", skd:"A minty tongue that chills; three stacks freeze.", up:"Higher stars hit harder" },
+  mint_rabbit: { names:["Mint Rabbit", "Cool Mint Bunny", "Jade Mint Rabbit", "Mint Rabbit"], sk:"Mint Breeze", skd:"Scatters mint leaves that heal nearby pals.", up:"Higher stars hit harder" },
+  mochi_seal: { names:["Mochi Seal", "Rice Mochi Seal", "Taro Mochi Seal", "Mochi Seal"], sk:"Mochi Treat", skd:"Tosses chewy mochi that heals pals.", up:"Higher stars hit harder" },
+  oat_sparrow: { names:["Oat Sparrow", "Toasted Oat Sparrow", "Oat Bird", "Oat Sparrow"], sk:"Oat Glean", skd:"Pecks a slime and marks it for a little extra gold.", up:"Higher stars hit harder" },
+  orange_otter: { names:["Orange Otter", "Citrus Otter", "Juice Orange Otter", "Orange Otter"], sk:"Orange Squirt", skd:"Rapid orange-juice squirts that stack on one slime.", up:"Higher stars hit harder" },
+  pea_frog: { names:["Pea Frog", "Green Pea Frog", "Sweet Pea Frog", "Pea Frog"], sk:"Pea Stomp", skd:"Hops and pops a ring of peas.", up:"Higher stars hit harder" },
+  peach_alpaca: { names:["Peach Alpaca", "Peach-Wool Alpaca", "Honey Peach Alpaca", "Peach Alpaca"], sk:"Peach Wool Bounce", skd:"Lobs a soft peach; nearby pals attack faster.", up:"Higher stars hit harder" },
+  pear_duck: { names:["Pear Duck", "Sweet Pear Duck", "Snow Pear Duck", "Pear Duck"], sk:"Pear Splash", skd:"A pear-juice splash that slightly slows a group.", up:"Higher stars hit harder" },
+  persimmon_tanuki: { names:["Persimmon Tanuki", "Sweet Persimmon Tanuki", "Red Persimmon Tanuki", "Persimmon Tanuki"], sk:"Persimmon Trick", skd:"Tosses a persimmon hex that makes slimes take more damage.", up:"Higher stars hit harder" },
+  pineapple_hedgehog: { names:["Pineapple Hedgehog", "Pine Hedgehog", "Golden Pineapple Hedgehog", "Pineapple Hedgehog"], sk:"Pineapple Roll", skd:"Rolls into a pineapple and spikes down the lane.", up:"Higher stars hit harder" },
+  plum_mole: { names:["Plum Mole", "Purple Plum Mole", "Sweet Plum Mole", "Plum Mole"], sk:"Plum Dig", skd:"Pops up and marks a slime for extra gold.", up:"Higher stars hit harder" },
+  plum_squirrel: { names:["Plum Squirrel", "Purple Plum Squirrel", "Sweet Plum Squirrel", "Plum Squirrel"], sk:"Plum Shot", skd:"Flicks a plum at one slime.", up:"Higher stars hit harder" },
+  pretzel_dachshund: { names:["Pretzel Dachshund", "Salty Pretzel Pup", "Crispy Pretzel Dog", "Pretzel Dachshund"], sk:"Pretzel Bump", skd:"A long pretzel-body bump that hits a small circle.", up:"Higher stars hit harder" },
+  radish_pup: { names:["Radish Pup", "Red Radish Pup", "Water Radish Pup", "Radish Pup"], sk:"Radish Guard", skd:"Pops a leafy radish shield on itself.", up:"Higher stars hit harder" },
+  sesame_badger: { names:["Sesame Badger", "Black Sesame Badger", "Toasted Sesame Badger", "Sesame Badger"], sk:"Sesame Boomerang", skd:"Throws a sesame bun that hits out and back.", up:"Higher stars hit harder" },
+  taro_octopus: { names:["Taro Octopus", "Taro Mash Octopus", "Purple Taro Octopus", "Taro Octopus"], sk:"Taro Slap", skd:"Eight arms slap out a ring of taro mash.", up:"Higher stars hit harder" },
+  wasabi_gecko: { names:["Wasabi Gecko", "Spicy Wasabi Gecko", "Green Wasabi Gecko", "Wasabi Gecko"], sk:"Wasabi Mist", skd:"A spicy wasabi spray that poisons a small group.", up:"Higher stars hit harder" },
+  yuzu_otter: { names:["Yuzu Otter", "Citrus Yuzu Otter", "Honey Yuzu Otter", "Yuzu Otter"], sk:"Yuzu Bubbles", skd:"Blows yuzu bubbles that pop and slow slimes.", up:"Higher stars hit harder" }
+});
 const ZH = { role: { ...ROLE_NAME }, rar: RAR_NAME.slice(), egg: EGG_NAME.slice(), loot: LOOT_NAME.slice(), zones: ZONES.map(z => z.name), endless: ENDLESS.name,
   enemy: Object.fromEntries(Object.entries(ENEMY).map(([k, v]) => [k, v.name])),
   pets: Object.fromEntries(PETS.map(p => [p.id, { names: p.names.slice(), sk: p.sk, skd: p.skd, up: p.up }])) };
@@ -2141,8 +2492,8 @@ function rollFood(lv) {
   return "candy";
 }
 /* auto-generated by tools/pack_atlas.py */
-const ATLAS_SHEETS = {"petsa":"assets/atlas-petsa.webp","petsb":"assets/atlas-petsb.webp","petsc":"assets/atlas-petsc.webp","mobs":"assets/atlas-mobs.webp"};
-const ATLAS_MAP = {"pets/chili-1":{"sheet":"petsa","x":2,"y":2,"w":217,"h":224},"pets/chili-1-s":{"sheet":"petsa","x":221,"y":2,"w":217,"h":224},"pets/chili-2":{"sheet":"petsa","x":440,"y":2,"w":220,"h":224},"pets/chili-2-s":{"sheet":"petsa","x":662,"y":2,"w":220,"h":224},"pets/chili-3":{"sheet":"petsa","x":884,"y":2,"w":220,"h":224},"pets/chili-3-s":{"sheet":"petsa","x":1106,"y":2,"w":220,"h":224},"pets/chili-4":{"sheet":"petsa","x":1328,"y":2,"w":215,"h":224},"pets/chili-4-s":{"sheet":"petsa","x":1545,"y":2,"w":215,"h":224},"pets/chestnut-1":{"sheet":"petsa","x":1762,"y":2,"w":223,"h":224},"pets/chestnut-1-s":{"sheet":"petsa","x":2,"y":228,"w":223,"h":224},"pets/chestnut-2":{"sheet":"petsa","x":227,"y":228,"w":215,"h":224},"pets/chestnut-2-s":{"sheet":"petsa","x":444,"y":228,"w":215,"h":224},"pets/chestnut-3":{"sheet":"petsa","x":661,"y":228,"w":217,"h":224},"pets/chestnut-3-s":{"sheet":"petsa","x":880,"y":228,"w":217,"h":224},"pets/berry-1":{"sheet":"petsa","x":1099,"y":228,"w":183,"h":224},"pets/berry-1-s":{"sheet":"petsa","x":1284,"y":228,"w":183,"h":224},"pets/berry-2":{"sheet":"petsa","x":1469,"y":228,"w":177,"h":224},"pets/berry-2-s":{"sheet":"petsa","x":1648,"y":228,"w":177,"h":224},"pets/berry-3":{"sheet":"petsa","x":1827,"y":228,"w":203,"h":224},"pets/berry-3-s":{"sheet":"petsa","x":2,"y":454,"w":203,"h":224},"pets/berry-4":{"sheet":"petsa","x":207,"y":454,"w":175,"h":224},"pets/berry-4-s":{"sheet":"petsa","x":384,"y":454,"w":175,"h":224},"pets/lychee-1":{"sheet":"petsa","x":561,"y":454,"w":219,"h":224},"pets/lychee-1-s":{"sheet":"petsa","x":782,"y":454,"w":219,"h":224},"pets/lychee-2":{"sheet":"petsa","x":1003,"y":454,"w":218,"h":224},"pets/lychee-2-s":{"sheet":"petsa","x":1223,"y":454,"w":218,"h":224},"pets/lychee-3":{"sheet":"petsa","x":1443,"y":454,"w":212,"h":224},"pets/lychee-3-s":{"sheet":"petsa","x":1657,"y":454,"w":212,"h":224},"pets/lychee-4":{"sheet":"petsa","x":2,"y":680,"w":209,"h":224},"pets/lychee-4-s":{"sheet":"petsa","x":213,"y":680,"w":209,"h":224},"pets/melon-2":{"sheet":"petsa","x":424,"y":680,"w":218,"h":224},"pets/melon-2-s":{"sheet":"petsa","x":644,"y":680,"w":218,"h":224},"pets/lemon-1":{"sheet":"petsa","x":864,"y":680,"w":195,"h":224},"pets/lemon-1-s":{"sheet":"petsa","x":1061,"y":680,"w":195,"h":224},"pets/lemon-2":{"sheet":"petsa","x":1258,"y":680,"w":192,"h":224},"pets/lemon-2-s":{"sheet":"petsa","x":1452,"y":680,"w":192,"h":224},"pets/lemon-3":{"sheet":"petsa","x":1646,"y":680,"w":189,"h":224},"pets/lemon-3-s":{"sheet":"petsa","x":1837,"y":680,"w":189,"h":224},"pets/lemon-4":{"sheet":"petsa","x":2,"y":906,"w":184,"h":224},"pets/lemon-4-s":{"sheet":"petsa","x":188,"y":906,"w":184,"h":224},"pets/coco-1":{"sheet":"petsa","x":374,"y":906,"w":181,"h":224},"pets/coco-1-s":{"sheet":"petsa","x":557,"y":906,"w":181,"h":224},"pets/coco-2":{"sheet":"petsa","x":740,"y":906,"w":180,"h":224},"pets/coco-2-s":{"sheet":"petsa","x":922,"y":906,"w":180,"h":224},"pets/coco-3":{"sheet":"petsa","x":1104,"y":906,"w":177,"h":224},"pets/coco-3-s":{"sheet":"petsa","x":1283,"y":906,"w":177,"h":224},"pets/coco-4":{"sheet":"petsa","x":1462,"y":906,"w":185,"h":224},"pets/coco-4-s":{"sheet":"petsa","x":1649,"y":906,"w":185,"h":224},"pets/taro-1":{"sheet":"petsa","x":1836,"y":906,"w":199,"h":224},"pets/taro-1-s":{"sheet":"petsa","x":2,"y":1132,"w":199,"h":224},"pets/taro-2":{"sheet":"petsa","x":203,"y":1132,"w":199,"h":224},"pets/taro-2-s":{"sheet":"petsa","x":404,"y":1132,"w":199,"h":224},"pets/taro-3":{"sheet":"petsa","x":605,"y":1132,"w":207,"h":224},"pets/taro-3-s":{"sheet":"petsa","x":814,"y":1132,"w":207,"h":224},"pets/taro-4":{"sheet":"petsa","x":1023,"y":1132,"w":212,"h":224},"pets/taro-4-s":{"sheet":"petsa","x":1237,"y":1132,"w":212,"h":224},"pets/peach-3":{"sheet":"petsa","x":1451,"y":1132,"w":218,"h":224},"pets/peach-3-s":{"sheet":"petsa","x":1671,"y":1132,"w":218,"h":224},"pets/peach-4":{"sheet":"petsa","x":2,"y":1358,"w":223,"h":224},"pets/peach-4-s":{"sheet":"petsa","x":227,"y":1358,"w":223,"h":224},"pets/blueberry-1":{"sheet":"petsa","x":452,"y":1358,"w":220,"h":224},"pets/blueberry-1-s":{"sheet":"petsa","x":674,"y":1358,"w":220,"h":224},"pets/blueberry-2":{"sheet":"petsa","x":896,"y":1358,"w":211,"h":224},"pets/blueberry-2-s":{"sheet":"petsa","x":1109,"y":1358,"w":211,"h":224},"pets/blueberry-3":{"sheet":"petsa","x":1322,"y":1358,"w":205,"h":224},"pets/blueberry-3-s":{"sheet":"petsa","x":1529,"y":1358,"w":205,"h":224},"pets/blueberry-4":{"sheet":"petsa","x":1736,"y":1358,"w":208,"h":224},"pets/blueberry-4-s":{"sheet":"petsa","x":2,"y":1584,"w":208,"h":224},"pets/pitaya-2":{"sheet":"petsa","x":212,"y":1584,"w":222,"h":224},"pets/pitaya-2-s":{"sheet":"petsa","x":436,"y":1584,"w":222,"h":224},"pets/kiwi-1":{"sheet":"petsa","x":660,"y":1584,"w":222,"h":224},"pets/kiwi-1-s":{"sheet":"petsa","x":884,"y":1584,"w":222,"h":224},"pets/kiwi-2":{"sheet":"petsa","x":1108,"y":1584,"w":202,"h":224},"pets/kiwi-2-s":{"sheet":"petsa","x":1312,"y":1584,"w":202,"h":224},"pets/kiwi-3":{"sheet":"petsa","x":1516,"y":1584,"w":182,"h":224},"pets/kiwi-3-s":{"sheet":"petsa","x":1700,"y":1584,"w":182,"h":224},"pets/kiwi-4":{"sheet":"petsa","x":2,"y":1810,"w":174,"h":224},"pets/kiwi-4-s":{"sheet":"petsa","x":178,"y":1810,"w":174,"h":224},"pets/grape-1":{"sheet":"petsa","x":354,"y":1810,"w":222,"h":224},"pets/grape-1-s":{"sheet":"petsa","x":578,"y":1810,"w":222,"h":224},"pets/grape-2":{"sheet":"petsa","x":802,"y":1810,"w":213,"h":224},"pets/grape-2-s":{"sheet":"petsa","x":1017,"y":1810,"w":213,"h":224},"pets/grape-3":{"sheet":"petsa","x":1232,"y":1810,"w":212,"h":224},"pets/grape-3-s":{"sheet":"petsa","x":1446,"y":1810,"w":212,"h":224},"pets/grape-4":{"sheet":"petsa","x":1660,"y":1810,"w":205,"h":224},"pets/grape-4-s":{"sheet":"petsb","x":2,"y":2,"w":205,"h":224},"pets/banana-1":{"sheet":"petsb","x":209,"y":2,"w":215,"h":224},"pets/banana-1-s":{"sheet":"petsb","x":426,"y":2,"w":215,"h":224},"pets/banana-2":{"sheet":"petsb","x":643,"y":2,"w":217,"h":224},"pets/banana-2-s":{"sheet":"petsb","x":862,"y":2,"w":217,"h":224},"pets/banana-3":{"sheet":"petsb","x":1081,"y":2,"w":217,"h":224},"pets/banana-3-s":{"sheet":"petsb","x":1300,"y":2,"w":217,"h":224},"pets/banana-4":{"sheet":"petsb","x":1519,"y":2,"w":220,"h":224},"pets/banana-4-s":{"sheet":"petsb","x":1741,"y":2,"w":220,"h":224},"pets/snowpear-3":{"sheet":"petsb","x":2,"y":228,"w":223,"h":224},"pets/snowpear-3-s":{"sheet":"petsb","x":227,"y":228,"w":223,"h":224},"pets/snowpear-4":{"sheet":"petsb","x":452,"y":228,"w":222,"h":224},"pets/snowpear-4-s":{"sheet":"petsb","x":676,"y":228,"w":222,"h":224},"pets/hen-3":{"sheet":"petsb","x":900,"y":228,"w":206,"h":224},"pets/hen-3-s":{"sheet":"petsb","x":1108,"y":228,"w":206,"h":224},"pets/hen-4":{"sheet":"petsb","x":1316,"y":228,"w":215,"h":224},"pets/hen-4-s":{"sheet":"petsb","x":1533,"y":228,"w":214,"h":224},"pets/chomp-1":{"sheet":"petsb","x":1749,"y":228,"w":217,"h":224},"pets/chomp-1-s":{"sheet":"petsb","x":2,"y":454,"w":217,"h":224},"pets/chomp-2":{"sheet":"petsb","x":221,"y":454,"w":220,"h":224},"pets/chomp-2-s":{"sheet":"petsb","x":443,"y":454,"w":220,"h":224},"pets/durian-2":{"sheet":"petsb","x":665,"y":454,"w":214,"h":224},"pets/durian-2-s":{"sheet":"petsb","x":881,"y":454,"w":214,"h":224},"pets/boba_hamster-1":{"sheet":"petsb","x":1097,"y":454,"w":211,"h":224},"pets/boba_hamster-1-s":{"sheet":"petsb","x":1310,"y":454,"w":211,"h":224},"pets/lychee_bunny-1":{"sheet":"petsb","x":1523,"y":454,"w":202,"h":224},"pets/lychee_bunny-1-s":{"sheet":"petsb","x":1727,"y":454,"w":202,"h":224},"pets/blueberry_penguin-1":{"sheet":"petsb","x":2,"y":680,"w":214,"h":224},"pets/blueberry_penguin-1-s":{"sheet":"petsb","x":218,"y":680,"w":214,"h":224},"pets/dragonfruit_dino-1":{"sheet":"petsb","x":434,"y":680,"w":209,"h":224},"pets/dragonfruit_dino-1-s":{"sheet":"petsb","x":645,"y":680,"w":209,"h":224},"pets/chili_phoenix-1":{"sheet":"petsb","x":856,"y":680,"w":214,"h":224},"pets/chili_phoenix-1-s":{"sheet":"petsb","x":1072,"y":680,"w":214,"h":224},"pets/durian-1":{"sheet":"petsb","x":1288,"y":680,"w":224,"h":223},"pets/durian-1-s":{"sheet":"petsb","x":1514,"y":680,"w":224,"h":223},"pets/cherry_fox-1":{"sheet":"petsb","x":1740,"y":680,"w":224,"h":223},"pets/cherry_fox-1-s":{"sheet":"petsb","x":2,"y":906,"w":224,"h":223},"pets/melon-4":{"sheet":"petsb","x":228,"y":906,"w":224,"h":222},"pets/melon-4-s":{"sheet":"petsb","x":454,"y":906,"w":224,"h":222},"pets/mango_dragon-1":{"sheet":"petsb","x":680,"y":906,"w":224,"h":222},"pets/mango_dragon-1-s":{"sheet":"petsb","x":906,"y":906,"w":224,"h":222},"pets/starfruit_owl-1":{"sheet":"petsb","x":1132,"y":906,"w":224,"h":221},"pets/starfruit_owl-1-s":{"sheet":"petsb","x":1358,"y":906,"w":224,"h":221},"pets/chestnut-4":{"sheet":"petsb","x":1584,"y":906,"w":224,"h":220},"pets/chestnut-4-s":{"sheet":"petsb","x":1810,"y":906,"w":224,"h":220},"pets/strawberry_cat-1":{"sheet":"petsb","x":2,"y":1131,"w":224,"h":220},"pets/strawberry_cat-1-s":{"sheet":"petsb","x":228,"y":1131,"w":224,"h":220},"pets/mango-1":{"sheet":"petsb","x":454,"y":1131,"w":224,"h":218},"pets/mango-1-s":{"sheet":"petsb","x":680,"y":1131,"w":224,"h":218},"pets/mango-3":{"sheet":"petsb","x":906,"y":1131,"w":224,"h":217},"pets/mango-3-s":{"sheet":"petsb","x":1132,"y":1131,"w":224,"h":217},"pets/snowpear-1":{"sheet":"petsb","x":1358,"y":1131,"w":224,"h":215},"pets/snowpear-1-s":{"sheet":"petsb","x":1584,"y":1131,"w":224,"h":215},"pets/lemon_bee-1":{"sheet":"petsb","x":1810,"y":1131,"w":224,"h":215},"pets/lemon_bee-1-s":{"sheet":"petsb","x":2,"y":1353,"w":224,"h":215},"pets/chomp-3":{"sheet":"petsb","x":228,"y":1353,"w":224,"h":214},"pets/chomp-3-s":{"sheet":"petsb","x":454,"y":1353,"w":224,"h":214},"pets/thunder_roc-1":{"sheet":"petsb","x":680,"y":1353,"w":224,"h":214},"pets/thunder_roc-1-s":{"sheet":"petsb","x":906,"y":1353,"w":224,"h":214},"pets/peach-2":{"sheet":"petsb","x":1132,"y":1353,"w":224,"h":213},"pets/peach-2-s":{"sheet":"petsb","x":1358,"y":1353,"w":224,"h":213},"pets/pitaya-3":{"sheet":"petsb","x":1584,"y":1353,"w":224,"h":213},"pets/pitaya-3-s":{"sheet":"petsb","x":1810,"y":1353,"w":224,"h":213},"pets/mango-2":{"sheet":"petsb","x":2,"y":1570,"w":224,"h":213},"pets/mango-2-s":{"sheet":"petsb","x":228,"y":1570,"w":224,"h":213},"pets/mango-4":{"sheet":"petsb","x":454,"y":1570,"w":224,"h":213},"pets/mango-4-s":{"sheet":"petsb","x":680,"y":1570,"w":224,"h":213},"pets/matcha_turtle-1":{"sheet":"petsb","x":906,"y":1570,"w":224,"h":213},"pets/matcha_turtle-1-s":{"sheet":"petsb","x":1132,"y":1570,"w":224,"h":213},"pets/snowpear-2":{"sheet":"petsb","x":1358,"y":1570,"w":224,"h":212},"pets/snowpear-2-s":{"sheet":"petsb","x":1584,"y":1570,"w":224,"h":212},"pets/waffle_bear-1":{"sheet":"petsb","x":1810,"y":1570,"w":224,"h":212},"pets/waffle_bear-1-s":{"sheet":"petsb","x":2,"y":1785,"w":224,"h":212},"pets/durian-4":{"sheet":"petsb","x":228,"y":1785,"w":224,"h":211},"pets/durian-4-s":{"sheet":"petsb","x":454,"y":1785,"w":224,"h":211},"pets/melon-3":{"sheet":"petsb","x":680,"y":1785,"w":224,"h":210},"pets/melon-3-s":{"sheet":"petsb","x":906,"y":1785,"w":224,"h":210},"pets/peach-1":{"sheet":"petsb","x":1132,"y":1785,"w":224,"h":210},"pets/peach-1-s":{"sheet":"petsb","x":1358,"y":1785,"w":224,"h":210},"pets/durian-3":{"sheet":"petsb","x":1584,"y":1785,"w":224,"h":208},"pets/durian-3-s":{"sheet":"petsb","x":1810,"y":1785,"w":224,"h":208},"pets/hen-5-s":{"sheet":"petsc","x":2,"y":2,"w":224,"h":206},"pets/hen-5":{"sheet":"petsc","x":228,"y":2,"w":224,"h":205},"pets/hen-2":{"sheet":"petsc","x":454,"y":2,"w":224,"h":204},"pets/hen-2-s":{"sheet":"petsc","x":680,"y":2,"w":224,"h":204},"pets/pitaya-1":{"sheet":"petsc","x":906,"y":2,"w":224,"h":203},"pets/pitaya-1-s":{"sheet":"petsc","x":1132,"y":2,"w":224,"h":203},"pets/pudding_shiba-1":{"sheet":"petsc","x":1358,"y":2,"w":224,"h":202},"pets/pudding_shiba-1-s":{"sheet":"petsc","x":1584,"y":2,"w":224,"h":202},"pets/hen-1":{"sheet":"petsc","x":1810,"y":2,"w":224,"h":201},"pets/hen-1-s":{"sheet":"petsc","x":2,"y":210,"w":224,"h":201},"pets/cloud_sheep-1":{"sheet":"petsc","x":228,"y":210,"w":224,"h":201},"pets/cloud_sheep-1-s":{"sheet":"petsc","x":454,"y":210,"w":224,"h":201},"pets/pitaya-4":{"sheet":"petsc","x":680,"y":210,"w":224,"h":196},"pets/pitaya-4-s":{"sheet":"petsc","x":906,"y":210,"w":224,"h":196},"pets/chomp-4":{"sheet":"petsc","x":1132,"y":210,"w":224,"h":193},"pets/chomp-4-s":{"sheet":"petsc","x":1358,"y":210,"w":224,"h":193},"pets/durian-5":{"sheet":"petsc","x":1584,"y":210,"w":224,"h":191},"pets/durian-5-s":{"sheet":"petsc","x":1810,"y":210,"w":224,"h":191},"pets/coconut_crab-1":{"sheet":"petsc","x":2,"y":413,"w":224,"h":190},"pets/coconut_crab-1-s":{"sheet":"petsc","x":228,"y":413,"w":224,"h":190},"pets/chomp-5":{"sheet":"petsc","x":454,"y":413,"w":224,"h":189},"pets/chomp-5-s":{"sheet":"petsc","x":680,"y":413,"w":224,"h":189},"pets/pumpkin-1":{"sheet":"petsc","x":906,"y":413,"w":224,"h":187},"pets/pumpkin-1-s":{"sheet":"petsc","x":1132,"y":413,"w":224,"h":187},"pets/pumpkin-3":{"sheet":"petsc","x":1358,"y":413,"w":224,"h":187},"pets/pumpkin-3-s":{"sheet":"petsc","x":1584,"y":413,"w":224,"h":187},"pets/melon-1":{"sheet":"petsc","x":1810,"y":413,"w":224,"h":185},"pets/melon-1-s":{"sheet":"petsc","x":2,"y":605,"w":224,"h":185},"pets/pumpkin-2":{"sheet":"petsc","x":228,"y":605,"w":224,"h":184},"pets/pumpkin-2-s":{"sheet":"petsc","x":454,"y":605,"w":224,"h":184},"pets/pumpkin-4":{"sheet":"petsc","x":680,"y":605,"w":224,"h":173},"pets/pumpkin-4-s":{"sheet":"petsc","x":906,"y":605,"w":224,"h":173},"enemies/b-1":{"sheet":"mobs","x":2,"y":2,"w":203,"h":224},"enemies/b-2":{"sheet":"mobs","x":207,"y":2,"w":200,"h":224},"enemies/b-3":{"sheet":"mobs","x":409,"y":2,"w":174,"h":224},"enemies/b-4":{"sheet":"mobs","x":585,"y":2,"w":190,"h":224},"enemies/z-1":{"sheet":"mobs","x":777,"y":2,"w":182,"h":224},"enemies/z-2":{"sheet":"mobs","x":2,"y":228,"w":210,"h":224},"enemies/z-3":{"sheet":"mobs","x":214,"y":228,"w":167,"h":224},"enemies/z-4":{"sheet":"mobs","x":383,"y":228,"w":169,"h":224},"enemies/z-5":{"sheet":"mobs","x":554,"y":228,"w":204,"h":224},"enemies/z-6":{"sheet":"mobs","x":760,"y":228,"w":128,"h":224},"eggs/egg-1":{"sheet":"mobs","x":2,"y":454,"w":194,"h":224},"eggs/egg-2":{"sheet":"mobs","x":198,"y":454,"w":193,"h":224},"eggs/egg-3":{"sheet":"mobs","x":393,"y":454,"w":194,"h":224},"eggs/egg-4":{"sheet":"mobs","x":589,"y":454,"w":174,"h":224},"enemies/mob-thief":{"sheet":"mobs","x":765,"y":454,"w":224,"h":223},"enemies/mob-shield":{"sheet":"mobs","x":2,"y":680,"w":197,"h":220},"enemies/mob-mage":{"sheet":"mobs","x":201,"y":680,"w":220,"h":214},"enemies/mob-mini":{"sheet":"mobs","x":423,"y":680,"w":220,"h":204},"enemies/mob-ranged":{"sheet":"mobs","x":645,"y":680,"w":220,"h":201},"enemies/mob-split-big":{"sheet":"mobs","x":2,"y":902,"w":224,"h":192},"fx/hen-egg":{"sheet":"mobs","x":228,"y":902,"w":165,"h":192},"enemies/mob-split-small":{"sheet":"mobs","x":395,"y":902,"w":224,"h":187},"fx/hen-minion":{"sheet":"mobs","x":621,"y":902,"w":192,"h":172},"fx/charm-bell":{"sheet":"mobs","x":815,"y":902,"w":93,"h":128},"fx/charm-bolt":{"sheet":"mobs","x":910,"y":902,"w":89,"h":128},"fx/charm-clover":{"sheet":"mobs","x":2,"y":1096,"w":114,"h":128},"fx/charm-compass":{"sheet":"mobs","x":118,"y":1096,"w":102,"h":128},"fx/charm-crest":{"sheet":"mobs","x":222,"y":1096,"w":108,"h":128},"fx/charm-frost":{"sheet":"mobs","x":332,"y":1096,"w":119,"h":128},"fx/charm-hourglass":{"sheet":"mobs","x":453,"y":1096,"w":85,"h":128},"fx/charm-medal":{"sheet":"mobs","x":540,"y":1096,"w":82,"h":128},"fx/charm-prism":{"sheet":"mobs","x":624,"y":1096,"w":111,"h":128},"fx/charm-scarf":{"sheet":"mobs","x":737,"y":1096,"w":127,"h":128},"fx/charm-shield":{"sheet":"mobs","x":866,"y":1096,"w":114,"h":128},"fx/charm-thiefbell":{"sheet":"mobs","x":2,"y":1226,"w":89,"h":128},"fx/charm-spore":{"sheet":"mobs","x":93,"y":1226,"w":128,"h":126},"fx/charm-sugar":{"sheet":"mobs","x":223,"y":1226,"w":128,"h":123},"fx/charm-ribbon":{"sheet":"mobs","x":353,"y":1226,"w":128,"h":122},"fx/charm-bow":{"sheet":"mobs","x":483,"y":1226,"w":128,"h":108},"fx/charm-crown":{"sheet":"mobs","x":613,"y":1226,"w":128,"h":98},"fx/charm-halo":{"sheet":"mobs","x":743,"y":1226,"w":128,"h":96},"fx/charm-shades":{"sheet":"mobs","x":873,"y":1226,"w":128,"h":68},"fx/charm-wings":{"sheet":"mobs","x":2,"y":1356,"w":128,"h":68}};
+const ATLAS_SHEETS = {"petsa":"assets/atlas-petsa.webp","petsb":"assets/atlas-petsb.webp","petsc":"assets/atlas-petsc.webp","petsd":"assets/atlas-petsd.webp","mobs":"assets/atlas-mobs.webp"};
+const ATLAS_MAP = {"pets/chili-1":{"sheet":"petsa","x":2,"y":2,"w":217,"h":224},"pets/chili-1-s":{"sheet":"petsa","x":221,"y":2,"w":217,"h":224},"pets/chili-2":{"sheet":"petsa","x":440,"y":2,"w":220,"h":224},"pets/chili-2-s":{"sheet":"petsa","x":662,"y":2,"w":220,"h":224},"pets/chili-3":{"sheet":"petsa","x":884,"y":2,"w":220,"h":224},"pets/chili-3-s":{"sheet":"petsa","x":1106,"y":2,"w":220,"h":224},"pets/chili-4":{"sheet":"petsa","x":1328,"y":2,"w":215,"h":224},"pets/chili-4-s":{"sheet":"petsa","x":1545,"y":2,"w":215,"h":224},"pets/chestnut-1":{"sheet":"petsa","x":1762,"y":2,"w":223,"h":224},"pets/chestnut-1-s":{"sheet":"petsa","x":2,"y":228,"w":223,"h":224},"pets/chestnut-2":{"sheet":"petsa","x":227,"y":228,"w":215,"h":224},"pets/chestnut-2-s":{"sheet":"petsa","x":444,"y":228,"w":215,"h":224},"pets/chestnut-3":{"sheet":"petsa","x":661,"y":228,"w":217,"h":224},"pets/chestnut-3-s":{"sheet":"petsa","x":880,"y":228,"w":217,"h":224},"pets/berry-1":{"sheet":"petsa","x":1099,"y":228,"w":183,"h":224},"pets/berry-1-s":{"sheet":"petsa","x":1284,"y":228,"w":183,"h":224},"pets/berry-2":{"sheet":"petsa","x":1469,"y":228,"w":177,"h":224},"pets/berry-2-s":{"sheet":"petsa","x":1648,"y":228,"w":177,"h":224},"pets/berry-3":{"sheet":"petsa","x":1827,"y":228,"w":203,"h":224},"pets/berry-3-s":{"sheet":"petsa","x":2,"y":454,"w":203,"h":224},"pets/berry-4":{"sheet":"petsa","x":207,"y":454,"w":175,"h":224},"pets/berry-4-s":{"sheet":"petsa","x":384,"y":454,"w":175,"h":224},"pets/lychee-1":{"sheet":"petsa","x":561,"y":454,"w":219,"h":224},"pets/lychee-1-s":{"sheet":"petsa","x":782,"y":454,"w":219,"h":224},"pets/lychee-2":{"sheet":"petsa","x":1003,"y":454,"w":218,"h":224},"pets/lychee-2-s":{"sheet":"petsa","x":1223,"y":454,"w":218,"h":224},"pets/lychee-3":{"sheet":"petsa","x":1443,"y":454,"w":212,"h":224},"pets/lychee-3-s":{"sheet":"petsa","x":1657,"y":454,"w":212,"h":224},"pets/lychee-4":{"sheet":"petsa","x":2,"y":680,"w":209,"h":224},"pets/lychee-4-s":{"sheet":"petsa","x":213,"y":680,"w":209,"h":224},"pets/melon-2":{"sheet":"petsa","x":424,"y":680,"w":218,"h":224},"pets/melon-2-s":{"sheet":"petsa","x":644,"y":680,"w":218,"h":224},"pets/lemon-1":{"sheet":"petsa","x":864,"y":680,"w":195,"h":224},"pets/lemon-1-s":{"sheet":"petsa","x":1061,"y":680,"w":195,"h":224},"pets/lemon-2":{"sheet":"petsa","x":1258,"y":680,"w":192,"h":224},"pets/lemon-2-s":{"sheet":"petsa","x":1452,"y":680,"w":192,"h":224},"pets/lemon-3":{"sheet":"petsa","x":1646,"y":680,"w":189,"h":224},"pets/lemon-3-s":{"sheet":"petsa","x":1837,"y":680,"w":189,"h":224},"pets/lemon-4":{"sheet":"petsa","x":2,"y":906,"w":184,"h":224},"pets/lemon-4-s":{"sheet":"petsa","x":188,"y":906,"w":184,"h":224},"pets/coco-1":{"sheet":"petsa","x":374,"y":906,"w":181,"h":224},"pets/coco-1-s":{"sheet":"petsa","x":557,"y":906,"w":181,"h":224},"pets/coco-2":{"sheet":"petsa","x":740,"y":906,"w":180,"h":224},"pets/coco-2-s":{"sheet":"petsa","x":922,"y":906,"w":180,"h":224},"pets/coco-3":{"sheet":"petsa","x":1104,"y":906,"w":177,"h":224},"pets/coco-3-s":{"sheet":"petsa","x":1283,"y":906,"w":177,"h":224},"pets/coco-4":{"sheet":"petsa","x":1462,"y":906,"w":185,"h":224},"pets/coco-4-s":{"sheet":"petsa","x":1649,"y":906,"w":185,"h":224},"pets/taro-1":{"sheet":"petsa","x":1836,"y":906,"w":199,"h":224},"pets/taro-1-s":{"sheet":"petsa","x":2,"y":1132,"w":199,"h":224},"pets/taro-2":{"sheet":"petsa","x":203,"y":1132,"w":199,"h":224},"pets/taro-2-s":{"sheet":"petsa","x":404,"y":1132,"w":199,"h":224},"pets/taro-3":{"sheet":"petsa","x":605,"y":1132,"w":207,"h":224},"pets/taro-3-s":{"sheet":"petsa","x":814,"y":1132,"w":207,"h":224},"pets/taro-4":{"sheet":"petsa","x":1023,"y":1132,"w":212,"h":224},"pets/taro-4-s":{"sheet":"petsa","x":1237,"y":1132,"w":212,"h":224},"pets/peach-3":{"sheet":"petsa","x":1451,"y":1132,"w":218,"h":224},"pets/peach-3-s":{"sheet":"petsa","x":1671,"y":1132,"w":218,"h":224},"pets/peach-4":{"sheet":"petsa","x":2,"y":1358,"w":223,"h":224},"pets/peach-4-s":{"sheet":"petsa","x":227,"y":1358,"w":223,"h":224},"pets/blueberry-1":{"sheet":"petsa","x":452,"y":1358,"w":220,"h":224},"pets/blueberry-1-s":{"sheet":"petsa","x":674,"y":1358,"w":220,"h":224},"pets/blueberry-2":{"sheet":"petsa","x":896,"y":1358,"w":211,"h":224},"pets/blueberry-2-s":{"sheet":"petsa","x":1109,"y":1358,"w":211,"h":224},"pets/blueberry-3":{"sheet":"petsa","x":1322,"y":1358,"w":205,"h":224},"pets/blueberry-3-s":{"sheet":"petsa","x":1529,"y":1358,"w":205,"h":224},"pets/blueberry-4":{"sheet":"petsa","x":1736,"y":1358,"w":208,"h":224},"pets/blueberry-4-s":{"sheet":"petsa","x":2,"y":1584,"w":208,"h":224},"pets/pitaya-2":{"sheet":"petsa","x":212,"y":1584,"w":222,"h":224},"pets/pitaya-2-s":{"sheet":"petsa","x":436,"y":1584,"w":222,"h":224},"pets/kiwi-1":{"sheet":"petsa","x":660,"y":1584,"w":222,"h":224},"pets/kiwi-1-s":{"sheet":"petsa","x":884,"y":1584,"w":222,"h":224},"pets/kiwi-2":{"sheet":"petsa","x":1108,"y":1584,"w":202,"h":224},"pets/kiwi-2-s":{"sheet":"petsa","x":1312,"y":1584,"w":202,"h":224},"pets/kiwi-3":{"sheet":"petsa","x":1516,"y":1584,"w":182,"h":224},"pets/kiwi-3-s":{"sheet":"petsa","x":1700,"y":1584,"w":182,"h":224},"pets/kiwi-4":{"sheet":"petsa","x":2,"y":1810,"w":174,"h":224},"pets/kiwi-4-s":{"sheet":"petsa","x":178,"y":1810,"w":174,"h":224},"pets/grape-1":{"sheet":"petsa","x":354,"y":1810,"w":222,"h":224},"pets/grape-1-s":{"sheet":"petsa","x":578,"y":1810,"w":222,"h":224},"pets/grape-2":{"sheet":"petsa","x":802,"y":1810,"w":213,"h":224},"pets/grape-2-s":{"sheet":"petsa","x":1017,"y":1810,"w":213,"h":224},"pets/grape-3":{"sheet":"petsa","x":1232,"y":1810,"w":212,"h":224},"pets/grape-3-s":{"sheet":"petsa","x":1446,"y":1810,"w":212,"h":224},"pets/grape-4":{"sheet":"petsa","x":1660,"y":1810,"w":205,"h":224},"pets/grape-4-s":{"sheet":"petsb","x":2,"y":2,"w":205,"h":224},"pets/banana-1":{"sheet":"petsb","x":209,"y":2,"w":215,"h":224},"pets/banana-1-s":{"sheet":"petsb","x":426,"y":2,"w":215,"h":224},"pets/banana-2":{"sheet":"petsb","x":643,"y":2,"w":217,"h":224},"pets/banana-2-s":{"sheet":"petsb","x":862,"y":2,"w":217,"h":224},"pets/banana-3":{"sheet":"petsb","x":1081,"y":2,"w":217,"h":224},"pets/banana-3-s":{"sheet":"petsb","x":1300,"y":2,"w":217,"h":224},"pets/banana-4":{"sheet":"petsb","x":1519,"y":2,"w":220,"h":224},"pets/banana-4-s":{"sheet":"petsb","x":1741,"y":2,"w":220,"h":224},"pets/snowpear-3":{"sheet":"petsb","x":2,"y":228,"w":223,"h":224},"pets/snowpear-3-s":{"sheet":"petsb","x":227,"y":228,"w":223,"h":224},"pets/snowpear-4":{"sheet":"petsb","x":452,"y":228,"w":222,"h":224},"pets/snowpear-4-s":{"sheet":"petsb","x":676,"y":228,"w":222,"h":224},"pets/hen-3":{"sheet":"petsb","x":900,"y":228,"w":206,"h":224},"pets/hen-3-s":{"sheet":"petsb","x":1108,"y":228,"w":206,"h":224},"pets/hen-4":{"sheet":"petsb","x":1316,"y":228,"w":215,"h":224},"pets/hen-4-s":{"sheet":"petsb","x":1533,"y":228,"w":214,"h":224},"pets/chomp-1":{"sheet":"petsb","x":1749,"y":228,"w":217,"h":224},"pets/chomp-1-s":{"sheet":"petsb","x":2,"y":454,"w":217,"h":224},"pets/chomp-2":{"sheet":"petsb","x":221,"y":454,"w":220,"h":224},"pets/chomp-2-s":{"sheet":"petsb","x":443,"y":454,"w":220,"h":224},"pets/durian-2":{"sheet":"petsb","x":665,"y":454,"w":214,"h":224},"pets/durian-2-s":{"sheet":"petsb","x":881,"y":454,"w":214,"h":224},"pets/boba_hamster-1":{"sheet":"petsb","x":1097,"y":454,"w":211,"h":224},"pets/boba_hamster-1-s":{"sheet":"petsb","x":1310,"y":454,"w":211,"h":224},"pets/lychee_bunny-1":{"sheet":"petsb","x":1523,"y":454,"w":202,"h":224},"pets/lychee_bunny-1-s":{"sheet":"petsb","x":1727,"y":454,"w":202,"h":224},"pets/blueberry_penguin-1":{"sheet":"petsb","x":2,"y":680,"w":214,"h":224},"pets/blueberry_penguin-1-s":{"sheet":"petsb","x":218,"y":680,"w":214,"h":224},"pets/dragonfruit_dino-1":{"sheet":"petsb","x":434,"y":680,"w":209,"h":224},"pets/dragonfruit_dino-1-s":{"sheet":"petsb","x":645,"y":680,"w":209,"h":224},"pets/chili_phoenix-1":{"sheet":"petsb","x":856,"y":680,"w":214,"h":224},"pets/chili_phoenix-1-s":{"sheet":"petsb","x":1072,"y":680,"w":214,"h":224},"pets/avocado_sloth-1":{"sheet":"petsb","x":1288,"y":680,"w":199,"h":224},"pets/avocado_sloth-1-s":{"sheet":"petsb","x":1489,"y":680,"w":199,"h":224},"pets/citrus_raccoon-1":{"sheet":"petsb","x":1690,"y":680,"w":216,"h":224},"pets/citrus_raccoon-1-s":{"sheet":"petsb","x":2,"y":906,"w":216,"h":224},"pets/corn_hamster-1":{"sheet":"petsb","x":220,"y":906,"w":208,"h":224},"pets/corn_hamster-1-s":{"sheet":"petsb","x":430,"y":906,"w":208,"h":224},"pets/fig_beetle-1":{"sheet":"petsb","x":640,"y":906,"w":207,"h":224},"pets/fig_beetle-1-s":{"sheet":"petsb","x":849,"y":906,"w":207,"h":224},"pets/golden_fig_stag-1":{"sheet":"petsb","x":1058,"y":906,"w":220,"h":224},"pets/golden_fig_stag-1-s":{"sheet":"petsb","x":1280,"y":906,"w":220,"h":224},"pets/grape_chick-1":{"sheet":"petsb","x":1502,"y":906,"w":216,"h":224},"pets/grape_chick-1-s":{"sheet":"petsb","x":1720,"y":906,"w":216,"h":224},"pets/honeydew_frog-1":{"sheet":"petsb","x":2,"y":1132,"w":222,"h":224},"pets/honeydew_frog-1-s":{"sheet":"petsb","x":226,"y":1132,"w":222,"h":224},"pets/jade_koi-1":{"sheet":"petsb","x":450,"y":1132,"w":220,"h":224},"pets/jade_koi-1-s":{"sheet":"petsb","x":672,"y":1132,"w":220,"h":224},"pets/melon_chick-1":{"sheet":"petsb","x":894,"y":1132,"w":217,"h":224},"pets/melon_chick-1-s":{"sheet":"petsb","x":1113,"y":1132,"w":217,"h":224},"pets/oat_sparrow-1":{"sheet":"petsb","x":1332,"y":1132,"w":222,"h":224},"pets/oat_sparrow-1-s":{"sheet":"petsb","x":1556,"y":1132,"w":222,"h":224},"pets/pea_frog-1":{"sheet":"petsb","x":1780,"y":1132,"w":220,"h":224},"pets/pea_frog-1-s":{"sheet":"petsb","x":2,"y":1358,"w":220,"h":224},"pets/peach_alpaca-1":{"sheet":"petsb","x":224,"y":1358,"w":214,"h":224},"pets/peach_alpaca-1-s":{"sheet":"petsb","x":440,"y":1358,"w":214,"h":224},"pets/pineapple_hedgehog-1":{"sheet":"petsb","x":656,"y":1358,"w":211,"h":224},"pets/pineapple_hedgehog-1-s":{"sheet":"petsb","x":869,"y":1358,"w":211,"h":224},"pets/radish_pup-1":{"sheet":"petsb","x":1082,"y":1358,"w":189,"h":224},"pets/radish_pup-1-s":{"sheet":"petsb","x":1273,"y":1358,"w":189,"h":224},"pets/durian-1":{"sheet":"petsb","x":1464,"y":1358,"w":224,"h":223},"pets/durian-1-s":{"sheet":"petsb","x":1690,"y":1358,"w":224,"h":223},"pets/cherry_fox-1":{"sheet":"petsb","x":2,"y":1584,"w":224,"h":223},"pets/cherry_fox-1-s":{"sheet":"petsb","x":228,"y":1584,"w":224,"h":223},"pets/mint_rabbit-1":{"sheet":"petsb","x":454,"y":1584,"w":224,"h":223},"pets/mint_rabbit-1-s":{"sheet":"petsb","x":680,"y":1584,"w":224,"h":223},"pets/melon-4":{"sheet":"petsb","x":906,"y":1584,"w":224,"h":222},"pets/melon-4-s":{"sheet":"petsb","x":1132,"y":1584,"w":224,"h":222},"pets/mango_dragon-1":{"sheet":"petsb","x":1358,"y":1584,"w":224,"h":222},"pets/mango_dragon-1-s":{"sheet":"petsb","x":1584,"y":1584,"w":224,"h":222},"pets/starfruit_owl-1":{"sheet":"petsb","x":1810,"y":1584,"w":224,"h":221},"pets/starfruit_owl-1-s":{"sheet":"petsb","x":2,"y":1809,"w":224,"h":221},"pets/chestnut-4":{"sheet":"petsb","x":228,"y":1809,"w":224,"h":220},"pets/chestnut-4-s":{"sheet":"petsb","x":454,"y":1809,"w":224,"h":220},"pets/strawberry_cat-1":{"sheet":"petsb","x":680,"y":1809,"w":224,"h":220},"pets/strawberry_cat-1-s":{"sheet":"petsb","x":906,"y":1809,"w":224,"h":220},"pets/pear_duck-1":{"sheet":"petsb","x":1132,"y":1809,"w":224,"h":220},"pets/pear_duck-1-s":{"sheet":"petsb","x":1358,"y":1809,"w":224,"h":220},"pets/papaya_toucan-1":{"sheet":"petsb","x":1584,"y":1809,"w":224,"h":219},"pets/papaya_toucan-1-s":{"sheet":"petsb","x":1810,"y":1809,"w":224,"h":219},"pets/mango-1":{"sheet":"petsc","x":2,"y":2,"w":224,"h":218},"pets/mango-1-s":{"sheet":"petsc","x":228,"y":2,"w":224,"h":218},"pets/plum_squirrel-1":{"sheet":"petsc","x":454,"y":2,"w":224,"h":218},"pets/plum_squirrel-1-s":{"sheet":"petsc","x":680,"y":2,"w":224,"h":218},"pets/mango-3":{"sheet":"petsc","x":906,"y":2,"w":224,"h":217},"pets/mango-3-s":{"sheet":"petsc","x":1132,"y":2,"w":224,"h":217},"pets/berry_sparrow-1":{"sheet":"petsc","x":1358,"y":2,"w":224,"h":217},"pets/berry_sparrow-1-s":{"sheet":"petsc","x":1584,"y":2,"w":224,"h":217},"pets/orange_otter-1":{"sheet":"petsc","x":1810,"y":2,"w":224,"h":217},"pets/orange_otter-1-s":{"sheet":"petsc","x":2,"y":222,"w":224,"h":217},"pets/snowpear-1":{"sheet":"petsc","x":228,"y":222,"w":224,"h":215},"pets/snowpear-1-s":{"sheet":"petsc","x":454,"y":222,"w":224,"h":215},"pets/lemon_bee-1":{"sheet":"petsc","x":680,"y":222,"w":224,"h":215},"pets/lemon_bee-1-s":{"sheet":"petsc","x":906,"y":222,"w":224,"h":215},"pets/chomp-3":{"sheet":"petsc","x":1132,"y":222,"w":224,"h":214},"pets/chomp-3-s":{"sheet":"petsc","x":1358,"y":222,"w":224,"h":214},"pets/thunder_roc-1":{"sheet":"petsc","x":1584,"y":222,"w":224,"h":214},"pets/thunder_roc-1-s":{"sheet":"petsc","x":1810,"y":222,"w":224,"h":214},"pets/peach-2":{"sheet":"petsc","x":2,"y":441,"w":224,"h":213},"pets/peach-2-s":{"sheet":"petsc","x":228,"y":441,"w":224,"h":213},"pets/pitaya-3":{"sheet":"petsc","x":454,"y":441,"w":224,"h":213},"pets/pitaya-3-s":{"sheet":"petsc","x":680,"y":441,"w":224,"h":213},"pets/mango-2":{"sheet":"petsc","x":906,"y":441,"w":224,"h":213},"pets/mango-2-s":{"sheet":"petsc","x":1132,"y":441,"w":224,"h":213},"pets/mango-4":{"sheet":"petsc","x":1358,"y":441,"w":224,"h":213},"pets/mango-4-s":{"sheet":"petsc","x":1584,"y":441,"w":224,"h":213},"pets/matcha_turtle-1":{"sheet":"petsc","x":1810,"y":441,"w":224,"h":213},"pets/matcha_turtle-1-s":{"sheet":"petsc","x":2,"y":656,"w":224,"h":213},"pets/ginger_cat-1":{"sheet":"petsc","x":228,"y":656,"w":224,"h":213},"pets/ginger_cat-1-s":{"sheet":"petsc","x":454,"y":656,"w":224,"h":213},"pets/snowpear-2":{"sheet":"petsc","x":680,"y":656,"w":224,"h":212},"pets/snowpear-2-s":{"sheet":"petsc","x":906,"y":656,"w":224,"h":212},"pets/waffle_bear-1":{"sheet":"petsc","x":1132,"y":656,"w":224,"h":212},"pets/waffle_bear-1-s":{"sheet":"petsc","x":1358,"y":656,"w":224,"h":212},"pets/durian-4":{"sheet":"petsc","x":1584,"y":656,"w":224,"h":211},"pets/durian-4-s":{"sheet":"petsc","x":1810,"y":656,"w":224,"h":211},"pets/croissant_corgi-1":{"sheet":"petsc","x":2,"y":871,"w":224,"h":211},"pets/croissant_corgi-1-s":{"sheet":"petsc","x":228,"y":871,"w":224,"h":211},"pets/melon-3":{"sheet":"petsc","x":454,"y":871,"w":224,"h":210},"pets/melon-3-s":{"sheet":"petsc","x":680,"y":871,"w":224,"h":210},"pets/peach-1":{"sheet":"petsc","x":906,"y":871,"w":224,"h":210},"pets/peach-1-s":{"sheet":"petsc","x":1132,"y":871,"w":224,"h":210},"pets/durian-3":{"sheet":"petsc","x":1358,"y":871,"w":224,"h":208},"pets/durian-3-s":{"sheet":"petsc","x":1584,"y":871,"w":224,"h":208},"pets/hen-5-s":{"sheet":"petsc","x":1810,"y":871,"w":224,"h":206},"pets/kiwi_ferret-1":{"sheet":"petsc","x":2,"y":1084,"w":224,"h":206},"pets/kiwi_ferret-1-s":{"sheet":"petsc","x":228,"y":1084,"w":224,"h":206},"pets/hen-5":{"sheet":"petsc","x":454,"y":1084,"w":224,"h":205},"pets/hen-2":{"sheet":"petsc","x":680,"y":1084,"w":224,"h":204},"pets/hen-2-s":{"sheet":"petsc","x":906,"y":1084,"w":224,"h":204},"pets/pitaya-1":{"sheet":"petsc","x":1132,"y":1084,"w":224,"h":203},"pets/pitaya-1-s":{"sheet":"petsc","x":1358,"y":1084,"w":224,"h":203},"pets/pudding_shiba-1":{"sheet":"petsc","x":1584,"y":1084,"w":224,"h":202},"pets/pudding_shiba-1-s":{"sheet":"petsc","x":1810,"y":1084,"w":224,"h":202},"pets/hen-1":{"sheet":"petsc","x":2,"y":1292,"w":224,"h":201},"pets/hen-1-s":{"sheet":"petsc","x":228,"y":1292,"w":224,"h":201},"pets/cloud_sheep-1":{"sheet":"petsc","x":454,"y":1292,"w":224,"h":201},"pets/cloud_sheep-1-s":{"sheet":"petsc","x":680,"y":1292,"w":224,"h":201},"pets/plum_mole-1":{"sheet":"petsc","x":906,"y":1292,"w":224,"h":201},"pets/plum_mole-1-s":{"sheet":"petsc","x":1132,"y":1292,"w":224,"h":201},"pets/blackberry_wolf-1":{"sheet":"petsc","x":1358,"y":1292,"w":224,"h":198},"pets/blackberry_wolf-1-s":{"sheet":"petsc","x":1584,"y":1292,"w":224,"h":198},"pets/pomegranate_lion-1":{"sheet":"petsc","x":1810,"y":1292,"w":224,"h":198},"pets/pomegranate_lion-1-s":{"sheet":"petsc","x":2,"y":1495,"w":224,"h":198},"pets/pitaya-4":{"sheet":"petsc","x":228,"y":1495,"w":224,"h":196},"pets/pitaya-4-s":{"sheet":"petsc","x":454,"y":1495,"w":224,"h":196},"pets/vanilla_swan-1":{"sheet":"petsc","x":680,"y":1495,"w":224,"h":196},"pets/vanilla_swan-1-s":{"sheet":"petsc","x":906,"y":1495,"w":224,"h":196},"pets/mochi_seal-1":{"sheet":"petsc","x":1132,"y":1495,"w":224,"h":195},"pets/mochi_seal-1-s":{"sheet":"petsc","x":1358,"y":1495,"w":224,"h":195},"pets/sesame_badger-1":{"sheet":"petsc","x":1584,"y":1495,"w":224,"h":194},"pets/sesame_badger-1-s":{"sheet":"petsc","x":1810,"y":1495,"w":224,"h":194},"pets/chomp-4":{"sheet":"petsc","x":2,"y":1695,"w":224,"h":193},"pets/chomp-4-s":{"sheet":"petsc","x":228,"y":1695,"w":224,"h":193},"pets/pretzel_dachshund-1":{"sheet":"petsc","x":454,"y":1695,"w":224,"h":193},"pets/pretzel_dachshund-1-s":{"sheet":"petsc","x":680,"y":1695,"w":224,"h":193},"pets/sorbet_narwhal-1":{"sheet":"petsc","x":906,"y":1695,"w":224,"h":193},"pets/sorbet_narwhal-1-s":{"sheet":"petsc","x":1132,"y":1695,"w":224,"h":193},"pets/durian-5":{"sheet":"petsc","x":1358,"y":1695,"w":224,"h":191},"pets/durian-5-s":{"sheet":"petsc","x":1584,"y":1695,"w":224,"h":191},"pets/coconut_crab-1":{"sheet":"petsc","x":1810,"y":1695,"w":224,"h":190},"pets/donut_hippo-1":{"sheet":"petsc","x":2,"y":1890,"w":224,"h":154},"pets/donut_hippo-1-s":{"sheet":"petsc","x":228,"y":1890,"w":224,"h":154},"pets/taro_octopus-1":{"sheet":"petsc","x":454,"y":1890,"w":224,"h":147},"pets/taro_octopus-1-s":{"sheet":"petsc","x":680,"y":1890,"w":224,"h":147},"pets/blood_orange_cerberus-1":{"sheet":"petsc","x":906,"y":1890,"w":224,"h":144},"pets/blood_orange_cerberus-1-s":{"sheet":"petsc","x":1132,"y":1890,"w":224,"h":144},"pets/coconut_crab-1-s":{"sheet":"petsd","x":2,"y":2,"w":224,"h":190},"pets/honeycomb_valkyrie_bee-1":{"sheet":"petsd","x":228,"y":2,"w":224,"h":190},"pets/honeycomb_valkyrie_bee-1-s":{"sheet":"petsd","x":454,"y":2,"w":224,"h":190},"pets/chomp-5":{"sheet":"petsd","x":680,"y":2,"w":224,"h":189},"pets/chomp-5-s":{"sheet":"petsd","x":906,"y":2,"w":224,"h":189},"pets/ramen_panda-1":{"sheet":"petsd","x":1132,"y":2,"w":224,"h":189},"pets/ramen_panda-1-s":{"sheet":"petsd","x":1358,"y":2,"w":224,"h":189},"pets/pumpkin-1":{"sheet":"petsd","x":1584,"y":2,"w":224,"h":187},"pets/pumpkin-1-s":{"sheet":"petsd","x":1810,"y":2,"w":224,"h":187},"pets/pumpkin-3":{"sheet":"petsd","x":2,"y":194,"w":224,"h":187},"pets/pumpkin-3-s":{"sheet":"petsd","x":228,"y":194,"w":224,"h":187},"pets/apple_mouse-1":{"sheet":"petsd","x":454,"y":194,"w":224,"h":187},"pets/apple_mouse-1-s":{"sheet":"petsd","x":680,"y":194,"w":224,"h":187},"pets/aurora_peach_kirin-1":{"sheet":"petsd","x":906,"y":194,"w":224,"h":186},"pets/aurora_peach_kirin-1-s":{"sheet":"petsd","x":1132,"y":194,"w":224,"h":186},"pets/melon-1":{"sheet":"petsd","x":1358,"y":194,"w":224,"h":185},"pets/melon-1-s":{"sheet":"petsd","x":1584,"y":194,"w":224,"h":185},"pets/pumpkin-2":{"sheet":"petsd","x":1810,"y":194,"w":224,"h":184},"pets/pumpkin-2-s":{"sheet":"petsd","x":2,"y":383,"w":224,"h":184},"pets/astral_berry_seraph-1":{"sheet":"petsd","x":228,"y":383,"w":224,"h":184},"pets/astral_berry_seraph-1-s":{"sheet":"petsd","x":454,"y":383,"w":224,"h":184},"pets/cinnamon_owl-1":{"sheet":"petsd","x":680,"y":383,"w":224,"h":184},"pets/cinnamon_owl-1-s":{"sheet":"petsd","x":906,"y":383,"w":224,"h":184},"pets/inferno_durian_behemoth-1":{"sheet":"petsd","x":1132,"y":383,"w":224,"h":184},"pets/inferno_durian_behemoth-1-s":{"sheet":"petsd","x":1358,"y":383,"w":224,"h":184},"pets/sun_mango_falcon-1":{"sheet":"petsd","x":1584,"y":383,"w":224,"h":184},"pets/sun_mango_falcon-1-s":{"sheet":"petsd","x":1810,"y":383,"w":224,"h":184},"pets/crimson_lychee_tiger-1":{"sheet":"petsd","x":2,"y":569,"w":224,"h":183},"pets/crimson_lychee_tiger-1-s":{"sheet":"petsd","x":228,"y":569,"w":224,"h":183},"pets/hibiscus_mantis-1":{"sheet":"petsd","x":454,"y":569,"w":224,"h":183},"pets/hibiscus_mantis-1-s":{"sheet":"petsd","x":680,"y":569,"w":224,"h":183},"pets/rambutan_porcupine-1":{"sheet":"petsd","x":906,"y":569,"w":224,"h":182},"pets/rambutan_porcupine-1-s":{"sheet":"petsd","x":1132,"y":569,"w":224,"h":182},"pets/royal_lychee_peacock-1":{"sheet":"petsd","x":1358,"y":569,"w":224,"h":182},"pets/royal_lychee_peacock-1-s":{"sheet":"petsd","x":1584,"y":569,"w":224,"h":182},"pets/amber_honey_bear-1":{"sheet":"petsd","x":1810,"y":569,"w":224,"h":181},"pets/amber_honey_bear-1-s":{"sheet":"petsd","x":2,"y":754,"w":224,"h":181},"pets/mint_chameleon-1":{"sheet":"petsd","x":228,"y":754,"w":224,"h":181},"pets/mint_chameleon-1-s":{"sheet":"petsd","x":454,"y":754,"w":224,"h":181},"pets/supernova_starfruit_dragon-1":{"sheet":"petsd","x":680,"y":754,"w":224,"h":181},"pets/supernova_starfruit_dragon-1-s":{"sheet":"petsd","x":906,"y":754,"w":224,"h":181},"pets/saffron_griffin-1":{"sheet":"petsd","x":1132,"y":754,"w":224,"h":180},"pets/saffron_griffin-1-s":{"sheet":"petsd","x":1358,"y":754,"w":224,"h":180},"pets/galaxy_kitsune-1":{"sheet":"petsd","x":1584,"y":754,"w":224,"h":179},"pets/galaxy_kitsune-1-s":{"sheet":"petsd","x":1810,"y":754,"w":224,"h":179},"pets/ruby_cherry_phoenix-1":{"sheet":"petsd","x":2,"y":937,"w":224,"h":178},"pets/ruby_cherry_phoenix-1-s":{"sheet":"petsd","x":228,"y":937,"w":224,"h":178},"pets/caramel_squirrel-1":{"sheet":"petsd","x":454,"y":937,"w":224,"h":175},"pets/caramel_squirrel-1-s":{"sheet":"petsd","x":680,"y":937,"w":224,"h":175},"pets/pistachio_knight_beetle-1":{"sheet":"petsd","x":906,"y":937,"w":224,"h":174},"pets/pistachio_knight_beetle-1-s":{"sheet":"petsd","x":1132,"y":937,"w":224,"h":174},"pets/pumpkin-4":{"sheet":"petsd","x":1358,"y":937,"w":224,"h":173},"pets/pumpkin-4-s":{"sheet":"petsd","x":1584,"y":937,"w":224,"h":173},"pets/obsidian_plum_golem-1":{"sheet":"petsd","x":1810,"y":937,"w":224,"h":172},"pets/obsidian_plum_golem-1-s":{"sheet":"petsd","x":2,"y":1117,"w":224,"h":172},"pets/truffle_boar-1":{"sheet":"petsd","x":228,"y":1117,"w":224,"h":172},"pets/truffle_boar-1-s":{"sheet":"petsd","x":454,"y":1117,"w":224,"h":172},"pets/cocoa_panther-1":{"sheet":"petsd","x":680,"y":1117,"w":224,"h":171},"pets/cocoa_panther-1-s":{"sheet":"petsd","x":906,"y":1117,"w":224,"h":171},"pets/matcha_crane-1":{"sheet":"petsd","x":1132,"y":1117,"w":224,"h":168},"pets/matcha_crane-1-s":{"sheet":"petsd","x":1358,"y":1117,"w":224,"h":168},"pets/wasabi_gecko-1":{"sheet":"petsd","x":1584,"y":1117,"w":224,"h":166},"pets/wasabi_gecko-1-s":{"sheet":"petsd","x":1810,"y":1117,"w":224,"h":166},"pets/yuzu_otter-1":{"sheet":"petsd","x":2,"y":1291,"w":224,"h":163},"pets/yuzu_otter-1-s":{"sheet":"petsd","x":228,"y":1291,"w":224,"h":163},"pets/lava_berry_wyvern-1":{"sheet":"petsd","x":454,"y":1291,"w":224,"h":162},"pets/lava_berry_wyvern-1-s":{"sheet":"petsd","x":680,"y":1291,"w":224,"h":162},"pets/celestial_melon_leviathan-1":{"sheet":"petsd","x":906,"y":1291,"w":224,"h":160},"pets/celestial_melon_leviathan-1-s":{"sheet":"petsd","x":1132,"y":1291,"w":224,"h":160},"pets/espresso_hawk-1":{"sheet":"petsd","x":1358,"y":1291,"w":224,"h":157},"pets/espresso_hawk-1-s":{"sheet":"petsd","x":1584,"y":1291,"w":224,"h":157},"pets/persimmon_tanuki-1":{"sheet":"petsd","x":1810,"y":1291,"w":224,"h":157},"pets/persimmon_tanuki-1-s":{"sheet":"petsd","x":2,"y":1456,"w":224,"h":157},"enemies/b-1":{"sheet":"mobs","x":2,"y":2,"w":203,"h":224},"enemies/b-2":{"sheet":"mobs","x":207,"y":2,"w":200,"h":224},"enemies/b-3":{"sheet":"mobs","x":409,"y":2,"w":174,"h":224},"enemies/b-4":{"sheet":"mobs","x":585,"y":2,"w":190,"h":224},"enemies/z-1":{"sheet":"mobs","x":777,"y":2,"w":182,"h":224},"enemies/z-2":{"sheet":"mobs","x":2,"y":228,"w":210,"h":224},"enemies/z-3":{"sheet":"mobs","x":214,"y":228,"w":167,"h":224},"enemies/z-4":{"sheet":"mobs","x":383,"y":228,"w":169,"h":224},"enemies/z-5":{"sheet":"mobs","x":554,"y":228,"w":204,"h":224},"enemies/z-6":{"sheet":"mobs","x":760,"y":228,"w":128,"h":224},"eggs/egg-1":{"sheet":"mobs","x":2,"y":454,"w":194,"h":224},"eggs/egg-2":{"sheet":"mobs","x":198,"y":454,"w":193,"h":224},"eggs/egg-3":{"sheet":"mobs","x":393,"y":454,"w":194,"h":224},"eggs/egg-4":{"sheet":"mobs","x":589,"y":454,"w":174,"h":224},"enemies/mob-thief":{"sheet":"mobs","x":765,"y":454,"w":224,"h":223},"enemies/mob-shield":{"sheet":"mobs","x":2,"y":680,"w":197,"h":220},"enemies/mob-mage":{"sheet":"mobs","x":201,"y":680,"w":220,"h":214},"enemies/mob-mini":{"sheet":"mobs","x":423,"y":680,"w":220,"h":204},"enemies/mob-ranged":{"sheet":"mobs","x":645,"y":680,"w":220,"h":201},"enemies/mob-split-big":{"sheet":"mobs","x":2,"y":902,"w":224,"h":192},"fx/hen-egg":{"sheet":"mobs","x":228,"y":902,"w":165,"h":192},"enemies/mob-split-small":{"sheet":"mobs","x":395,"y":902,"w":224,"h":187},"fx/hen-minion":{"sheet":"mobs","x":621,"y":902,"w":192,"h":172},"fx/charm-anvil":{"sheet":"mobs","x":815,"y":902,"w":128,"h":128},"fx/charm-bell":{"sheet":"mobs","x":2,"y":1096,"w":93,"h":128},"fx/charm-bloodgem":{"sheet":"mobs","x":97,"y":1096,"w":128,"h":128},"fx/charm-bolt":{"sheet":"mobs","x":227,"y":1096,"w":89,"h":128},"fx/charm-clover":{"sheet":"mobs","x":318,"y":1096,"w":114,"h":128},"fx/charm-comet":{"sheet":"mobs","x":434,"y":1096,"w":128,"h":128},"fx/charm-compass":{"sheet":"mobs","x":564,"y":1096,"w":102,"h":128},"fx/charm-crest":{"sheet":"mobs","x":668,"y":1096,"w":108,"h":128},"fx/charm-emberheart":{"sheet":"mobs","x":778,"y":1096,"w":128,"h":128},"fx/charm-frost":{"sheet":"mobs","x":2,"y":1226,"w":119,"h":128},"fx/charm-hourglass":{"sheet":"mobs","x":123,"y":1226,"w":85,"h":128},"fx/charm-medal":{"sheet":"mobs","x":210,"y":1226,"w":82,"h":128},"fx/charm-monarch":{"sheet":"mobs","x":294,"y":1226,"w":128,"h":128},"fx/charm-orchardleaf":{"sheet":"mobs","x":424,"y":1226,"w":128,"h":128},"fx/charm-prism":{"sheet":"mobs","x":554,"y":1226,"w":111,"h":128},"fx/charm-relic":{"sheet":"mobs","x":667,"y":1226,"w":128,"h":128},"fx/charm-scarf":{"sheet":"mobs","x":797,"y":1226,"w":127,"h":128},"fx/charm-shield":{"sheet":"mobs","x":2,"y":1356,"w":114,"h":128},"fx/charm-stardust":{"sheet":"mobs","x":118,"y":1356,"w":128,"h":128},"fx/charm-thiefbell":{"sheet":"mobs","x":248,"y":1356,"w":89,"h":128},"fx/charm-tidal":{"sheet":"mobs","x":339,"y":1356,"w":128,"h":128},"fx/charm-whisper":{"sheet":"mobs","x":469,"y":1356,"w":128,"h":128},"fx/charm-spore":{"sheet":"mobs","x":599,"y":1356,"w":128,"h":126},"fx/charm-sugar":{"sheet":"mobs","x":729,"y":1356,"w":128,"h":123},"fx/charm-ribbon":{"sheet":"mobs","x":859,"y":1356,"w":128,"h":122},"fx/charm-bow":{"sheet":"mobs","x":2,"y":1486,"w":128,"h":108},"fx/charm-crown":{"sheet":"mobs","x":132,"y":1486,"w":128,"h":98},"fx/charm-halo":{"sheet":"mobs","x":262,"y":1486,"w":128,"h":96},"fx/charm-shades":{"sheet":"mobs","x":392,"y":1486,"w":128,"h":68},"fx/charm-wings":{"sheet":"mobs","x":522,"y":1486,"w":128,"h":68}};
 
 /* ================= art helpers (chibi, thick outline, flat + soft cel shade) ================= */
 const OL = "#2b1b22";
@@ -2960,7 +3311,8 @@ let uidSeq = 1;
 const CLIENT_KEY = "mengchong-td-client-id";
 const NAME_KEY = "mengchong-td-player-name";
 const LB_URL = "https://pet-td-leaderboard.carden1218.workers.dev";
-const GAME_VERSION = '2.1';   // tournament build — the leaderboard rejects any other clientVersion
+const GAME_VERSION = '2.2';
+let lastSeasonInfo = null;   // tournament build — the leaderboard rejects any other clientVersion
 const LB_CACHE_KEY = "mengchong-td-board-cache";
 function getClientId() {
   try {
@@ -3002,7 +3354,7 @@ function persist() {
       beaten: save.beaten, endlessBest: save.endlessBest, seen: save.seen, seenShiny: save.seenShiny,
       firstEgg: save.firstEgg, hatched: save.hatched, food: save.food, charms: save.charms, evoMain: save.evoMain, uidSeq,
       maps: save.maps || {}, tutorialDone: !!save.tutorialDone, bgmVol: bgmVolume(),
-      specialGot: save.specialGot || {}, thiefKills: save.thiefKills | 0, squad: save.squad || [], migratedV21: true,
+      specialGot: save.specialGot || {}, thiefKills: save.thiefKills | 0, squad: save.squad || [], migratedV21: true, charmLv: save.charmLv || {}, seenV22: !!save.seenV22,
       playerName: save.playerName || "", clientId: save.clientId || getClientId()
     }));
   } catch (e) {}
@@ -3019,7 +3371,7 @@ function snapshotSave() {
     gems: save.gems, pets: save.pets, eggs: save.eggs, beaten: save.beaten, endlessBest: save.endlessBest,
     seen: save.seen, seenShiny: save.seenShiny, firstEgg: save.firstEgg, hatched: save.hatched, food: save.food, charms: save.charms, evoMain: save.evoMain, uidSeq, lang: LANG,
     maps: save.maps || {}, tutorialDone: !!save.tutorialDone, bgmVol: bgmVolume(),
-    specialGot: save.specialGot || {}, thiefKills: save.thiefKills | 0, squad: save.squad || [], migratedV21: true,
+    specialGot: save.specialGot || {}, thiefKills: save.thiefKills | 0, squad: save.squad || [], migratedV21: true, charmLv: save.charmLv || {}, seenV22: !!save.seenV22,
     playerName: save.playerName || "", clientId: save.clientId || getClientId()
   };
 }
@@ -3048,6 +3400,8 @@ function applySave(d) {
   save.bgmVol = d.bgmVol != null && isFinite(d.bgmVol) ? clamp(d.bgmVol | 0, 0, 100) : BGM_DEFAULT_VOL;
   save.specialGot = {}; if (d.specialGot && typeof d.specialGot === "object") for (const k in d.specialGot) if (CHARM[k] && CHARM[k].specialOnly && d.specialGot[k]) save.specialGot[k] = 1;
   save.thiefKills = Math.max(0, d.thiefKills | 0);
+  save.charmLv = {}; if (d.charmLv && typeof d.charmLv === 'object') for (const k in d.charmLv) save.charmLv[k] = Math.max(1, Math.min(5, d.charmLv[k] | 0));
+  save.seenV22 = !!d.seenV22;
   save.squad = normSquad(d.squad);
   const importedId = typeof d.clientId === "string" && /^[A-Za-z0-9._-]{8,128}$/.test(d.clientId) ? d.clientId : "";
   if (importedId) {
@@ -3090,7 +3444,7 @@ function normPet(p) {
     lv: clamp(p.lv | 0 || 1, 1, MAX_LV), xp: Math.max(0, p.xp | 0),
     tr: { a: clamp(tr0.a | 0, 0, cap), h: clamp(tr0.h | 0, 0, cap), s: clamp(tr0.s | 0, 0, cap) },
     evo: Math.max(0, p.evo | 0), nick: sanitizeNick(p.nick), charm: p.charm && CHARM[p.charm] ? p.charm : "",
-    trait: p.trait && TRAIT[p.trait] ? p.trait : "", tro: Array.isArray(p.tro) ? p.tro.filter(x => TRAIT[x]).slice(0, 3) : [] };
+    trait: p.trait && TRAIT[p.trait] ? p.trait : "", tro: Array.isArray(p.tro) ? p.tro.filter(x => TRAIT[x]).slice(0, 3) : [], bond: Math.max(0, Math.min(100, p.bond | 0)) };
 }
 function loadSave() {
   try {
@@ -3463,7 +3817,7 @@ function startRun(mapId, hard) {
     running: true, paused: false, speed: 1, over: false, won: false,
     enemies: [], towers: [], shots: [], fx: [], zones: [], floaters: [], flyEggs: [], minions: [],
     spawnQ: [], spawnT: 0, spawnGap: 1, waveActive: false, countdown: 12, t: 0,
-    selPet: null, selTower: null, kills: 0, gemsGot: 0, eggsGot: [], foodGot: 0, bestWave: 0, charmsGot: 0, synM: null, hoverSlot: -1
+    selPet: null, selTower: null, kills: 0, gemsGot: 0, eggsGot: [], foodGot: 0, bestWave: 0, charmsGot: 0, synM: null, hoverSlot: -1, energy: 25, energyMax: 100, autoSkill: false, autoT: 0
   });
   screen = "battle";
   hideAll();
@@ -3472,6 +3826,7 @@ function startRun(mapId, hard) {
   el("btn-speed").textContent = "×1";
   el("btn-end").textContent = tr("end");
   el("loot-pill").classList.remove("hidden");
+  try { initV22Battle(); } catch (e) {}
   // v13: restore the player's own saved squad (never overwritten automatically); first run ever -> auto-deploy once
   B.terrain = terrainMap(level, 1);
   if (!restoreSquad()) autoDeploy(); else fillEmptySlots();   // saved squad wins; only EMPTY slots get new pets (never moves/replaces the player's picks)
@@ -3645,7 +4000,7 @@ function showInspect(t) {
   box.innerHTML = "<h3>" + (t.shiny ? tr("shiny_pre") : "") + (t.nick ? esc(t.nick) + " <small style='opacity:.75'>(" + stageName(t.id, t.star) + ")</small>" : stageName(t.id, t.star)) + " " + starsHTML(t.star) + "</h3>"
     + (t.charm ? "<div class='charm-line'>" + tr("charm_on", tr("charm_" + t.charm)) + " · " + tr("charm_" + t.charm + "_d") + "</div>" : "")
     + "<div><span class='role r5t r5-" + d.r5 + "'>" + ROLE5_ICON[d.r5] + " " + tr("r5_" + d.r5) + "</span> <span class='role'>" + tr("el_type", elName(d.el)) + "</span> · " + tr("field_lv", t.tier) + "</div>"
-    + (t.terr || t._aura || t.jamT > 0 ? "<div class='terr-line'>" + (t.terr ? TERRAIN[t.terr].icon + " " + tr("terr_" + t.terr) + " <small>" + tr("terr_" + t.terr + "_d") + "</small> " : "") + (t._aura ? "✨ " + tr("aura_on") + " " : "") + (t.jamT > 0 ? "🟢 " + tr("jammed") : "") + "</div>" : "")
+    + (t.terr || t._aura || t.jamT > 0 ? "<div class='terr-line'>" + (t.terr ? TERRAIN[t.terr].icon + " " + tr("terr_" + t.terr) + " <small>" + tr("terr_" + t.terr + "_d") + "</small> " : "") + (t._aura ? "✨ " + tr("aura_on") + " " : "") + (t.jamT > 0 ? "🟢 " + tr("jammed") : "") + (t.sleepT > 0 ? " 💤" : "") + (t.stunT > 0 ? " ✦" : "") + "</div>" : "")
     + (save.pets.find(q => q.uid === t.uid) ? (() => { const q = save.pets.find(q => q.uid === t.uid); return "<div style='margin:3px 0'>" + lvHTML(q) + " " + gradeHTML(q.grade) + " <span class='pwr'>⚔ " + fmtPower(petPower(q)) + "</span></div>" + aptBarHTML(q, true); })() : "")
     + "<div class='skill'><b>" + tr("skill_line", d.sk) + "</b>" + d.skd + "<br><span style='opacity:.8'>" + tr("skill_up", d.up) + "</span></div>"
     + "<div>" + (d.dmg ? tr("dmg", Math.round(st.dmg)) : "") + tr("range_hp", Math.round(st.range), Math.ceil(t.hp), Math.round(st.maxHp)) + "</div>"
@@ -3730,6 +4085,8 @@ function enemySkills(e, dt) {
     const n = 2 + (Math.random() < 0.5 ? 1 : 0);
     for (let k = 0; k < n; k++) { spawnEnemy({ id: "mini", hpMul: e.max / def.hp * 0.6, spdMul: e.spd / def.spd, minion: true }); const m = B.enemies[B.enemies.length - 1]; m.lane = e.lane; m.y = e.y + 10; m.x = e.x + (k - 1) * 16; m.reward = 1; }
     e.summons += n; B.fx.push({ typ: "ring", x: e.x, y: e.y, r0: 6, r1: 50, color: "#b07aff", life: 0.35, max: 0.35 });
+    const backs = B.towers.filter(t => !t.fainted && t.slot >= 5);
+    if (backs.length) { const t = backs[Math.floor(Math.random() * backs.length)]; t.sleepT = Math.max(t.sleepT || 0, 2.2); burst(t.x, t.y - 40, "#c89aff", 8); }
   }
 }
 function blockerFor(e) {
@@ -3781,7 +4138,7 @@ function killEnemy(e) {
   const def0 = ENEMY[e.typ];
   let bonus = (e.goldMark | 0) + (def0.thief ? 10 + Math.floor(B.wave / 2) : 0);
   const gain = Math.round((e.reward + bonus) * teamGoldMul());
-  B.gold += gain; B.kills++;
+  B.gold += gain; B.kills++; try { onV22Kill(); } catch (e) {}
   if (bonus) B.floaters.push({ x: e.x + 12, y: e.y - 40, text: "+" + bonus + "g", color: "#ffe14a", life: 1, max: 1, big: true });
   if (def0.split) for (let k = -1; k <= 1; k += 2) {                 // Split Slime: two minis pop out
     spawnEnemy({ id: def0.split, hpMul: e.max / def0.hp, spdMul: e.spd / def0.spd });
@@ -3860,6 +4217,7 @@ function waveCleared() {
     const p = save.pets.find(q => q.uid === t.uid);
     if (p && gainXp(p, xpG)) { upMsg = tr("lvup", stageName(p.id, p.star), p.lv); t.ind = indivMul(p); t.lv = p.lv; }
   }
+  try { onV22Wave(); } catch (e) {}
   for (const t of B.towers) { t.fainted = false; t.hp = petStats(t).maxHp; }
   if (lv.endless) { save.endlessBest = Math.max(save.endlessBest, B.wave); checkSpecialCharms(); }
   persist();
@@ -4166,6 +4524,7 @@ function shotLand0(s) {
 }
 function step(dt) {
   B.t += dt;
+  try { tickV22(dt); } catch (e) {}
   if (!B.waveActive) {
     if (B.wave > 0 || B.countdown < 12) { B.countdown -= dt; }
     if (B.countdown <= 0) startNextWave();
@@ -4397,6 +4756,9 @@ function renderBattle() {
     if (t.shield > 0) { const k = 0.5 + 0.5 * t.shield / (t.shieldMax || 1); c.globalAlpha = 0.35 * k; c.fillStyle = t.shieldCol || "#3fa84d"; c.beginPath(); c.ellipse(t.x, t.y - 30, 42, 46, 0, 0, TAU); c.fill(); c.globalAlpha = 0.9 * k; c.strokeStyle = t.shieldCol || "#3fa84d"; c.lineWidth = 4; c.setLineDash([10, 6]); c.stroke(); c.setLineDash([]); c.globalAlpha = 1; }
     if (t.hurtT > 0) { c.fillStyle = "rgba(255,80,80,.35)"; c.beginPath(); c.arc(t.x, t.y - 30, 30, 0, TAU); c.fill(); }
     if (t.jamT > 0) { c.globalAlpha = 0.8; E(c, t.x - 22, t.y - 70, 9, 7, "#8adf4a", { lw: 2.5, hl: true }); dot(c, t.x - 14, t.y - 62, 3, "#8adf4a"); c.globalAlpha = 1; }
+    if (t.sleepT > 0) { c.font = "900 16px sans-serif"; c.textAlign = "center"; c.fillStyle = "#c89aff"; c.strokeStyle = OL; c.lineWidth = 3; c.strokeText("💤", t.x + 20, t.y - 72); c.fillText("💤", t.x + 20, t.y - 72); }
+    if (t.stunT > 0) { c.font = "900 16px sans-serif"; c.textAlign = "center"; c.fillStyle = "#ffe14a"; c.strokeStyle = OL; c.lineWidth = 3; c.strokeText("✦", t.x - 18, t.y - 72); c.fillText("✦", t.x - 18, t.y - 72); }
+    if (petLocked && petLocked(t)) { c.font = "900 14px sans-serif"; c.textAlign = "center"; c.fillText("🔒", t.x, t.y + 8); }
     if (t.shiny && !t.fainted) for (let i = 0; i < 2; i++) { const a = time * 2 + i * 3 + t.ph; const s = (Math.sin(time * 4 + i * 2) + 1) * 2.5 + 1; spark(c, t.x + Math.cos(a) * 30, t.y - 40 + Math.sin(a) * 22, s, "#fff6a0"); }
     if (t.fainted) { c.font = "900 18px sans-serif"; c.textAlign = "center"; c.fillStyle = "#fff"; c.strokeStyle = OL; c.lineWidth = 4; c.strokeText("Zzz", t.x + 20, t.y - 60); c.fillText("Zzz", t.x + 20, t.y - 60); }
     // hp bar
@@ -4603,6 +4965,7 @@ function renderBoard(data) {
     return;
   }
   st.textContent = data.offline ? tr("board_offline") : tr("board_online");
+  try { renderBoardShowcase(data && data.seasonReward); fetchSeasonReward().then(info => { lastSeasonInfo = info; renderBoardShowcase(info); }).catch(() => {}); } catch (e) {}
   st.classList.toggle("offline", !!data.offline);
   const entries = data.entries || [];
   list.innerHTML = "";
@@ -4701,7 +5064,7 @@ function renderMenuBG() {
 
 /* ================= screens ================= */
 function hideAll() {
-  for (const id of ["lang-screen", "title-screen", "starter", "home", "detail", "hatch", "help", "pause", "result", "save-screen", "name-screen", "newgame-screen", "board-screen", "hud", "dock", "inspect"]) el(id).classList.add("hidden");
+  for (const id of ["lang-screen", "title-screen", "starter", "home", "detail", "hatch", "help", "pause", "result", "save-screen", "name-screen", "newgame-screen", "board-screen", "hud", "dock", "inspect", "news-modal", "update-modal"]) { const n = el(id); if (n) n.classList.add("hidden"); }
 }
 function openHome(tab) {
   if (tab) homeTab = tab;
@@ -4918,7 +5281,7 @@ function renderTrain(body) {
     + tr("tr_line", "", pct) + " <small>" + (p.tr[k] >= cap ? tr("stat_cap") : tr("tr_cnt", p.tr[k], cap)) + "</small></span></div>";
   head.insertAdjacentHTML("beforeend", "<div class='tp-info'><div class='tp-name'>" + (isUltra(p) ? "<span class='ultra'>" + tr("ultra") + "</span> " : p.shiny ? tr("shiny_pre") : "") + petName(p) + " " + starsHTML(p.star) + " <button type='button' class='mini b-sky' data-rename='" + p.uid + "'>✎ " + tr("rename") + "</button></div>"
     + "<div class='tp-lv'>" + lvHTML(p) + "<span class='xpbar'><i style='width:" + (p.lv >= MAX_LV ? 100 : p.xp / need * 100) + "%'></i></span><small>" + (p.lv >= MAX_LV ? tr("maxlv") : tr("xp", p.xp, need)) + "</small></div>"
-    + aptBarHTML(p, true) + "<div class='pwr' style='margin:4px 0'>⚔ " + tr("power_n", fmtPower(petPower(p))) + "</div>"
+    + aptBarHTML(p, true) + "<div class='bond-line'>❤ " + tr("bond_n", p.bond | 0) + " · " + tr("bond_d") + "</div>" + "<div class='pwr' style='margin:4px 0'>⚔ " + tr("power_n", fmtPower(petPower(p))) + "</div>"
     + stat("a", tr("st_atk"), Math.round(p.tr.a * 3)) + stat("h", tr("st_hp"), Math.round(p.tr.h * 4)) + stat("s", tr("st_spd"), Math.round(p.tr.s * 1.5 * 10) / 10)
     + "</div>");
   box.appendChild(head);
@@ -5035,7 +5398,7 @@ function petCard(id, star, shiny, opts) {
   div.insertAdjacentHTML("beforeend", "<div class='nm'>" + (opts.locked ? "???" : opts.pet && opts.pet.nick ? "<span class='nick'>" + esc(opts.pet.nick) + "</span>" : stageName(id, star)) + "</div>"
     + (opts.locked ? "<div class='meta'>" + tr("not_met") + "</div>" : "<div class='pc-stars'>" + starsHTML(star) + "</div>"
       + (opts.pet ? "<div class='pc-gl'>" + gradeHTML(opts.pet.grade) + lvHTML(opts.pet) + "</div>" + aptBarHTML(opts.pet) + "<div class='pwr'>⚔ " + fmtPower(petPower(opts.pet)) + "</div>" : "")
-      + "<div class='meta'><span class='role r5t r5-" + d.r5 + "'>" + ROLE5_ICON[d.r5] + " " + tr("r5_" + d.r5) + "</span>" + (d.limited ? "<span class='lim-tag'>" + tr("limited") + "</span>" : "") + (opts.extra || "") + "</div>"));
+      + "<div class='meta'><span class='role r5t r5-" + d.r5 + "'>" + ROLE5_ICON[d.r5] + " " + tr("r5_" + d.r5) + "</span>" + (d.seasonExclusive ? "<span class='lim-tag champ'>" + tr("s1_badge") + "</span>" : d.limited ? "<span class='lim-tag'>" + tr("limited") + "</span>" : "") + (opts.extra || "") + "</div>"));
   return div;
 }
 function renderBook(body) {
@@ -5102,7 +5465,7 @@ function pullBanner() {
   save.gems -= BANNER.cost;
   const r = rollBanner();
   let id = "thunder_roc";
-  if (r !== "thunder_roc") { let rar = r, pool = PETS.filter(p => p.rar === rar && !p.limited); while (!pool.length && rar > 1) { rar--; pool = PETS.filter(p => p.rar === rar && !p.limited); } id = pick(pool).id; }
+  if (r !== "thunder_roc") { let rar = r, pool = PETS.filter(p => p.rar === rar && !p.limited && !p.seasonExclusive); while (!pool.length && rar > 1) { rar--; pool = PETS.filter(p => p.rar === rar && !p.limited && !p.seasonExclusive); } id = pick(pool).id; }
   const p = addPet(id, 1, Math.random() < SHINY_BASE); save.hatched++; persist(); checkSpecialCharms();
   return p;
 }
@@ -5340,11 +5703,16 @@ function renderCharms(body) {
   for (const c of SHOP_CHARMS) {
     const row = document.createElement("div"); row.className = "charm-row r" + c.rar + (sel && sel.charm === c.id ? " on" : ""); row.dataset.charm = c.id;
     row.appendChild(charmIconCanvas(c.id, 44));
-    row.insertAdjacentHTML("beforeend", "<div class='cr-i'><b>" + tr("charm_" + c.id) + "</b><small>" + tr("charm_" + c.id + "_d") + "</small><span class='chip'>" + tr("charm_owned", save.charms[c.id] | 0) + "</span></div>");
+    const clv = (save.charmLv && save.charmLv[c.id]) || 1;
+    row.insertAdjacentHTML("beforeend", "<div class='cr-i'><b>" + tr("charm_" + c.id) + " <small>" + tr("charm_lv", clv) + "</small></b><small>" + tr("charm_" + c.id + "_d") + "</small><span class='chip'>" + tr("charm_owned", save.charms[c.id] | 0) + "</span></div>");
     const bb = document.createElement("button"); bb.type = "button"; bb.className = "mini b-gold"; bb.textContent = tr("charm_buy", c.cost) + "💎"; bb.disabled = save.gems < c.cost; bb.dataset.buy = c.id;
     bb.addEventListener("click", () => { if (buyCharm(c.id)) renderHome(); });
     const be = document.createElement("button"); be.type = "button"; be.className = "mini b-mint"; be.textContent = tr("charm_equip"); be.disabled = !sel || !(save.charms[c.id] > 0); be.dataset.equip = c.id;
     be.addEventListener("click", () => { if (sel && equipCharm(sel.uid, c.id)) renderHome(); });
+    const bu = document.createElement("button"); bu.type = "button"; bu.className = "mini"; bu.textContent = tr("charm_enhance") + " " + (40 * ((save.charmLv && save.charmLv[c.id]) || 1) + 40) + "💎";
+    bu.disabled = ((save.charmLv && save.charmLv[c.id]) || 1) >= 5 || (save.gems < (40 * ((save.charmLv && save.charmLv[c.id]) || 1) + 40));
+    bu.addEventListener("click", () => { if (enhanceCharm(c.id)) renderHome(); });
+    row.appendChild(bu);
     const bx = document.createElement("div"); bx.className = "cr-b"; bx.appendChild(bb); bx.appendChild(be); row.appendChild(bx);
     shop.appendChild(row);
   }
@@ -5425,8 +5793,8 @@ function rollHatch(egg) {
   const w = HATCH_W[egg.q];
   let r = Math.random() * w.reduce((a, b) => a + b, 0), rar = 1;
   for (let i = 1; i <= MAX_RAR; i++) { r -= w[i] || 0; if (r <= 0) { rar = i; break; } }
-  let pool = PETS.filter(p => p.rar === rar && !p.limited);
-  while (!pool.length && rar > 1) { rar--; pool = PETS.filter(p => p.rar === rar && !p.limited); }
+  let pool = PETS.filter(p => p.rar === rar && !p.limited && !p.seasonExclusive);
+  while (!pool.length && rar > 1) { rar--; pool = PETS.filter(p => p.rar === rar && !p.limited && !p.seasonExclusive); }
   const id = pick(pool).id;
   const shiny = forceShinyNext || Math.random() < egg.sh;
   forceShinyNext = false;
@@ -5938,6 +6306,306 @@ window.__PETTD__ = {
     return fired ? (PET[id].typ + "|" + sig) : "NOFIRE";
   }
 };
+
+/* ================= v2.2 (GB-12): skills, energy, tray fold, slot lock, bond, charms, version, S1 champion ================= */
+const ENERGY_MAX = 100, ENERGY_REGEN = 2.6, ENERGY_KILL = 3.5;
+const CMD_SKILLS = [
+  { id:"freeze_bomb", cost:50, icon:"❄", typ:"freeze" },
+  { id:"rally_horn",  cost:45, icon:"📯", typ:"rally" },
+  { id:"star_strike", cost:60, icon:"⭐", typ:"stars" }
+];
+function ultCostOf(d) { return 28 + Math.min(17, (d.rar || 1) * 3); }
+function ultTypOf(d) {
+  const r = d.r5 || role5(d.id);
+  if (r === "support") return "heal";
+  if (r === "control") return "freeze";
+  if (r === "econ") return "gold";
+  if (r === "summon") return "shield";
+  if (r === "aoe") return "blast";
+  return "burst";
+}
+function petCC(t) { return !!(t && ((t.sleepT || 0) > 0 || (t.stunT || 0) > 0)); }
+function petLocked(t) { return !!(t && (petCC(t) || (t.jamT || 0) > 0)); }
+
+const _deploy0 = deploy;
+deploy = function (uid, slot, quiet) {
+  if (B && B.towers) {
+    const old = B.towers.find(t => t.slot === slot);
+    if (old && petLocked(old)) { if (!quiet) { showToast(tr("slot_locked")); try { sfx.click(); } catch (e) {} } return false; }
+  }
+  const ok = _deploy0(uid, slot, quiet);
+  if (ok) {
+    const t = B.towers.find(q => q.uid === uid);
+    if (t) { t.sleepT = t.sleepT || 0; t.stunT = t.stunT || 0; t.jamT = t.jamT || 0; }
+    try { renderSkillBar(); } catch (e) {}
+  }
+  return ok;
+};
+const _recall0 = recall;
+recall = function (t) {
+  if (t && petLocked(t)) { showToast(tr("slot_locked")); return; }
+  _recall0(t);
+  try { renderSkillBar(); } catch (e) {}
+};
+
+const _petStats0 = petStats;
+petStats = function (t) {
+  const out = _petStats0(t);
+  let bond = 0;
+  if (t) {
+    if (t.bond != null) bond = t.bond | 0;
+    else {
+      const p = save.pets && save.pets.find(q => q.uid === t.uid);
+      if (p) bond = p.bond | 0;
+    }
+  }
+  const bk = 1 + 0.0015 * Math.max(0, Math.min(100, bond));
+  out.dmg *= bk; out.maxHp *= bk;
+  return out;
+};
+const _charmEff1 = charmEff;
+charmEff = function (p) {
+  const base = _charmEff1(p);
+  if (!p || !p.charm) return base;
+  const lv = Math.max(1, Math.min(5, (save.charmLv && save.charmLv[p.charm]) || 1));
+  if (lv <= 1) return base;
+  const k = 1 + 0.12 * (lv - 1), o = {};
+  for (const key in base) o[key] = base[key] * k;
+  return o;
+};
+
+function initV22Battle() {
+  B.energy = 25; B.energyMax = ENERGY_MAX; B.autoSkill = !!B.autoSkill; B.autoT = 0;
+  try { renderSkillBar(); } catch (e) {}
+}
+function tickV22(dt) {
+  if (!B || !B.running) return;
+  B.energy = Math.min(ENERGY_MAX, (B.energy || 0) + ENERGY_REGEN * dt);
+  for (const t of B.towers) {
+    if (t.sleepT > 0) t.sleepT = Math.max(0, t.sleepT - dt);
+    if (t.stunT > 0) t.stunT = Math.max(0, t.stunT - dt);
+  }
+  if (B.autoSkill) {
+    B.autoT = (B.autoT || 0) - dt;
+    if (B.autoT <= 0) { B.autoT = 0.55; autoCastV22(); }
+  }
+  skillBarTimer = (skillBarTimer || 0) - dt;
+  if (skillBarTimer <= 0) { skillBarTimer = 0.2; renderSkillBar(); }
+}
+let skillBarTimer = 0;
+function onV22Kill() { if (B) B.energy = Math.min(ENERGY_MAX, (B.energy || 0) + ENERGY_KILL); }
+function onV22Wave() {
+  for (const t of B.towers) {
+    const p = save.pets.find(q => q.uid === t.uid);
+    if (!p) continue;
+    p.bond = Math.min(100, (p.bond | 0) + 2);
+    t.bond = p.bond;
+  }
+}
+
+function spendEnergy(n) {
+  if ((B.energy || 0) < n) return false;
+  B.energy -= n; renderSkillBar(); return true;
+}
+function fireUlt(t) {
+  if (!B || !t || t.fainted || petCC(t)) return false;
+  const d = PET[t.id]; if (!d) return false;
+  const cost = ultCostOf(d); if (!spendEnergy(cost)) { showToast(tr("energy_need")); return false; }
+  const typ = ultTypOf(d), st = petStats(t), col = (d.fx && d.fx[0]) || ELEM_COL[d.el] || "#ffe14a";
+  B.fx.push({ typ: "ring", x: t.x, y: t.y - 30, r0: 8, r1: 90, color: col, life: 0.4, max: 0.4 });
+  burst(t.x, t.y - 36, col, 16);
+  if (typ === "heal") {
+    for (const a of B.towers) { if (a.fainted) continue; a.hp = Math.min(petStats(a).maxHp, a.hp + petStats(a).maxHp * 0.28); a._haste = (a._haste || 0) + 0.35; }
+  } else if (typ === "freeze") {
+    for (const e of B.enemies) if (e.hp > 0 && dist(t.x, t.y, e.x, e.y) < 260) { e.frozenT = Math.max(e.frozenT || 0, 1.6); e.stunT = Math.max(e.stunT || 0, 0.4); }
+  } else if (typ === "gold") {
+    const g = 8 + B.wave * 2; B.gold += g; B.floaters.push({ x: t.x, y: t.y - 60, text: "+" + g + "g", color: "#ffe14a", life: 1, max: 1, big: true });
+  } else if (typ === "shield") {
+    for (const a of B.towers) { if (a.fainted) continue; const hp = petStats(a).maxHp; a.shield = (a.shield || 0) + hp * 0.35; }
+  } else if (typ === "blast") {
+    for (const e of enemiesIn(t.x, t.y - 40, 280)) hitEnemy(e, st.dmg * 2.4, d.el, { burn: st.burn || 8 });
+  } else {
+    const tgt = targetFor(t, st.range + 80) || B.enemies.find(e => e.hp > 0);
+    if (tgt) hitEnemy(tgt, st.dmg * 3.2, d.el, { stun: 0.6 });
+    for (const e of enemiesIn((tgt || t).x, (tgt || t).y, 90)) if (e !== tgt) hitEnemy(e, st.dmg * 1.2, d.el, {});
+  }
+  try { sfx.place(); } catch (e) {}
+  showToast(tr("ult_cast", stageName(t.id, t.star)), 1.4);
+  return true;
+}
+function fireCmd(id) {
+  if (!B || B.over) return false;
+  const sk = CMD_SKILLS.find(s => s.id === id); if (!sk) return false;
+  if (!spendEnergy(sk.cost)) { showToast(tr("energy_need")); return false; }
+  if (sk.typ === "freeze") {
+    for (const e of B.enemies) if (e.hp > 0) { e.frozenT = Math.max(e.frozenT || 0, 2.2); e.stunT = Math.max(e.stunT || 0, 0.5); }
+    B.fx.push({ typ: "flash", life: 0.35, max: 0.35 });
+    B.floaters.push({ x: W / 2, y: 280, text: tr("cmd_freeze_bomb"), color: "#bfe6ff", life: 1.2, max: 1.2, big: true });
+  } else if (sk.typ === "rally") {
+    for (const a of B.towers) { if (a.fainted) continue; const hp = petStats(a).maxHp; a.hp = Math.min(hp, a.hp + hp * 0.25); a._haste = (a._haste || 0) + 0.45; a._dmgB = (a._dmgB || 0) + 0.2; }
+    B.floaters.push({ x: W / 2, y: 280, text: tr("cmd_rally_horn"), color: "#ffe14a", life: 1.2, max: 1.2, big: true });
+  } else {
+    for (const e of B.enemies) if (e.hp > 0) {
+      hitEnemy(e, 28 + B.wave * 3, "光", { burn: 8 });
+      B.fx.push({ typ: "ring", x: e.x, y: e.y, r0: 6, r1: 50, color: "#ffe14a", life: 0.3, max: 0.3 });
+    }
+    B.floaters.push({ x: W / 2, y: 280, text: tr("cmd_star_strike"), color: "#ffe14a", life: 1.2, max: 1.2, big: true });
+  }
+  try { sfx.shiny(); } catch (e) {}
+  return true;
+}
+function autoCastV22() {
+  if (!B || B.over || !B.waveActive) return;
+  const n = B.enemies.filter(e => e.hp > 0).length;
+  if (n >= 6 && (B.energy || 0) >= 60) { fireCmd("star_strike"); return; }
+  if (n >= 4 && (B.energy || 0) >= 50) { fireCmd("freeze_bomb"); return; }
+  const hurt = B.towers.filter(t => !t.fainted && t.hp < petStats(t).maxHp * 0.55);
+  if (hurt.length && (B.energy || 0) >= 45) { fireCmd("rally_horn"); return; }
+  const ready = B.towers.filter(t => !t.fainted && !petCC(t) && (B.energy || 0) >= ultCostOf(PET[t.id] || { rar: 1 }));
+  if (ready.length) fireUlt(ready[0]);
+}
+
+function renderSkillBar() {
+  const bar = el("skill-bar"); if (!bar || !B || !B.running) return;
+  const en = Math.max(0, Math.min(ENERGY_MAX, B.energy || 0));
+  let html = "<div class='en-wrap' title='" + esc(tr("energy_pool")) + "'><div class='en-fill' style='width:" + (en / ENERGY_MAX * 100) + "%'></div><span class='en-num'>" + Math.floor(en) + "</span></div>";
+  html += "<button type='button' class='sk-auto" + (B.autoSkill ? " on" : "") + "' id='btn-sk-auto'>" + tr(B.autoSkill ? "skill_auto" : "skill_manual") + "</button>";
+  html += "<div class='sk-cmds'>";
+  for (const s of CMD_SKILLS) {
+    const ok = en >= s.cost;
+    html += "<button type='button' class='sk-btn cmd" + (ok ? "" : " off") + "' data-cmd='" + s.id + "' title='" + esc(tr("cmd_" + s.id) + " · " + s.cost) + "'>" + s.icon + "<small>" + s.cost + "</small></button>";
+  }
+  html += "</div><div class='sk-ults'>";
+  for (const t of B.towers) {
+    if (t.fainted) continue;
+    const d = PET[t.id]; if (!d) continue;
+    const cost = ultCostOf(d), ok = en >= cost && !petCC(t);
+    html += "<button type='button' class='sk-btn ult r" + d.rar + (ok ? "" : " off") + "' data-ult='" + t.uid + "' title='" + esc(stageName(t.id, t.star) + " · " + cost) + "'>" + (d.el || "★") + "<small>" + cost + "</small></button>";
+  }
+  html += "</div>";
+  bar.innerHTML = html;
+  const au = el("btn-sk-auto"); if (au) au.onclick = (e) => { e.stopPropagation(); B.autoSkill = !B.autoSkill; renderSkillBar(); };
+  bar.querySelectorAll("[data-cmd]").forEach(b => b.onclick = (e) => { e.stopPropagation(); fireCmd(b.dataset.cmd); });
+  bar.querySelectorAll("[data-ult]").forEach(b => b.onclick = (e) => { e.stopPropagation(); const t = B.towers.find(x => String(x.uid) === b.dataset.ult); if (t) fireUlt(t); });
+}
+
+function setDockFold(on) {
+  const dock = el("dock"); if (!dock) return;
+  dock.classList.toggle("folded", !!on);
+  const b = el("btn-tray-fold");
+  if (b) { b.textContent = on ? "«" : "»"; b.title = tr(on ? "tray_expand" : "tray_collapse"); }
+  try { localStorage.setItem("mengchong-td-dockfold", on ? "1" : "0"); } catch (e) {}
+}
+function initDockFold() {
+  let on = false;
+  try { on = localStorage.getItem("mengchong-td-dockfold") === "1"; } catch (e) {}
+  setDockFold(on);
+  const b = el("btn-tray-fold");
+  if (b && !b._bound) { b._bound = 1; b.addEventListener("click", (e) => { e.stopPropagation(); setDockFold(!el("dock").classList.contains("folded")); }); }
+}
+
+/* ---- version check + news ---- */
+function showNewsModal(force) {
+  const m = el("news-modal"); if (!m) return;
+  el("news-body").innerHTML = "<h3>" + tr("v22_news_title") + "</h3><ul class='news-list'>"
+    + "<li>" + tr("v22_news_1") + "</li><li>" + tr("v22_news_2") + "</li><li>" + tr("v22_news_3") + "</li><li>" + tr("v22_news_4") + "</li><li>" + tr("v22_news_5") + "</li></ul>";
+  m.classList.remove("hidden");
+  if (!force) { save.seenV22 = true; persist(); }
+}
+function hideNewsModal() { const m = el("news-modal"); if (m) m.classList.add("hidden"); }
+function showUpdateModal(ver) {
+  const m = el("update-modal"); if (!m) return;
+  el("update-body").innerHTML = "<h3>" + tr("update_live", ver || "2.2") + "</h3><p>" + tr("update_live_d") + "</p>";
+  m.classList.remove("hidden");
+}
+function hideUpdateModal() { const m = el("update-modal"); if (m) m.classList.add("hidden"); }
+let verPollT = 0, verBusy = false;
+async function pollGameVersion() {
+  if (verBusy) return; verBusy = true;
+  try {
+    const r = await fetch(LB_URL + "/api/version", { cache: "no-store" });
+    if (!r.ok) return;
+    const d = await r.json();
+    lastVersionInfo = d;
+    if (d && d.latest && String(d.latest) !== String(GAME_VERSION)) showUpdateModal(d.latest);
+  } catch (e) {}
+  finally { verBusy = false; }
+}
+let lastVersionInfo = null;
+function startVersionPoll() {
+  pollGameVersion();
+  setInterval(pollGameVersion, 120000);
+  document.addEventListener("visibilitychange", () => { if (document.visibilityState === "visible") pollGameVersion(); });
+}
+
+/* ---- S1 champion claim ---- */
+const S1_PET = "aurora_peach_kirin";
+async function fetchSeasonReward() {
+  try {
+    const r = await fetch(LB_URL + "/api/season-reward?client_id=" + encodeURIComponent(save.clientId || ""), { cache: "no-store" });
+    if (!r.ok) return null;
+    return await r.json();
+  } catch (e) { return null; }
+}
+function claimSeasonPet(info) {
+  if (!info || !info.canClaim || !info.petId || !PET[info.petId]) { showToast(tr("s1_not_yet")); return; }
+  if (save.pets.some(p => p.id === info.petId)) { showToast(tr("s1_already")); return; }
+  const p = addPet(info.petId, 1, false); save.seen[info.petId] = true; persist();
+  showToast(tr("s1_claimed", stageName(info.petId, 1)), 4);
+  try { sfx.shiny(); } catch (e) {}
+  renderBoardShowcase(info);
+  return p;
+}
+function renderBoardShowcase(info) {
+  const box = el("s1-showcase"); if (!box) return;
+  const d = PET[S1_PET]; if (!d) { box.innerHTML = ""; return; }
+  const owned = save.pets.some(p => p.id === S1_PET);
+  const can = !!(info && info.canClaim && !owned);
+  box.innerHTML = "";
+  const art = petCanvas(S1_PET, 4, false, 58);
+  const wrap = document.createElement("div"); wrap.className = "s1-banner r7";
+  wrap.appendChild(art);
+  wrap.insertAdjacentHTML("beforeend", "<div class='s1-i'><b>🏆 " + stageName(S1_PET, 4) + "</b><span class='s1-tag'>" + tr("s1_badge") + "</span><small>" + tr("s1_hint") + "</small></div>");
+  if (can) {
+    const b = document.createElement("button"); b.type = "button"; b.className = "mini b-gold"; b.textContent = tr("s1_claim");
+    b.onclick = () => { claimSeasonPet(info); };
+    wrap.appendChild(b);
+  } else {
+    wrap.insertAdjacentHTML("beforeend", "<span class='s1-state'>" + (owned ? tr("s1_already") : tr("s1_not_yet")) + "</span>");
+  }
+  box.appendChild(wrap);
+}
+
+function enhanceCharm(cid) {
+  const c = CHARM[cid]; if (!c) return false;
+  if (!(save.charms[cid] > 0) && !save.pets.some(p => p.charm === cid)) return false;
+  save.charmLv = save.charmLv || {};
+  const lv = Math.max(1, save.charmLv[cid] | 0 || 1);
+  if (lv >= 5) { showToast(tr("charm_max_lv")); return false; }
+  const cost = 40 * lv + 40;
+  if (save.gems < cost) { showToast(tr("no_gems_charm")); return false; }
+  save.gems -= cost; save.charmLv[cid] = lv + 1; persist();
+  showToast(tr("charm_upgraded", tr("charm_" + cid), lv + 1));
+  try { sfx.coin(); } catch (e) {}
+  return true;
+}
+
+function bootV22() {
+  initDockFold();
+  startVersionPoll();
+  const bn = el("btn-news"); if (bn && !bn._bound) { bn._bound = 1; bn.addEventListener("click", () => showNewsModal(true)); }
+  const nc = el("btn-news-ok"); if (nc) nc.addEventListener("click", hideNewsModal);
+  const ur = el("btn-update-reload"); if (ur) ur.addEventListener("click", () => location.reload());
+  const ux = el("btn-update-later"); if (ux) ux.addEventListener("click", hideUpdateModal);
+  document.querySelectorAll(".ver-badge").forEach(v => { v.textContent = "v" + GAME_VERSION; });
+}
+
+/* expose a few hooks used by tests */
+if (typeof window !== "undefined") {
+  window.__v22 = { petLocked, petCC, ultCostOf, CMD_SKILLS, ENERGY_MAX, S1_PET, enhanceCharm, claimSeasonPet, fireCmd, fireUlt };
+}
+
+try { bootV22(); if (save.started && !save.seenV22) setTimeout(function(){ showNewsModal(false); }, 600); } catch (e) {}
 })();
 </script>
 </body>
