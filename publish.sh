@@ -22,7 +22,7 @@ die() { echo "$*" >&2; exit 1; }
 copy_game() {
   cp "$SRC/index.html" "$DEST/index.html"
   mkdir -p "$DEST/assets"
-  for d in bg eggs enemies pets ui; do
+  for d in bg eggs enemies pets ui packs; do
     if [[ -d "$SRC/assets/$d" ]]; then
       rm -rf "$DEST/assets/$d"
       mkdir -p "$DEST/assets/$d"
