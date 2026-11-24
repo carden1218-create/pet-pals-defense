@@ -1051,9 +1051,31 @@
   #t24 .t24-bub p { margin:4px 0 6px; line-height:1.35; } #t24 .t24-step { float:right; opacity:.6; font-size:12px; } #t24 .t24-h { font-size:12px; color:#c0392b; }
   #t24 .t24-bub button { float:right; }
   html.land .u24-acc { font-size:30px; min-height:36px; } html.land .u24-pow { font-size:24px; }
-  html.land body.b-locked24 #dock { justify-content:center; align-items:center; gap:14px; }
-  html.land body.b-locked24 #dock-bar { justify-content:center; transform:scale(1.25); }
-  html.land body.b-locked24 #i24-bar .i24-slot { width:64px; height:64px; font-size:34px; }
+  html.land body.b-locked24 #dock { justify-content:flex-start; align-items:stretch; gap:8px; padding:6px 8px 8px; }
+  html.land body.b-locked24 #dock-bar { justify-content:center; transform:none; flex-wrap:wrap; padding:4px 6px 2px; }
+  html.land body.b-locked24 #i24-bar { justify-content:center; padding:2px 6px; flex-wrap:nowrap; }
+  html.land body.b-locked24 #i24-bar .i24-slot { width:52px; height:52px; font-size:28px; }
+  #r24-bar { display:none; flex-direction:column; gap:4px; padding:2px 8px 8px; width:100%; box-sizing:border-box; min-height:0; }
+  body.b-locked24 #r24-bar { display:flex; }
+  #r24-bar .r24-h { font-size:12px; font-weight:900; text-align:center; color:#3a1800; }
+  #r24-bar .r24-list { display:flex; flex-direction:column; gap:6px; overflow-y:auto; -webkit-overflow-scrolling:touch; max-height:38vh; }
+  #r24-bar .r24-card { display:flex; align-items:center; gap:6px; border:3px solid var(--ol); border-radius:14px; background:#fff8e6; padding:3px 8px 3px 3px; cursor:pointer; box-shadow:0 3px 0 rgba(43,27,34,.28); font:inherit; color:inherit; width:100%; text-align:left; }
+  #r24-bar .r24-card .r24-art { flex:0 0 44px; width:44px; height:44px; }
+  #r24-bar .r24-card canvas { width:44px; height:44px; display:block; }
+  #r24-bar .r24-nm { flex:1; min-width:0; font-size:12px; font-weight:900; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+  #r24-bar .r24-cost { flex:0 0 auto; font-size:13px; font-weight:900; white-space:nowrap; }
+  #r24-bar .r24-card.off { opacity:.55; cursor:default; }
+  #r24-bar .r24-card.flash { animation:i24p .45s ease-in-out 2; }
+  #r24-bar .r24-empty { font-size:12px; font-weight:800; text-align:center; opacity:.65; padding:6px 4px; }
+  html.land body.b-locked24 #r24-bar { flex:1 1 auto; min-height:0; }
+  html.land body.b-locked24 #r24-bar .r24-list { max-height:none; flex:1 1 auto; }
+  html.port body.b-locked24 #r24-bar .r24-list { flex-direction:row; overflow-x:auto; overflow-y:hidden; max-height:none; }
+  html.port body.b-locked24 #r24-bar .r24-card { flex:0 0 auto; width:auto; min-width:138px; }
+  @media (max-height: 500px) and (orientation: landscape) {
+    html.land body.b-locked24 #i24-bar .i24-slot { width:40px; height:40px; font-size:22px; }
+    html.land body.b-locked24 #r24-bar .r24-card canvas, html.land body.b-locked24 #r24-bar .r24-card .r24-art { width:36px; height:36px; flex-basis:36px; }
+    html.land body.b-locked24 #r24-bar .r24-nm { font-size:11px; }
+  }
   #toast { white-space: nowrap !important; }
   html.land #toast { position: fixed !important; top: 10px !important; left: calc(var(--stage-w, 42vw) + (100vw - var(--stage-w, 42vw)) / 2) !important; transform: translateX(-50%) !important; max-width: calc((100vw - var(--stage-w, 42vw)) - 24px) !important; }
 </style>
@@ -3430,7 +3452,7 @@ let uidSeq = 1;
 const CLIENT_KEY = "mengchong-td-client-id";
 const NAME_KEY = "mengchong-td-player-name";
 const LB_URL = "https://pet-td-leaderboard.carden1218.workers.dev";
-const GAME_VERSION = '2.4.1';
+const GAME_VERSION = '2.4.2';
 let lastSeasonInfo = null;   // tournament build — the leaderboard rejects any other clientVersion
 const LB_CACHE_KEY = "mengchong-td-board-cache";
 function getClientId() {
@@ -4223,6 +4245,8 @@ function targetFor(t, range) {
   return best;
 }
 function teamGoldMul() { let g = 1 + ((B.synM && B.synM.gold) || 0); for (const t of B.towers) if (t.ce && t.ce.gold) g += t.ce.gold; return g; }
+const GOLD_INCOME_MUL = 0.33;
+function goldIncome(n) { n = +n || 0; if (n <= 0) return 0; return Math.max(1, Math.round(n * GOLD_INCOME_MUL)); }
 function hitEnemy(e, dmg, elem, o) {
   o = o || {};
   if (e.hp <= 0) return;
@@ -4259,7 +4283,7 @@ function killEnemy(e) {
   e.hp = 0;
   const def0 = ENEMY[e.typ];
   let bonus = (e.goldMark | 0) + (def0.thief ? 10 + Math.floor(B.wave / 2) : 0);
-  const gain = Math.round((e.reward + bonus) * teamGoldMul());
+  const gain = goldIncome((e.reward + bonus) * teamGoldMul());
   B.gold += gain; B.kills++; try { onV22Kill(); } catch (e) {}
   if (bonus) B.floaters.push({ x: e.x + 12, y: e.y - 40, text: "+" + bonus + "g", color: "#ffe14a", life: 1, max: 1, big: true });
   if (def0.split) for (let k = -1; k <= 1; k += 2) {                 // Split Slime: two minis pop out
@@ -6427,7 +6451,7 @@ function fireUlt(t) {
   } else if (typ === "freeze") {
     for (const e of B.enemies) if (e.hp > 0 && dist(t.x, t.y, e.x, e.y) < 260) { e.frozenT = Math.max(e.frozenT || 0, 1.6); e.stunT = Math.max(e.stunT || 0, 0.4); }
   } else if (typ === "gold") {
-    const g = 8 + B.wave * 2; B.gold += g; B.floaters.push({ x: t.x, y: t.y - 60, text: "+" + g + "g", color: "#ffe14a", life: 1, max: 1, big: true });
+    const g = goldIncome(8 + B.wave * 2); B.gold += g; B.floaters.push({ x: t.x, y: t.y - 60, text: "+" + g + "g", color: "#ffe14a", life: 1, max: 1, big: true });
   } else if (typ === "shield") {
     for (const a of B.towers) { if (a.fainted) continue; const hp = petStats(a).maxHp; a.shield = (a.shield || 0) + hp * 0.35; }
   } else if (typ === "blast") {
@@ -6745,7 +6769,7 @@ function grantTreasureEgg(e) {
   const q = Math.random() < 0.35 ? 3 : 2;
   dropEgg(e ? e.x : W / 2, e ? e.y : 320, q, Math.max(0.08, shinyChance(lootLevel(B.level, Math.max(1, B.wave))) * 1.4));
   B.treasureDropped = true;
-  B.gold += 12;
+  B.gold += goldIncome(12);
   B.floaters.push({ x: (e && e.x) || W / 2, y: ((e && e.y) || 300) - 70, text: tr("treasure_burst"), color: "#ffe14a", life: 1.4, max: 1.4, big: true, huge: true });
   try { sfx.shiny(); } catch (err) {}
   showEggJumpPill(true);
@@ -6890,12 +6914,13 @@ if (typeof window !== "undefined") {
 /* ================= v2.4 (GB-14): New Coins, 1 life, locked lineup, timing-bar ult, item drops, hats, incubator, perks, clean HUD, tutorial ================= */
 Object.assign(STR.zh, {
   gold: "🪙 新金币 {0}", gold_init: "🪙 新金币 0", no_gold: "新金币不够！打怪赚新金币吧",
-  upgrade: "升级 🪙{0}", fainted: "{0} 累倒了！点它用新金币复活",
+  upgrade: "升级 🪙{0}", fainted: "{0} 累倒了！在旁边的复活栏点它就能复活",
   place_then: "排好阵容，点「开战！」", rest: "下一波 {0}…",
   tut_loot: "第 3 步：打怪赚「新金币」（只在这局有效），用来升级、放大招、复活！",
   tut_hatch: "孵蛋器：蛋要放进孵蛋器慢慢孵，升级孵蛋器孵得更快！",
   lock24: "阵容已锁定，战斗中不能换宠物", lock24_go: "开战！卡片栏已收起，阵容锁定",
   revive24: "复活 🪙{0}", revived24: "{0} 复活啦！", rev_need24: "复活要 🪙{0} 新金币",
+  rev_max24: "本局最多复活 3 次", rev_none24: "本局复活次数已用完", rev_left24: "复活（还能 {0} 次）", r24_empty: "还没有宠物累倒",
   ult_pick24: "点一只宠物放大招", ult_cd24: "大招冷却中 {0}秒", ult_cost24: "确认 🪙{0}", cancel24: "取消",
   ult_title24: "大招预览", ult_tap24: "点绿色区域！", ult_miss24: "失误！发射！", ult_max24: "满格！发射！",
   ult_heal: "全队回血 + 加速", ult_freeze: "冻住附近所有怪", ult_gold: "炸出一堆新金币", ult_shield: "全队加护盾", ult_blast: "大范围爆炸 + 燃烧", ult_burst: "超强单体重击 + 溅射",
@@ -6916,7 +6941,7 @@ Object.assign(STR.zh, {
   t24_2: "准备好了就点「开战！」", t24_3: "打死怪物会掉道具！点一下把它捡起来。",
   t24_4: "按住道具栏里的道具，拖到一只宠物身上！", t24_5: "宠物打够了怪，头顶会冒出绿色箭头 ↑，点它升级！",
   t24_6: "点左下角的白色大招按钮。", t24_7: "再点一只宠物。", t24_8: "看看大招预览，点「确认」花新金币。",
-  t24_9: "节奏条来了！在绿色区域点屏幕，越来越快，失误就发射大招！", t24_10: "有宠物累倒了！点它。", t24_11: "用新金币把它复活！",
+  t24_9: "节奏条来了！在绿色区域点屏幕，越来越快，失误就发射大招！", t24_10: "有宠物累倒了！看旁边的复活卡片。", t24_11: "点卡片，花新金币把它复活！",
   t24_12: "注意：家只有 1 条命，漏掉一只怪就输！每打完一波可以选一个词条。", t24_13: "这是孵蛋器：蛋要放进去慢慢孵，升级后更快。",
   t24_14: "蛋孵好了！点它孵化。", t24_15: "看看孵出了谁！", t24_16: "这是装扮宝箱，送你一次免费，点它！",
   t24_17: "在图鉴里打开宠物详情，就能给宠物戴帽子。教程完成，加油！",
@@ -6925,12 +6950,13 @@ Object.assign(STR.zh, {
 });
 Object.assign(STR.en, {
   gold: "🪙 Coins {0}", gold_init: "🪙 Coins 0", no_gold: "Not enough New Coins — beat slimes to earn more!",
-  upgrade: "Upgrade 🪙{0}", fainted: "{0} fainted! Tap it to revive with New Coins",
+  upgrade: "Upgrade 🪙{0}", fainted: "{0} fainted! Revive it from the side panel",
   place_then: "Set your team, then tap “Fight!”", rest: "Next wave {0}…",
   tut_loot: "Step 3: beating slimes earns New Coins (this run only) — use them to upgrade, cast ultimates and revive!",
   tut_hatch: "Incubator: eggs hatch over time in the incubator. Upgrade it to hatch faster!",
   lock24: "Lineup is locked during battle", lock24_go: "Fight! Tray hidden — lineup locked",
   revive24: "Revive 🪙{0}", revived24: "{0} is back!", rev_need24: "Revive needs 🪙{0}",
+  rev_max24: "Only 3 revives per run", rev_none24: "No revives left this run", rev_left24: "Revive ({0} left)", r24_empty: "No fainted pets",
   ult_pick24: "Tap a pet to cast its ultimate", ult_cd24: "Ultimate cooling down {0}s", ult_cost24: "Confirm 🪙{0}", cancel24: "Cancel",
   ult_title24: "Ultimate Preview", ult_tap24: "Tap in the green!", ult_miss24: "Miss! FIRE!", ult_max24: "MAX! FIRE!",
   ult_heal: "Heal + haste the team", ult_freeze: "Freeze every slime nearby", ult_gold: "Blast out a pile of New Coins", ult_shield: "Shield the whole team", ult_blast: "Huge explosion + burn", ult_burst: "Mega single hit + splash",
@@ -6951,7 +6977,7 @@ Object.assign(STR.en, {
   t24_2: "Ready? Tap “Fight!”", t24_3: "Slimes drop items! Tap the item to pick it up.",
   t24_4: "Hold the item in the item bar and drag it onto a pet!", t24_5: "When a pet has beaten enough slimes, a green ↑ arrow pops up. Tap it to level up!",
   t24_6: "Tap the white ultimate button at the bottom-left.", t24_7: "Now tap a pet.", t24_8: "Check the ultimate preview and tap Confirm to spend New Coins.",
-  t24_9: "Timing bar! Tap the screen while the marker is in the green. It speeds up — a miss fires the ultimate!", t24_10: "A pet fainted! Tap it.", t24_11: "Revive it with New Coins!",
+  t24_9: "Timing bar! Tap the screen while the marker is in the green. It speeds up — a miss fires the ultimate!", t24_10: "A pet fainted! Check the revive cards on the side.", t24_11: "Tap a card and spend New Coins to revive!",
   t24_12: "Careful: your home has only 1 life — one slime gets through and you lose! After each wave you pick a perk.", t24_13: "This is the incubator: eggs hatch over time here. Upgrade it to hatch faster.",
   t24_14: "Your egg is ready! Tap it to hatch.", t24_15: "Let's see who hatched!", t24_16: "This is the Cosmetic Chest. Your first one is free — tap it!",
   t24_17: "Open a pet's details in the Pet Book to put a hat on it. Tutorial done — have fun!",
@@ -7064,13 +7090,19 @@ const PERKS24 = [{ id: "atk", v: 0.06, max: 4 }, { id: "spd", v: 0.05, max: 4 },
 function battleLocked() { return !!(B && B.running && !B.over && (B.wave >= 1 || B.waveActive)); }
 function perkN(id) { return (B && B.perks24 && B.perks24[id]) | 0; }
 function perkV(id) { const p = PERKS24.find(x => x.id === id); return p ? p.v * perkN(id) : 0; }
-function reviveCost(t) { const p = save.pets.find(q => q.uid === t.uid); const apt = p ? p.apt : 50; return Math.max(5, Math.round((15 + apt * 0.6 + (B.wave | 0) * 2) * (1 - perkV("rev")))); }
+const REVIVE_MAX24 = 3;
+function reviveLeft() { return Math.max(0, REVIVE_MAX24 - ((B && B.revives24) | 0)); }
+function reviveCost(t) {
+  const p = t && save.pets.find(q => q.uid === t.uid); const apt = p ? p.apt : 50;
+  const base = Math.max(8, Math.round((15 + apt * 0.6 + (B.wave | 0) * 2) * (1 - perkV("rev"))));
+  return Math.max(8, Math.round(base * Math.pow(1.5, (B.revives24 | 0))));
+}
 function ultCost24(t) { return 30 + 10 * ((PET[t.id] && PET[t.id].rar) || 1); }
 
 initV22Battle = function () {
   B.energy = 0; B.energyMax = 0; B.autoSkill = false;
   B.shake = 0; B.combo = 0; B.comboT = 0; B.hookNudge = false; B.treasureDropped = false;
-  B.drops24 = []; B.items24 = [null, null, null]; B.perks24 = {}; B.ultCd24 = 0; B.ultSel = false; B.ultFired24 = 0;
+  B.drops24 = []; B.items24 = [null, null, null]; B.perks24 = {}; B.ultCd24 = 0; B.ultSel = false; B.ultFired24 = 0; B.revives24 = 0;
   const sb = el("skill-bar"); if (sb) sb.innerHTML = "";
 };
 renderSkillBar = function () { const sb = el("skill-bar"); if (sb) sb.innerHTML = ""; };
@@ -7094,9 +7126,9 @@ const _startRun24 = startRun;
 startRun = function (mapId, hard) {
   _startRun24(mapId, hard);
   B.lives = 1; if (B.level) B.level = Object.assign({}, B.level, { lives: 1 });
-  B.drops24 = []; B.items24 = [null, null, null]; B.perks24 = {}; B.ultCd24 = 0; B.ultSel = false;
+  B.drops24 = []; B.items24 = [null, null, null]; B.perks24 = {}; B.ultCd24 = 0; B.ultSel = false; B.revives24 = 0;
   document.body.classList.remove("b-locked24");
-  closeUlt24(); closePerk24(); renderItems24(); refreshHUD();
+  closeUlt24(); closePerk24(); renderItems24(); renderRevive24(); refreshHUD();
 };
 const _deploy24 = deploy;
 deploy = function (uid, slot, quiet) {
@@ -7119,12 +7151,13 @@ endRun = function (won) { document.body.classList.remove("b-locked24"); closeUlt
 const _leak24 = leak;
 leak = function (e) { if (B.tut24) { e.hp = 0; e.leaked = true; return; } _leak24(e); };
 const _hitPet24 = hitPet;
-hitPet = function (t, dmg, e) { if (t && t.flyT > 0) return; if (B.tut24) dmg *= 0.2; _hitPet24(t, dmg, e); };
+hitPet = function (t, dmg, e) { if (t && t.flyT > 0) return; if (B.tut24) dmg *= 0.2; const was = t && t.fainted; _hitPet24(t, dmg, e); if (t && t.fainted && !was) renderRevive24(); };
 const _waveCleared24 = waveCleared;
 waveCleared = function () {
   const down = B.towers.filter(t => t.fainted);
   _waveCleared24();
   for (const t of down) { t.fainted = true; t.hp = 0; }        // v2.4: only New Coins revive
+  renderRevive24();
   if (B.running && !B.over && !B.tut24) openPerk24();
 };
 const _killEnemy24 = killEnemy;
@@ -7181,26 +7214,52 @@ function levelUpFx24(t) {
 }
 function revive24(t) {
   if (!t || !t.fainted) return false;
+  if (reviveLeft() <= 0) { showToast(tr("rev_max24")); renderRevive24(); return false; }
   const c = reviveCost(t);
   if (B.gold < c) { showToast(tr("rev_need24", c)); return false; }
   B.gold -= c; t.fainted = false; t.hp = petStats(t).maxHp;
+  B.revives24 = (B.revives24 | 0) + 1;
   burst(t.x, t.y - 30, "#7fe07a", 18); B.fx.push({ typ: "ring", x: t.x, y: t.y - 20, r0: 8, r1: 70, color: "#7fe07a", life: 0.4, max: 0.4 });
   showToast(tr("revived24", stageName(t.id, t.star))); try { sfx.lvup(); } catch (e) {}
-  refreshHUD(); return true;
+  el("inspect").classList.add("hidden"); B.selTower = null;
+  renderRevive24(); refreshHUD(); return true;
+}
+function renderRevive24() {
+  const bar = el("r24-bar"); if (!bar) return;
+  const down = (B && B.towers) ? B.towers.filter(t => t.fainted) : [];
+  const left = reviveLeft();
+  bar.innerHTML = "";
+  const h = document.createElement("div"); h.className = "r24-h";
+  h.textContent = left > 0 ? tr("rev_left24", left) : tr("rev_none24");
+  bar.appendChild(h);
+  const list = document.createElement("div"); list.className = "r24-list"; bar.appendChild(list);
+  if (!down.length) {
+    const e = document.createElement("div"); e.className = "r24-empty"; e.textContent = tr("r24_empty"); list.appendChild(e); return;
+  }
+  down.forEach((t, i) => {
+    const c = reviveCost(t), cap = left <= 0, poor = !cap && B.gold < c;
+    const card = document.createElement("button"); card.type = "button";
+    card.className = "r24-card" + (cap || poor ? " off" : "");
+    if (i === 0) card.id = "btn-rev24";
+    card.dataset.uid = t.uid;
+    const art = document.createElement("div"); art.className = "r24-art";
+    try { art.appendChild(petCanvas(t.id, t.star, t.shiny, 44, { charm: t.charm, hat: hatOfUid(t.uid) })); } catch (err) {}
+    const nm = document.createElement("span"); nm.className = "r24-nm"; nm.textContent = stageName(t.id, t.star);
+    const cost = document.createElement("span"); cost.className = "r24-cost";
+    cost.textContent = cap ? tr("rev_max24") : ("🪙" + c);
+    card.appendChild(art); card.appendChild(nm); card.appendChild(cost);
+    card.addEventListener("click", (ev) => { ev.stopPropagation(); revive24(t); });
+    list.appendChild(card);
+  });
 }
 const _showInspect24 = showInspect;
 showInspect = function (t) {
+  if (t && t.fainted) { el("inspect").classList.add("hidden"); B.selTower = null; renderRevive24(); return; }
   _showInspect24(t);
-  const box = el("inspect"), rc = el("btn-recall");
+  const rc = el("btn-recall");
   if (rc && battleLocked()) rc.remove();
-  if (t.fainted) {
-    const row = box.querySelector(".btn-row") || box;
-    const b = document.createElement("button"); b.type = "button"; b.className = "b-mint"; b.id = "btn-rev24"; b.textContent = tr("revive24", reviveCost(t));
-    b.addEventListener("click", (e) => { e.stopPropagation(); if (revive24(t)) { box.classList.add("hidden"); B.selTower = null; } });
-    row.prepend(b);
-  }
 };
-refreshHUD = (function (f) { return function () { f(); const l = el("st-lives"); if (l && B) l.textContent = "❤ " + B.lives; }; })(refreshHUD);
+refreshHUD = (function (f) { return function () { f(); const l = el("st-lives"); if (l && B) l.textContent = "❤ " + B.lives; renderRevive24(); }; })(refreshHUD);
 
 /* ---------- ultimate: white icon -> pet -> preview -> confirm -> timing bar -> boom ---------- */
 const ULT_ICON = { x: 34, y: 640, r: 24 };
@@ -7260,7 +7319,7 @@ function ultBoom24(t, power, hits, msg) {
   for (const e of B.enemies) if (e.hp > 0) { hitEnemy(e, st.dmg * mul * (typ === "burst" ? 1.3 : 1) + 8, d.el, { src: t, burn: typ === "blast" ? st.dmg : 0, stun: 0.5 }); burst(e.x, e.y, col, 6); }
   if (typ === "heal") for (const a of B.towers) { if (!a.fainted) a.hp = petStats(a).maxHp; }
   else if (typ === "freeze") for (const e of B.enemies) if (e.hp > 0) { e.frozenT = Math.max(e.frozenT || 0, 2 + hits * 0.15); }
-  else if (typ === "gold") { const g = 10 + hits * 4; B.gold += g; }
+  else if (typ === "gold") { const g = goldIncome(10 + hits * 4); B.gold += g; }
   else if (typ === "shield") for (const a of B.towers) if (!a.fainted) a.shield = (a.shield || 0) + petStats(a).maxHp * 0.4;
   B.floaters.push({ x: W / 2, y: 300, text: msg || "", color: "#fff", life: 1.2, max: 1.2, big: true });
   B.floaters.push({ x: W / 2, y: 345, text: tr("power24", power), color: "#ffe14a", life: 1.6, max: 1.6, huge: true });
@@ -7357,6 +7416,17 @@ function onCanvasDown24(ev) {
     stop();
     let best = null, bd = 60; for (const t of B.towers) { if (t.fainted) continue; const dd = dist(x, y, t.x, t.y - 30); if (dd < bd) { bd = dd; best = t; } }
     if (best) openUltPreview(best); else B.ultSel = false;
+    return;
+  }
+  for (const t of B.towers) {
+    if (!t.fainted) continue;
+    if (dist(x, y, t.x, t.y - 30) < 46) {
+      stop();
+      renderRevive24();
+      const card = document.querySelector('#r24-bar .r24-card[data-uid="' + t.uid + '"]');
+      if (card) { card.classList.remove("flash"); void card.offsetWidth; card.classList.add("flash"); }
+      return;
+    }
   }
 }
 
@@ -7515,7 +7585,7 @@ const T24_STEPS = [
   { tx: "t24_7", tgt: () => { const t = firstPet24(); return t ? worldRect24(t.x, t.y - 30, 48) : null; }, done: () => U24.phase === "preview" },
   { tx: "t24_8", tgt: () => el("u24-ok"), done: () => U24.phase === "timing" || (B.ultFired24 | 0) > 0 },
   { tx: "t24_9", tgt: () => null, done: () => (B.ultFired24 | 0) > 0, top: true },
-  { tx: "t24_10", enter: () => { const t = firstPet24(); if (t) { t.fainted = true; t.hp = 0; T24.rev = t; } B.gold = Math.max(B.gold, 150); el("inspect").classList.add("hidden"); }, tgt: () => T24.rev ? worldRect24(T24.rev.x, T24.rev.y - 30, 48) : null, done: () => !!el("btn-rev24") },
+  { tx: "t24_10", enter: () => { const t = firstPet24(); if (t) { t.fainted = true; t.hp = 0; T24.rev = t; } B.gold = Math.max(B.gold, 150); el("inspect").classList.add("hidden"); renderRevive24(); }, tgt: () => el("r24-bar") || el("btn-rev24"), done: () => !!el("btn-rev24") },
   { tx: "t24_11", tgt: () => el("btn-rev24"), done: () => T24.rev && !T24.rev.fainted },
   { tx: "t24_12", next: true, tgt: () => el("st-lives"), leave: () => { B.tut24 = false; B.over = true; B.running = false; B.paused = false; document.body.classList.remove("b-locked24"); hideAll(); V().free24 = 1;
       if (!save.eggs.length && !V().inc.s.length) save.eggs.push({ q: 1, sh: SHINY_BASE }); V().fastN = Math.max(V().fastN | 0, 1); persist(); openHome("hatch"); } },
@@ -7605,7 +7675,8 @@ function bootV24() {
   }
   const dock = el("dock");
   if (dock && !el("i24-bar")) { const b = document.createElement("div"); b.id = "i24-bar"; dock.insertBefore(b, el("tray")); }
-  renderItems24();
+  if (dock && !el("r24-bar")) { const r = document.createElement("div"); r.id = "r24-bar"; dock.insertBefore(r, el("tray")); }
+  renderItems24(); renderRevive24();
   canvas.addEventListener("pointerdown", onCanvasDown24, { capture: true });
   for (const evn of ["pointerdown", "mousedown", "touchstart", "click"]) document.addEventListener(evn, t24Guard, { capture: true, passive: false });
   setInterval(() => { try { t24Tick(); } catch (e) {} }, 250);
@@ -7616,9 +7687,9 @@ function bootV24() {
 
 if (typeof window !== "undefined") {
   window.__v24 = {
-    V: () => JSON.parse(JSON.stringify(V())), state: () => ({ lives: B.lives, gold: B.gold, items: (B.items24 || []).slice(), drops: (B.drops24 || []).map(d => ({ k: d.k, x: d.x, y: d.y })), perks: Object.assign({}, B.perks24), ultFired: B.ultFired24 | 0, ultSel: !!B.ultSel, u: U24.phase, locked: battleLocked(), towers: B.towers.map(t => ({ uid: t.uid, tier: t.tier, kills: t.kills24 | 0, fainted: !!t.fainted, flyT: t.flyT || 0, fireT: t.fireT || 0, swapT: t.swapT || 0, y: t.y, y0: t.y0 })) }),
+    V: () => JSON.parse(JSON.stringify(V())), state: () => ({ lives: B.lives, gold: B.gold, items: (B.items24 || []).slice(), drops: (B.drops24 || []).map(d => ({ k: d.k, x: d.x, y: d.y })), perks: Object.assign({}, B.perks24), ultFired: B.ultFired24 | 0, ultSel: !!B.ultSel, u: U24.phase, locked: battleLocked(), revives: B.revives24 | 0, towers: B.towers.map(t => ({ uid: t.uid, tier: t.tier, kills: t.kills24 | 0, fainted: !!t.fainted, flyT: t.flyT || 0, fireT: t.fireT || 0, swapT: t.swapT || 0, y: t.y, y0: t.y0 })) }),
     dropItem: (x, y, k) => dropItem24(x, y, k), applyItem: (i, k) => applyItem24(B.towers[i], k), tapTiming: (p) => tapTiming24(p), openPreview: (i) => openUltPreview(B.towers[i]), confirmUlt: () => el("u24-ok") && el("u24-ok").click(),
-    rawB: () => B, revive: (i) => revive24(B.towers[i]), faint: (i) => { const t = B.towers[i]; t.fainted = true; t.hp = 0; }, setKills: (i, n) => { B.towers[i].kills24 = n; }, upgrade: (i) => upgradeTower(B.towers[i]),
+    rawB: () => B, reviveCost, reviveLeft, reviveMax: REVIVE_MAX24, goldIncome, revive: (i) => revive24(B.towers[i]), faint: (i) => { const t = B.towers[i]; t.fainted = true; t.hp = 0; renderRevive24(); }, setKills: (i, n) => { B.towers[i].kills24 = n; }, upgrade: (i) => upgradeTower(B.towers[i]),
     perk: () => openPerk24(), pickPerk: () => { const b = document.querySelector("#p24 .p24-b"); if (b) b.click(); }, chest: (free) => openChest24(free), equip: (uid, h) => { V().eq[uid] = h; persist(); },
     incFill: () => incFill24(), hatchSlot: (i) => hatchSlot24(i), incUp: () => upgradeInc24(), finishInc: () => { for (const s of V().inc.s) s.t0 = Date.now() - s.d - 1; persist(); },
     styleOf: styleOf24, tut: () => ({ on: T24.on, i: T24.i, n: T24_STEPS.length, tx: T24_STEPS[T24.i] && T24_STEPS[T24.i].tx }), tutSkipAll: () => { while (T24.on) t24Advance(); }, tutAdvance: () => t24Advance(), tutRect: () => T24.rect,
@@ -7693,7 +7764,7 @@ killEnemy = function (e) {
     for (const t of B.towers) if (!t.fainted && dist(t.x, t.y, e.x, e.y) < r + 30) hitPet(t, (ENEMY[e.typ].atk || 8) * (e.boss ? 1.2 : 1.5) + (B.wave | 0), e);
     B.zones.push({ x: e.x, y: e.y, r: r * 0.6, life: 2, max: 2, burn: 0, el: "火", color: "#ff7a3a" });
   }
-  if (ab.includes("rich")) { const g = 25 + (B.wave | 0) * 3; B.gold += g; B.floaters.push({ x: e.x, y: e.y - 50, text: tr("rich24", g), color: "#ffe14a", life: 1.3, max: 1.3, big: true }); for (let i = 0; i < 3; i++) burst(e.x, e.y - 20, "#ffd23a", 10); }
+  if (ab.includes("rich")) { const g = goldIncome(25 + (B.wave | 0) * 3); B.gold += g; B.floaters.push({ x: e.x, y: e.y - 50, text: tr("rich24", g), color: "#ffe14a", life: 1.3, max: 1.3, big: true }); for (let i = 0; i < 3; i++) burst(e.x, e.y - 20, "#ffd23a", 10); }
 };
 const _fireTower24b = fireTower;
 fireTower = function (t, st) { if (t.frz24 > 0 || (t.stunT || 0) > 0 || (t.sleepT || 0) > 0) return false; return _fireTower24b(t, st); };
@@ -7975,7 +8046,7 @@ window.__PETTD__ = {
     bgmTarget: bgmTargetGain(), bgmGain: bgmGain ? bgmGain.gain.value : null, sfxLevel: SFX_LEVEL, vol: bgmVolume(), legacyBgm: 0.20 }),
   setBgmVolume: (v) => setBgmVolume(v),
   // v13.2 hooks: charms, traits, squad, roles, synergies, terrain, rarity, economy, banner, enemies
-  GAME_VERSION, SHAKE_CAP, SHAKE_DECAY, bumpShake, tickShake, resetViewTransform, getShake: () => (B && B.shake) || 0, getViewTransform: () => { const m = ctx.getTransform(); return { a:m.a, b:m.b, c:m.c, d:m.d, e:m.e, f:m.f }; }, getShakeCss: () => (canvas && canvas.style && canvas.style.transform) || "",
+  GAME_VERSION, SHAKE_CAP, SHAKE_DECAY, bumpShake, tickShake, resetViewTransform, GOLD_INCOME_MUL, goldIncome, getShake: () => (B && B.shake) || 0, getViewTransform: () => { const m = ctx.getTransform(); return { a:m.a, b:m.b, c:m.c, d:m.d, e:m.e, f:m.f }; }, getShakeCss: () => (canvas && canvas.style && canvas.style.transform) || "",
   RAR_KEY, RAR_MUL, MAX_STAR, MAX_LV, EVO_REQ, HATCH_W, BANNER, TERRAIN, ROLE5, TRAITS, ARMOR, ENERGY_START: 60,
   specialCharms: () => CHARMS.filter(c => c.specialOnly).map(c => ({ id: c.id, cost: c.cost || 0, cond: c.cond })), shopCharms: () => SHOP_CHARMS.map(c => c.id),
   checkSpecialCharms: (q) => checkSpecialCharms(q), specialGot: () => Object.assign({}, save.specialGot), setThiefKills(n) { save.thiefKills = n; persist(); },
