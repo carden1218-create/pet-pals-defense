@@ -668,6 +668,71 @@
   html.land [data-tab="train"] .split { grid-template-columns: minmax(420px, 1fr) 1fr; }
   html.land [data-tab="train"] .grid3 { grid-template-columns: repeat(auto-fill, minmax(128px, 1fr)); }
   html.land [data-tab="book"] .grid3, html.land #detail .grid3 { grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); }
+
+  /* ===== GB-7: player name + combat power + leaderboard ===== */
+  #name-screen, #board-screen { z-index: 28; }
+  #name-input {
+    width: 90%; font-size: 20px; font-weight: 900; padding: 8px 12px;
+    border: 3px solid var(--ol); border-radius: 14px; text-align: center; font-family: inherit;
+    background: #fff; color: var(--ink); box-shadow: 0 3px 0 var(--ol);
+  }
+  .pwr, .pwr-pill {
+    display: inline-block; font-weight: 900; font-size: 11px; color: #7a3200;
+    background: #ffe58a; border: 2px solid var(--ol); border-radius: 999px;
+    padding: 0 6px; margin-top: 3px; letter-spacing: 0;
+  }
+  .card .pwr { margin: 3px auto 0; }
+  #st-power, #st-tpower, #home-power, #board-mypower { background: #ffe58a; }
+  .board-panel {
+    max-width: 560px; width: 100%;
+    max-height: calc(100% - 8px);
+    display: flex; flex-direction: column; overflow: hidden;
+    padding-bottom: 12px;
+  }
+  .board-mebar { display: flex; flex-wrap: wrap; align-items: center; justify-content: center; gap: 6px; margin: 8px 0 6px; }
+  .board-status { font-size: 12px; font-weight: 800; color: var(--dim); }
+  .board-status.offline { color: #c05600; }
+  .board-tabs { grid-template-columns: 1fr 1fr; margin-bottom: 6px; }
+  .board-head, .brow {
+    display: grid; grid-template-columns: 40px minmax(0, 1.3fr) 72px 78px 96px;
+    gap: 4px; align-items: center; font-weight: 900; font-size: 12px;
+  }
+  .board-head { color: var(--dim); padding: 0 6px 4px; }
+  .board-list { flex: 1; min-height: 80px; overflow-y: auto; overflow-x: hidden; padding: 0 2px 4px; }
+  .brow {
+    background: #fff8e6; border: 3px solid var(--ol); border-radius: 14px;
+    box-shadow: 0 3px 0 var(--ol); padding: 4px 6px; margin-bottom: 6px;
+  }
+  .brow.me { background: #ffe4f0; outline: 3px solid var(--pink); }
+  .brow .bn { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: 13px; }
+  .brow .bw, .brow .bp { text-align: right; font-size: 13px; }
+  .rk {
+    width: 28px; height: 28px; border-radius: 50%; border: 3px solid var(--ol);
+    display: inline-flex; align-items: center; justify-content: center;
+    background: #fff; font-size: 12px; justify-self: center;
+  }
+  .rk.g { background: #ffd24a; }
+  .rk.s { background: #d5dbe3; }
+  .rk.b { background: #e8a36a; color: #fff; }
+  .bpets { display: flex; gap: 1px; justify-content: flex-end; }
+  .bpets canvas { width: 22px; height: 22px; display: block; }
+  .board-self { margin: 4px 0 6px; }
+  .board-self .brow { margin-bottom: 0; background: #e8fff0; }
+  .board-empty, .board-loading { text-align: center; font-weight: 800; color: var(--dim); padding: 18px 8px; }
+  .board-actions { flex-shrink: 0; margin-top: 4px; }
+  html.land .board-panel { max-width: 760px; width: min(760px, 96%); }
+  html.land .board-head, html.land .brow { grid-template-columns: 44px minmax(0, 1.4fr) 80px 90px 120px; font-size: 13px; }
+  html.land .bpets canvas { width: 26px; height: 26px; }
+  @media (max-height: 500px) and (orientation: landscape) {
+    .board-panel { padding: 8px 10px 8px; }
+    .board-mebar { margin: 2px 0; }
+    .brow { padding: 2px 6px; margin-bottom: 4px; }
+    html.land .hud-stats #st-power { font-size: 11px; }
+  }
+
+  #home-power { font-size: 13px; padding: 2px 8px; }
+  .audio-bar { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; margin-bottom: 8px; }
+  .audio-bar button { padding: 4px 10px; font-size: 13px; }
 </style>
 </head>
 <body>
@@ -678,9 +743,11 @@
       <div class="hud-row">
         <div class="hud-stats">
           <span class="pill" id="st-wave" data-i18n="wave_init">第 1 波</span>
+          <span class="pill sm" id="st-power">⚔ 0</span>
           <span class="pill sm" id="st-eggs" data-i18n="eggs_init">蛋 0</span>
         </div>
         <div class="hud-btns">
+          <button type="button" class="rnd b-lav" id="btn-board-hud" title="Leaderboard">🏆</button>
           <button type="button" class="rnd" id="btn-speed">×1</button>
           <button type="button" class="rnd" id="btn-pause" data-i18n="pause_btn">暂停</button>
           <button type="button" class="rnd b-red" id="btn-end" data-i18n="end">结束</button>
@@ -695,6 +762,7 @@
   <div id="dock" class="hidden">
     <div id="dock-bar">
       <span class="dpill" id="st-gold" data-i18n="gold_init">金币 0</span>
+      <span class="dpill" id="st-tpower">⚔ 0</span>
       <span class="dpill" id="st-deploy" data-i18n="deploy_init">上阵 0/10</span>
       <span class="dpill heart" id="st-lives">❤ 10</span>
       <button type="button" class="b-go-s hidden" id="btn-next" data-i18n="fight">开战！</button>
@@ -723,6 +791,7 @@
     <div class="btn-row" style="flex-direction:column;align-items:center">
       <button type="button" class="b-pink b-big" id="btn-start" data-i18n="btn_start">Start</button>
       <button type="button" class="b-gold hidden" id="btn-continue" data-i18n="btn_continue">Continue</button>
+      <button type="button" class="b-lav" id="btn-board-title" data-i18n="board_btn">Leaderboard</button>
       <button type="button" class="b-mint lang-toggle" id="btn-lang-title" data-i18n="lang_toggle">Language</button>
       <div class="audio-row" style="margin-top:8px">
         <button type="button" class="audio-btn" data-audio="bgm" data-i18n="music">Music</button>
@@ -746,6 +815,7 @@
         <span class="ribbon" style="font-size:20px;padding:2px 14px" data-i18n="short_title">萌宠防线</span>
         <div style="display:flex;gap:6px;align-items:center">
           <span class="pill" id="home-gems">0</span>
+          <span class="pill" id="home-power">⚔ 0</span>
           <button type="button" id="btn-help" style="padding:4px 10px;font-size:14px" data-i18n="help">Help</button>
           <button type="button" class="lang-toggle" id="btn-lang-home" style="padding:4px 10px;font-size:14px" data-i18n="lang_toggle">Language</button>
         </div>
@@ -753,6 +823,7 @@
       <div class="audio-bar">
         <button type="button" class="audio-btn" data-audio="bgm" data-i18n="music">Music</button>
         <button type="button" class="audio-btn" data-audio="sfx" data-i18n="sfx">SFX</button>
+        <button type="button" class="b-lav" id="btn-board-home" data-i18n="board_btn">Leaderboard</button>
         <button type="button" id="btn-save-home" data-i18n="save_code">Save Code</button>
       </div>
       <div class="tabs">
@@ -811,6 +882,7 @@
         <button type="button" class="audio-btn" data-audio="sfx" data-i18n="sfx">SFX</button>
       </div>
       <div class="btn-row" style="margin-top:10px">
+        <button type="button" class="b-lav" id="btn-board-pause" data-i18n="board_btn">Leaderboard</button>
         <button type="button" id="btn-save-pause" data-i18n="save_code">Save Code</button>
       </div>
       <p class="subtitle" style="margin:12px 0 0" data-i18n="pause_note">结束后，已经掉落的蛋和宝石都会保留。</p>
@@ -825,6 +897,45 @@
     </div>
   </div>
 
+
+  <div id="name-screen" class="overlay dim-bg hidden">
+    <div class="panel center" style="max-width:400px">
+      <div style="margin-top:-38px"><span class="ribbon pink" data-i18n="name_title">Player Name</span></div>
+      <p class="subtitle" data-i18n="name_hint">1–20 characters. In a hurry? Just keep the suggested name!</p>
+      <input id="name-input" type="text" maxlength="20" autocomplete="off" spellcheck="false" data-i18n-placeholder="name_ph" placeholder="Type your name">
+      <div class="btn-row" style="margin-top:12px">
+        <button type="button" id="btn-name-shuffle" data-i18n="name_shuffle">New idea</button>
+        <button type="button" class="b-pink b-big" id="btn-name-ok" data-i18n="name_ok">Let's go!</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="board-screen" class="overlay dim-bg hidden">
+    <div class="panel board-panel">
+      <div class="center" style="margin-top:-40px"><span class="ribbon lav" data-i18n="board_title">Leaderboard</span></div>
+      <div class="board-mebar">
+        <button type="button" class="mini b-sky" id="btn-board-name" data-i18n="name_edit">Edit name</button>
+        <span class="pill" id="board-mypower">⚔ 0</span>
+        <span class="board-status" id="board-status"></span>
+      </div>
+      <div class="tabs board-tabs">
+        <button type="button" class="on" id="btn-bsort-wave" data-bsort="wave" data-i18n="board_wave">Highest Wave</button>
+        <button type="button" id="btn-bsort-power" data-bsort="power" data-i18n="board_power">Team Power</button>
+      </div>
+      <div class="board-head">
+        <span data-i18n="board_rank">#</span>
+        <span data-i18n="board_col_name">Player</span>
+        <span data-i18n="board_col_wave">Best Wave</span>
+        <span data-i18n="board_col_power">Power</span>
+      </div>
+      <div id="board-list" class="board-list"></div>
+      <div id="board-self" class="board-self"></div>
+      <div class="btn-row board-actions">
+        <button type="button" class="b-mint" id="btn-board-refresh" data-i18n="board_refresh">Refresh</button>
+        <button type="button" class="b-pink" id="btn-board-close" data-i18n="back">Back</button>
+      </div>
+    </div>
+  </div>
 
   <div id="save-screen" class="overlay dim-bg hidden">
     <div class="panel center" style="max-width:520px">
@@ -1077,6 +1188,43 @@ function sanitizeNick(s) {
   s = String(s == null ? "" : s).normalize("NFC").replace(/[\u0000-\u001f\u007f-\u009f<>&"'`\\]/g, "").replace(/\s+/g, " ").trim();
   return Array.from(s).slice(0, NICK_MAX).join("");
 }
+const NAME_MAX = 20;
+const NAME_POOL = {
+  en: ["Mango Knight","Egg Ranger","Berry Hero","Coco Champ","Lucky Peach","Star Kitten","Wave Rider","Chili Dash","Taro Tank","Lemon Bolt","Peach Guard","Melon Wall"],
+  zh: ["芒果骑士","孵蛋达人","浆果勇士","幸运蜜桃","波次先锋","椰香冠军","辣椒闪击","芋泥坦克","柠檬闪电","蜜桃守卫","西瓜城墙","星星小猫"]
+};
+function sanitizePlayerName(s) {
+  s = String(s == null ? "" : s).normalize("NFC").replace(/[\u0000-\u001f\u007f-\u009f]/g, "").trim();
+  if (/[<>]/.test(s)) return "";
+  s = s.replace(/[&"`]/g, "").replace(/\s+/g, " ").trim();
+  return Array.from(s).slice(0, NAME_MAX).join("");
+}
+function suggestName() {
+  const pool = NAME_POOL[LANG === "en" ? "en" : "zh"];
+  return pool[Math.floor(Math.random() * pool.length)];
+}
+function charmPowerMul(p) {
+  const c = p && p.charm && CHARM[p.charm];
+  if (!c) return 1;
+  return 1 + 0.06 + 0.04 * ((c.rar || 1) - 1);
+}
+function petPower(p) {
+  if (!p || !PET[p.id]) return 0;
+  const d = PET[p.id], m = indivMul(p);
+  const train = (p.tr && ((p.tr.a || 0) + (p.tr.h || 0) + (p.tr.s || 0))) || 0;
+  const raw = 100 * STAR_MUL[clampN(p.star | 0, 1, MAX_STAR)] * (d.rar + 1)
+    * m.base * (1 + 0.02 * train) * (p.shiny ? 1.08 : 1) * charmPowerMul(p);
+  return Math.max(1, Math.round(raw));
+}
+function teamPower(list) {
+  return (list || []).slice().sort((a, b) => petPower(b) - petPower(a)).slice(0, 5).reduce((s, p) => s + petPower(p), 0);
+}
+function topPetSummaries(list, n) {
+  return (list || []).slice().sort((a, b) => petPower(b) - petPower(a)).slice(0, n || 5).map(p => ({
+    species: p.id, star: p.star | 0, shiny: !!p.shiny, nickname: p.nick || "", power: petPower(p)
+  }));
+}
+function fmtPower(n) { n = Math.round(+n || 0); return n >= 10000 ? n.toLocaleString("en-US") : String(n); }
 function esc(s) { return String(s).replace(/[&<>"']/g, c => ({ "&":"&amp;", "<":"&lt;", ">":"&gt;", '"':"&quot;", "'":"&#39;" }[c])); }
 
 /* ================= i18n (中文 / English) ================= */
@@ -1153,7 +1301,16 @@ const STR = {
     charm_bow:"爱心蝴蝶结", charm_bow_d:"攻击/生命 +8% · 持续回血", charm_wings:"小天使翼", charm_wings_d:"溅射范围 +30%",
     charm_clover:"金四叶草", charm_clover_d:"全队金币 +15%", charm_crown:"迷你王冠", charm_crown_d:"对首领伤害 +35%",
     rename:"取名", rename_title:"给萌宠取名", rename_hint:"最多 12 个字，留空就用默认名字。", rename_save:"保存", rename_reset:"恢复默认", rename_cancel:"取消",
-    rename_ok:"改好啦：{0}", rename_ph:"输入昵称", nick_tag:"昵称", evo_legend:"传说光环形态（大翅膀 + 皇冠光芒）"
+    rename_ok:"改好啦：{0}", rename_ph:"输入昵称", nick_tag:"昵称", evo_legend:"传说光环形态（大翅膀 + 皇冠光芒）",
+    power:"战力", power_n:"战力 {0}", team_power:"队伍战力", team_power_n:"队伍战力 {0}",
+    board_btn:"排行榜", board_title:"排行榜", board_wave:"最高波数榜", board_power:"战力榜",
+    board_refresh:"刷新", board_rank:"名次", board_col_name:"玩家", board_col_wave:"最高波数", board_col_power:"战力",
+    board_me:"我的名次", board_you:"我", board_empty:"还没有上榜记录，去打几波再来看看！",
+    board_offline:"网络不通，显示本地记录", board_online:"已同步", board_loading:"正在拉取排行榜…",
+    board_syncing:"正在同步成绩…", board_updated:"排行榜已更新", board_err:"暂时排不上，先看看本地成绩吧",
+    name_title:"玩家昵称", name_hint:"1–20 个字。想快点开始的话，直接用推荐名字就好！",
+    name_ok:"就用这个", name_shuffle:"换一个", name_ph:"输入你的昵称", name_bad:"换个昵称再试试（1–20 个字，不要用符号）",
+    name_edit:"改昵称"
   },
   en: {
     game_title:"Pet Pals Defense", short_title:"Pet Pals", doc_title:"Pet Pals Defense — Catch · Hatch · Evolve", tagline:"Catch pets · Hatch & evolve · Battle endless slimes",
@@ -1225,7 +1382,16 @@ const STR = {
     charm_bow:"Heart Bow", charm_bow_d:"Atk/HP +8% · regen", charm_wings:"Angel Wings", charm_wings_d:"Splash +30%",
     charm_clover:"Gold Clover", charm_clover_d:"Team gold +15%", charm_crown:"Mini Crown", charm_crown_d:"Boss damage +35%",
     rename:"Rename", rename_title:"Name Your Pet", rename_hint:"Up to 12 characters. Leave empty to use the default name.", rename_save:"Save", rename_reset:"Reset", rename_cancel:"Cancel",
-    rename_ok:"Renamed: {0}", rename_ph:"Type a nickname", nick_tag:"Nickname", evo_legend:"Legendary aura form (big wings + crown rays)"
+    rename_ok:"Renamed: {0}", rename_ph:"Type a nickname", nick_tag:"Nickname", evo_legend:"Legendary aura form (big wings + crown rays)",
+    power:"Power", power_n:"Power {0}", team_power:"Team Power", team_power_n:"Team Power {0}",
+    board_btn:"Leaderboard", board_title:"Leaderboard", board_wave:"Highest Wave", board_power:"Team Power",
+    board_refresh:"Refresh", board_rank:"Rank", board_col_name:"Player", board_col_wave:"Best Wave", board_col_power:"Power",
+    board_me:"Your Rank", board_you:"You", board_empty:"No scores yet — clear a few waves and come back!",
+    board_offline:"Offline — showing your saved board", board_online:"Online", board_loading:"Loading the leaderboard…",
+    board_syncing:"Syncing your score…", board_updated:"Leaderboard updated", board_err:"Couldn't reach the board — showing local records",
+    name_title:"Player Name", name_hint:"1–20 characters. In a hurry? Just keep the suggested name!",
+    name_ok:"Let's go!", name_shuffle:"New idea", name_ph:"Type your name", name_bad:"Pick another name (1–20 characters, no symbols)",
+    name_edit:"Edit name"
   }
 };
 function tr(key, ...a) { const s = (STR[LANG] && STR[LANG][key]) ?? STR.zh[key] ?? key; return s.replace(/\{(\d)\}/g, (_, i) => a[+i]); }
@@ -2101,9 +2267,31 @@ function petCanvas(id, star, shiny, px, opts) {
 
 /* ================= save ================= */
 let uidSeq = 1;
+const CLIENT_KEY = "mengchong-td-client-id";
+const NAME_KEY = "mengchong-td-player-name";
+const LB_URL = "https://pet-td-leaderboard.carden1218.workers.dev";
+const LB_CACHE_KEY = "mengchong-td-board-cache";
+function getClientId() {
+  try {
+    let id = localStorage.getItem(CLIENT_KEY);
+    if (id && /^[A-Za-z0-9._-]{8,128}$/.test(id)) return id;
+    id = (crypto.randomUUID && crypto.randomUUID()) || ("id-" + Date.now().toString(36) + "-" + Math.random().toString(36).slice(2, 10));
+    localStorage.setItem(CLIENT_KEY, id);
+    return id;
+  } catch (e) {
+    return "local-" + Date.now().toString(36);
+  }
+}
+function readStoredName() {
+  try { return sanitizePlayerName(localStorage.getItem(NAME_KEY) || ""); } catch (e) { return ""; }
+}
+function writeStoredName(n) {
+  try { if (n) localStorage.setItem(NAME_KEY, n); } catch (e) {}
+}
 const save = {
   started: false, muted: false, muteBgm: false, muteSfx: false, gems: 60, pets: [], eggs: [], beaten: 0, endlessBest: 0,
-  seen: {}, seenShiny: {}, firstEgg: false, hatched: 0, food: {}, charms: {}, evoMain: {}
+  seen: {}, seenShiny: {}, firstEgg: false, hatched: 0, food: {}, charms: {}, evoMain: {},
+  playerName: readStoredName(), clientId: getClientId()
 };
 function persist() {
   try {
@@ -2111,15 +2299,18 @@ function persist() {
       v: 2, started: save.started, muted: !!(save.muteBgm && save.muteSfx), muteBgm: !!save.muteBgm, muteSfx: !!save.muteSfx,
       gems: save.gems, pets: save.pets, eggs: save.eggs,
       beaten: save.beaten, endlessBest: save.endlessBest, seen: save.seen, seenShiny: save.seenShiny,
-      firstEgg: save.firstEgg, hatched: save.hatched, food: save.food, charms: save.charms, evoMain: save.evoMain, uidSeq
+      firstEgg: save.firstEgg, hatched: save.hatched, food: save.food, charms: save.charms, evoMain: save.evoMain, uidSeq,
+      playerName: save.playerName || "", clientId: save.clientId || getClientId()
     }));
   } catch (e) {}
+  maybeSubmitScore("persist");
 }
 function snapshotSave() {
   return {
     v: 2, started: save.started, muted: !!(save.muteBgm && save.muteSfx), muteBgm: !!save.muteBgm, muteSfx: !!save.muteSfx,
     gems: save.gems, pets: save.pets, eggs: save.eggs, beaten: save.beaten, endlessBest: save.endlessBest,
-    seen: save.seen, seenShiny: save.seenShiny, firstEgg: save.firstEgg, hatched: save.hatched, food: save.food, charms: save.charms, evoMain: save.evoMain, uidSeq, lang: LANG
+    seen: save.seen, seenShiny: save.seenShiny, firstEgg: save.firstEgg, hatched: save.hatched, food: save.food, charms: save.charms, evoMain: save.evoMain, uidSeq, lang: LANG,
+    playerName: save.playerName || "", clientId: save.clientId || getClientId()
   };
 }
 function applySave(d) {
@@ -2138,6 +2329,13 @@ function applySave(d) {
   save.food = {}; for (const f of FOODS) { const n = d.food && d.food[f.id] | 0; if (n > 0) save.food[f.id] = n; }
   save.charms = {}; for (const c of CHARMS) { const n = d.charms && d.charms[c.id] | 0; if (n > 0) save.charms[c.id] = n; }
   save.evoMain = {}; if (d.evoMain && typeof d.evoMain === "object") for (const k in d.evoMain) if (PET[k]) save.evoMain[k] = d.evoMain[k] | 0;
+  const importedId = typeof d.clientId === "string" && /^[A-Za-z0-9._-]{8,128}$/.test(d.clientId) ? d.clientId : "";
+  if (importedId) {
+    save.clientId = importedId;
+    try { localStorage.setItem(CLIENT_KEY, importedId); } catch (e) {}
+  } else save.clientId = getClientId();
+  const nm = sanitizePlayerName(d.playerName || readStoredName());
+  save.playerName = nm; if (nm) writeStoredName(nm);
   for (const p of save.pets) { save.seen[p.id] = true; if (p.shiny) save.seenShiny[p.id] = true; }
   uidSeq = Math.max(1, d.uidSeq | 0, ...save.pets.map(p => p.uid + 1));
   for (const p of save.pets) if (!p.uid) p.uid = uidSeq++;
@@ -2178,8 +2376,10 @@ function loadSave() {
 let migratedNote = false;
 function newGame(starterId) {
   uidSeq = 1;
+  const keepName = save.playerName || readStoredName(), keepId = save.clientId || getClientId();
   Object.assign(save, { started: true, gems: 60, pets: [], eggs: [{ q: 1, sh: SHINY_BASE }], beaten: 0, endlessBest: 0,
-    seen: {}, seenShiny: {}, firstEgg: false, hatched: 0, food: { candy: 2 }, charms: {}, evoMain: {} });
+    seen: {}, seenShiny: {}, firstEgg: false, hatched: 0, food: { candy: 2 }, charms: {}, evoMain: {},
+    playerName: keepName, clientId: keepId });
   addPet(starterId || "chili", 1, false, { minApt: 45 });
   persist();
 }
@@ -2273,7 +2473,8 @@ function packSave(d) {
       if (q.evo || q.nick || q.charm) a.push(q.evo | 0, q.nick || "", q.charm || ""); return a; }),
     ch: d.charms || {}, em: d.evoMain || {},
     q: (d.eggs || []).map(e => [e.q | 0, +e.sh || 0]),
-    fo: d.food || {}, s: d.seen || {}, ss: d.seenShiny || {}, lang: d.lang || LANG || ""
+    fo: d.food || {}, s: d.seen || {}, ss: d.seenShiny || {}, lang: d.lang || LANG || "",
+    pn: d.playerName || "", cid: d.clientId || ""
   };
 }
 function unpackSave(p) {
@@ -2286,7 +2487,8 @@ function unpackSave(p) {
       evo: a[11] | 0, nick: a[12] || "", charm: a[13] || "" })),
     charms: p.ch || {}, evoMain: p.em || {},
     eggs: (p.q || []).map(a => ({ q: a[0], sh: a[1] })),
-    food: p.fo || {}, seen: p.s || {}, seenShiny: p.ss || {}, lang: p.lang || ""
+    food: p.fo || {}, seen: p.s || {}, seenShiny: p.ss || {}, lang: p.lang || "",
+    playerName: p.pn || "", clientId: p.cid || ""
   };
 }
 function exportSaveCode() {
@@ -2455,7 +2657,6 @@ function startRun() {
   showToast(B.towers.length ? tr("deploy_hint") : tr("deploy_empty"), 3.2);
   musicFollowScreen();
 }
-function petPower(p) { const d = PET[p.id], m = indivMul(p); return STAR_MUL[clamp(p.star | 0, 1, MAX_STAR)] * (d.rar + 1) * (p.charm ? 1.06 : 1) * (p.shiny ? 1.08 : 1) * m.base * (1 + 0.02 * ((p.tr && (p.tr.a + p.tr.h + p.tr.s)) || 0)); }
 function gainXp(p, n) {
   let ups = 0;
   if (p.lv >= MAX_LV) return 0;
@@ -2508,6 +2709,9 @@ function recall(t) {
 function refreshHUD() {
   el("st-lives").textContent = "❤ " + B.lives;
   el("st-gold").textContent = tr("gold", B.gold);
+  const tp = teamPower(save.pets);
+  if (el("st-power")) el("st-power").textContent = "⚔ " + fmtPower(tp);
+  if (el("st-tpower")) el("st-tpower").textContent = "⚔ " + fmtPower(tp);
   el("st-deploy").textContent = tr("deployed", B.towers.length, SLOTS);
   el("st-eggs").textContent = tr("eggs_run", B.eggsGot.length);
   const lv = B.level;
@@ -2534,7 +2738,7 @@ function renderTray() {
     div.insertAdjacentHTML("beforeend", "<span class='tg'>" + RAR_NAME[d.rar] + "</span>");
     div.appendChild(petCanvas(p.id, p.star, p.shiny, 84, { charm: p.charm }));
     const nm = document.createElement("div"); nm.className = "nm";
-    nm.innerHTML = (p.shiny ? "✦" : "") + petName(p) + "<br><span class='st'>" + "★".repeat(p.star) + "</span>";
+    nm.innerHTML = (p.shiny ? "✦" : "") + petName(p) + "<br><span class='st'>" + "★".repeat(p.star) + "</span><br><span class='pwr'>⚔ " + fmtPower(petPower(p)) + "</span>";
     div.appendChild(nm);
     div.addEventListener("click", (e) => { e.stopPropagation(); sfx.click(); B.selPet = B.selPet === p.uid ? null : p.uid; B.selTower = null; el("inspect").classList.add("hidden"); renderTray(); });
     box.appendChild(div);
@@ -2548,7 +2752,7 @@ function showInspect(t) {
   box.innerHTML = "<h3>" + (t.shiny ? tr("shiny_pre") : "") + (t.nick ? esc(t.nick) + " <small style='opacity:.75'>(" + stageName(t.id, t.star) + ")</small>" : stageName(t.id, t.star)) + " " + starsHTML(t.star) + "</h3>"
     + (t.charm ? "<div class='charm-line'>" + tr("charm_on", tr("charm_" + t.charm)) + " · " + tr("charm_" + t.charm + "_d") + "</div>" : "")
     + "<div><span class='role role-" + d.role + "'>" + ROLE_NAME[d.role] + "</span> <span class='role'>" + tr("el_type", elName(d.el)) + "</span> · " + tr("field_lv", t.tier) + "</div>"
-    + (save.pets.find(q => q.uid === t.uid) ? (() => { const q = save.pets.find(q => q.uid === t.uid); return "<div style='margin:3px 0'>" + lvHTML(q) + " " + gradeHTML(q.grade) + "</div>" + aptBarHTML(q, true); })() : "")
+    + (save.pets.find(q => q.uid === t.uid) ? (() => { const q = save.pets.find(q => q.uid === t.uid); return "<div style='margin:3px 0'>" + lvHTML(q) + " " + gradeHTML(q.grade) + " <span class='pwr'>⚔ " + fmtPower(petPower(q)) + "</span></div>" + aptBarHTML(q, true); })() : "")
     + "<div class='skill'><b>" + tr("skill_line", d.sk) + "</b>" + d.skd + "<br><span style='opacity:.8'>" + tr("skill_up", d.up) + "</span></div>"
     + "<div>" + (d.dmg ? tr("dmg", Math.round(st.dmg)) : "") + tr("range_hp", Math.round(st.range), Math.ceil(t.hp), Math.round(st.maxHp)) + "</div>"
     + "<div class='btn-row' style='margin-top:8px'>"
@@ -3268,6 +3472,194 @@ function renderBattle() {
   }
 }
 
+
+/* ================= player name + live leaderboard (GB-7) ================= */
+let nameAfter = null, boardSort = "wave", boardMode = "live", boardBusy = false, boardFromBattle = false;
+let lastPosted = { wave: -1, power: -1, t: 0, name: "" };
+let submitTimer = 0, boardCache = { wave: null, power: null, offline: false, status: "" };
+try { const c = JSON.parse(localStorage.getItem(LB_CACHE_KEY) || "null"); if (c && c.wave) boardCache = Object.assign(boardCache, c); } catch (e) {}
+
+function currentBestWave() { return Math.max(save.endlessBest | 0, (B && B.bestWave) | 0, (B && B.wave) | 0); }
+function scorePayload() {
+  const name = sanitizePlayerName(save.playerName || readStoredName() || suggestName());
+  return {
+    client_id: save.clientId || getClientId(),
+    player_name: name,
+    highest_wave: Math.max(1, currentBestWave()),
+    team_power: teamPower(save.pets),
+    top_pets: topPetSummaries(save.pets, 5)
+  };
+}
+function setPlayerName(raw, quiet) {
+  const n = sanitizePlayerName(raw);
+  if (!n) return false;
+  save.playerName = n; writeStoredName(n);
+  if (save.started) { try { persist(); } catch (e) {} }
+  if (!quiet) showToast(tr("rename_ok", n));
+  return n;
+}
+function openNamePrompt(after) {
+  nameAfter = after || null;
+  const box = el("name-screen");
+  const inp = el("name-input");
+  const cur = sanitizePlayerName(save.playerName || readStoredName()) || suggestName();
+  inp.value = cur;
+  inp.placeholder = tr("name_ph");
+  box.classList.remove("hidden");
+  setTimeout(() => { try { inp.focus(); inp.select(); } catch (e) {} }, 50);
+}
+function closeNamePrompt() { el("name-screen").classList.add("hidden"); }
+function confirmPlayerName() {
+  const n = setPlayerName(el("name-input").value || suggestName(), true);
+  if (!n) { showToast(tr("name_bad")); return false; }
+  closeNamePrompt();
+  const cb = nameAfter; nameAfter = null;
+  if (cb) cb();
+  if (el("board-screen") && !el("board-screen").classList.contains("hidden")) renderBoard();
+  maybeSubmitScore("name");
+  return true;
+}
+function ensurePlayerName(cb) {
+  if (sanitizePlayerName(save.playerName || readStoredName())) { if (cb) cb(); return; }
+  openNamePrompt(cb);
+}
+
+function saveBoardCache() {
+  try { localStorage.setItem(LB_CACHE_KEY, JSON.stringify({ wave: boardCache.wave, power: boardCache.power })); } catch (e) {}
+}
+function localBoardFallback(sort) {
+  const pay = scorePayload();
+  const me = {
+    rank: 1, player_name: pay.player_name, highest_wave: save.endlessBest | 0,
+    team_power: pay.team_power, top_pets: pay.top_pets, updated_at: Date.now()
+  };
+  const cached = boardCache[sort];
+  if (cached && cached.entries) {
+    return { sort, limit: cached.limit || 50, total: cached.total || cached.entries.length, entries: cached.entries, me: cached.me || (save.endlessBest ? me : null), offline: true };
+  }
+  return { sort, limit: 50, total: save.endlessBest ? 1 : 0, entries: save.endlessBest ? [me] : [], me: save.endlessBest ? me : null, offline: true };
+}
+async function fetchBoard(sort) {
+  if (boardMode === "offline") throw new Error("offline");
+  const url = LB_URL + "/leaderboard?sort=" + encodeURIComponent(sort) + "&limit=50&client_id=" + encodeURIComponent(save.clientId || getClientId());
+  const r = await fetch(url, { headers: { Accept: "application/json" } });
+  if (!r.ok) throw new Error("http " + r.status);
+  return r.json();
+}
+function petBadgeCanvases(pets) {
+  const wrap = document.createElement("div"); wrap.className = "bpets";
+  (pets || []).slice(0, 5).forEach(p => {
+    if (!p || !PET[p.species || p.id]) return;
+    wrap.appendChild(petCanvas(p.species || p.id, p.star || 1, !!p.shiny, 22));
+  });
+  return wrap;
+}
+function boardRow(e, mine) {
+  const div = document.createElement("div");
+  div.className = "brow" + (mine ? " me" : "");
+  const rk = document.createElement("span");
+  const r = e.rank | 0;
+  rk.className = "rk" + (r === 1 ? " g" : r === 2 ? " s" : r === 3 ? " b" : "");
+  rk.textContent = r ? String(r) : "–";
+  const nm = document.createElement("span"); nm.className = "bn";
+  nm.textContent = (e.player_name || "????") + (mine ? " · " + tr("board_you") : "");
+  const bw = document.createElement("span"); bw.className = "bw"; bw.textContent = String(e.highest_wave | 0);
+  const bp = document.createElement("span"); bp.className = "bp"; bp.textContent = fmtPower(e.team_power);
+  div.appendChild(rk); div.appendChild(nm); div.appendChild(bw); div.appendChild(bp);
+  div.appendChild(petBadgeCanvases(e.top_pets));
+  return div;
+}
+function renderBoard(data) {
+  const list = el("board-list"), self = el("board-self"), st = el("board-status");
+  if (el("board-mypower")) el("board-mypower").textContent = "⚔ " + fmtPower(teamPower(save.pets));
+  if (el("btn-board-name")) el("btn-board-name").textContent = "✎ " + (save.playerName || tr("name_edit"));
+  document.querySelectorAll(".board-tabs button").forEach(b => b.classList.toggle("on", b.dataset.bsort === boardSort));
+  if (!data) {
+    list.innerHTML = "<div class='board-loading'>" + tr("board_loading") + "</div>";
+    self.innerHTML = "";
+    st.textContent = "";
+    return;
+  }
+  st.textContent = data.offline ? tr("board_offline") : tr("board_online");
+  st.classList.toggle("offline", !!data.offline);
+  const entries = data.entries || [];
+  list.innerHTML = "";
+  if (!entries.length) list.innerHTML = "<div class='board-empty'>" + tr("board_empty") + "</div>";
+  else entries.forEach(e => {
+    const mine = data.me && e.player_name === data.me.player_name && e.highest_wave === data.me.highest_wave && e.team_power === data.me.team_power && e.rank === data.me.rank;
+    list.appendChild(boardRow(e, !!mine));
+  });
+  self.innerHTML = "";
+  if (data.me) {
+    const inTop = entries.some(e => e.rank === data.me.rank && e.player_name === data.me.player_name);
+    if (!inTop || data.me.rank > entries.length) {
+      const lab = document.createElement("div"); lab.className = "sec-title"; lab.textContent = tr("board_me") + " · #" + data.me.rank;
+      self.appendChild(lab);
+      self.appendChild(boardRow(data.me, true));
+    }
+  }
+}
+async function loadBoard(sort) {
+  boardSort = sort === "power" ? "power" : "wave";
+  renderBoard(null);
+  try {
+    const data = await fetchBoard(boardSort);
+    boardCache[boardSort] = data;
+    boardCache.offline = false;
+    saveBoardCache();
+    renderBoard(data);
+    return data;
+  } catch (e) {
+    const fb = localBoardFallback(boardSort);
+    renderBoard(fb);
+    return fb;
+  }
+}
+function openBoard() {
+  if (screen === "battle" && B && B.running && !B.over) {
+    boardFromBattle = !B.paused;
+    B.paused = true;
+  } else boardFromBattle = false;
+  el("board-screen").classList.remove("hidden");
+  loadBoard(boardSort);
+}
+function closeBoard() {
+  el("board-screen").classList.add("hidden");
+  if (boardFromBattle && B && !el("pause").classList.contains("hidden") === false) {
+    /* keep paused if pause overlay is open */
+  }
+  if (boardFromBattle && el("pause").classList.contains("hidden")) B.paused = false;
+  boardFromBattle = false;
+}
+function maybeSubmitScore(reason) {
+  if (boardMode === "offline") return;
+  if (!sanitizePlayerName(save.playerName || readStoredName())) return;
+  if (currentBestWave() < 1) return;
+  const pay = scorePayload();
+  const now = Date.now();
+  const grew = pay.highest_wave > lastPosted.wave || pay.team_power > lastPosted.power + 5 || pay.player_name !== lastPosted.name;
+  if (lastPosted.t && !grew && reason !== "force") return;
+  const wait = lastPosted.t ? Math.max(0, 2500 - (now - lastPosted.t)) : 0;
+  if (wait > 0) {
+    clearTimeout(submitTimer);
+    submitTimer = setTimeout(() => maybeSubmitScore(reason || "retry"), wait + 20);
+    return;
+  }
+  lastPosted = { wave: pay.highest_wave, power: pay.team_power, t: now, name: pay.player_name };
+  postScore(pay);
+}
+async function postScore(pay) {
+  try {
+    const r = await fetch(LB_URL + "/score", {
+      method: "POST",
+      headers: { "Content-Type": "application/json", Accept: "application/json" },
+      body: JSON.stringify(pay)
+    });
+    if (!r.ok) return;
+    if (el("board-screen") && !el("board-screen").classList.contains("hidden")) loadBoard(boardSort);
+  } catch (e) { /* stay quiet offline */ }
+}
+
 /* ================= title / home background ================= */
 const walkers = [];
 function renderMenuBG() {
@@ -3286,7 +3678,7 @@ function renderMenuBG() {
 
 /* ================= screens ================= */
 function hideAll() {
-  for (const id of ["lang-screen", "title-screen", "starter", "home", "detail", "hatch", "help", "pause", "result", "save-screen", "hud", "dock", "inspect"]) el(id).classList.add("hidden");
+  for (const id of ["lang-screen", "title-screen", "starter", "home", "detail", "hatch", "help", "pause", "result", "save-screen", "name-screen", "board-screen", "hud", "dock", "inspect"]) el(id).classList.add("hidden");
 }
 function openHome(tab) {
   if (tab) homeTab = tab;
@@ -3298,6 +3690,7 @@ function openHome(tab) {
 }
 function renderHome() {
   el("home-gems").textContent = tr("gems", save.gems);
+  if (el("home-power")) el("home-power").textContent = "⚔ " + fmtPower(teamPower(save.pets));
   document.querySelectorAll(".tabs button").forEach(b => b.classList.toggle("on", b.dataset.tab === homeTab));
   const body = el("home-body"); body.innerHTML = "";
   if (homeTab === "play") renderPlay(body);
@@ -3331,7 +3724,7 @@ function renderPlay(body) {
   if (top) drawPet(c, top.id, top.star, top.shiny, 205, 146, [0, 62, 68, 74, 80, 86][top.star], { charm: top.charm, shadow: false, glow: false, t: 0.6 });
   hero.appendChild(cv);
   hero.insertAdjacentHTML("beforeend", "<div class='ph-txt'><h3>" + ENDLESS.name + "</h3><p>" + tr("endless_desc") + "</p>"
-    + "<div class='ph-stats'><span class='chip'>" + tr("best_wave", save.endlessBest) + "</span><span class='chip'>" + tr("pets_n", save.pets.length) + "</span><span class='chip'>" + tr("eggs_n", save.eggs.length) + "</span></div></div>");
+    + "<div class='ph-stats'><span class='chip'>" + tr("best_wave", save.endlessBest) + "</span><span class='chip'>" + tr("team_power_n", fmtPower(teamPower(save.pets))) + "</span><span class='chip'>" + tr("pets_n", save.pets.length) + "</span><span class='chip'>" + tr("eggs_n", save.eggs.length) + "</span></div></div>");
   body.appendChild(hero);
   const go = document.createElement("button"); go.type = "button"; go.className = "big b-go"; go.id = "btn-play"; go.textContent = tr("start_adv");
   go.addEventListener("click", () => { sfx.click(); if (!save.pets.length) { showToast(tr("hatch_first")); return; } startRun(); });
@@ -3383,7 +3776,7 @@ function renderTrain(body) {
     + tr("tr_line", "", pct) + " <small>" + (p.tr[k] >= cap ? tr("stat_cap") : tr("tr_cnt", p.tr[k], cap)) + "</small></span></div>";
   box.insertAdjacentHTML("beforeend", "<div class='tp-info'><div class='tp-name'>" + (isUltra(p) ? "<span class='ultra'>" + tr("ultra") + "</span> " : p.shiny ? tr("shiny_pre") : "") + petName(p) + " " + starsHTML(p.star) + " <button type='button' class='mini b-sky' data-rename='" + p.uid + "'>✎ " + tr("rename") + "</button></div>"
     + "<div class='tp-lv'>" + lvHTML(p) + "<span class='xpbar'><i style='width:" + (p.lv >= MAX_LV ? 100 : p.xp / need * 100) + "%'></i></span><small>" + (p.lv >= MAX_LV ? tr("maxlv") : tr("xp", p.xp, need)) + "</small></div>"
-    + aptBarHTML(p, true) + "<div class='apt-note'>" + tr("apt_note") + "</div>"
+    + aptBarHTML(p, true) + "<div class='pwr' style='margin:4px 0'>⚔ " + tr("power_n", fmtPower(petPower(p))) + "</div>" + "<div class='apt-note'>" + tr("apt_note") + "</div>"
     + stat("a", tr("st_atk"), Math.round(p.tr.a * 3)) + stat("h", tr("st_hp"), Math.round(p.tr.h * 4)) + stat("s", tr("st_spd"), Math.round(p.tr.s * 1.5 * 10) / 10)
     + "</div>");
   body.appendChild(box);
@@ -3444,7 +3837,7 @@ function petCard(id, star, shiny, opts) {
   if (opts.pet) { art.insertAdjacentHTML("beforeend", gradeHTML(opts.pet.grade) + lvHTML(opts.pet)); if (isUltra(opts.pet)) { div.classList.add("ultra-card"); art.insertAdjacentHTML("beforeend", "<span class='stag ultra'>" + tr("ultra") + "</span>"); } }
   div.appendChild(art);
   div.insertAdjacentHTML("beforeend", "<div class='nm'>" + (opts.locked ? "???" : opts.pet && opts.pet.nick ? "<span class='nick'>" + esc(opts.pet.nick) + "</span>" : stageName(id, star)) + "</div>"
-    + (opts.locked ? "<div class='meta'>" + tr("not_met") + "</div>" : "<div>" + starsHTML(star) + "</div>" + (opts.pet ? aptBarHTML(opts.pet) : "") + "<div class='meta'><span class='role role-" + d.role + "'>" + ROLE_NAME[d.role] + "</span>" + (opts.extra || "") + "</div>"));
+    + (opts.locked ? "<div class='meta'>" + tr("not_met") + "</div>" : "<div>" + starsHTML(star) + "</div>" + (opts.pet ? aptBarHTML(opts.pet) + "<div class='pwr'>⚔ " + fmtPower(petPower(opts.pet)) + "</div>" : "") + "<div class='meta'><span class='role role-" + d.role + "'>" + ROLE_NAME[d.role] + "</span>" + (opts.extra || "") + "</div>"));
   return div;
 }
 function renderBook(body) {
@@ -3490,7 +3883,7 @@ function openDetail(id) {
       row.appendChild(petCanvas(p.id, p.star, p.shiny, 62, { charm: p.charm }));
       row.insertAdjacentHTML("beforeend", "<div class='own-info'><div><b>" + (isUltra(p) ? "<span class='ultra'>" + tr("ultra") + "</span> " : p.shiny ? tr("shiny_pre") : "") + petName(p) + "</b> " + starsHTML(p.star) + " " + lvHTML(p) + " " + gradeHTML(p.grade)
         + " <button type='button' class='mini b-sky' data-rename='" + p.uid + "'>✎</button></div>"
-        + aptBarHTML(p, true) + "<div class='own-tr'>" + tr("st_atk") + " +" + p.tr.a * 3 + "% · " + tr("st_hp") + " +" + p.tr.h * 4 + "% · " + tr("st_spd") + " +" + Math.round(p.tr.s * 15) / 10 + "%</div></div>");
+        + aptBarHTML(p, true) + "<div class='pwr'>⚔ " + tr("power_n", fmtPower(petPower(p))) + "</div>" + "<div class='own-tr'>" + tr("st_atk") + " +" + p.tr.a * 3 + "% · " + tr("st_hp") + " +" + p.tr.h * 4 + "% · " + tr("st_spd") + " +" + Math.round(p.tr.s * 15) / 10 + "%</div></div>");
       box.appendChild(row);
     }
     bindRename(box, () => openDetail(id));
@@ -3629,7 +4022,7 @@ function renderEvo(body) {
   if (main.star < MAX_STAR) {
     const a = evoStatsOf(main, main.star), b2 = evoStatsOf(main, main.star + 1);
     hd.insertAdjacentHTML("beforeend", "<div class='evo-prog'><span class='ep-bar'><i style='width:" + Math.min(100, (main.evo | 0) / req * 100) + "%'></i></span><b>" + tr("evo_progress", main.evo | 0, req) + "</b></div>"
-      + "<div class='evo-stats'><span>" + tr("evo_stats", STAR_MUL[main.star], STAR_MUL[main.star + 1]) + "</span>"
+      + "<div class='evo-stats'><span>" + tr("evo_stats", STAR_MUL[main.star], STAR_MUL[main.star + 1]) + "</span><span>⚔ " + fmtPower(petPower(main)) + "</span>"
       + (d.dmg ? "<span>" + tr("st_atk") + " " + a.dmg + " ➜ <b>" + b2.dmg + "</b></span>" : "") + "<span>" + tr("st_hp") + " " + a.hp + " ➜ <b>" + b2.hp + "</b></span>"
       + "<span>" + tr("evo_look") + ": " + stageName(main.id, main.star) + " ➜ <b>" + (stageName(main.id, main.star + 1) === stageName(main.id, main.star) ? tr("evo_legend") : stageName(main.id, main.star + 1)) + "</b></span></div>");
     const br = document.createElement("div"); br.className = "btn-row evo-btns";
@@ -3875,8 +4268,19 @@ canvas.addEventListener("pointerdown", (ev) => {
   if (occ) { sfx.click(); showInspect(occ); }
   else { B.selTower = null; el("inspect").classList.add("hidden"); }
 });
-el("btn-start").addEventListener("click", () => { unlockAudio(); sfx.click(); openStarter(); });
-el("btn-continue").addEventListener("click", () => { unlockAudio(); sfx.click(); openHome("play"); });
+el("btn-start").addEventListener("click", () => { unlockAudio(); sfx.click(); ensurePlayerName(() => openStarter()); });
+el("btn-continue").addEventListener("click", () => { unlockAudio(); sfx.click(); ensurePlayerName(() => openHome("play")); });
+el("btn-name-ok").addEventListener("click", () => { sfx.click(); confirmPlayerName(); });
+el("btn-name-shuffle").addEventListener("click", () => { sfx.click(); el("name-input").value = suggestName(); });
+el("name-input").addEventListener("keydown", (e) => { if (e.key === "Enter") { e.preventDefault(); confirmPlayerName(); } });
+["btn-board-title", "btn-board-home", "btn-board-hud", "btn-board-pause"].forEach(id => {
+  el(id).addEventListener("click", () => { sfx.click(); openBoard(); });
+});
+el("btn-board-close").addEventListener("click", () => { sfx.click(); closeBoard(); });
+el("btn-board-refresh").addEventListener("click", () => { sfx.click(); maybeSubmitScore("force"); loadBoard(boardSort); });
+el("btn-board-name").addEventListener("click", () => { sfx.click(); openNamePrompt(() => { if (!el("board-screen").classList.contains("hidden")) loadBoard(boardSort); }); });
+document.querySelectorAll(".board-tabs button").forEach(b => b.addEventListener("click", () => { sfx.click(); loadBoard(b.dataset.bsort); }));
+
 document.querySelectorAll(".tabs button").forEach(b => b.addEventListener("click", () => { sfx.click(); homeTab = b.dataset.tab; renderHome(); }));
 el("btn-help").addEventListener("click", () => { el("help").classList.remove("hidden"); });
 el("btn-save-home").addEventListener("click", () => { sfx.click(); openSave(); });
@@ -3919,8 +4323,10 @@ function applyLang(l, rerender) {
   document.documentElement.classList.toggle("lang-en", LANG === "en");
   document.title = tr("doc_title");
   document.querySelectorAll("[data-i18n]").forEach(n => { n.innerHTML = tr(n.dataset.i18n); });
+  document.querySelectorAll("[data-i18n-placeholder]").forEach(n => { n.placeholder = tr(n.dataset.i18nPlaceholder); });
   refreshMuteUI();
   if (rerender && screen === "home") renderHome();
+  if (el("board-screen") && !el("board-screen").classList.contains("hidden")) loadBoard(boardSort);
 }
 let langFrom = "title";
 function openLang(from) {
@@ -3970,7 +4376,7 @@ window.__PETTD__ = {
   getLang: () => LANG, setLang(l) { applyLang(l, true); },
   debugEnemies: () => B.enemies.map(e => ({ t: e.typ, x: Math.round(e.x), y: Math.round(e.y), hp: Math.round(e.hp), stun: e.stunT })),
   ready: () => assetsReady,
-  getSave: () => JSON.parse(JSON.stringify({ food: save.food, gems: save.gems, pets: save.pets, eggs: save.eggs, beaten: save.beaten, endlessBest: save.endlessBest, muted: save.muted, muteBgm: save.muteBgm, muteSfx: save.muteSfx })),
+  getSave: () => JSON.parse(JSON.stringify({ food: save.food, gems: save.gems, pets: save.pets, eggs: save.eggs, beaten: save.beaten, endlessBest: save.endlessBest, muted: save.muted, muteBgm: save.muteBgm, muteSfx: save.muteSfx, playerName: save.playerName, clientId: save.clientId })),
   getBattle: () => ({ running: B.running, over: B.over, won: B.won, lives: B.lives, gold: B.gold, wave: B.wave, waveActive: B.waveActive,
     enemies: B.enemies.length, spawnQ: B.spawnQ.length, kills: B.kills, eggsGot: B.eggsGot.length, speed: B.speed,
     towers: B.towers.map(t => ({ id: t.id, slot: t.slot, star: t.star, tier: t.tier, hp: t.hp, fainted: t.fainted })),
@@ -3981,7 +4387,15 @@ window.__PETTD__ = {
   givePet(id, star, shiny, apt) { return addPet(id, star || 1, shiny, apt != null ? { apt } : {}).uid; },
   feed: (uid, fid) => feedPet(uid, fid), giveFood(fid, n) { save.food[fid] = (save.food[fid] | 0) + (n || 1); persist(); },
   getPet: (uid) => { const p = save.pets.find(q => q.uid === uid); return p ? JSON.parse(JSON.stringify(p)) : null; },
-  petPower: (uid) => petPower(save.pets.find(q => q.uid === uid)), gainXp: (uid, n) => gainXp(save.pets.find(q => q.uid === uid), n),
+  petPower: (uid) => petPower(save.pets.find(q => q.uid === uid)), calcPower: (p) => petPower(p),
+  teamPower: () => teamPower(save.pets), topPets: (n) => topPetSummaries(save.pets, n),
+  scorePayload, sanitizePlayerName, suggestName, fmtPower, NAME_MAX, LB_URL, charmPowerMul,
+  getClientId, getPlayerName: () => save.playerName || "", setPlayerName, openNamePrompt, confirmPlayerName, ensurePlayerName,
+  openBoard, closeBoard, loadBoard, refreshBoard: () => loadBoard(boardSort),
+  setBoardMode(m) { boardMode = m === "offline" ? "offline" : "live"; },
+  getBoardState: () => ({ sort: boardSort, mode: boardMode, cache: boardCache, open: !el("board-screen").classList.contains("hidden") }),
+  submitScore: () => maybeSubmitScore("force"),
+  gainXp: (uid, n) => gainXp(save.pets.find(q => q.uid === uid), n),
   hatchAll: () => hatchAll().map(p => ({ uid: p.uid, id: p.id, apt: p.apt, grade: p.grade, shiny: p.shiny })), trainCap, indivMul: (uid) => indivMul(save.pets.find(q => q.uid === uid)),
   addEgg(q, sh) { save.eggs.push({ q: q || 1, sh: sh == null ? 0.05 : sh }); persist(); },
   deploy(uid, slot) { const ok = deploy(uid, slot); renderTray(); return ok; },
