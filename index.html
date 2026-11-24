@@ -3358,6 +3358,28 @@ const app = document.getElementById("app");
 const canvas = document.getElementById("cv");
 const ctx = canvas.getContext("2d");
 const el = (id) => document.getElementById(id);
+const SHAKE_CAP = 3;
+const SHAKE_DECAY = SHAKE_CAP / 0.25;
+function clearShakeCss() {
+  try { if (canvas && canvas.style) canvas.style.transform = ""; } catch (e) {}
+}
+function resetViewTransform() {
+  ctx.setTransform(pxk, 0, 0, pxk, 0, 0);
+  clearShakeCss();
+}
+function bumpShake(n) {
+  if (!B || !(n > 0)) return;
+  B.shake = Math.min(SHAKE_CAP, Math.max(B.shake || 0, Math.min(SHAKE_CAP, n)));
+}
+function tickShake(dt) {
+  if (!B) return;
+  if (B.shake > 0) {
+    B.shake = Math.max(0, B.shake - dt * SHAKE_DECAY);
+    if (B.shake <= 0.001) { B.shake = 0; clearShakeCss(); }
+  } else if (B.shake !== 0) {
+    B.shake = 0; clearShakeCss();
+  }
+}
 let pxk = 1, land = false;
 const FIELD_H = 724;
 function isLand() { return window.innerWidth > window.innerHeight + 20; }
@@ -3408,7 +3430,7 @@ let uidSeq = 1;
 const CLIENT_KEY = "mengchong-td-client-id";
 const NAME_KEY = "mengchong-td-player-name";
 const LB_URL = "https://pet-td-leaderboard.carden1218.workers.dev";
-const GAME_VERSION = '2.4';
+const GAME_VERSION = '2.4.1';
 let lastSeasonInfo = null;   // tournament build — the leaderboard rejects any other clientVersion
 const LB_CACHE_KEY = "mengchong-td-board-cache";
 function getClientId() {
@@ -4624,6 +4646,7 @@ function shotLand0(s) {
 }
 function step(dt) {
   B.t += dt;
+  tickShake(dt);
   try { tickV22(dt); } catch (e) {}
   if (!B.waveActive) {
     if (B.wave > 0 || B.countdown < 12) { B.countdown -= dt; }
@@ -6220,8 +6243,15 @@ let last = 0;
 function loop(ts) {
   const dt = Math.min(0.05, ((ts - last) / 1000) || 0.016); last = ts; time += dt;
   if (toastT > 0) { toastT -= dt; if (toastT <= 0) el("toast").classList.add("hidden"); }
-  if (screen === "battle" || (screen === "result" && B.level)) { updateBattle(dt); renderBattle(); }
-  else renderMenuBG();
+  resetViewTransform();
+  if (screen === "battle" || (screen === "result" && B.level)) {
+    updateBattle(dt);
+    if (B && (!B.running || B.paused || B.over)) tickShake(dt);
+    const sh = Math.min(SHAKE_CAP, (B && B.shake) || 0);
+    if (sh > 0) { ctx.save(); ctx.translate((Math.random() - 0.5) * 2 * sh, (Math.random() - 0.5) * 2 * sh); }
+    try { renderBattle(); }
+    finally { if (sh > 0) ctx.restore(); resetViewTransform(); }
+  } else renderMenuBG();
   if (screen === "hatch") renderHatch(dt);
   tutTick();
   requestAnimationFrame(loop);
@@ -6587,9 +6617,6 @@ if (typeof window !== "undefined") {
 /* ================= v2.3 (GB-13): first 60s hook, treasure slime, combat juice ================= */
 const ENERGY_START = 60;
 const STARTER_BUDDY = { chili: "berry", lychee: "chestnut", chestnut: "chili" };
-const SHAKE_CAP = 6.5;
-
-function bumpShake(n) { if (B) B.shake = Math.min(SHAKE_CAP, (B.shake || 0) + n); }
 function isTreasure(e) { return !!(e && (e.typ === "treasure" || (ENEMY[e.typ] && ENEMY[e.typ].treasure))); }
 function isFreshHookSave() {
   if (save.firstTreasureEggClaimed) return false;
@@ -6682,6 +6709,7 @@ spawnEnemy = function (g) {
     e.hp = ENEMY.treasure.hp * (g.hpMul || 1); e.max = e.hp;
     B.fx.push({ typ: "ring", x: e.x, y: e.y, r0: 8, r1: 70, color: "#ffe14a", life: 0.45, max: 0.45 });
   }
+  if (e.boss) bumpShake(3);
   return e;
 };
 
@@ -6719,7 +6747,6 @@ function grantTreasureEgg(e) {
   B.treasureDropped = true;
   B.gold += 12;
   B.floaters.push({ x: (e && e.x) || W / 2, y: ((e && e.y) || 300) - 70, text: tr("treasure_burst"), color: "#ffe14a", life: 1.4, max: 1.4, big: true, huge: true });
-  bumpShake(4.5);
   try { sfx.shiny(); } catch (err) {}
   showEggJumpPill(true);
 }
@@ -6743,7 +6770,7 @@ killEnemy = function (e) {
   const typ = e && e.typ, boss = !!(e && e.boss), tre = isTreasure(e);
   _killEnemy(e);
   if (tre) grantTreasureEgg(e);
-  if (boss) bumpShake(5);
+  if (boss) bumpShake(3);
   if (B) {
     B.combo = (B.comboT > 0 ? (B.combo || 0) : 0) + 1;
     B.comboT = 1.35;
@@ -6768,13 +6795,13 @@ hitEnemy = function (e, dmg, elem, o) {
 const _fireUlt = fireUlt;
 fireUlt = function (t) {
   const ok = _fireUlt(t);
-  if (ok) { bumpShake(3.2); if (B) B.hookNudge = false; }
+  if (ok) { if (B) B.hookNudge = false; }
   return ok;
 };
 const _fireCmd = fireCmd;
 fireCmd = function (id) {
   const ok = _fireCmd(id);
-  if (ok) { bumpShake(id === "star_strike" ? 4.2 : 3.4); if (B) B.hookNudge = false; }
+  if (ok) { if (B) B.hookNudge = false; }
   return ok;
 };
 
@@ -6782,7 +6809,6 @@ const _tickV22 = tickV22;
 tickV22 = function (dt) {
   _tickV22(dt);
   if (!B) return;
-  if (B.shake > 0) B.shake = Math.max(0, B.shake - dt * 14);
   if (B.comboT > 0) { B.comboT -= dt; if (B.comboT <= 0) B.combo = 0; }
 };
 
@@ -6824,10 +6850,8 @@ refreshHUD = function () {
 
 const _renderBattle = renderBattle;
 renderBattle = function () {
-  const c = ctx, sh = Math.min(SHAKE_CAP, (B && B.shake) || 0);
-  if (sh > 0) { c.save(); c.translate((Math.random() - 0.5) * 2 * sh, (Math.random() - 0.5) * 2 * sh); }
+  // Shake is applied in the main loop around this call, then the view transform is always reset.
   _renderBattle();
-  if (sh > 0) c.restore();
 };
 
 const _waveCleared = waveCleared;
@@ -7153,7 +7177,6 @@ function levelUpFx24(t) {
   B.fx.push({ typ: "lv24", x: t.x, y: t.y - 30, life: 0.9, max: 0.9 });
   burst(t.x, t.y - 40, "#ffd23a", 26); burst(t.x, t.y - 40, "#7fe07a", 12);
   B.floaters.push({ x: t.x, y: t.y - 100, text: tr("lvup24"), color: "#ffe14a", life: 1.3, max: 1.3, huge: true });
-  try { bumpShake(3); } catch (e) {}
   try { sfx.lvup(); sfx.shiny(); } catch (e) {}
 }
 function revive24(t) {
@@ -7241,7 +7264,7 @@ function ultBoom24(t, power, hits, msg) {
   else if (typ === "shield") for (const a of B.towers) if (!a.fainted) a.shield = (a.shield || 0) + petStats(a).maxHp * 0.4;
   B.floaters.push({ x: W / 2, y: 300, text: msg || "", color: "#fff", life: 1.2, max: 1.2, big: true });
   B.floaters.push({ x: W / 2, y: 345, text: tr("power24", power), color: "#ffe14a", life: 1.6, max: 1.6, huge: true });
-  try { bumpShake(6.5); } catch (e) {}
+  try { bumpShake(3); } catch (e) {}
   try { sfx.shiny(); sfx.pop(); sfx.attack("meteor"); } catch (e) {}
   t.pop24 = 1; B.ultCd24 = 15; B.ultFired24 = (B.ultFired24 | 0) + 1;
   refreshHUD();
@@ -7474,7 +7497,7 @@ showNewsModal = function (force) {
 };
 showUpdateModal = function (ver) {
   const m = el("update-modal"); if (!m) return;
-  el("update-body").innerHTML = "<h3>" + tr("update_live", ver || "2.4") + "</h3><p>" + tr("update_live_d") + "</p>";
+  el("update-body").innerHTML = "<h3>" + tr("update_live", ver || "2.4.1") + "</h3><p>" + tr("update_live_d") + "</p>";
   m.classList.remove("hidden");
 };
 
@@ -7632,7 +7655,7 @@ function abExec(e, a) {
   else if (a === "harden") { e.sh24 = Math.max(e.sh24 || 0, e.max * 0.25); B.fx.push({ typ: "ring", x: e.x, y: e.y, r0: 10, r1: 60, color: "#b0a8a0", life: 0.4, max: 0.4 }); }
   else if (a === "guard") { for (const o of B.enemies) if (o.hp > 0 && o !== e && dist(o.x, o.y, e.x, e.y) < 140) o.sh24 = Math.min(o.max * 0.4, (o.sh24 || 0) + o.max * 0.2);
     B.fx.push({ typ: "ring", x: e.x, y: e.y, r0: 10, r1: 140, color: "#7ab8ff", life: 0.45, max: 0.45 }); }
-  else if (a === "slam") { for (const t of nearPets(e, 200)) { t.stunT = Math.max(t.stunT || 0, 0.8); hitPet(t, e.atk * 0.5, e); } B.fx.push({ typ: "ring", x: e.x, y: e.y + 20, r0: 20, r1: 200, color: "#c08a5a", life: 0.5, max: 0.5 }); try { bumpShake(2.5); } catch (er) {} }
+  else if (a === "slam") { for (const t of nearPets(e, 200)) { t.stunT = Math.max(t.stunT || 0, 0.8); hitPet(t, e.atk * 0.5, e); } B.fx.push({ typ: "ring", x: e.x, y: e.y + 20, r0: 20, r1: 200, color: "#c08a5a", life: 0.5, max: 0.5 }); }
   else if (a === "firetrail") { const t = nearPets(e, 210)[0]; if (t) { hitPet(t, e.atk * 0.4, e); for (let i = 0; i < 4; i++) B.fx.push({ typ: "fire24", x: lerp(e.x, t.x, i / 3), y: lerp(e.y, t.y - 30, i / 3), life: 0.5, max: 0.5 }); } }
   else if (a === "summonB") { for (let k = 0; k < 2; k++) { spawnEnemy({ id: "mini", hpMul: (B.wave | 0) * 0.08 + 1, spdMul: 1, minion: true }); const m = B.enemies[B.enemies.length - 1]; m.lane = e.lane; m.y = e.y + 12; m.x = e.x + (k ? 18 : -18); m.reward = 1; }
     B.fx.push({ typ: "ring", x: e.x, y: e.y, r0: 6, r1: 60, color: "#b07aff", life: 0.35, max: 0.35 }); }
@@ -7774,7 +7797,7 @@ abExec = function (e, a) {
     B.fx.push({ typ: "bolt", x1: t.x + 10, y1: 0, x2: t.x, y2: t.y - 40, color: "#ffe14a", life: 0.3, max: 0.3, seed: Math.random() * 99 });
     B.fx.push({ typ: "ring", x: t.x, y: t.y - 10, r0: 6, r1: 60, color: "#ffe14a", life: 0.35, max: 0.35 });
     hitPet(t, base * 2.2 + w * 1.5, e); t.stunT = Math.max(t.stunT || 0, 0.4);
-    try { bumpShake(2); sfx.attack("thunder"); } catch (er) {}
+    try { sfx.attack("thunder"); } catch (er) {}
   } else {
     e.dash24 = 0.25; hitPet(t, base * 1.6 + w, e); t.stunT = Math.max(t.stunT || 0, 0.3);
     B.fx.push({ typ: "ring", x: t.x, y: t.y - 20, r0: 8, r1: 50, color: "#c08a5a", life: 0.3, max: 0.3 }); burst(t.x, t.y - 30, "#c08a5a", 10);
@@ -7952,7 +7975,8 @@ window.__PETTD__ = {
     bgmTarget: bgmTargetGain(), bgmGain: bgmGain ? bgmGain.gain.value : null, sfxLevel: SFX_LEVEL, vol: bgmVolume(), legacyBgm: 0.20 }),
   setBgmVolume: (v) => setBgmVolume(v),
   // v13.2 hooks: charms, traits, squad, roles, synergies, terrain, rarity, economy, banner, enemies
-  GAME_VERSION, RAR_KEY, RAR_MUL, MAX_STAR, MAX_LV, EVO_REQ, HATCH_W, BANNER, TERRAIN, ROLE5, TRAITS, ARMOR, ENERGY_START: 60,
+  GAME_VERSION, SHAKE_CAP, SHAKE_DECAY, bumpShake, tickShake, resetViewTransform, getShake: () => (B && B.shake) || 0, getViewTransform: () => { const m = ctx.getTransform(); return { a:m.a, b:m.b, c:m.c, d:m.d, e:m.e, f:m.f }; }, getShakeCss: () => (canvas && canvas.style && canvas.style.transform) || "",
+  RAR_KEY, RAR_MUL, MAX_STAR, MAX_LV, EVO_REQ, HATCH_W, BANNER, TERRAIN, ROLE5, TRAITS, ARMOR, ENERGY_START: 60,
   specialCharms: () => CHARMS.filter(c => c.specialOnly).map(c => ({ id: c.id, cost: c.cost || 0, cond: c.cond })), shopCharms: () => SHOP_CHARMS.map(c => c.id),
   checkSpecialCharms: (q) => checkSpecialCharms(q), specialGot: () => Object.assign({}, save.specialGot), setThiefKills(n) { save.thiefKills = n; persist(); },
   setEndlessBest(n) { save.endlessBest = n; persist(); },
