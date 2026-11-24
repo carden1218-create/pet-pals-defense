@@ -982,6 +982,23 @@
     #skill-bar .sk-btn { flex-basis:32px; height:30px; font-size:12px; }
   }
 
+  /* ===== v2.3 hook juice ===== */
+  #skill-bar .sk-btn.hook-nudge:not(.off) { animation: hookpulse .7s ease-in-out infinite; box-shadow:0 0 0 2px #ffe14a, 0 0 12px #ffe14a; position:relative; z-index:2; }
+  #skill-bar .sk-btn.hook-nudge:not(.off)::after {
+    content: attr(data-hook); position:absolute; left:50%; bottom:calc(100% + 6px); transform:translateX(-50%);
+    white-space:nowrap; font-size:11px; font-weight:900; color:#3a1800; background:#ffe14a; border:2px solid var(--ol);
+    border-radius:10px; padding:2px 7px; pointer-events:none; animation: hooktip .7s ease-in-out infinite;
+  }
+  @keyframes hookpulse { 0%,100% { transform:scale(1); } 50% { transform:scale(1.12); } }
+  @keyframes hooktip { 0%,100% { transform:translate(-50%,0); } 50% { transform:translate(-50%,-3px); } }
+  #mile-pill { display:inline-block; font-size:11px; font-weight:900; padding:2px 8px; border-radius:10px; border:2px solid var(--ol);
+    background:linear-gradient(90deg,#fff6c0,#ffd8f0); color:#4a2060; vertical-align:middle; margin-left:6px; }
+  #mile-pill.hidden { display:none; }
+  #egg-jump { display:inline-flex; align-items:center; gap:4px; margin-left:6px; font-size:12px; font-weight:900; padding:3px 10px;
+    border-radius:12px; border:2px solid var(--ol); background:linear-gradient(90deg,#ffe14a,#ff9ad8); color:#3a1800; cursor:pointer;
+    animation: hookpulse 1s ease-in-out infinite; vertical-align:middle; }
+  #egg-jump.hidden { display:none; }
+
 </style>
 </head>
 <body>
@@ -1002,7 +1019,7 @@
           <button type="button" class="rnd b-red" id="btn-end" data-i18n="end">结束</button>
         </div>
       </div>
-      <div id="hud-sub"><span class="banner hidden" id="loot-pill" data-i18n="loot_init">掉落 Lv.1</span><span id="hud-syn"></span></div>
+      <div id="hud-sub"><span class="banner hidden" id="loot-pill" data-i18n="loot_init">掉落 Lv.1</span><span id="hud-syn"></span><span id="mile-pill" class="hidden"></span><button type="button" id="egg-jump" class="hidden">🎁</button></div>
     </div>
     <div id="inspect" class="hidden"></div>
     <div id="toast" class="hidden"></div>
@@ -1637,7 +1654,8 @@ const ENEMY = {
   spitter:{ name:"远程史莱姆", col:"#7acf3a", el:"草", hp:70,  spd:30, atk:6,  reward:9, size:86, img:"mob-ranged", skill:"spit" },
   mage:   { name:"法师史莱姆", col:"#6a3ab8", el:"光", hp:95,  spd:24, atk:8,  reward:12, size:90, img:"mob-mage", skill:"summon" },
   mini:   { name:"小史莱姆", col:"#6a6aff", el:"水", hp:26,  spd:44, atk:5,  reward:1, size:54, img:"mob-mini" },
-  bossX:  { name:"混沌史莱姆王", col:"#8a4ad0", el:"光", hp:1400, spd:17, atk:50, reward:80,  size:150, img:"b-4", boss:true }
+  bossX:  { name:"混沌史莱姆王", col:"#8a4ad0", el:"光", hp:1400, spd:17, atk:50, reward:80,  size:150, img:"b-4", boss:true },
+  treasure:{ name:"黄金宝箱史莱姆", col:"#ffe14a", el:"光", hp:72, spd:40, atk:4, reward:20, size:96, img:"z-4", treasure:true }
 };
 
 /* Endless: map zone changes every 10 waves (cycles through all 8 themes). Story maps: see MAPS. */
@@ -2271,7 +2289,17 @@ Object.assign(STR.zh, {
     cond_hard_sky:"精英通关星光浮岛", cond_all_maps:"通关全部 7 张地图", cond_hard_3:"精英通关任意 3 张地图", cond_dex_50:"图鉴收集 50 种萌宠",
     r5_econ:"寻宝经济",
     season_v21:"欢迎来到 v2.1 比赛新赛季！已保留你的图鉴，星级已统一归回 1★，公平开赛！",
-  evo_direct:"直接进化 → {0}★", evo_direct_need:"还差 {0} 个碎片"
+  evo_direct:"直接进化 → {0}★", evo_direct_need:"还差 {0} 个碎片",
+    hook_ult:"⚡ 点此释放大招！", egg_jump:"🎁 掉蛋啦！马上去孵新宠！",
+    starter_buddy:"同行伙伴 {0} 加入队伍！一起上阵吧",
+    treasure_burst:"宝箱爆开！", crit_pop:"暴击!", super_pop:"克制!",
+    combo_n:"🔥 {0}x 连击！", mile_treasure:"前方宝箱史莱姆！", mile_boss:"距首领还有 {0} 波",
+    mile_zone:"距下个区域还有 {0} 波", mile_end:"最后冲刺！",
+    v23_news_title:"萌宠防线 v2.3 更新",
+    v23_news_1:"开局 15 秒就能放大招：团队能量预充 60 点，第一波按钮会闪烁提示你出手！",
+    v23_news_2:"前 3 波节奏更快，新玩家开局就有 2 只互补萌宠一起上阵",
+    v23_news_3:"首局前两波会出现闪耀的黄金宝箱史莱姆，打爆必掉一颗稀有/史诗蛋（每存档仅一次）",
+    v23_news_4:"战斗打击感升级：大招微震屏、暴击/克制跳字、连击提示，以及距下一波宝箱/首领的小进度"
 });
 Object.assign(STR.en, {
   terr_high:"Highland Sniper", terr_high_d:"Range +25% · Crit +15%", terr_rune:"Power Rune", terr_rune_d:"Atk speed +22%", terr_bend:"Choke Bend", terr_bend_d:"Splash/Slow +15%",
@@ -2311,7 +2339,17 @@ Object.assign(STR.en, {
     cond_hard_sky:"Clear Starlight Sky on Hard", cond_all_maps:"Clear all 7 maps", cond_hard_3:"Clear any 3 maps on Hard", cond_dex_50:"Collect 50 species in the Dex",
     r5_econ:"Treasure Econ",
     season_v21:"Welcome to v2.1 Tournament Season! Your pets are preserved and reset to 1★ for a fair start.",
-  evo_direct:"Evolve Now → {0}★", evo_direct_need:"Need {0} more shards"
+  evo_direct:"Evolve Now → {0}★", evo_direct_need:"Need {0} more shards",
+    hook_ult:"⚡ Tap to unleash!", egg_jump:"🎁 New Egg Dropped! Hatch it now!",
+    starter_buddy:"{0} joined as your starter buddy!",
+    treasure_burst:"Treasure burst!", crit_pop:"CRIT!", super_pop:"SUPER!",
+    combo_n:"🔥 {0}x COMBO!", mile_treasure:"Treasure Slime incoming!", mile_boss:"Boss in {0} waves",
+    mile_zone:"Next zone in {0} waves", mile_end:"Final push!",
+    v23_news_title:"Pet Pals Defense v2.3 Update",
+    v23_news_1:"Unleash skills in the first 15 seconds: Team Energy starts at 60, and Wave 1 buttons pulse so you know to tap!",
+    v23_news_2:"Waves 1–3 play faster, and new players start with 2 complementary pals already in the squad",
+    v23_news_3:"A glowing Golden Treasure Slime appears in your first early waves and bursts into a guaranteed Rare/Epic egg (once per save)",
+    v23_news_4:"Juicier combat: tasteful micro screen-shake, CRIT!/SUPER! pop-ups, kill combos, and a Next Milestone indicator"
 });
 function tr(key, ...a) { const s = (STR[LANG] && STR[LANG][key]) ?? STR.zh[key] ?? key; return s.replace(/\{(\d)\}/g, (_, i) => a[+i]); }
 const EL_EN = { 火:"Fire", 水:"Water", 草:"Grass", 雷:"Thunder", 土:"Earth", 光:"Light" };
@@ -2327,7 +2365,7 @@ const EN = {
   endless: "Endless Adventure",
   enemy: { sprout:"Sprout Slime", jelly:"Jelly Slime", ember:"Flame Slime", zap:"Battery Slime", pebble:"Rock Slime", puff:"Balloon Slime",
     split:"Split Slime", splitling:"Mini Split Slime", thief:"Egg Thief Slime",
-    boss1:"Jelly Slime King", boss2:"Stone Slime King", boss3:"Lava Slime King", bossX:"Chaos Slime King", shield:"Tower-Shield Slime", spitter:"Ranged Spitter Slime", mage:"Mage Summoner Slime", mini:"Mini Slime" },
+    boss1:"Jelly Slime King", boss2:"Stone Slime King", boss3:"Lava Slime King", bossX:"Chaos Slime King", shield:"Tower-Shield Slime", spitter:"Ranged Spitter Slime", mage:"Mage Summoner Slime", mini:"Mini Slime", treasure:"Golden Treasure Slime" },
   pets: {
     chili:    { names:["Chili Mouse","Pepper Mouse","Blaze Pepper Mouse","Inferno Pepper King"], sk:"Chili Seeds", skd:"Spits a fiery seed at one slime and keeps it burning.", up:"Stage 3+: two seeds at once, longer burn" },
     chestnut: { names:["Chestnut Hog","Spiky Chestnut Hog","Armored Chestnut Hog","Chestnut Fortress"], sk:"Spiky Roll", skd:"Rolls a spiky chestnut up its lane that pierces up to 3 slimes (weaker with each hit) and nudges the first one back. Bites prick the biter a little.", up:"Stage 3+: pushes a bit further. Stage 4: a bigger chestnut" },
@@ -3311,7 +3349,7 @@ let uidSeq = 1;
 const CLIENT_KEY = "mengchong-td-client-id";
 const NAME_KEY = "mengchong-td-player-name";
 const LB_URL = "https://pet-td-leaderboard.carden1218.workers.dev";
-const GAME_VERSION = '2.2';
+const GAME_VERSION = '2.3';
 let lastSeasonInfo = null;   // tournament build — the leaderboard rejects any other clientVersion
 const LB_CACHE_KEY = "mengchong-td-board-cache";
 function getClientId() {
@@ -3354,7 +3392,7 @@ function persist() {
       beaten: save.beaten, endlessBest: save.endlessBest, seen: save.seen, seenShiny: save.seenShiny,
       firstEgg: save.firstEgg, hatched: save.hatched, food: save.food, charms: save.charms, evoMain: save.evoMain, uidSeq,
       maps: save.maps || {}, tutorialDone: !!save.tutorialDone, bgmVol: bgmVolume(),
-      specialGot: save.specialGot || {}, thiefKills: save.thiefKills | 0, squad: save.squad || [], migratedV21: true, charmLv: save.charmLv || {}, seenV22: !!save.seenV22,
+      specialGot: save.specialGot || {}, thiefKills: save.thiefKills | 0, squad: save.squad || [], migratedV21: true, charmLv: save.charmLv || {}, seenV22: !!save.seenV22, seenV23: !!save.seenV23, firstTreasureEggClaimed: !!save.firstTreasureEggClaimed,
       playerName: save.playerName || "", clientId: save.clientId || getClientId()
     }));
   } catch (e) {}
@@ -3371,7 +3409,7 @@ function snapshotSave() {
     gems: save.gems, pets: save.pets, eggs: save.eggs, beaten: save.beaten, endlessBest: save.endlessBest,
     seen: save.seen, seenShiny: save.seenShiny, firstEgg: save.firstEgg, hatched: save.hatched, food: save.food, charms: save.charms, evoMain: save.evoMain, uidSeq, lang: LANG,
     maps: save.maps || {}, tutorialDone: !!save.tutorialDone, bgmVol: bgmVolume(),
-    specialGot: save.specialGot || {}, thiefKills: save.thiefKills | 0, squad: save.squad || [], migratedV21: true, charmLv: save.charmLv || {}, seenV22: !!save.seenV22,
+    specialGot: save.specialGot || {}, thiefKills: save.thiefKills | 0, squad: save.squad || [], migratedV21: true, charmLv: save.charmLv || {}, seenV22: !!save.seenV22, seenV23: !!save.seenV23, firstTreasureEggClaimed: !!save.firstTreasureEggClaimed,
     playerName: save.playerName || "", clientId: save.clientId || getClientId()
   };
 }
@@ -3402,6 +3440,8 @@ function applySave(d) {
   save.thiefKills = Math.max(0, d.thiefKills | 0);
   save.charmLv = {}; if (d.charmLv && typeof d.charmLv === 'object') for (const k in d.charmLv) save.charmLv[k] = Math.max(1, Math.min(5, d.charmLv[k] | 0));
   save.seenV22 = !!d.seenV22;
+  save.seenV23 = !!d.seenV23;
+  save.firstTreasureEggClaimed = !!d.firstTreasureEggClaimed;
   save.squad = normSquad(d.squad);
   const importedId = typeof d.clientId === "string" && /^[A-Za-z0-9._-]{8,128}$/.test(d.clientId) ? d.clientId : "";
   if (importedId) {
@@ -3484,7 +3524,7 @@ function newGame(starterId) {
   const keepName = save.playerName || readStoredName(), keepId = save.clientId || getClientId();
   Object.assign(save, { started: true, gems: 60, pets: [], eggs: [{ q: 1, sh: SHINY_BASE }], beaten: 0, endlessBest: 0,
     seen: {}, seenShiny: {}, firstEgg: false, hatched: 0, food: { candy: 2 }, charms: {}, evoMain: {},
-    maps: {}, tutorialDone: false, bgmVol: bgmVolume(), specialGot: {}, thiefKills: 0, squad: [], migratedV21: true,
+    maps: {}, tutorialDone: false, bgmVol: bgmVolume(), specialGot: {}, thiefKills: 0, squad: [], migratedV21: true, firstTreasureEggClaimed: false, seenV23: true,
     playerName: keepName, clientId: keepId });
   tutStart(true);
   addPet(starterId || "chili", 1, false, { minApt: 45 });
@@ -3586,7 +3626,7 @@ function packSave(d) {
     pn: d.playerName || "", cid: d.clientId || "",
     // v13 appends: story maps, tutorial flag, music volume (older codes simply lack them)
     mp: d.maps || {}, td: d.tutorialDone ? 1 : 0, bv: d.bgmVol == null ? BGM_DEFAULT_VOL : d.bgmVol | 0,
-    m21: d.migratedV21 ? 1 : 0, sg: d.specialGot || {}, tk: d.thiefKills | 0, sq: (d.squad || []).map(x => [x.u | 0, x.s | 0])
+    m21: d.migratedV21 ? 1 : 0, sg: d.specialGot || {}, tk: d.thiefKills | 0, sq: (d.squad || []).map(x => [x.u | 0, x.s | 0]), te: d.firstTreasureEggClaimed ? 1 : 0, s23: d.seenV23 ? 1 : 0
   };
 }
 function unpackSave(p) {
@@ -3602,7 +3642,7 @@ function unpackSave(p) {
     food: p.fo || {}, seen: p.s || {}, seenShiny: p.ss || {}, lang: p.lang || "",
     playerName: p.pn || "", clientId: p.cid || "",
     maps: p.mp, tutorialDone: p.td == null ? undefined : !!p.td, bgmVol: p.bv,
-    migratedV21: !!p.m21, specialGot: p.sg || {}, thiefKills: p.tk | 0, squad: Array.isArray(p.sq) ? p.sq.map(a => ({ u: a[0], s: a[1] })) : []
+    migratedV21: !!p.m21, specialGot: p.sg || {}, thiefKills: p.tk | 0, squad: Array.isArray(p.sq) ? p.sq.map(a => ({ u: a[0], s: a[1] })) : [], firstTreasureEggClaimed: !!p.te, seenV23: !!p.s23
   };
 }
 function exportSaveCode() {
@@ -4839,7 +4879,7 @@ function renderBattle() {
   c.textAlign = "center";
   for (const f of B.floaters) {
     c.globalAlpha = Math.min(1, f.life / f.max * 1.6);
-    c.font = "900 " + (f.big ? 20 : 15) + "px sans-serif"; c.lineWidth = 4; c.strokeStyle = OL;
+    c.font = "900 " + (f.huge ? 28 : f.big ? 22 : 15) + "px sans-serif"; c.lineWidth = 4; c.strokeStyle = OL;
     c.strokeText(f.text, f.x, f.y); c.fillStyle = f.color; c.fillText(f.text, f.x, f.y);
   }
   c.globalAlpha = 1;
@@ -6181,131 +6221,6 @@ if (firstLaunch) revealGame();
 assetLoad.interactive.then(() => revealGame());
 assetLoad.all.then(() => { assetsReady = true; BG.clear(); revealGame(); if (screen === "home" && homeTab === "play") renderHome(); });
 
-/* ================= test / debug hooks ================= */
-window.__PETTD__ = {
-  STR, PETS, LEVELS, ENEMY, SAVE_KEY, OLD_SAVE_KEY, SONG, endlessSpec, lootLevel, eggWeights, dropChance, shinyChance,
-  getScreen: () => screen,
-  getLang: () => LANG, setLang(l) { applyLang(l, true); },
-  debugEnemies: () => B.enemies.map(e => ({ t: e.typ, x: Math.round(e.x), y: Math.round(e.y), hp: Math.round(e.hp), stun: e.stunT })),
-  ready: () => assetsReady,
-  getSave: () => JSON.parse(JSON.stringify({ migratedV21: save.migratedV21, squad: save.squad, specialGot: save.specialGot, thiefKills: save.thiefKills, maps: save.maps, tutorialDone: save.tutorialDone, bgmVol: save.bgmVol, started: save.started, food: save.food, gems: save.gems, pets: save.pets, eggs: save.eggs, beaten: save.beaten, endlessBest: save.endlessBest, muted: save.muted, muteBgm: save.muteBgm, muteSfx: save.muteSfx, playerName: save.playerName, clientId: save.clientId, charms: save.charms, evoMain: save.evoMain, hatched: save.hatched })),
-  getBattle: () => ({ running: B.running, over: B.over, won: B.won, lives: B.lives, gold: B.gold, wave: B.wave, waveActive: B.waveActive,
-    enemies: B.enemies.length, spawnQ: B.spawnQ.length, kills: B.kills, eggsGot: B.eggsGot.length, speed: B.speed,
-    towers: B.towers.map(t => ({ id: t.id, slot: t.slot, star: t.star, tier: t.tier, hp: t.hp, fainted: t.fainted })),
-    loot: B.level ? lootLevel(B.level, Math.max(1, B.wave)) : 0 }),
-  newGame, openHome, persist, flushSave, suspendPersist(on) { persistSuspended = !!on; }, openStarter, hasActiveSave, refreshTitleButtons, requestNewGame, beginNewGame, cancelNewGame,
-  setEndlessBest(n) { save.endlessBest = n | 0; persist(); },
-  clearWave() { waveCleared(); },
-  startRun() { startRun(); },
-  startLevel() { startRun(); },
-  givePet(id, star, shiny, apt) { return addPet(id, star || 1, shiny, apt != null ? { apt } : {}).uid; },
-  feed: (uid, fid) => feedPet(uid, fid), giveFood(fid, n) { save.food[fid] = (save.food[fid] | 0) + (n || 1); persist(); },
-  getPet: (uid) => { const p = save.pets.find(q => q.uid === uid); return p ? JSON.parse(JSON.stringify(p)) : null; },
-  petPower: (uid) => petPower(save.pets.find(q => q.uid === uid)), calcPower: (p) => petPower(p),
-  teamPower: () => teamPower(save.pets), topPets: (n) => topPetSummaries(save.pets, n),
-  scorePayload, sanitizePlayerName, suggestName, fmtPower, NAME_MAX, LB_URL, charmPowerMul,
-  getClientId, getPlayerName: () => save.playerName || "", setPlayerName, openNamePrompt, confirmPlayerName, ensurePlayerName,
-  openBoard, closeBoard, loadBoard, refreshBoard: () => loadBoard(boardSort),
-  setBoardMode(m) { boardMode = m === "offline" ? "offline" : "live"; },
-  getBoardState: () => ({ sort: boardSort, mode: boardMode, cache: boardCache, open: !el("board-screen").classList.contains("hidden") }),
-  submitScore: () => maybeSubmitScore("force"),
-  gainXp: (uid, n) => gainXp(save.pets.find(q => q.uid === uid), n),
-  hatchAll: () => hatchAll().map(p => ({ uid: p.uid, id: p.id, apt: p.apt, grade: p.grade, shiny: p.shiny })), trainCap, indivMul: (uid) => indivMul(save.pets.find(q => q.uid === uid)),
-  addEgg(q, sh) { save.eggs.push({ q: q || 1, sh: sh == null ? 0.05 : sh }); persist(); },
-  deploy(uid, slot) { const ok = deploy(uid, slot); renderTray(); return ok; },
-  clearField() { B.towers = []; renderTray(); },
-  startWave() { if (!B.waveActive) { B.countdown = 0; startNextWave(); } },
-  setSpeed(n) { B.speed = n; el("btn-speed").textContent = "×" + n; },
-  setGold(n) { B.gold = n; refreshHUD(); },
-  setWave(n) { B.wave = n; refreshHUD(); },
-  endRun() { endRun(false); },
-  forceShiny(v) { forceShinyNext = v !== false; },
-  hatchFirst() { if (!save.eggs.length) save.eggs.push({ q: 1, sh: 0.05 }); return openHatch(save.eggs.reduce((bi, e, i, a) => e.q > a[bi].q ? i : bi, 0)); },
-  skipHatchAnim: skipHatch,
-  hatchedPet: () => H8.pet ? { ...H8.pet } : null,
-  evolve, feedEvo: (m, u, o) => feedEvo(m, u, o), oneClickEvo, directEvolve, evoReady: (id) => evoReady(evoMainOf(id)), migratedV21: () => !!save.migratedV21, setEvo(uid, n) { const p = save.pets.find(q => q.uid === uid); if (p) { p.evo = n; persist(); } }, setEvoMain, evoMain: (id) => { const m = evoMainOf(id); return m ? m.uid : null; },
-  evoEligible: (id) => { const m = evoMainOf(id); return m ? evoEligible(m).map(p => p.uid) : []; },
-  copyValue: (uid) => copyValue(save.pets.find(q => q.uid === uid)), EVO_REQ, CHARMS, SHINY_BASE, SHINY_CAP, HATCH_W, rollApt, birthGrade, sanitizeNick, NICK_MAX,
-  getCharms: () => ({ ...save.charms }), giveCharm(cid, n) { save.charms[cid] = (save.charms[cid] | 0) + (n || 1); persist(); },
-  buyCharm, equipCharm, unequipCharm, renamePet, openRename, dropCharm: (cid) => dropCharm(200, 300, cid), setGems(n) { save.gems = n; persist(); },
-  petName: (uid) => { const p = save.pets.find(q => q.uid === uid); return p ? petName(p) : null; },
-  towerInfo: () => B.towers.map(t => ({ uid: t.uid, nick: t.nick, charm: t.charm, star: t.star })),
-  minions: () => B.minions.map(m => ({ phase: m.phase, giant: m.giant, lane: m.lane, y: Math.round(m.y) })),
-  spawnEnemyAt(id, lane, y, hpMul) { spawnEnemy({ id, hpMul: hpMul || 1, spdMul: 1 }); const e = B.enemies[B.enemies.length - 1]; e.lane = lane; e.x = LANE_X[lane]; e.y = y; return B.enemies.length; },
-  killAll() { for (const e of B.enemies.slice()) if (e.hp > 0) killEnemy(e); B.enemies = B.enemies.filter(e => e.hp > 0); return B.enemies.map(e => e.typ); },
-  stepN(n, dt) { for (let i = 0; i < n; i++) step(dt || 1 / 60); },
-  openBook() { openHome("book"); },
-  openDetail, selectTray(uid) { B.selPet = uid; renderTray(); },
-  fxKinds: () => [...new Set([...B.shots.map(s => "shot:" + s.kind), ...B.fx.map(f => "fx:" + f.typ), ...B.zones.map(() => "zone"), ...B.minions.map(m => "minion:" + m.phase)])],
-  spawnDemo() {   // a field full of tough slimes so every skill is visible at once
-    B.enemies = []; B.spawnQ = []; B.waveActive = true;
-    const ty = ["sprout", "jelly", "ember", "zap", "pebble", "puff", "split", "thief"];
-    for (let i = 0; i < 10; i++) { spawnEnemy({ id: ty[i % 8], hpMul: 60, spdMul: 0.15 }); const e = B.enemies[B.enemies.length - 1]; e.lane = i % 5; e.x = LANE_X[e.lane]; e.y = 330 + Math.floor(i / 5) * 110 + (i % 2) * 20; }
-    spawnEnemy({ id: "boss2", hpMul: 8, spdMul: 0.1 }); B.enemies[B.enemies.length - 1].y = 220;
-  },
-  enemyNames: () => B.enemies.map(e => ENEMY[e.typ].name),
-  getMute: () => ({ muted: !!save.muted, muteBgm: !!save.muteBgm, muteSfx: !!save.muteSfx }),
-  exportSave: () => exportSaveCode(),
-  importSave: (code, o) => importSaveCode(code, o || {}),
-  openSave, fit, isLand: () => land,
-  // v13 hooks
-  MAPS, storySpec, pathDX, milestonePerks, perkAt, HARD,
-  startMap(id, hard) { startRun(id, hard); }, getLevel: () => B.level ? { id: B.level.id, story: !!B.level.story, hard: !!B.level.hard, endless: !!B.level.endless, waves: B.level.waves || 0, path: B.level.path || "straight", theme: curTheme() } : null,
-  getMaps: () => JSON.parse(JSON.stringify(save.maps)), setMapCleared(id, hard) { save.maps[id] = { c: 1, h: hard ? 1 : 0, n: 1 }; persist(); },
-  winStory() { if (!B.level || !B.level.story) return false; B.wave = B.level.waves - 1; B.spawnQ = []; B.enemies = []; B.waveActive = true; B.wave++; waveCleared(); return true; },
-  selectMap(id) { selMap = id; if (screen === "home") renderHome(); }, setHard(v) { hardSel = !!v; if (screen === "home") renderHome(); },
-  tutState: () => ({ active: tut.active, step: tutStepId(), done: !!save.tutorialDone }), tutStart() { tutStart(); }, tutNext, tutSkip() { tutFinish(true); },
-  planTrain: (uid, amt, g) => { const pl = planTrain(save.pets.find(q => q.uid === uid), amt, g); return { from: pl.from, to: pl.to, used: pl.used, gems: pl.gems }; },
-  applyTrain: (uid, amt, g) => { const r = applyTrain(uid, amt, g); return r && { from: r.from, to: r.to, gems: r.gems, used: r.used, milestones: (r.milestones || []).map(m => ({ lv: m.lv, k: m.perk.k })) }; },
-  statSnap: (uid) => statSnap(save.pets.find(q => q.uid === uid)), buyFoodPack,
-  audioInfo: () => ({ ctx: !!audioCtx, state: audioCtx ? audioCtx.state : "none", limiter: !!(limiter && limiter.constructor && /Compressor/.test(limiter.constructor.name)), limiterThreshold: limiter ? limiter.threshold.value : null,
-    bgmTarget: bgmTargetGain(), bgmGain: bgmGain ? bgmGain.gain.value : null, sfxLevel: SFX_LEVEL, vol: bgmVolume(), legacyBgm: 0.20 }),
-  setBgmVolume: (v) => setBgmVolume(v),
-  // v13.2 hooks: charms, traits, squad, roles, synergies, terrain, rarity, economy, banner, enemies
-  GAME_VERSION, RAR_KEY, RAR_MUL, MAX_STAR, MAX_LV, EVO_REQ, HATCH_W, BANNER, TERRAIN, ROLE5, TRAITS, ARMOR,
-  specialCharms: () => CHARMS.filter(c => c.specialOnly).map(c => ({ id: c.id, cost: c.cost || 0, cond: c.cond })), shopCharms: () => SHOP_CHARMS.map(c => c.id),
-  checkSpecialCharms: (q) => checkSpecialCharms(q), specialGot: () => Object.assign({}, save.specialGot), setThiefKills(n) { save.thiefKills = n; persist(); },
-  setEndlessBest(n) { save.endlessBest = n; persist(); },
-  traitOffers: (uid) => traitOffers(save.pets.find(q => q.uid === uid)).slice(), pickTrait, rerollTrait,
-  setPetLv(uid, lv) { const p = save.pets.find(q => q.uid === uid); if (p) { p.lv = lv; persist(); } },
-  getSquad: () => (save.squad || []).map(x => ({ u: x.u, s: x.s })), resetSquad() { save.squad = []; persist(); },
-  deployPet: (uid, slot) => { const ok = deploy(uid, slot, false); return ok; }, recallUid(uid) { const t = B.towers.find(q => q.uid === uid); if (t) recall(t); return !!t; },
-  towers: () => B.towers.map(t => ({ uid: t.uid, id: t.id, slot: t.slot, terr: t.terr, aura: t._aura, jam: t.jamT })),
-  teamSynergies, synergyMods, suggestTeam, teamAdvice: () => teamAdvice(B.towers.map(t => t.id)), role5,
-  combatValueOf: (id, star, lv, apt, slot) => { const p = { id, star: star || 1, lv: lv || 1, apt: apt || 50, tr: { a: 0, h: 0, s: 0 } };
-    const t = { id, star: p.star, shiny: false, ind: indivMul(p), tier: 1, ce: {}, terr: slot != null ? ((B.terrain || {})[slot] || "") : "", _aura: 0 }; return combatValue(t); },
-  powerOf: (id, star, lv, apt) => petPower({ id, star: star || 1, lv: lv || 1, apt: apt || 50, tr: { a: 0, h: 0, s: 0 } }),
-  towerStats: (uid) => { const t = B.towers.find(q => q.uid === uid); if (!t) return null; const st = petStats(t); return { range: st.range, crit: st.crit, rate: st.rate, dmg: st.dmg, splash: st.splash, slow: st.slow, terr: t.terr, aura: t._aura }; },
-  terrainMap: () => Object.assign({}, B.terrain || {}), mapTerrain: (id) => Object.assign({}, (MAP[id] && MAP[id].terrain) || {}),
-  rollHatchN(q, n) { const c = {}; for (let i = 0; i < n; i++) { const r = rollHatch({ q, sh: 0 }); const k = RAR_KEY[PET[r.id].rar]; c[k] = (c[k] || 0) + 1; } return c; },
-  rollAptN(n) { const c = {}; for (let i = 0; i < n; i++) { const g = birthGrade(rollApt(1), 1, false); c[g] = (c[g] || 0) + 1; } return c; },
-  goldEggChance: (endless, wave, boss) => goldEggChance(endless ? ENDLESS : { story: true }, wave, boss), dropChance: (endless, wave) => dropChance(endless ? ENDLESS : MAPS[0], wave),
-  bannerInfo: () => ({ active: bannerActive(), ends: BANNER.ends, left: bannerLeft(), cost: BANNER.cost, rates: Object.assign({}, BANNER.w) }), pullBanner: () => { const p = pullBanner(); return p && { uid: p.uid, id: p.id }; },
-  endlessSpec, smoothHp, spawnTest(id, wave) { B.wave = wave || B.wave; spawnEnemy({ id, hpMul: 1, spdMul: 1 }); return B.enemies.length; },
-  enemies: () => B.enemies.map(e => ({ typ: e.typ, hp: e.hp, max: e.max, y: e.y, elite: !!e.elite, lane: e.lane })),
-  setEnemyY(y) { for (const e of B.enemies) e.y = y; }, stepEnemies(dt, n) { for (let i = 0; i < (n || 1); i++) for (const e of B.enemies.slice()) enemySkills(e, dt); return B.enemies.length; },
-
-  setMute(bgm, sfxOff) { setMuteBgm(!!bgm); setMuteSfx(!!sfxOff); return this.getMute(); },
-  musicTrack: () => musicTrack,
-  audioReady: () => !!(audioCtx && SONG && SONG.main),
-
-  // fire one pet once in a sandbox and report what its attack produced
-  probeAttack(id, star) {
-    const keep = { shots: B.shots, fx: B.fx, zones: B.zones, towers: B.towers, enemies: B.enemies, floaters: B.floaters, minions: B.minions };
-    B.shots = []; B.fx = []; B.zones = []; B.floaters = []; B.minions = [];
-    const t = { uid: -1, id, star: star || 1, shiny: false, slot: 7, x: LANE_X[2], y: BACK_Y, tier: 1, cd: 0, bounce: 0, hp: 1, fainted: false, ph: 0 };
-    const mate = { uid: -2, id: "chili", star: 1, shiny: false, slot: 6, x: LANE_X[1], y: BACK_Y, tier: 1, cd: 9, bounce: 0, hp: 1, fainted: false, ph: 0 };
-    B.towers = [t, mate];
-    const mk = (lane, y) => ({ typ: "pebble", lane, x: LANE_X[lane], y, hp: 9999, max: 9999, spd: 20, atk: 0, el: "土", fly: false, boss: false, reward: 0, slowT: 0, slowV: 1, stunT: 0, burnT: 0, burnD: 0, atkCd: 9, ph: 0, biting: false, hitT: 0 });
-    B.enemies = [mk(2, 420), mk(2, 360), mk(1, 400), mk(3, 410)];
-    if (PET[id].typ === "spikequake") B.enemies.push(mk(2, BACK_Y - 70));
-    let fired = false; try { fired = fireTower(t, petStats(t)); } catch (err) { return "ERR " + err.message; }
-    const sig = [...new Set([...B.shots.map(s => "shot:" + s.kind), ...B.fx.map(f => "fx:" + f.typ)])].sort().join("+")
-      + (t.shield || mate.shield ? "+shield" : "") + (B.enemies.some(e => e.hp < 9999) ? "+dmg" : "") + (mate.berryT ? "+buff" : "") + (B.minions.length ? "+minion" : "");
-    Object.assign(B, keep);
-    return fired ? (PET[id].typ + "|" + sig) : "NOFIRE";
-  }
-};
 
 /* ================= v2.2 (GB-12): skills, energy, tray fold, slot lock, bond, charms, version, S1 champion ================= */
 const ENERGY_MAX = 100, ENERGY_REGEN = 2.6, ENERGY_KILL = 3.5;
@@ -6605,7 +6520,412 @@ if (typeof window !== "undefined") {
   window.__v22 = { petLocked, petCC, ultCostOf, CMD_SKILLS, ENERGY_MAX, S1_PET, enhanceCharm, claimSeasonPet, fireCmd, fireUlt };
 }
 
-try { bootV22(); if (save.started && !save.seenV22) setTimeout(function(){ showNewsModal(false); }, 600); } catch (e) {}
+
+/* ================= v2.3 (GB-13): first 60s hook, treasure slime, combat juice ================= */
+const ENERGY_START = 60;
+const STARTER_BUDDY = { chili: "berry", lychee: "chestnut", chestnut: "chili" };
+const SHAKE_CAP = 6.5;
+
+function bumpShake(n) { if (B) B.shake = Math.min(SHAKE_CAP, (B.shake || 0) + n); }
+function isTreasure(e) { return !!(e && (e.typ === "treasure" || (ENEMY[e.typ] && ENEMY[e.typ].treasure))); }
+function isFreshHookSave() {
+  if (save.firstTreasureEggClaimed) return false;
+  if ((save.beaten | 0) > 0) return false;
+  if ((save.endlessBest | 0) >= 5) return false;
+  if ((save.hatched | 0) > 2) return false;
+  if (save.maps && Object.keys(save.maps).some(k => save.maps[k] && save.maps[k].c)) return false;
+  return true;
+}
+function shouldSpawnTreasure() {
+  if (!isFreshHookSave()) return false;
+  if (!B || !B.level || !B.level.story || B.level.hard) return false;
+  if (B.level.id && B.level.id !== "orchard") return false;
+  return B.wave === 1 || B.wave === 2;
+}
+
+const _initV22Battle = initV22Battle;
+initV22Battle = function () {
+  _initV22Battle();
+  B.energy = ENERGY_START;
+  B.energyMax = ENERGY_MAX;
+  B.shake = 0; B.combo = 0; B.comboT = 0; B.hookNudge = true; B.treasureDropped = false;
+  try { renderSkillBar(); } catch (e) {}
+};
+
+const _newGame = newGame;
+newGame = function (starterId) {
+  _newGame(starterId);
+  const sid = starterId || "chili";
+  const buddy = STARTER_BUDDY[sid] || "berry";
+  if (buddy && PET[buddy] && !save.pets.some(p => p.id === buddy)) {
+    addPet(buddy, 1, false, { minApt: 40 });
+    try { showToast(tr("starter_buddy", stageName(buddy, 1)), 3.2); } catch (e) {}
+  }
+  save.firstTreasureEggClaimed = false;
+  save.seenV23 = true;
+  persist();
+};
+
+const _storySpec = storySpec;
+storySpec = function (map, n, hard) {
+  const es = _storySpec(map, n, hard);
+  if (n <= 3) {
+    es.gap = Math.max(0.22, (es.gap || 1) * (n === 1 ? 0.5 : n === 2 ? 0.6 : 0.7));
+    es.spdMul = (es.spdMul || 1) * (n === 1 ? 1.32 : n === 2 ? 1.22 : 1.14);
+    if (n === 1) es.hpMul = (es.hpMul || 1) * 0.92;
+  }
+  return es;
+};
+const _endlessSpec = endlessSpec;
+endlessSpec = function (n) {
+  const es = _endlessSpec(n);
+  if (n <= 3) {
+    es.gap = Math.max(0.22, (es.gap || 1) * (n === 1 ? 0.55 : 0.7));
+    es.spdMul = (es.spdMul || 1) * (n === 1 ? 1.25 : 1.15);
+  }
+  return es;
+};
+
+const _startNextWave = startNextWave;
+startNextWave = function () {
+  const ok = _startNextWave();
+  if (ok === false) return false;
+  if (B.wave <= 3) {
+    B.spawnT = 0;
+    if (B.wave === 1) {
+      let n = 0;
+      for (const g of B.spawnQ) {
+        if (g.id === "treasure") continue;
+        if (n < 2) { g.near = 1; g.y0 = 200 + n * 18; n++; }
+      }
+    }
+  }
+  if (shouldSpawnTreasure() && !B.spawnQ.some(g => g.id === "treasure")) {
+    const at = B.wave === 1 ? Math.min(3, Math.max(1, B.spawnQ.length - 1)) : 1;
+    B.spawnQ.splice(at, 0, { id: "treasure", hpMul: 0.85, spdMul: 1.15, near: 1, y0: 180 });
+  }
+  try { refreshHUD(); } catch (e) {}
+  return true;
+};
+
+const _spawnEnemy = spawnEnemy;
+spawnEnemy = function (g) {
+  _spawnEnemy(g);
+  const e = B.enemies[B.enemies.length - 1];
+  if (!e) return e;
+  if (g && g.near) { e.y = g.y0 || 200; e.x = laneXAt(e.lane, e.y); }
+  if (isTreasure(e)) {
+    e.elite = false; e.treasure = true; e.reward = Math.max(e.reward, 18);
+    e.hp = ENEMY.treasure.hp * (g.hpMul || 1); e.max = e.hp;
+    B.fx.push({ typ: "ring", x: e.x, y: e.y, r0: 8, r1: 70, color: "#ffe14a", life: 0.45, max: 0.45 });
+  }
+  return e;
+};
+
+const _drawEnemyGear = drawEnemyGear;
+drawEnemyGear = function (c, e, sz) {
+  _drawEnemyGear(c, e, sz);
+  if (!isTreasure(e)) return;
+  const k = sz / 90, pulse = 0.5 + 0.5 * Math.sin((B && B.t || time) * 6 + (e.ph || 0));
+  c.save();
+  c.globalAlpha = 0.35 + 0.25 * pulse;
+  c.strokeStyle = "#ffe14a"; c.lineWidth = 4;
+  c.beginPath(); c.ellipse(0, -sz * 0.35, sz * 0.62, sz * 0.5, 0, 0, Math.PI * 2); c.stroke();
+  c.globalAlpha = 1;
+  c.font = "900 " + Math.round(22 * k) + "px sans-serif";
+  c.textAlign = "center"; c.textBaseline = "middle";
+  c.fillText("👑", 0, -sz * 0.92);
+  c.font = "900 " + Math.round(13 * k) + "px sans-serif";
+  c.lineWidth = 3; c.strokeStyle = "#3a1800"; c.strokeText("🎁 Egg!", 0, -sz * 1.12);
+  c.fillStyle = "#ffe14a"; c.fillText("🎁 Egg!", 0, -sz * 1.12);
+  for (let i = 0; i < 5; i++) {
+    const a = (B && B.t || time) * 3 + i * 1.26;
+    c.globalAlpha = 0.5 + 0.5 * Math.sin(a * 2);
+    c.fillStyle = i % 2 ? "#fff6c0" : "#ffd23a";
+    c.beginPath(); c.arc(Math.cos(a) * sz * 0.55, -sz * 0.4 + Math.sin(a) * sz * 0.4, 2.4, 0, Math.PI * 2); c.fill();
+  }
+  c.restore();
+};
+
+function grantTreasureEgg(e) {
+  if (save.firstTreasureEggClaimed) return;
+  save.firstTreasureEggClaimed = true;
+  save.firstEgg = true;
+  const q = Math.random() < 0.35 ? 3 : 2;
+  dropEgg(e ? e.x : W / 2, e ? e.y : 320, q, Math.max(0.08, shinyChance(lootLevel(B.level, Math.max(1, B.wave))) * 1.4));
+  B.treasureDropped = true;
+  B.gold += 12;
+  B.floaters.push({ x: (e && e.x) || W / 2, y: ((e && e.y) || 300) - 70, text: tr("treasure_burst"), color: "#ffe14a", life: 1.4, max: 1.4, big: true, huge: true });
+  bumpShake(4.5);
+  try { sfx.shiny(); } catch (err) {}
+  showEggJumpPill(true);
+}
+
+function showEggJumpPill(on) {
+  const p = el("egg-jump"); if (!p) return;
+  p.classList.toggle("hidden", !on);
+  if (on) { p.textContent = tr("egg_jump"); p.onclick = (ev) => { ev.stopPropagation(); leaveToHatch(); }; }
+}
+function leaveToHatch() {
+  try { sfx.egg(); } catch (e) {}
+  if (B && B.running && !B.over) { B.over = true; B.running = false; B.won = true; persist(); }
+  showEggJumpPill(false);
+  hideAll();
+  openHome("hatch");
+  showToast(tr("egg_jump"), 2.8);
+}
+
+const _killEnemy = killEnemy;
+killEnemy = function (e) {
+  const typ = e && e.typ, boss = !!(e && e.boss), tre = isTreasure(e);
+  _killEnemy(e);
+  if (tre) grantTreasureEgg(e);
+  if (boss) bumpShake(5);
+  if (B) {
+    B.combo = (B.comboT > 0 ? (B.combo || 0) : 0) + 1;
+    B.comboT = 1.35;
+    if (B.combo >= 3 && B.combo % 1 === 0) {
+      B.floaters.push({ x: (e && e.x) || W / 2, y: ((e && e.y) || 280) - 80, text: tr("combo_n", B.combo), color: "#ff9a3a", life: 1.1, max: 1.1, big: true, huge: B.combo >= 8 });
+    }
+  }
+};
+
+const _hitEnemy = hitEnemy;
+hitEnemy = function (e, dmg, elem, o) {
+  const n0 = (B.floaters || []).length;
+  _hitEnemy(e, dmg, elem, o);
+  for (let i = n0; i < B.floaters.length; i++) {
+    const f = B.floaters[i];
+    if (!f || !f.text || !/^\d/.test(String(f.text)) && !/\d/.test(String(f.text))) continue;
+    if (f.color === "#ffd23a" && f.big) { f.text = tr("crit_pop") + " " + f.text; f.huge = true; f.life = Math.max(f.life, 0.95); f.max = Math.max(f.max, 0.95); }
+    else if (f.color === "#ff8a5a" && f.big) { f.text = tr("super_pop") + " " + f.text; f.huge = true; }
+  }
+};
+
+const _fireUlt = fireUlt;
+fireUlt = function (t) {
+  const ok = _fireUlt(t);
+  if (ok) { bumpShake(3.2); if (B) B.hookNudge = false; }
+  return ok;
+};
+const _fireCmd = fireCmd;
+fireCmd = function (id) {
+  const ok = _fireCmd(id);
+  if (ok) { bumpShake(id === "star_strike" ? 4.2 : 3.4); if (B) B.hookNudge = false; }
+  return ok;
+};
+
+const _tickV22 = tickV22;
+tickV22 = function (dt) {
+  _tickV22(dt);
+  if (!B) return;
+  if (B.shake > 0) B.shake = Math.max(0, B.shake - dt * 14);
+  if (B.comboT > 0) { B.comboT -= dt; if (B.comboT <= 0) B.combo = 0; }
+};
+
+const _renderSkillBar = renderSkillBar;
+renderSkillBar = function () {
+  _renderSkillBar();
+  const bar = el("skill-bar"); if (!bar || !B) return;
+  if (B.hookNudge && (B.wave | 0) <= 1 && (B.energy || 0) >= 50) {
+    const prefer = (B.energy || 0) >= 60 ? "star_strike" : "freeze_bomb";
+    const btn = bar.querySelector('[data-cmd="' + prefer + '"]:not(.off)') || bar.querySelector(".sk-btn.cmd:not(.off)") || bar.querySelector(".sk-btn.ult:not(.off)");
+    if (btn) { btn.classList.add("hook-nudge"); btn.setAttribute("data-hook", tr("hook_ult")); btn.title = tr("hook_ult"); }
+  }
+};
+
+function nextMilestone() {
+  if (!B || !B.level) return "";
+  const lv = B.level, w = Math.max(1, B.wave || 1);
+  if (B.treasureDropped === false && shouldSpawnTreasure() && w <= 2) return tr("mile_treasure");
+  if (lv.story) {
+    const left = lv.waves - w;
+    if (left <= 0) return tr("mile_end");
+    let bossIn = 5 - (w % 5); if (bossIn === 5 && w % 5 === 0) bossIn = 0;
+    if (w % 5 === 0) return tr("mile_end");
+    const toBoss = (5 - (w % 5)) || 5;
+    const toEnd = left;
+    if (toBoss <= toEnd) return tr("mile_boss", toBoss);
+    return tr("mile_boss", toEnd);
+  }
+  const toZone = 10 - ((w - 1) % 10);
+  return tr("mile_zone", toZone);
+}
+const _refreshHUD = refreshHUD;
+refreshHUD = function () {
+  _refreshHUD();
+  const m = el("mile-pill");
+  if (m && B && B.running) { m.textContent = nextMilestone(); m.classList.remove("hidden"); }
+  else if (m) m.classList.add("hidden");
+};
+
+const _renderBattle = renderBattle;
+renderBattle = function () {
+  const c = ctx, sh = Math.min(SHAKE_CAP, (B && B.shake) || 0);
+  if (sh > 0) { c.save(); c.translate((Math.random() - 0.5) * 2 * sh, (Math.random() - 0.5) * 2 * sh); }
+  _renderBattle();
+  if (sh > 0) c.restore();
+};
+
+const _waveCleared = waveCleared;
+waveCleared = function () {
+  _waveCleared();
+  if (B && B.treasureDropped) showEggJumpPill(true);
+};
+
+const _showNewsModal = showNewsModal;
+showNewsModal = function (force) {
+  const m = el("news-modal"); if (!m) return;
+  el("news-body").innerHTML = "<h3>" + tr("v23_news_title") + "</h3><ul class='news-list'>"
+    + "<li>" + tr("v23_news_1") + "</li><li>" + tr("v23_news_2") + "</li><li>" + tr("v23_news_3") + "</li><li>" + tr("v23_news_4") + "</li></ul>";
+  m.classList.remove("hidden");
+  if (!force) { save.seenV23 = true; persist(); }
+};
+
+const _showUpdateModal = showUpdateModal;
+showUpdateModal = function (ver) {
+  const m = el("update-modal"); if (!m) return;
+  el("update-body").innerHTML = "<h3>" + tr("update_live", ver || "2.3") + "</h3><p>" + tr("update_live_d") + "</p>";
+  m.classList.remove("hidden");
+};
+
+function bootV23() {
+  const p = el("egg-jump");
+  if (p && !p._bound) { p._bound = 1; p.addEventListener("click", (e) => { e.stopPropagation(); leaveToHatch(); }); }
+  document.querySelectorAll(".ver-badge").forEach(v => { v.textContent = "v" + GAME_VERSION; });
+}
+
+if (typeof window !== "undefined") {
+  window.__v23 = { ENERGY_START, STARTER_BUDDY, shouldSpawnTreasure, isFreshHookSave, grantTreasureEgg, leaveToHatch, bumpShake, nextMilestone };
+}
+
+/* ================= test / debug hooks ================= */
+window.__PETTD__ = {
+  STR, PETS, LEVELS, ENEMY, SAVE_KEY, OLD_SAVE_KEY, SONG, endlessSpec, lootLevel, eggWeights, dropChance, shinyChance,
+  getScreen: () => screen,
+  getLang: () => LANG, setLang(l) { applyLang(l, true); },
+  debugEnemies: () => B.enemies.map(e => ({ t: e.typ, x: Math.round(e.x), y: Math.round(e.y), hp: Math.round(e.hp), stun: e.stunT })),
+  ready: () => assetsReady,
+  getSave: () => JSON.parse(JSON.stringify({ migratedV21: save.migratedV21, squad: save.squad, specialGot: save.specialGot, thiefKills: save.thiefKills, maps: save.maps, tutorialDone: save.tutorialDone, bgmVol: save.bgmVol, started: save.started, food: save.food, gems: save.gems, pets: save.pets, eggs: save.eggs, beaten: save.beaten, endlessBest: save.endlessBest, muted: save.muted, muteBgm: save.muteBgm, muteSfx: save.muteSfx, playerName: save.playerName, clientId: save.clientId, charms: save.charms, evoMain: save.evoMain, hatched: save.hatched, firstEgg: !!save.firstEgg, firstTreasureEggClaimed: !!save.firstTreasureEggClaimed, seenV23: !!save.seenV23 })),
+  getBattle: () => ({ running: B.running, over: B.over, won: B.won, lives: B.lives, gold: B.gold, wave: B.wave, waveActive: B.waveActive,
+    enemies: B.enemies.length, spawnQ: B.spawnQ.length, kills: B.kills, eggsGot: B.eggsGot.length, speed: B.speed, energy: B.energy, combo: B.combo || 0,
+    towers: B.towers.map(t => ({ id: t.id, slot: t.slot, star: t.star, tier: t.tier, hp: t.hp, fainted: t.fainted })),
+    loot: B.level ? lootLevel(B.level, Math.max(1, B.wave)) : 0 }),
+  newGame, openHome, persist, flushSave, suspendPersist(on) { persistSuspended = !!on; }, openStarter, hasActiveSave, refreshTitleButtons, requestNewGame, beginNewGame, cancelNewGame,
+  setEndlessBest(n) { save.endlessBest = n | 0; persist(); },
+  clearWave() { waveCleared(); },
+  startRun() { startRun(); },
+  startLevel() { startRun(); },
+  givePet(id, star, shiny, apt) { return addPet(id, star || 1, shiny, apt != null ? { apt } : {}).uid; },
+  feed: (uid, fid) => feedPet(uid, fid), giveFood(fid, n) { save.food[fid] = (save.food[fid] | 0) + (n || 1); persist(); },
+  getPet: (uid) => { const p = save.pets.find(q => q.uid === uid); return p ? JSON.parse(JSON.stringify(p)) : null; },
+  petPower: (uid) => petPower(save.pets.find(q => q.uid === uid)), calcPower: (p) => petPower(p),
+  teamPower: () => teamPower(save.pets), topPets: (n) => topPetSummaries(save.pets, n),
+  scorePayload, sanitizePlayerName, suggestName, fmtPower, NAME_MAX, LB_URL, charmPowerMul,
+  getClientId, getPlayerName: () => save.playerName || "", setPlayerName, openNamePrompt, confirmPlayerName, ensurePlayerName,
+  openBoard, closeBoard, loadBoard, refreshBoard: () => loadBoard(boardSort),
+  setBoardMode(m) { boardMode = m === "offline" ? "offline" : "live"; },
+  getBoardState: () => ({ sort: boardSort, mode: boardMode, cache: boardCache, open: !el("board-screen").classList.contains("hidden") }),
+  submitScore: () => maybeSubmitScore("force"),
+  gainXp: (uid, n) => gainXp(save.pets.find(q => q.uid === uid), n),
+  hatchAll: () => hatchAll().map(p => ({ uid: p.uid, id: p.id, apt: p.apt, grade: p.grade, shiny: p.shiny })), trainCap, indivMul: (uid) => indivMul(save.pets.find(q => q.uid === uid)),
+  addEgg(q, sh) { save.eggs.push({ q: q || 1, sh: sh == null ? 0.05 : sh }); persist(); },
+  deploy(uid, slot) { const ok = deploy(uid, slot); renderTray(); return ok; },
+  clearField() { B.towers = []; renderTray(); },
+  startWave() { if (!B.waveActive) { B.countdown = 0; startNextWave(); } },
+  setSpeed(n) { B.speed = n; el("btn-speed").textContent = "×" + n; },
+  setGold(n) { B.gold = n; refreshHUD(); },
+  setWave(n) { B.wave = n; refreshHUD(); },
+  endRun() { endRun(false); },
+  forceShiny(v) { forceShinyNext = v !== false; },
+  hatchFirst() { if (!save.eggs.length) save.eggs.push({ q: 1, sh: 0.05 }); return openHatch(save.eggs.reduce((bi, e, i, a) => e.q > a[bi].q ? i : bi, 0)); },
+  skipHatchAnim: skipHatch,
+  hatchedPet: () => H8.pet ? { ...H8.pet } : null,
+  evolve, feedEvo: (m, u, o) => feedEvo(m, u, o), oneClickEvo, directEvolve, evoReady: (id) => evoReady(evoMainOf(id)), migratedV21: () => !!save.migratedV21, setEvo(uid, n) { const p = save.pets.find(q => q.uid === uid); if (p) { p.evo = n; persist(); } }, setEvoMain, evoMain: (id) => { const m = evoMainOf(id); return m ? m.uid : null; },
+  evoEligible: (id) => { const m = evoMainOf(id); return m ? evoEligible(m).map(p => p.uid) : []; },
+  copyValue: (uid) => copyValue(save.pets.find(q => q.uid === uid)), EVO_REQ, CHARMS, SHINY_BASE, SHINY_CAP, HATCH_W, rollApt, birthGrade, sanitizeNick, NICK_MAX,
+  getCharms: () => ({ ...save.charms }), giveCharm(cid, n) { save.charms[cid] = (save.charms[cid] | 0) + (n || 1); persist(); },
+  buyCharm, equipCharm, unequipCharm, renamePet, openRename, dropCharm: (cid) => dropCharm(200, 300, cid), setGems(n) { save.gems = n; persist(); },
+  petName: (uid) => { const p = save.pets.find(q => q.uid === uid); return p ? petName(p) : null; },
+  towerInfo: () => B.towers.map(t => ({ uid: t.uid, nick: t.nick, charm: t.charm, star: t.star })),
+  minions: () => B.minions.map(m => ({ phase: m.phase, giant: m.giant, lane: m.lane, y: Math.round(m.y) })),
+  spawnEnemyAt(id, lane, y, hpMul) { spawnEnemy({ id, hpMul: hpMul || 1, spdMul: 1 }); const e = B.enemies[B.enemies.length - 1]; e.lane = lane; e.x = LANE_X[lane]; e.y = y; return B.enemies.length; },
+  killAll() { for (const e of B.enemies.slice()) if (e.hp > 0) killEnemy(e); B.enemies = B.enemies.filter(e => e.hp > 0); return B.enemies.map(e => e.typ); },
+  stepN(n, dt) { for (let i = 0; i < n; i++) step(dt || 1 / 60); },
+  openBook() { openHome("book"); },
+  openDetail, selectTray(uid) { B.selPet = uid; renderTray(); },
+  fxKinds: () => [...new Set([...B.shots.map(s => "shot:" + s.kind), ...B.fx.map(f => "fx:" + f.typ), ...B.zones.map(() => "zone"), ...B.minions.map(m => "minion:" + m.phase)])],
+  spawnDemo() {   // a field full of tough slimes so every skill is visible at once
+    B.enemies = []; B.spawnQ = []; B.waveActive = true;
+    const ty = ["sprout", "jelly", "ember", "zap", "pebble", "puff", "split", "thief"];
+    for (let i = 0; i < 10; i++) { spawnEnemy({ id: ty[i % 8], hpMul: 60, spdMul: 0.15 }); const e = B.enemies[B.enemies.length - 1]; e.lane = i % 5; e.x = LANE_X[e.lane]; e.y = 330 + Math.floor(i / 5) * 110 + (i % 2) * 20; }
+    spawnEnemy({ id: "boss2", hpMul: 8, spdMul: 0.1 }); B.enemies[B.enemies.length - 1].y = 220;
+  },
+  enemyNames: () => B.enemies.map(e => ENEMY[e.typ].name),
+  getMute: () => ({ muted: !!save.muted, muteBgm: !!save.muteBgm, muteSfx: !!save.muteSfx }),
+  exportSave: () => exportSaveCode(),
+  importSave: (code, o) => importSaveCode(code, o || {}),
+  openSave, fit, isLand: () => land,
+  // v13 hooks
+  MAPS, storySpec, pathDX, milestonePerks, perkAt, HARD,
+  startMap(id, hard) { startRun(id, hard); }, getLevel: () => B.level ? { id: B.level.id, story: !!B.level.story, hard: !!B.level.hard, endless: !!B.level.endless, waves: B.level.waves || 0, path: B.level.path || "straight", theme: curTheme() } : null,
+  getMaps: () => JSON.parse(JSON.stringify(save.maps)), setMapCleared(id, hard) { save.maps[id] = { c: 1, h: hard ? 1 : 0, n: 1 }; persist(); },
+  winStory() { if (!B.level || !B.level.story) return false; B.wave = B.level.waves - 1; B.spawnQ = []; B.enemies = []; B.waveActive = true; B.wave++; waveCleared(); return true; },
+  selectMap(id) { selMap = id; if (screen === "home") renderHome(); }, setHard(v) { hardSel = !!v; if (screen === "home") renderHome(); },
+  tutState: () => ({ active: tut.active, step: tutStepId(), done: !!save.tutorialDone }), tutStart() { tutStart(); }, tutNext, tutSkip() { tutFinish(true); },
+  planTrain: (uid, amt, g) => { const pl = planTrain(save.pets.find(q => q.uid === uid), amt, g); return { from: pl.from, to: pl.to, used: pl.used, gems: pl.gems }; },
+  applyTrain: (uid, amt, g) => { const r = applyTrain(uid, amt, g); return r && { from: r.from, to: r.to, gems: r.gems, used: r.used, milestones: (r.milestones || []).map(m => ({ lv: m.lv, k: m.perk.k })) }; },
+  statSnap: (uid) => statSnap(save.pets.find(q => q.uid === uid)), buyFoodPack,
+  audioInfo: () => ({ ctx: !!audioCtx, state: audioCtx ? audioCtx.state : "none", limiter: !!(limiter && limiter.constructor && /Compressor/.test(limiter.constructor.name)), limiterThreshold: limiter ? limiter.threshold.value : null,
+    bgmTarget: bgmTargetGain(), bgmGain: bgmGain ? bgmGain.gain.value : null, sfxLevel: SFX_LEVEL, vol: bgmVolume(), legacyBgm: 0.20 }),
+  setBgmVolume: (v) => setBgmVolume(v),
+  // v13.2 hooks: charms, traits, squad, roles, synergies, terrain, rarity, economy, banner, enemies
+  GAME_VERSION, RAR_KEY, RAR_MUL, MAX_STAR, MAX_LV, EVO_REQ, HATCH_W, BANNER, TERRAIN, ROLE5, TRAITS, ARMOR, ENERGY_START: 60,
+  specialCharms: () => CHARMS.filter(c => c.specialOnly).map(c => ({ id: c.id, cost: c.cost || 0, cond: c.cond })), shopCharms: () => SHOP_CHARMS.map(c => c.id),
+  checkSpecialCharms: (q) => checkSpecialCharms(q), specialGot: () => Object.assign({}, save.specialGot), setThiefKills(n) { save.thiefKills = n; persist(); },
+  setEndlessBest(n) { save.endlessBest = n; persist(); },
+  traitOffers: (uid) => traitOffers(save.pets.find(q => q.uid === uid)).slice(), pickTrait, rerollTrait,
+  setPetLv(uid, lv) { const p = save.pets.find(q => q.uid === uid); if (p) { p.lv = lv; persist(); } },
+  getSquad: () => (save.squad || []).map(x => ({ u: x.u, s: x.s })), resetSquad() { save.squad = []; persist(); },
+  deployPet: (uid, slot) => { const ok = deploy(uid, slot, false); return ok; }, recallUid(uid) { const t = B.towers.find(q => q.uid === uid); if (t) recall(t); return !!t; },
+  towers: () => B.towers.map(t => ({ uid: t.uid, id: t.id, slot: t.slot, terr: t.terr, aura: t._aura, jam: t.jamT })),
+  teamSynergies, synergyMods, suggestTeam, teamAdvice: () => teamAdvice(B.towers.map(t => t.id)), role5,
+  combatValueOf: (id, star, lv, apt, slot) => { const p = { id, star: star || 1, lv: lv || 1, apt: apt || 50, tr: { a: 0, h: 0, s: 0 } };
+    const t = { id, star: p.star, shiny: false, ind: indivMul(p), tier: 1, ce: {}, terr: slot != null ? ((B.terrain || {})[slot] || "") : "", _aura: 0 }; return combatValue(t); },
+  powerOf: (id, star, lv, apt) => petPower({ id, star: star || 1, lv: lv || 1, apt: apt || 50, tr: { a: 0, h: 0, s: 0 } }),
+  towerStats: (uid) => { const t = B.towers.find(q => q.uid === uid); if (!t) return null; const st = petStats(t); return { range: st.range, crit: st.crit, rate: st.rate, dmg: st.dmg, splash: st.splash, slow: st.slow, terr: t.terr, aura: t._aura }; },
+  terrainMap: () => Object.assign({}, B.terrain || {}), mapTerrain: (id) => Object.assign({}, (MAP[id] && MAP[id].terrain) || {}),
+  rollHatchN(q, n) { const c = {}; for (let i = 0; i < n; i++) { const r = rollHatch({ q, sh: 0 }); const k = RAR_KEY[PET[r.id].rar]; c[k] = (c[k] || 0) + 1; } return c; },
+  rollAptN(n) { const c = {}; for (let i = 0; i < n; i++) { const g = birthGrade(rollApt(1), 1, false); c[g] = (c[g] || 0) + 1; } return c; },
+  goldEggChance: (endless, wave, boss) => goldEggChance(endless ? ENDLESS : { story: true }, wave, boss), dropChance: (endless, wave) => dropChance(endless ? ENDLESS : MAPS[0], wave),
+  bannerInfo: () => ({ active: bannerActive(), ends: BANNER.ends, left: bannerLeft(), cost: BANNER.cost, rates: Object.assign({}, BANNER.w) }), pullBanner: () => { const p = pullBanner(); return p && { uid: p.uid, id: p.id }; },
+  endlessSpec, smoothHp, spawnTest(id, wave) { B.wave = wave || B.wave; spawnEnemy({ id, hpMul: 1, spdMul: 1 }); return B.enemies.length; },
+  enemies: () => B.enemies.map(e => ({ typ: e.typ, hp: e.hp, max: e.max, y: e.y, elite: !!e.elite, lane: e.lane })),
+  setEnemyY(y) { for (const e of B.enemies) e.y = y; }, stepEnemies(dt, n) { for (let i = 0; i < (n || 1); i++) for (const e of B.enemies.slice()) enemySkills(e, dt); return B.enemies.length; },
+
+  setMute(bgm, sfxOff) { setMuteBgm(!!bgm); setMuteSfx(!!sfxOff); return this.getMute(); },
+  musicTrack: () => musicTrack,
+  audioReady: () => !!(audioCtx && SONG && SONG.main),
+
+  // fire one pet once in a sandbox and report what its attack produced
+  probeAttack(id, star) {
+    const keep = { shots: B.shots, fx: B.fx, zones: B.zones, towers: B.towers, enemies: B.enemies, floaters: B.floaters, minions: B.minions };
+    B.shots = []; B.fx = []; B.zones = []; B.floaters = []; B.minions = [];
+    const t = { uid: -1, id, star: star || 1, shiny: false, slot: 7, x: LANE_X[2], y: BACK_Y, tier: 1, cd: 0, bounce: 0, hp: 1, fainted: false, ph: 0 };
+    const mate = { uid: -2, id: "chili", star: 1, shiny: false, slot: 6, x: LANE_X[1], y: BACK_Y, tier: 1, cd: 9, bounce: 0, hp: 1, fainted: false, ph: 0 };
+    B.towers = [t, mate];
+    const mk = (lane, y) => ({ typ: "pebble", lane, x: LANE_X[lane], y, hp: 9999, max: 9999, spd: 20, atk: 0, el: "土", fly: false, boss: false, reward: 0, slowT: 0, slowV: 1, stunT: 0, burnT: 0, burnD: 0, atkCd: 9, ph: 0, biting: false, hitT: 0 });
+    B.enemies = [mk(2, 420), mk(2, 360), mk(1, 400), mk(3, 410)];
+    if (PET[id].typ === "spikequake") B.enemies.push(mk(2, BACK_Y - 70));
+    let fired = false; try { fired = fireTower(t, petStats(t)); } catch (err) { return "ERR " + err.message; }
+    const sig = [...new Set([...B.shots.map(s => "shot:" + s.kind), ...B.fx.map(f => "fx:" + f.typ)])].sort().join("+")
+      + (t.shield || mate.shield ? "+shield" : "") + (B.enemies.some(e => e.hp < 9999) ? "+dmg" : "") + (mate.berryT ? "+buff" : "") + (B.minions.length ? "+minion" : "");
+    Object.assign(B, keep);
+    return fired ? (PET[id].typ + "|" + sig) : "NOFIRE";
+  }
+};
+
+try { bootV22(); bootV23(); if (save.started && !save.seenV23) setTimeout(function(){ showNewsModal(false); }, 600); } catch (e) {}
 })();
 </script>
 </body>
