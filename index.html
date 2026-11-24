@@ -999,6 +999,63 @@
     animation: hookpulse 1s ease-in-out infinite; vertical-align:middle; }
   #egg-jump.hidden { display:none; }
 
+
+  /* ===== v2.4 ===== */
+  #skill-bar, #team-bar, #loot-pill, #hud-syn, #mile-pill, #st-power, #st-eggs, #btn-board-hud, #st-tpower { display:none !important; }
+  body.b-locked24 #tray, body.b-locked24 #btn-tray-fold, body.b-locked24 #st-deploy, body.b-locked24 #btn-next { display:none !important; }
+  #toast { top: 54px !important; font-size: 12px !important; padding: 4px 12px !important; max-width: 80%; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; opacity: .92; pointer-events: none; }
+  #i24-bar { display:flex; gap:8px; justify-content:center; padding:4px 8px; }
+  #i24-bar .i24-slot { width:46px; height:46px; border:3px solid var(--ol); border-radius:14px; background:#fff8e6; font-size:26px; display:flex; align-items:center; justify-content:center; touch-action:none; user-select:none; box-shadow:0 3px 0 rgba(43,27,34,.35); }
+  #i24-bar .i24-slot:not(.on) { opacity:.45; border-style:dashed; }
+  #i24-bar .i24-slot.on { background:#fff3b0; animation: i24p 1.2s ease-in-out infinite; cursor:grab; }
+  @keyframes i24p { 50% { transform: scale(1.08); } }
+  .i24-ghost { position:fixed; z-index:80; font-size:38px; transform:translate(-50%,-60%); pointer-events:none; filter: drop-shadow(0 3px 2px rgba(0,0,0,.4)); }
+  body:not(.b-locked24) #i24-bar { display:none; }
+  html.land #i24-bar { flex-wrap:wrap; }
+  #u24, #p24 { position:fixed; inset:0; z-index:60; display:flex; align-items:center; justify-content:center; background:rgba(30,18,26,.55); touch-action:none; }
+  #u24.hidden, #p24.hidden, #t24.hidden { display:none !important; }
+  .u24-card, .p24-card { background:#fffdf3; border:4px solid var(--ol); border-radius:22px; padding:12px 16px; width:min(300px,88vw); text-align:center; font-weight:800; box-shadow:0 6px 0 rgba(43,27,34,.35); }
+  .u24-card h3, .p24-card h3 { margin:0 0 6px; font-size:18px; }
+  .u24-card .u24-pet canvas { width:86px; height:86px; }
+  .u24-card .u24-eff { margin:6px 0 2px; color:#c0392b; }
+  .u24-card small { display:block; opacity:.75; margin-bottom:8px; }
+  .u24-card .btn-row { display:flex; gap:8px; justify-content:center; }
+  .u24-tim { width:min(360px,92vw); text-align:center; color:#fff; font-weight:900; user-select:none; }
+  .u24-hint { font-size:20px; text-shadow:0 2px 0 #000; margin-bottom:10px; }
+  .u24-bar { position:relative; height:34px; border:4px solid var(--ol); border-radius:18px; background:linear-gradient(90deg,#ff4a4a 0%,#ff7a5a 30%,#5fe06a 35%,#5fe06a 65%,#ff7a5a 70%,#ff4a4a 100%); }
+  .u24-bar .u24-mk { position:absolute; top:-10px; width:10px; height:46px; margin-left:-5px; background:#fff; border:3px solid var(--ol); border-radius:6px; }
+  .u24-acc { font-size:38px; min-height:46px; margin-top:8px; color:#fff6a0; text-shadow:0 3px 0 #000; }
+  .u24-pow { font-size:30px; color:#ffe14a; text-shadow:0 3px 0 #c0392b, 0 0 14px #ff9a3a; letter-spacing:1px; }
+  .u24-acc.pop, .u24-pow.pop { animation:u24pop .3s ease-out; }
+  @keyframes u24pop { 0% { transform:scale(1.7); } 100% { transform:scale(1); } }
+  .p24-b { display:block; width:100%; margin:6px 0; padding:9px 8px; border:3px solid var(--ol); border-radius:14px; background:#fff3b0; font-weight:900; font-size:15px; }
+  .inc24 .inc-hd { display:flex; align-items:center; gap:8px; flex-wrap:wrap; } .inc24 .inc-hd small { flex:1; opacity:.75; }
+  .inc24 .inc-d { font-size:12px; opacity:.8; margin:4px 0 6px; font-weight:700; }
+  .inc-slots { display:flex; gap:8px; flex-wrap:wrap; justify-content:center; }
+  .inc-slot { width:92px; min-height:108px; border:3px solid var(--ol); border-radius:16px; background:#fff3e0; text-align:center; font-size:11px; font-weight:900; padding:4px; cursor:pointer; }
+  .inc-slot canvas { width:56px; height:63px; }
+  .inc-slot.ready { background:#e4f9d8; animation:i24p 1s ease-in-out infinite; }
+  .inc-slot.empty { opacity:.55; border-style:dashed; cursor:default; display:flex; align-items:center; }
+  .inc-bar { height:7px; border:2px solid var(--ol); border-radius:6px; background:#fff; overflow:hidden; margin-top:2px; } .inc-bar i { display:block; height:100%; background:#5fe06a; width:0; }
+  .inc-q { text-align:center; font-size:12px; font-weight:800; margin-top:6px; }
+  .chest24 { display:flex; align-items:center; gap:10px; } .chest24 .ch-ic { font-size:38px; } .chest24 .ch-i { flex:1; font-size:13px; } .chest24 .ch-i small { display:block; opacity:.75; }
+  .chest24 .ch-hats span { display:inline-block; margin:2px 3px 0 0; padding:1px 6px; border-radius:8px; background:#ffe6f2; font-size:11px; }
+  .hat-sel24 { margin-top:4px; font-weight:800; font-size:12px; border:2px solid var(--ol); border-radius:8px; background:#fff8e6; max-width:100%; }
+  #t24 { position:fixed; inset:0; z-index:70; pointer-events:none; }
+  #t24 .t24-ring { position:fixed; border:4px solid #ffe14a; border-radius:16px; box-shadow:0 0 0 9999px rgba(20,10,20,.55), 0 0 16px #ffe14a; animation:t24r 1s ease-in-out infinite; }
+  #t24 .t24-ring.nodim { box-shadow:0 0 16px #ffe14a; }
+  @keyframes t24r { 50% { border-color:#fff; } }
+  #t24 .t24-arr { position:fixed; font-size:30px; animation:t24a .7s ease-in-out infinite; }
+  @keyframes t24a { 50% { transform:translateY(8px); } }
+  #t24 .t24-bub { position:fixed; width:min(340px,calc(100vw - 16px)); background:#fffdf3; border:4px solid var(--ol); border-radius:18px; padding:8px 12px; font-weight:800; font-size:14px; pointer-events:auto; box-shadow:0 5px 0 rgba(43,27,34,.35); }
+  #t24 .t24-bub p { margin:4px 0 6px; line-height:1.35; } #t24 .t24-step { float:right; opacity:.6; font-size:12px; } #t24 .t24-h { font-size:12px; color:#c0392b; }
+  #t24 .t24-bub button { float:right; }
+  html.land .u24-acc { font-size:30px; min-height:36px; } html.land .u24-pow { font-size:24px; }
+  html.land body.b-locked24 #dock { justify-content:center; align-items:center; gap:14px; }
+  html.land body.b-locked24 #dock-bar { justify-content:center; transform:scale(1.25); }
+  html.land body.b-locked24 #i24-bar .i24-slot { width:64px; height:64px; font-size:34px; }
+  #toast { white-space: nowrap !important; }
+  html.land #toast { position: fixed !important; top: 10px !important; left: calc(var(--stage-w, 42vw) + (100vw - var(--stage-w, 42vw)) / 2) !important; transform: translateX(-50%) !important; max-width: calc((100vw - var(--stage-w, 42vw)) - 24px) !important; }
 </style>
 </head>
 <body>
@@ -2773,6 +2830,7 @@ function drawPet(c, id, star, shiny, x, y, size, o) {
   c.shadowBlur = 0;
   if (o.fx !== false) petFxFront(c, id, star, shiny, 0, -h, w, h, tt);
   if (o.charm) drawCharmOn(c, o.charm, 0, -h, w, h, tt);
+  if (o.hat) drawHat24(c, o.hat, 0, -h, w, h);
   c.restore();
 }
 function drawPetCentered(c, id, star, shiny, cx, cy, size, o) {
@@ -2784,6 +2842,7 @@ function drawPetCentered(c, id, star, shiny, cx, cy, size, o) {
   blit(c, fr, cx - w / 2, top, w, h);
   if (o.fx !== false) petFxFront(c, id, star, shiny, cx, top, w, h, tt);
   if (o.charm) drawCharmOn(c, o.charm, cx, top, w, h, tt);
+  if (o.hat) drawHat24(c, o.hat, cx, top, w, h);
 }
 function drawEnemyImg(c, typ, x, y, size, o) {
   const fr = spriteFrame("enemies/" + ENEMY[typ].img); if (!fr) return;
@@ -3338,7 +3397,7 @@ function petCanvas(id, star, shiny, px, opts) {
   const c = cv.getContext("2d"); c.scale(2, 2);
   if (opts && opts.silhouette) { c.filter = "brightness(0) opacity(.35)"; }
   const k = (opts && opts.k) || 1.0;
-  drawPetCentered(c, id, star, shiny, px / 2, px / 2 + 4 * k, px * k, { charm: opts && opts.charm, fx: !(opts && opts.silhouette) });
+  drawPetCentered(c, id, star, shiny, px / 2, px / 2 + 4 * k, px * k, { charm: opts && opts.charm, hat: opts && opts.hat, fx: !(opts && opts.silhouette) });
   return cv;
 }
 
@@ -3349,7 +3408,7 @@ let uidSeq = 1;
 const CLIENT_KEY = "mengchong-td-client-id";
 const NAME_KEY = "mengchong-td-player-name";
 const LB_URL = "https://pet-td-leaderboard.carden1218.workers.dev";
-const GAME_VERSION = '2.3';
+const GAME_VERSION = '2.4';
 let lastSeasonInfo = null;   // tournament build — the leaderboard rejects any other clientVersion
 const LB_CACHE_KEY = "mengchong-td-board-cache";
 function getClientId() {
@@ -3392,7 +3451,7 @@ function persist() {
       beaten: save.beaten, endlessBest: save.endlessBest, seen: save.seen, seenShiny: save.seenShiny,
       firstEgg: save.firstEgg, hatched: save.hatched, food: save.food, charms: save.charms, evoMain: save.evoMain, uidSeq,
       maps: save.maps || {}, tutorialDone: !!save.tutorialDone, bgmVol: bgmVolume(),
-      specialGot: save.specialGot || {}, thiefKills: save.thiefKills | 0, squad: save.squad || [], migratedV21: true, charmLv: save.charmLv || {}, seenV22: !!save.seenV22, seenV23: !!save.seenV23, firstTreasureEggClaimed: !!save.firstTreasureEggClaimed,
+      specialGot: save.specialGot || {}, thiefKills: save.thiefKills | 0, squad: save.squad || [], migratedV21: true, charmLv: save.charmLv || {}, seenV22: !!save.seenV22, seenV23: !!save.seenV23, v24: save.v24 || null, firstTreasureEggClaimed: !!save.firstTreasureEggClaimed,
       playerName: save.playerName || "", clientId: save.clientId || getClientId()
     }));
   } catch (e) {}
@@ -3409,7 +3468,7 @@ function snapshotSave() {
     gems: save.gems, pets: save.pets, eggs: save.eggs, beaten: save.beaten, endlessBest: save.endlessBest,
     seen: save.seen, seenShiny: save.seenShiny, firstEgg: save.firstEgg, hatched: save.hatched, food: save.food, charms: save.charms, evoMain: save.evoMain, uidSeq, lang: LANG,
     maps: save.maps || {}, tutorialDone: !!save.tutorialDone, bgmVol: bgmVolume(),
-    specialGot: save.specialGot || {}, thiefKills: save.thiefKills | 0, squad: save.squad || [], migratedV21: true, charmLv: save.charmLv || {}, seenV22: !!save.seenV22, seenV23: !!save.seenV23, firstTreasureEggClaimed: !!save.firstTreasureEggClaimed,
+    specialGot: save.specialGot || {}, thiefKills: save.thiefKills | 0, squad: save.squad || [], migratedV21: true, charmLv: save.charmLv || {}, seenV22: !!save.seenV22, seenV23: !!save.seenV23, v24: save.v24 || null, firstTreasureEggClaimed: !!save.firstTreasureEggClaimed,
     playerName: save.playerName || "", clientId: save.clientId || getClientId()
   };
 }
@@ -3443,6 +3502,7 @@ function applySave(d) {
   save.seenV23 = !!d.seenV23;
   save.firstTreasureEggClaimed = !!d.firstTreasureEggClaimed;
   save.squad = normSquad(d.squad);
+  save.v24 = d.v24 && typeof d.v24 === "object" ? d.v24 : null;
   const importedId = typeof d.clientId === "string" && /^[A-Za-z0-9._-]{8,128}$/.test(d.clientId) ? d.clientId : "";
   if (importedId) {
     save.clientId = importedId;
@@ -3626,7 +3686,7 @@ function packSave(d) {
     pn: d.playerName || "", cid: d.clientId || "",
     // v13 appends: story maps, tutorial flag, music volume (older codes simply lack them)
     mp: d.maps || {}, td: d.tutorialDone ? 1 : 0, bv: d.bgmVol == null ? BGM_DEFAULT_VOL : d.bgmVol | 0,
-    m21: d.migratedV21 ? 1 : 0, sg: d.specialGot || {}, tk: d.thiefKills | 0, sq: (d.squad || []).map(x => [x.u | 0, x.s | 0]), te: d.firstTreasureEggClaimed ? 1 : 0, s23: d.seenV23 ? 1 : 0
+    m21: d.migratedV21 ? 1 : 0, sg: d.specialGot || {}, tk: d.thiefKills | 0, sq: (d.squad || []).map(x => [x.u | 0, x.s | 0]), x24: d.v24 || null, te: d.firstTreasureEggClaimed ? 1 : 0, s23: d.seenV23 ? 1 : 0
   };
 }
 function unpackSave(p) {
@@ -3642,7 +3702,7 @@ function unpackSave(p) {
     food: p.fo || {}, seen: p.s || {}, seenShiny: p.ss || {}, lang: p.lang || "",
     playerName: p.pn || "", clientId: p.cid || "",
     maps: p.mp, tutorialDone: p.td == null ? undefined : !!p.td, bgmVol: p.bv,
-    migratedV21: !!p.m21, specialGot: p.sg || {}, thiefKills: p.tk | 0, squad: Array.isArray(p.sq) ? p.sq.map(a => ({ u: a[0], s: a[1] })) : [], firstTreasureEggClaimed: !!p.te, seenV23: !!p.s23
+    migratedV21: !!p.m21, specialGot: p.sg || {}, thiefKills: p.tk | 0, squad: Array.isArray(p.sq) ? p.sq.map(a => ({ u: a[0], s: a[1] })) : [], v24: p.x24 || null, firstTreasureEggClaimed: !!p.te, seenV23: !!p.s23
   };
 }
 function exportSaveCode() {
@@ -4023,7 +4083,7 @@ function renderTray() {
     // v13: three separate zones — top strip, unobstructed art, footer (nothing is drawn over the pet)
     div.innerHTML = "<div class='tc-top'><span class='tc-rar'>" + RAR_NAME[d.rar] + "</span><span class='tc-badges'>" + (p.charm ? "<span class='tc-charm' title='" + esc(tr("charm_" + p.charm)) + "'>🎀</span>" : "") + "<span class='r5b r5-" + d.r5 + "' title='" + esc(tr("r5_" + d.r5)) + "'>" + ROLE5_ICON[d.r5] + "</span><span class='el el-" + d.el + "'>" + elShort(d.el) + "</span></span></div>";
     const art = document.createElement("div"); art.className = "tc-art";
-    art.appendChild(petCanvas(p.id, p.star, p.shiny, 84, { charm: p.charm }));
+    art.appendChild(petCanvas(p.id, p.star, p.shiny, 84, { charm: p.charm, hat: hatOfUid(p.uid) }));
     div.appendChild(art);
     const ft = document.createElement("div"); ft.className = "tc-foot";
     ft.innerHTML = "<div class='tc-nm'>" + (p.shiny ? "✦" : "") + petName(p) + "</div><div class='tc-st'>" + "★".repeat(p.star) + "</div><div class='tc-pw'>⚔ " + fmtPower(petPower(p)) + "</div>";
@@ -4340,7 +4400,7 @@ function shoot(o) { B.shots.push(Object.assign({ age: 0, hit: new Set(), src: cu
 function fireTower(t, st) { const prev = curSrc; curSrc = t; try { return fireTower0(t, st); } finally { curSrc = prev; } }
 function fireTower0(t, st) {
   const d = PET[t.id], stg = stageOf(t.star), col = fxCol(t);
-  const ox = t.x, oy = t.y - 40;
+  const _o24 = originOf24(t), ox = _o24.x, oy = _o24.y;
   if (d.typ === "berrypop") {               // heal + attack buff, berries lobbed to friends
     const r = st.range * (stg >= 4 ? 1.25 : 1);
     for (const o of B.towers) {
@@ -4688,7 +4748,7 @@ function step(dt) {
 function updateBattle(dt) {
   for (const f of B.fx) { f.life -= dt; if (f.typ === "bit") { f.x += f.vx * dt; f.y += f.vy * dt; f.vy += 260 * dt; } }
   B.fx = B.fx.filter(f => f.life > 0);
-  for (const f of B.floaters) { f.life -= dt; f.y -= 38 * dt; }
+  for (const f of B.floaters) { f.life -= dt * (f.big || f.huge ? 1 : 1.7); if (!f.still) f.y -= 38 * dt; }
   B.floaters = B.floaters.filter(f => f.life > 0);
   for (const g of B.flyEggs) g.t += dt;
   B.flyEggs = B.flyEggs.filter(g => g.t < 1.3);
@@ -4751,8 +4811,9 @@ function renderBattle() {
     if (e.stunT > 0) c.rotate(Math.sin(B.t * 20) * 0.1);
     c.scale(1 + sq, 1 - sq);
     if (def.tint) c.filter = def.tint;
+    if (e.st24) c.globalAlpha = 0.28 + 0.08 * Math.sin(B.t * 9);
     drawEnemyImg(c, e.typ, 0, 0, sz, { rot: e.biting ? Math.sin(B.t * 10 + e.ph) * 0.08 : 0, flash: e.hitT > 0 });
-    c.filter = "none";
+    c.filter = "none"; c.globalAlpha = 1;
     drawEnemyGear(c, e, sz);
     c.restore();
     if (e.elite) { c.save(); c.globalAlpha = 0.7; c.strokeStyle = "#ffd23a"; c.lineWidth = 3; c.beginPath(); c.ellipse(e.x, e.y + sz * 0.38, sz * 0.4, sz * 0.14, 0, 0, TAU); c.stroke(); c.restore(); }
@@ -4791,7 +4852,7 @@ function renderBattle() {
     groundRing(c, t.x, t.y + 4, size * 0.34, t.fainted ? "#9a8a90" : "#3ac8ff", t.slot + 3);
     c.save();
     if (t.fainted) c.globalAlpha = 0.45;
-    drawPet(c, t.id, t.star, t.shiny, t.x, t.y + 6 - t.bounce * 6, size, { squash: t.bounce * 0.6 - breathe * 3, charm: t.charm, t: time + t.ph });
+    { const pz = poseV24(t); if (!(t.frog24 > 0)) drawPet(c, t.id, t.star, t.shiny, t.x + pz.dx, t.y + 6 - t.bounce * 6 + pz.dy, size, { squash: t.bounce * 0.6 - breathe * 3 + pz.sq, charm: t.charm, hat: hatOfUid(t.uid), t: time + t.ph }); }
     c.restore();
     if (t.shield > 0) { const k = 0.5 + 0.5 * t.shield / (t.shieldMax || 1); c.globalAlpha = 0.35 * k; c.fillStyle = t.shieldCol || "#3fa84d"; c.beginPath(); c.ellipse(t.x, t.y - 30, 42, 46, 0, 0, TAU); c.fill(); c.globalAlpha = 0.9 * k; c.strokeStyle = t.shieldCol || "#3fa84d"; c.lineWidth = 4; c.setLineDash([10, 6]); c.stroke(); c.setLineDash([]); c.globalAlpha = 1; }
     if (t.hurtT > 0) { c.fillStyle = "rgba(255,80,80,.35)"; c.beginPath(); c.arc(t.x, t.y - 30, 30, 0, TAU); c.fill(); }
@@ -4814,6 +4875,7 @@ function renderBattle() {
   // shots
   for (const s of B.shots) {
     const col = s.color;
+    shotPre24(c, s); c.save(); c.translate(s.x, s.y); c.scale(SHOT_K24, SHOT_K24); c.translate(-s.x, -s.y);
     if (s.big) { c.save(); c.globalAlpha = 0.45; dot(c, s.x, s.y, 16, "#fff3a0"); c.globalAlpha = 0.25; dot(c, s.x, s.y, 24, col); c.restore(); c.save(); c.translate(s.x, s.y); c.scale(1.35, 1.35); c.translate(-s.x, -s.y); }
     switch (s.kind) {
       case "peck": c.save(); c.translate(s.x, s.y); c.rotate(Math.atan2(s.ty - s.y, s.tx - s.x)); F(c, cc => { cc.moveTo(10, 0); cc.lineTo(-6, -5); cc.lineTo(-6, 5); cc.closePath(); }, "#ffb02e", 2); c.restore(); E(c, s.x - 8, s.y, 4, 4, "#ffd23a", { lw: 1.5, hl: false }); break;
@@ -4830,9 +4892,10 @@ function renderBattle() {
       case "feather": c.save(); c.translate(s.x, s.y); c.rotate(Math.atan2(s.vy, s.vx)); E(c, 0, 0, 16, 4.5, col, { lw: 2.5, hl: false }); c.strokeStyle = "#fff"; c.lineWidth = 1.5; c.beginPath(); c.moveTo(-12, 0); c.lineTo(10, 0); c.stroke(); c.restore(); break;
       case "meteor": { const ang = Math.atan2(s.ty - s.y, s.tx - s.x); for (let i = 3; i >= 1; i--) { c.globalAlpha = 0.25 * (4 - i); dot(c, s.x - Math.cos(ang) * i * 12, s.y - Math.sin(ang) * i * 12, 9 - i, "#ffb02e"); } c.globalAlpha = 1;
         E(c, s.x, s.y, 13, 13, col, { lw: 3, hl: false }); dot(c, s.x - 4, s.y + 2, 2, "#2a1c20"); dot(c, s.x + 4, s.y - 3, 2, "#2a1c20"); flame(c, s.x - 2, s.y - 12, 6, "#ffb02e", "#ffe14a"); break; }
-      default: E(c, s.x, s.y, 5, 5, col, { lw: 2.5, hl: false });
+      default: shotDefault24(c, s, col);
     }
     if (s.big) c.restore();
+    c.restore();
   }
   // fx
   for (const f of B.fx) {
@@ -4879,15 +4942,15 @@ function renderBattle() {
   c.textAlign = "center";
   for (const f of B.floaters) {
     c.globalAlpha = Math.min(1, f.life / f.max * 1.6);
-    c.font = "900 " + (f.huge ? 28 : f.big ? 22 : 15) + "px sans-serif"; c.lineWidth = 4; c.strokeStyle = OL;
+    c.font = "900 " + (f.huge ? 22 : f.big ? 16 : 12) + "px sans-serif"; c.lineWidth = 4; c.strokeStyle = OL;
     c.strokeText(f.text, f.x, f.y); c.fillStyle = f.color; c.fillText(f.text, f.x, f.y);
   }
   c.globalAlpha = 1;
   // pre-wave hint
   if (!B.waveActive && !B.over) {
     const msg = B.wave === 0 ? tr("place_then") : tr("rest", Math.ceil(B.countdown));
-    c.font = "900 20px sans-serif"; c.lineWidth = 6; c.strokeStyle = OL; c.strokeText(msg, W / 2, 400); c.fillStyle = "#fff"; c.fillText(msg, W / 2, 400);
-    if ((B.level.endless || B.level.story) && B.wave > 0) {
+    c.font = "900 14px sans-serif"; c.lineWidth = 4; c.strokeStyle = OL; c.strokeText(msg, W / 2, 104); c.fillStyle = "#fff"; c.fillText(msg, W / 2, 104);
+    if (false) {
       const L = lootLevel(B.level, B.wave + 1);
       const m2 = tr("next_loot", L, lootLabel(L));
       c.font = "900 16px sans-serif"; c.strokeText(m2, W / 2, 428); c.fillStyle = "#ffe14a"; c.fillText(m2, W / 2, 428);
@@ -5481,7 +5544,7 @@ function openDetail(id) {
     box.insertAdjacentHTML("beforeend", "<div class='sec-title'>" + tr("my_family", d.names[0], mine.length) + "</div><div class='apt-note' style='margin:-2px 0 6px'>" + tr("apt_note") + "</div>");
     for (const p of mine) {
       const row = document.createElement("div"); row.className = "own-row" + (p.shiny ? " shiny" : "") + (isUltra(p) ? " ultra-card" : "");
-      row.appendChild(petCanvas(p.id, p.star, p.shiny, 62, { charm: p.charm }));
+      row.appendChild(petCanvas(p.id, p.star, p.shiny, 62, { charm: p.charm, hat: hatOfUid(p.uid) })); row.dataset.uid = p.uid;
       row.insertAdjacentHTML("beforeend", "<div class='own-info'><div><b>" + (isUltra(p) ? "<span class='ultra'>" + tr("ultra") + "</span> " : p.shiny ? tr("shiny_pre") : "") + petName(p) + "</b> " + starsHTML(p.star) + " " + lvHTML(p) + " " + gradeHTML(p.grade)
         + " <button type='button' class='mini b-sky' data-rename='" + p.uid + "'>✎</button></div>"
         + aptBarHTML(p, true) + "<div class='pwr'>⚔ " + tr("power_n", fmtPower(petPower(p))) + "</div>" + "<div class='own-tr'>" + tr("st_atk") + " +" + p.tr.a * 3 + "% · " + tr("st_hp") + " +" + p.tr.h * 4 + "% · " + tr("st_spd") + " +" + Math.round(p.tr.s * 15) / 10 + "%</div></div>");
@@ -6685,7 +6748,7 @@ killEnemy = function (e) {
     B.combo = (B.comboT > 0 ? (B.combo || 0) : 0) + 1;
     B.comboT = 1.35;
     if (B.combo >= 3 && B.combo % 1 === 0) {
-      B.floaters.push({ x: (e && e.x) || W / 2, y: ((e && e.y) || 280) - 80, text: tr("combo_n", B.combo), color: "#ff9a3a", life: 1.1, max: 1.1, big: true, huge: B.combo >= 8 });
+      B.floaters = B.floaters.filter(f => !f.combo24); B.floaters.push({ x: W / 2, y: 102, text: tr("combo_n", B.combo), color: "#ff9a3a", life: 1.1, max: 1.1, big: true, combo24: true, still: true });
     }
   }
 };
@@ -6799,6 +6862,1015 @@ if (typeof window !== "undefined") {
   window.__v23 = { ENERGY_START, STARTER_BUDDY, shouldSpawnTreasure, isFreshHookSave, grantTreasureEgg, leaveToHatch, bumpShake, nextMilestone };
 }
 
+
+/* ================= v2.4 (GB-14): New Coins, 1 life, locked lineup, timing-bar ult, item drops, hats, incubator, perks, clean HUD, tutorial ================= */
+Object.assign(STR.zh, {
+  gold: "🪙 新金币 {0}", gold_init: "🪙 新金币 0", no_gold: "新金币不够！打怪赚新金币吧",
+  upgrade: "升级 🪙{0}", fainted: "{0} 累倒了！点它用新金币复活",
+  place_then: "排好阵容，点「开战！」", rest: "下一波 {0}…",
+  tut_loot: "第 3 步：打怪赚「新金币」（只在这局有效），用来升级、放大招、复活！",
+  tut_hatch: "孵蛋器：蛋要放进孵蛋器慢慢孵，升级孵蛋器孵得更快！",
+  lock24: "阵容已锁定，战斗中不能换宠物", lock24_go: "开战！卡片栏已收起，阵容锁定",
+  revive24: "复活 🪙{0}", revived24: "{0} 复活啦！", rev_need24: "复活要 🪙{0} 新金币",
+  ult_pick24: "点一只宠物放大招", ult_cd24: "大招冷却中 {0}秒", ult_cost24: "确认 🪙{0}", cancel24: "取消",
+  ult_title24: "大招预览", ult_tap24: "点绿色区域！", ult_miss24: "失误！发射！", ult_max24: "满格！发射！",
+  ult_heal: "全队回血 + 加速", ult_freeze: "冻住附近所有怪", ult_gold: "炸出一堆新金币", ult_shield: "全队加护盾", ult_blast: "大范围爆炸 + 燃烧", ult_burst: "超强单体重击 + 溅射",
+  ult_d24: "连续点中绿色越多，威力越大！", power24: "POWER x{0}",
+  item_full24: "道具栏满了", item_got24: "捡到 {0}！拖到宠物身上使用",
+  it_fly: "飞天翅膀", it_fire: "火焰之力", it_swap: "元素转换",
+  it_fly_d: "飞上天空攻击，怪打不到", it_fire_d: "攻击附带燃烧", it_swap_d: "临时变成克制怪物的属性",
+  it_used24: "{0} → {1}", up_need24: "再打败 {0} 只怪才能升级", lvup24: "LEVEL UP!",
+  perk_title24: "选一个词条（本局有效）", perk_atk: "全队攻击 +6%", perk_spd: "全队攻速 +5%", perk_hp: "全队血量 +8%", perk_crit: "暴击率 +3%", perk_coin: "击杀新金币 +10%", perk_range: "射程 +5%", perk_rev: "复活便宜 10%",
+  inc24: "孵蛋器 Lv.{0}", inc_up24: "升级 {0}💎", inc_max24: "已满级", inc_q24: "排队中的蛋：{0}", inc_ready24: "点我孵化！", inc_empty24: "空位：打怪掉蛋或买蛋",
+  inc_d24: "蛋会自动放进孵蛋器，到时间就能孵。等级越高越快、位置越多。", inc_spd24: "速度 ×{0} · {1} 个位置",
+  chest24: "装扮宝箱", chest_d24: "随机得到一顶帽子，戴上有小加成", chest_btn24: "打开 {0}💎", chest_free24: "免费打开！", chest_dup24: "重复了，返还 {0}💎", chest_got24: "得到 {0}！",
+  hats24: "我的帽子：{0}/{1}", hat_none24: "不戴帽子", hat24: "帽子",
+  hat_party: "派对帽", hat_beanie: "毛线帽", hat_flower: "小红花", hat_bow: "蝴蝶结", hat_top: "小礼帽", hat_straw: "草帽", hat_chef: "厨师帽", hat_sprout: "小豆芽",
+  hb_atk: "攻击 +{0}%", hb_hp: "血量 +{0}%", hb_spd: "攻速 +{0}%", hb_crit: "暴击 +{0}%", hb_range: "射程 +{0}%",
+  t24_next: "下一步", t24_skip: "", t24_title: "v2.4 新玩法教程",
+  t24_1: "开战前先排阵容：点卡片，再点空位。开战后卡片栏会收起，阵容就锁定了！",
+  t24_2: "准备好了就点「开战！」", t24_3: "打死怪物会掉道具！点一下把它捡起来。",
+  t24_4: "按住道具栏里的道具，拖到一只宠物身上！", t24_5: "宠物打够了怪，头顶会冒出绿色箭头 ↑，点它升级！",
+  t24_6: "点左下角的白色大招按钮。", t24_7: "再点一只宠物。", t24_8: "看看大招预览，点「确认」花新金币。",
+  t24_9: "节奏条来了！在绿色区域点屏幕，越来越快，失误就发射大招！", t24_10: "有宠物累倒了！点它。", t24_11: "用新金币把它复活！",
+  t24_12: "注意：家只有 1 条命，漏掉一只怪就输！每打完一波可以选一个词条。", t24_13: "这是孵蛋器：蛋要放进去慢慢孵，升级后更快。",
+  t24_14: "蛋孵好了！点它孵化。", t24_15: "看看孵出了谁！", t24_16: "这是装扮宝箱，送你一次免费，点它！",
+  t24_17: "在图鉴里打开宠物详情，就能给宠物戴帽子。教程完成，加油！",
+  v24_news_title: "萌宠防线 v2.4 更新", v24_news_1: "删掉了下方技能栏：大招改成白色按钮 + 节奏条，点得越准越炸！", v24_news_2: "新金币（只在这局有效）：升级、大招、复活都用它；家只有 1 条命。",
+  v24_news_3: "怪物会掉道具（飞天、火焰、元素转换），拖到宠物身上用；每波结束选一个词条。", v24_news_4: "孵蛋器、装扮宝箱和帽子；每只宠物的子弹都不一样了！"
+});
+Object.assign(STR.en, {
+  gold: "🪙 Coins {0}", gold_init: "🪙 Coins 0", no_gold: "Not enough New Coins — beat slimes to earn more!",
+  upgrade: "Upgrade 🪙{0}", fainted: "{0} fainted! Tap it to revive with New Coins",
+  place_then: "Set your team, then tap “Fight!”", rest: "Next wave {0}…",
+  tut_loot: "Step 3: beating slimes earns New Coins (this run only) — use them to upgrade, cast ultimates and revive!",
+  tut_hatch: "Incubator: eggs hatch over time in the incubator. Upgrade it to hatch faster!",
+  lock24: "Lineup is locked during battle", lock24_go: "Fight! Tray hidden — lineup locked",
+  revive24: "Revive 🪙{0}", revived24: "{0} is back!", rev_need24: "Revive needs 🪙{0}",
+  ult_pick24: "Tap a pet to cast its ultimate", ult_cd24: "Ultimate cooling down {0}s", ult_cost24: "Confirm 🪙{0}", cancel24: "Cancel",
+  ult_title24: "Ultimate Preview", ult_tap24: "Tap in the green!", ult_miss24: "Miss! FIRE!", ult_max24: "MAX! FIRE!",
+  ult_heal: "Heal + haste the team", ult_freeze: "Freeze every slime nearby", ult_gold: "Blast out a pile of New Coins", ult_shield: "Shield the whole team", ult_blast: "Huge explosion + burn", ult_burst: "Mega single hit + splash",
+  ult_d24: "The more greens you hit in a row, the bigger the boom!", power24: "POWER x{0}",
+  item_full24: "Item bar is full", item_got24: "Got {0}! Drag it onto a pet",
+  it_fly: "Sky Wings", it_fire: "Fire Power", it_swap: "Element Swap",
+  it_fly_d: "Flies up and attacks from the sky — slimes can't reach it", it_fire_d: "Attacks set slimes on fire", it_swap_d: "Turns into the element that beats the slimes",
+  it_used24: "{0} → {1}", up_need24: "Defeat {0} more slimes to level up", lvup24: "LEVEL UP!",
+  perk_title24: "Pick a perk (this run)", perk_atk: "Team ATK +6%", perk_spd: "Team attack speed +5%", perk_hp: "Team HP +8%", perk_crit: "Crit chance +3%", perk_coin: "Kill coins +10%", perk_range: "Range +5%", perk_rev: "Revives 10% cheaper",
+  inc24: "Incubator Lv.{0}", inc_up24: "Upgrade {0}💎", inc_max24: "Max level", inc_q24: "Eggs waiting: {0}", inc_ready24: "Tap to hatch!", inc_empty24: "Empty — find or buy eggs",
+  inc_d24: "Eggs go into the incubator automatically and hatch over time. Higher levels are faster with more spots.", inc_spd24: "Speed ×{0} · {1} spots",
+  chest24: "Cosmetic Chest", chest_d24: "Get a random hat — each gives a small bonus", chest_btn24: "Open {0}💎", chest_free24: "Open FREE!", chest_dup24: "Duplicate — {0}💎 back", chest_got24: "You got {0}!",
+  hats24: "My hats: {0}/{1}", hat_none24: "No hat", hat24: "Hat",
+  hat_party: "Party Hat", hat_beanie: "Beanie", hat_flower: "Red Flower", hat_bow: "Big Bow", hat_top: "Top Hat", hat_straw: "Straw Hat", hat_chef: "Chef Hat", hat_sprout: "Sprout",
+  hb_atk: "ATK +{0}%", hb_hp: "HP +{0}%", hb_spd: "SPD +{0}%", hb_crit: "Crit +{0}%", hb_range: "Range +{0}%",
+  t24_next: "Next", t24_title: "v2.4 New Gameplay Tutorial",
+  t24_1: "Set your lineup BEFORE battle: tap a card, then an empty spot. Once the fight starts the tray hides and the lineup locks!",
+  t24_2: "Ready? Tap “Fight!”", t24_3: "Slimes drop items! Tap the item to pick it up.",
+  t24_4: "Hold the item in the item bar and drag it onto a pet!", t24_5: "When a pet has beaten enough slimes, a green ↑ arrow pops up. Tap it to level up!",
+  t24_6: "Tap the white ultimate button at the bottom-left.", t24_7: "Now tap a pet.", t24_8: "Check the ultimate preview and tap Confirm to spend New Coins.",
+  t24_9: "Timing bar! Tap the screen while the marker is in the green. It speeds up — a miss fires the ultimate!", t24_10: "A pet fainted! Tap it.", t24_11: "Revive it with New Coins!",
+  t24_12: "Careful: your home has only 1 life — one slime gets through and you lose! After each wave you pick a perk.", t24_13: "This is the incubator: eggs hatch over time here. Upgrade it to hatch faster.",
+  t24_14: "Your egg is ready! Tap it to hatch.", t24_15: "Let's see who hatched!", t24_16: "This is the Cosmetic Chest. Your first one is free — tap it!",
+  t24_17: "Open a pet's details in the Pet Book to put a hat on it. Tutorial done — have fun!",
+  v24_news_title: "Pet Pals Defense v2.4 Update", v24_news_1: "The bottom skill bar is gone: ultimates now use a white button + timing bar. Better timing = bigger boom!", v24_news_2: "New Coins (this run only) pay for upgrades, ultimates and revives. Your home has just 1 life.",
+  v24_news_3: "Slimes drop items (Sky Wings, Fire, Element Swap) you drag onto pets; pick a perk after every wave.", v24_news_4: "Incubator, Cosmetic Chest and hats — and every pet now shoots its own kind of bullet!"
+});
+
+/* ---------- persistent v2.4 state (never wipes old data) ---------- */
+const INC_SLOTS = [2, 2, 3, 3, 4], INC_SPD = [1, 0.8, 0.62, 0.48, 0.36], INC_UP = [60, 120, 200, 300], EGG_SEC = { 1: 60, 2: 180, 3: 480, 4: 900 };
+const CHEST_COST = 90, CHEST_DUP = 30;
+function V() {
+  let v = save.v24;
+  if (!v || typeof v !== "object") v = save.v24 = {};
+  if (!v.inc || typeof v.inc !== "object") v.inc = { lv: 1, s: [] };
+  v.inc.lv = clamp(v.inc.lv | 0 || 1, 1, 5); if (!Array.isArray(v.inc.s)) v.inc.s = [];
+  v.inc.s = v.inc.s.filter(e => e && e.q >= 1 && e.q <= 4);
+  if (!v.hats || typeof v.hats !== "object") v.hats = {};
+  if (!v.eq || typeof v.eq !== "object") v.eq = {};
+  if (!v.mig) { v.mig = 1; v.fastN = (save.eggs || []).length; }   // eggs already owned before v2.4 hatch almost instantly
+  return v;
+}
+
+/* ---------- hats ---------- */
+const HATS = [
+  { id: "party", b: { atk: 0.04 } }, { id: "beanie", b: { hp: 0.05 } }, { id: "flower", b: { spd: 0.04 } }, { id: "bow", b: { crit: 0.03 } },
+  { id: "top", b: { range: 0.05 } }, { id: "straw", b: { atk: 0.02, hp: 0.03 } }, { id: "chef", b: { spd: 0.02, crit: 0.02 } }, { id: "sprout", b: { range: 0.03, atk: 0.02 } }
+];
+const HAT = {}; HATS.forEach(h => HAT[h.id] = h);
+function hatOfUid(uid) { const v = save.v24; const h = v && v.eq && v.eq[uid]; return h && HAT[h] ? h : ""; }
+function hatBonusText(id) { const b = HAT[id].b; return Object.keys(b).map(k => tr("hb_" + k, Math.round(b[k] * 100))).join(" · "); }
+function drawHat24(c, id, cx, top, w, h) {
+  const s = Math.max(10, w * 0.2), x = cx, y = top + h * 0.1;
+  c.save(); c.translate(x, y);
+  if (id === "party") { F(c, cc => { cc.moveTo(-s * 0.8, 0); cc.lineTo(0, -s * 2); cc.lineTo(s * 0.8, 0); cc.closePath(); }, "#ff7ab8", 2.5);
+    for (let i = 0; i < 3; i++) dot(c, -s * 0.3 + i * s * 0.3, -s * 0.5 - i * s * 0.45, s * 0.12, i % 2 ? "#ffe14a" : "#7ae0ff");
+    E(c, 0, -s * 2.05, s * 0.28, s * 0.28, "#ffe14a", { lw: 2, hl: false }); }
+  else if (id === "beanie") { F(c, cc => { cc.ellipse(0, 0, s * 1.05, s * 0.95, 0, Math.PI, TAU); cc.closePath(); }, "#5ab8ff", 2.5);
+    F(c, cc => cc.roundRect(-s * 1.1, -s * 0.15, s * 2.2, s * 0.4, s * 0.15), "#ffffff", 2.5); E(c, 0, -s * 1.05, s * 0.3, s * 0.3, "#ff7ab8", { lw: 2, hl: false }); }
+  else if (id === "flower") { c.translate(s * 0.7, -s * 0.2); for (let i = 0; i < 5; i++) { const a = i / 5 * TAU; E(c, Math.cos(a) * s * 0.42, Math.sin(a) * s * 0.42, s * 0.34, s * 0.34, "#ff5a6a", { lw: 2, hl: false }); } E(c, 0, 0, s * 0.28, s * 0.28, "#ffe14a", { lw: 2, hl: false }); }
+  else if (id === "bow") { for (const sg of [-1, 1]) F(c, cc => { cc.moveTo(0, 0); cc.lineTo(sg * s * 1.1, -s * 0.6); cc.lineTo(sg * s * 1.1, s * 0.5); cc.closePath(); }, "#ff6aa8", 2.5); E(c, 0, 0, s * 0.3, s * 0.3, "#ff9ad0", { lw: 2, hl: false }); }
+  else if (id === "top") { F(c, cc => cc.roundRect(-s * 1.2, -s * 0.15, s * 2.4, s * 0.35, s * 0.15), "#3a2a3a", 2.5); F(c, cc => cc.roundRect(-s * 0.7, -s * 1.5, s * 1.4, s * 1.4, s * 0.15), "#3a2a3a", 2.5);
+    F(c, cc => cc.rect(-s * 0.7, -s * 0.5, s * 1.4, s * 0.25), "#ff5a6a", 0); }
+  else if (id === "straw") { E(c, 0, 0, s * 1.45, s * 0.38, "#f2cf6a", { lw: 2.5, hl: false }); F(c, cc => { cc.ellipse(0, -s * 0.1, s * 0.75, s * 0.7, 0, Math.PI, TAU); cc.closePath(); }, "#f2cf6a", 2.5); F(c, cc => cc.rect(-s * 0.74, -s * 0.3, s * 1.48, s * 0.2), "#ff7a5a", 0); }
+  else if (id === "chef") { F(c, cc => cc.roundRect(-s * 0.7, -s * 0.6, s * 1.4, s * 0.65, s * 0.1), "#ffffff", 2.5); for (const dx of [-0.5, 0, 0.5]) E(c, dx * s, -s * 0.95, s * 0.48, s * 0.48, "#ffffff", { lw: 2.5, hl: false }); }
+  else if (id === "sprout") { c.strokeStyle = OL; c.lineWidth = 2.5; c.beginPath(); c.moveTo(0, 0); c.lineTo(0, -s * 1.1); c.stroke(); for (const sg of [-1, 1]) leaf(c, 0, -s * 1.05, s * 0.9, sg < 0 ? Math.PI + 0.5 : -0.5, "#6ad85a"); }
+  c.restore();
+}
+function openChest24(free) {
+  const v = V();
+  if (!free) { if (save.gems < CHEST_COST) { showToast(tr("no_gems_charm")); return null; } save.gems -= CHEST_COST; }
+  v.chests = (v.chests | 0) + 1;
+  const h = pick(HATS).id;
+  if (v.hats[h]) { save.gems += CHEST_DUP; showToast(tr("chest_dup24", CHEST_DUP) + " · " + tr("hat_" + h), 2.8); }
+  else { v.hats[h] = 1; showToast(tr("chest_got24", tr("hat_" + h)) + " (" + hatBonusText(h) + ")", 3); }
+  persist(); try { sfx.shiny(); } catch (e) {}
+  return h;
+}
+
+/* ---------- per-pet distinct projectiles + attack animation ---------- */
+const SHOT_K24 = 1.4, STY24 = ["star", "heart", "leaf", "moon", "diamond", "swirl", "note", "flower", "bolt", "ring"];
+function styleOf24(id) { let h = 7; for (const ch of String(id)) h = (h * 31 + ch.charCodeAt(0)) >>> 0; return STY24[h % STY24.length]; }
+function styShape24(c, sty, x, y, r, col, rot) {
+  c.save(); c.translate(x, y); c.rotate(rot || 0);
+  if (sty === "star") F(c, cc => starPath(cc, 0, 0, r * 1.25, 5, 0.48), col, 2.2);
+  else if (sty === "heart") F(c, cc => { cc.moveTo(0, r * 0.9); cc.bezierCurveTo(-r * 1.6, -r * 0.2, -r * 0.6, -r * 1.3, 0, -r * 0.4); cc.bezierCurveTo(r * 0.6, -r * 1.3, r * 1.6, -r * 0.2, 0, r * 0.9); cc.closePath(); }, col, 2.2);
+  else if (sty === "leaf") F(c, cc => { cc.moveTo(-r * 1.2, 0); cc.quadraticCurveTo(0, -r * 1.1, r * 1.2, 0); cc.quadraticCurveTo(0, r * 1.1, -r * 1.2, 0); cc.closePath(); }, col, 2.2);
+  else if (sty === "moon") F(c, cc => { cc.arc(0, 0, r, 0.6, TAU - 0.6); cc.arc(r * 0.5, 0, r * 0.75, TAU - 0.9, 0.9, true); cc.closePath(); }, col, 2.2);
+  else if (sty === "diamond") F(c, cc => { cc.moveTo(0, -r * 1.3); cc.lineTo(r * 0.85, 0); cc.lineTo(0, r * 1.3); cc.lineTo(-r * 0.85, 0); cc.closePath(); }, col, 2.2);
+  else if (sty === "swirl") { E(c, 0, 0, r, r, col, { lw: 2.2, hl: false }); c.strokeStyle = OL; c.lineWidth = 2; c.beginPath(); for (let i = 0; i < 14; i++) { const a = i * 0.55, rr = r * 0.08 * i; i ? c.lineTo(Math.cos(a) * rr, Math.sin(a) * rr) : c.moveTo(0, 0); } c.stroke(); }
+  else if (sty === "note") { E(c, -r * 0.3, r * 0.4, r * 0.65, r * 0.5, col, { lw: 2.2, hl: false }); c.strokeStyle = OL; c.lineWidth = 2.5; c.beginPath(); c.moveTo(r * 0.3, r * 0.35); c.lineTo(r * 0.3, -r * 1.2); c.lineTo(r * 0.9, -r * 0.8); c.stroke(); }
+  else if (sty === "flower") { for (let i = 0; i < 5; i++) { const a = i / 5 * TAU; E(c, Math.cos(a) * r * 0.55, Math.sin(a) * r * 0.55, r * 0.45, r * 0.45, col, { lw: 1.8, hl: false }); } dot(c, 0, 0, r * 0.35, "#fff6a0"); }
+  else if (sty === "bolt") F(c, cc => { cc.moveTo(-r * 0.3, -r * 1.3); cc.lineTo(r * 0.6, -r * 0.2); cc.lineTo(0, -r * 0.1); cc.lineTo(r * 0.3, r * 1.3); cc.lineTo(-r * 0.6, r * 0.1); cc.lineTo(0, 0); cc.closePath(); }, col, 2.2);
+  else { c.lineWidth = 6; c.strokeStyle = OL; c.beginPath(); c.arc(0, 0, r, 0, TAU); c.stroke(); c.lineWidth = 3.5; c.strokeStyle = col; c.stroke(); }
+  c.restore();
+}
+function shotPre24(c, s) {
+  if (!s.src || s.src.id === "thunder_roc") return;
+  if (!s.sty) s.sty = styleOf24(s.src.id);
+  s._tr = s._tr || []; s._tr.push([s.x, s.y]); if (s._tr.length > 7) s._tr.shift();
+  for (let i = 0; i < s._tr.length - 1; i++) { const [x, y] = s._tr[i], k = (i + 1) / s._tr.length; c.globalAlpha = 0.45 * k; styShape24(c, s.sty, x, y, 3 + 4 * k, s.color || "#fff", s.age * 6 + i); }
+  c.globalAlpha = 1;
+}
+function shotDefault24(c, s, col) {
+  const sty = s.sty || (s.src ? styleOf24(s.src.id) : "ring");
+  c.globalAlpha = 0.35; dot(c, s.x, s.y, 11, col); c.globalAlpha = 1;
+  styShape24(c, sty, s.x, s.y, 7.5, col, s.age * 8);
+}
+const _fireTower24 = fireTower;
+fireTower = function (t, st) {
+  const n0 = B.shots.length;
+  const ok = _fireTower24(t, st);
+  if (ok) {
+    t.rec24 = 1;
+    const d = PET[t.id], col = (d.fx && d.fx[t.shiny ? 1 : 0]) || ELEM_COL[d.el] || "#ffe14a", sty = styleOf24(t.id);
+    for (let i = n0; i < B.shots.length; i++) { const s = B.shots[i]; if (s && s.src === t) s.sty = sty; }
+    if (t.id !== "thunder_roc") { const o = originOf24(t); B.fx.push({ typ: "muz24", x: o.x, y: o.y, color: col, sty, part: o.part, life: 0.26, max: 0.26 }); }
+  }
+  return ok;
+};
+function poseV24(t) {
+  const wind = (!t.fainted && t.cd > 0 && t.cd < 0.22) ? (0.22 - t.cd) / 0.22 : 0, rec = t.rec24 || 0, pop = t.pop24 || 0;
+  const pt = PART_CACHE24[t.id] || "mouth", sd = (t.slot % 5) > 2 ? -1 : 1, sw = pt === "paw" ? sd : pt === "tail" ? -sd : pt === "mouth" || pt === "beak" ? sd * 0.5 : 0;
+  return { dx: (rec * 7 - wind * 5) * sw, dy: -wind * 6 + rec * 5 - pop * 10 + (pt === "horn" ? wind * 4 - rec * 8 : 0), sq: -wind * 0.7 + rec * 1.1 + Math.sin(pop * 18) * pop * 1.6 };
+}
+
+/* ---------- battle rules ---------- */
+const ITEMS24 = { fly: { ic: "🕊️", dur: 10, col: "#bfe6ff" }, fire: { ic: "🔥", dur: 10, col: "#ff8a3a" }, swap: { ic: "🌀", dur: 12, col: "#c89aff" } };
+const UP_KILLS = [0, 6, 16];
+const PERKS24 = [{ id: "atk", v: 0.06, max: 4 }, { id: "spd", v: 0.05, max: 4 }, { id: "hp", v: 0.08, max: 3 }, { id: "crit", v: 0.03, max: 3 }, { id: "coin", v: 0.10, max: 3 }, { id: "range", v: 0.05, max: 3 }, { id: "rev", v: 0.10, max: 3 }];
+function battleLocked() { return !!(B && B.running && !B.over && (B.wave >= 1 || B.waveActive)); }
+function perkN(id) { return (B && B.perks24 && B.perks24[id]) | 0; }
+function perkV(id) { const p = PERKS24.find(x => x.id === id); return p ? p.v * perkN(id) : 0; }
+function reviveCost(t) { const p = save.pets.find(q => q.uid === t.uid); const apt = p ? p.apt : 50; return Math.max(5, Math.round((15 + apt * 0.6 + (B.wave | 0) * 2) * (1 - perkV("rev")))); }
+function ultCost24(t) { return 30 + 10 * ((PET[t.id] && PET[t.id].rar) || 1); }
+
+initV22Battle = function () {
+  B.energy = 0; B.energyMax = 0; B.autoSkill = false;
+  B.shake = 0; B.combo = 0; B.comboT = 0; B.hookNudge = false; B.treasureDropped = false;
+  B.drops24 = []; B.items24 = [null, null, null]; B.perks24 = {}; B.ultCd24 = 0; B.ultSel = false; B.ultFired24 = 0;
+  const sb = el("skill-bar"); if (sb) sb.innerHTML = "";
+};
+renderSkillBar = function () { const sb = el("skill-bar"); if (sb) sb.innerHTML = ""; };
+tickV22 = function (dt) {
+  if (!B || !B.running) return;
+  for (const t of B.towers) {
+    if (t.sleepT > 0) t.sleepT = Math.max(0, t.sleepT - dt);
+    if (t.stunT > 0) t.stunT = Math.max(0, t.stunT - dt);
+    t.rec24 = Math.max(0, (t.rec24 || 0) - dt * 6); t.pop24 = Math.max(0, (t.pop24 || 0) - dt * 1.6);
+    if (t.y0 == null) t.y0 = t.y;
+    for (const k of ["fly", "fire", "swap"]) if (t[k + "T"] > 0) t[k + "T"] = Math.max(0, t[k + "T"] - dt);
+    const fk = t.flyT > 0 ? Math.min(1, t.flyT * 2, (ITEMS24.fly.dur - t.flyT) * 3 + 0.01) : 0;
+    t.y = t.y0 - 50 * fk;
+  }
+  if (B.comboT > 0) { B.comboT -= dt; if (B.comboT <= 0) B.combo = 0; }
+  if (B.ultCd24 > 0) B.ultCd24 -= dt;
+  for (const d of B.drops24 || []) d.life -= dt;
+  if (B.drops24) B.drops24 = B.drops24.filter(d => d.life > 0);
+};
+const _startRun24 = startRun;
+startRun = function (mapId, hard) {
+  _startRun24(mapId, hard);
+  B.lives = 1; if (B.level) B.level = Object.assign({}, B.level, { lives: 1 });
+  B.drops24 = []; B.items24 = [null, null, null]; B.perks24 = {}; B.ultCd24 = 0; B.ultSel = false;
+  document.body.classList.remove("b-locked24");
+  closeUlt24(); closePerk24(); renderItems24(); refreshHUD();
+};
+const _deploy24 = deploy;
+deploy = function (uid, slot, quiet) {
+  if (battleLocked()) { if (!quiet) showToast(tr("lock24")); return false; }
+  const ok = _deploy24(uid, slot, quiet);
+  if (ok) { const t = B.towers.find(q => q.uid === uid); if (t) { t.y0 = t.y; t.kills24 = 0; } }
+  return ok;
+};
+const _recall24 = recall;
+recall = function (t) { if (battleLocked()) { showToast(tr("lock24")); return; } _recall24(t); };
+const _startNextWave24 = startNextWave;
+startNextWave = function () {
+  const first = B.wave === 0;
+  const ok = _startNextWave24();
+  if (ok && first) { document.body.classList.add("b-locked24"); B.selPet = null; showToast(tr("lock24_go"), 2.2); }
+  return ok;
+};
+const _endRun24 = endRun;
+endRun = function (won) { document.body.classList.remove("b-locked24"); closeUlt24(); closePerk24(); _endRun24(won); };
+const _leak24 = leak;
+leak = function (e) { if (B.tut24) { e.hp = 0; e.leaked = true; return; } _leak24(e); };
+const _hitPet24 = hitPet;
+hitPet = function (t, dmg, e) { if (t && t.flyT > 0) return; if (B.tut24) dmg *= 0.2; _hitPet24(t, dmg, e); };
+const _waveCleared24 = waveCleared;
+waveCleared = function () {
+  const down = B.towers.filter(t => t.fainted);
+  _waveCleared24();
+  for (const t of down) { t.fainted = true; t.hp = 0; }        // v2.4: only New Coins revive
+  if (B.running && !B.over && !B.tut24) openPerk24();
+};
+const _killEnemy24 = killEnemy;
+killEnemy = function (e) {
+  const g0 = B.gold, src = (curSrc && curSrc.uid != null ? curSrc : null) || e.lastSrc24;
+  _killEnemy24(e);
+  const extra = Math.round((B.gold - g0) * perkV("coin")); if (extra > 0) B.gold += extra;
+  if (src && B.towers.includes(src)) src.kills24 = (src.kills24 | 0) + 1;
+  if (!B.tut24 && (B.drops24 || []).length < 3 && (e.boss || Math.random() < 0.09)) dropItem24(e.x, e.y);
+};
+function dropItem24(x, y, k) {
+  k = k || pick(Object.keys(ITEMS24));
+  B.drops24 = B.drops24 || [];
+  B.drops24.push({ k, x: clamp(x, 40, W - 40), y: clamp(y, FIELD_TOP + 40, FENCE_Y - 60), life: 10, ph: Math.random() * 6 });
+  try { sfx.coin(); } catch (e) {}
+}
+const _hitEnemy24 = hitEnemy;
+hitEnemy = function (e, dmg, elem, o) {
+  const src = (o && o.src) || curSrc;
+  if (src && e && src.uid != null) e.lastSrc24 = src;
+  if (src && B.towers && src.uid != null) {
+    if (src.swapT > 0 && src.swapEl) elem = src.swapEl;
+    if (src.fireT > 0) { o = Object.assign({}, o || {}, { burn: Math.max((o && o.burn) || 0, dmg * 0.35), burnT: 2.5 }); if (Math.random() < 0.3) B.fx.push({ typ: "fire24", x: e.x, y: e.y - 20, life: 0.4, max: 0.4 }); }
+  }
+  _hitEnemy24(e, dmg, elem, o);
+};
+const _petStats24 = petStats;
+petStats = function (t) {
+  const out = _petStats24(t);
+  const h = t && t.uid != null ? hatOfUid(t.uid) : "";
+  const b = h ? HAT[h].b : {};
+  out.dmg *= (1 + (b.atk || 0)) * (1 + perkV("atk")) * (t && t.flyT > 0 ? 1.25 : 1);
+  out.maxHp *= (1 + (b.hp || 0)) * (1 + perkV("hp"));
+  out.rate /= (1 + (b.spd || 0)) * (1 + perkV("spd"));
+  out.crit += (b.crit || 0) + perkV("crit");
+  out.range *= (1 + (b.range || 0)) * (1 + perkV("range")) * (t && t.flyT > 0 ? 1.35 : 1);
+  return out;
+};
+function upgradeReady(t) { return t && !t.fainted && t.tier < 3 && (t.kills24 | 0) >= UP_KILLS[t.tier]; }
+const _upgradeTower24 = upgradeTower;
+upgradeTower = function (t) {
+  if (!t || t.tier >= 3) return;
+  if (!upgradeReady(t)) { showToast(tr("up_need24", UP_KILLS[t.tier] - (t.kills24 | 0))); return; }
+  const tier0 = t.tier;
+  _upgradeTower24(t);
+  if (t.tier > tier0) { levelUpFx24(t); el("inspect").classList.add("hidden"); B.selTower = null; }
+};
+function levelUpFx24(t) {
+  t.pop24 = 1;
+  B.fx.push({ typ: "lv24", x: t.x, y: t.y - 30, life: 0.9, max: 0.9 });
+  burst(t.x, t.y - 40, "#ffd23a", 26); burst(t.x, t.y - 40, "#7fe07a", 12);
+  B.floaters.push({ x: t.x, y: t.y - 100, text: tr("lvup24"), color: "#ffe14a", life: 1.3, max: 1.3, huge: true });
+  try { bumpShake(3); } catch (e) {}
+  try { sfx.lvup(); sfx.shiny(); } catch (e) {}
+}
+function revive24(t) {
+  if (!t || !t.fainted) return false;
+  const c = reviveCost(t);
+  if (B.gold < c) { showToast(tr("rev_need24", c)); return false; }
+  B.gold -= c; t.fainted = false; t.hp = petStats(t).maxHp;
+  burst(t.x, t.y - 30, "#7fe07a", 18); B.fx.push({ typ: "ring", x: t.x, y: t.y - 20, r0: 8, r1: 70, color: "#7fe07a", life: 0.4, max: 0.4 });
+  showToast(tr("revived24", stageName(t.id, t.star))); try { sfx.lvup(); } catch (e) {}
+  refreshHUD(); return true;
+}
+const _showInspect24 = showInspect;
+showInspect = function (t) {
+  _showInspect24(t);
+  const box = el("inspect"), rc = el("btn-recall");
+  if (rc && battleLocked()) rc.remove();
+  if (t.fainted) {
+    const row = box.querySelector(".btn-row") || box;
+    const b = document.createElement("button"); b.type = "button"; b.className = "b-mint"; b.id = "btn-rev24"; b.textContent = tr("revive24", reviveCost(t));
+    b.addEventListener("click", (e) => { e.stopPropagation(); if (revive24(t)) { box.classList.add("hidden"); B.selTower = null; } });
+    row.prepend(b);
+  }
+};
+refreshHUD = (function (f) { return function () { f(); const l = el("st-lives"); if (l && B) l.textContent = "❤ " + B.lives; }; })(refreshHUD);
+
+/* ---------- ultimate: white icon -> pet -> preview -> confirm -> timing bar -> boom ---------- */
+const ULT_ICON = { x: 34, y: 640, r: 24 };
+const U24 = { open: false, phase: "", t: null, pos: 0, dir: 1, spd: 0.85, power: 0, hits: 0, idle: 0, raf: 0, last: 0, wasPaused: false };
+function closeUlt24() { const m = el("u24"); if (m) m.classList.add("hidden"); if (U24.open && B) B.paused = U24.wasPaused; U24.open = false; U24.phase = ""; cancelAnimationFrame(U24.raf); }
+function openUltPreview(t) {
+  const m = el("u24"); if (!m) return;
+  const d = PET[t.id], cost = ultCost24(t);
+  U24.open = true; U24.phase = "preview"; U24.t = t; U24.wasPaused = B.paused; B.paused = true; B.ultSel = false;
+  m.innerHTML = "<div class='u24-card'><h3>" + tr("ult_title24") + "</h3><div class='u24-pet'></div><b>" + stageName(t.id, t.star) + "</b>"
+    + "<div class='u24-eff'>💥 " + tr("ult_" + ultTypOf(d)) + "</div><small>" + tr("ult_d24") + "</small>"
+    + "<div class='btn-row'><button type='button' class='mini' id='u24-no'>" + tr("cancel24") + "</button><button type='button' class='b-gold' id='u24-ok'" + (B.gold < cost ? " disabled" : "") + ">" + tr("ult_cost24", cost) + "</button></div></div>";
+  m.querySelector(".u24-pet").appendChild(petCanvas(t.id, t.star, t.shiny, 86, { charm: t.charm, hat: hatOfUid(t.uid) }));
+  m.classList.remove("hidden");
+  el("u24-no").onclick = (e) => { e.stopPropagation(); closeUlt24(); };
+  el("u24-ok").onclick = (e) => { e.stopPropagation(); if (B.gold < cost) { showToast(tr("no_gold")); return; } B.gold -= cost; refreshHUD(); startTiming24(); };
+}
+function startTiming24() {
+  const m = el("u24");
+  Object.assign(U24, { phase: "timing", pos: 0.05, dir: 1, spd: 0.85, power: 0, hits: 0, idle: 0, last: performance.now() });
+  m.innerHTML = "<div class='u24-tim'><div class='u24-hint'>" + tr("ult_tap24") + "</div><div class='u24-bar'><i class='u24-g'></i><b class='u24-mk'></b></div><div class='u24-acc'></div><div class='u24-pow'>" + tr("power24", 0) + "</div></div>";
+  m.onpointerdown = (e) => { if (U24.phase !== "timing") return; e.preventDefault(); e.stopPropagation(); tapTiming24(); };
+  const loop = (now) => {
+    if (U24.phase !== "timing") return;
+    const dt = Math.min(0.05, (now - U24.last) / 1000); U24.last = now; U24.idle += dt;
+    U24.pos += U24.dir * U24.spd * dt; if (U24.pos > 1) { U24.pos = 2 - U24.pos; U24.dir = -1; } if (U24.pos < 0) { U24.pos = -U24.pos; U24.dir = 1; }
+    const mk = m.querySelector(".u24-mk"); if (mk) mk.style.left = (U24.pos * 100) + "%";
+    if (U24.idle > 4.5) { fireTiming24(tr("ult_miss24")); return; }
+    U24.raf = requestAnimationFrame(loop);
+  };
+  U24.raf = requestAnimationFrame(loop);
+}
+const GREEN24 = 0.15;
+function tapTiming24(forcePos) {
+  if (U24.phase !== "timing") return;
+  const pos = forcePos != null ? forcePos : U24.pos, off = Math.abs(pos - 0.5);
+  U24.idle = 0;
+  if (off > GREEN24) { fireTiming24(tr("ult_miss24")); return; }
+  const acc = Math.round(100 - off / GREEN24 * 30);
+  U24.hits++; U24.power += acc; U24.spd *= 1.22;
+  const m = el("u24"), a = m.querySelector(".u24-acc"), p = m.querySelector(".u24-pow");
+  if (a) { a.textContent = acc + "%"; a.classList.remove("pop"); void a.offsetWidth; a.classList.add("pop"); }
+  if (p) { p.textContent = tr("power24", U24.power); p.classList.remove("pop"); void p.offsetWidth; p.classList.add("pop"); }
+  try { sfx.coin(); } catch (e) {}
+  if (U24.hits >= 12) fireTiming24(tr("ult_max24"));
+}
+function fireTiming24(msg) {
+  U24.phase = "fire"; cancelAnimationFrame(U24.raf);
+  const t = U24.t, power = U24.power, hits = U24.hits;
+  closeUlt24();
+  if (t && B.running && !B.over) ultBoom24(t, power, hits, msg);
+}
+function ultBoom24(t, power, hits, msg) {
+  const d = PET[t.id], st = petStats(t), col = (d.fx && d.fx[0]) || ELEM_COL[d.el] || "#ffe14a", typ = ultTypOf(d);
+  const mul = 2 + power / 45;
+  B.fx.push({ typ: "ult24", x: t.x, y: t.y - 40, color: col, life: 1.3, max: 1.3, sty: styleOf24(t.id) });
+  for (const e of B.enemies) if (e.hp > 0) { hitEnemy(e, st.dmg * mul * (typ === "burst" ? 1.3 : 1) + 8, d.el, { src: t, burn: typ === "blast" ? st.dmg : 0, stun: 0.5 }); burst(e.x, e.y, col, 6); }
+  if (typ === "heal") for (const a of B.towers) { if (!a.fainted) a.hp = petStats(a).maxHp; }
+  else if (typ === "freeze") for (const e of B.enemies) if (e.hp > 0) { e.frozenT = Math.max(e.frozenT || 0, 2 + hits * 0.15); }
+  else if (typ === "gold") { const g = 10 + hits * 4; B.gold += g; }
+  else if (typ === "shield") for (const a of B.towers) if (!a.fainted) a.shield = (a.shield || 0) + petStats(a).maxHp * 0.4;
+  B.floaters.push({ x: W / 2, y: 300, text: msg || "", color: "#fff", life: 1.2, max: 1.2, big: true });
+  B.floaters.push({ x: W / 2, y: 345, text: tr("power24", power), color: "#ffe14a", life: 1.6, max: 1.6, huge: true });
+  try { bumpShake(6.5); } catch (e) {}
+  try { sfx.shiny(); sfx.pop(); sfx.attack("meteor"); } catch (e) {}
+  t.pop24 = 1; B.ultCd24 = 15; B.ultFired24 = (B.ultFired24 | 0) + 1;
+  refreshHUD();
+}
+
+/* ---------- per-wave perk (mild, capped) ---------- */
+function closePerk24() { const m = el("p24"); if (m && !m.classList.contains("hidden")) { m.classList.add("hidden"); if (B) B.paused = !!B._pp24; } }
+function openPerk24() {
+  const m = el("p24"); if (!m) return;
+  const pool = PERKS24.filter(p => perkN(p.id) < p.max).sort(() => Math.random() - 0.5).slice(0, 3);
+  if (!pool.length) return;
+  B._pp24 = B.paused; B.paused = true;
+  m.innerHTML = "<div class='p24-card'><h3>" + tr("perk_title24") + "</h3>" + pool.map(p => "<button type='button' class='p24-b' data-p='" + p.id + "'>" + tr("perk_" + p.id) + (perkN(p.id) ? " <small>(" + perkN(p.id) + "/" + p.max + ")</small>" : "") + "</button>").join("") + "</div>";
+  m.classList.remove("hidden");
+  m.querySelectorAll(".p24-b").forEach(b => b.onclick = (e) => { e.stopPropagation(); B.perks24[b.dataset.p] = perkN(b.dataset.p) + 1; try { sfx.click(); } catch (er) {} closePerk24(); });
+}
+
+/* ---------- item bar + drag ---------- */
+function renderItems24() {
+  const bar = el("i24-bar"); if (!bar) return;
+  bar.innerHTML = "";
+  (B.items24 || [null, null, null]).forEach((k, i) => {
+    const s = document.createElement("div"); s.className = "i24-slot" + (k ? " on" : ""); s.dataset.i = i;
+    s.textContent = k ? ITEMS24[k].ic : ""; if (k) s.title = tr("it_" + k) + " — " + tr("it_" + k + "_d");
+    s.addEventListener("pointerdown", (e) => startDrag24(e, i));
+    bar.appendChild(s);
+  });
+}
+let drag24 = null;
+function startDrag24(e, i) {
+  const k = B.items24 && B.items24[i]; if (!k || !B.running || B.over) return;
+  e.preventDefault(); e.stopPropagation();
+  const g = document.createElement("div"); g.className = "i24-ghost"; g.textContent = ITEMS24[k].ic; document.body.appendChild(g);
+  drag24 = { i, k, g };
+  const mv = (ev) => { g.style.left = ev.clientX + "px"; g.style.top = ev.clientY + "px"; };
+  mv(e);
+  const up = (ev) => {
+    window.removeEventListener("pointermove", mv); window.removeEventListener("pointerup", up); window.removeEventListener("pointercancel", up);
+    g.remove(); const dg = drag24; drag24 = null;
+    const r = canvas.getBoundingClientRect();
+    if (ev.type === "pointercancel" || ev.clientX < r.left || ev.clientX > r.right || ev.clientY < r.top || ev.clientY > r.bottom) return;
+    const { x, y } = toWorld(ev);
+    const t = B.towers.filter(q => !q.fainted).sort((a, b) => dist(x, y, a.x, a.y - 30) - dist(x, y, b.x, b.y - 30))[0];
+    if (!t || dist(x, y, t.x, t.y - 30) > 70) return;
+    applyItem24(t, dg.k); B.items24[dg.i] = null; renderItems24();
+  };
+  window.addEventListener("pointermove", mv); window.addEventListener("pointerup", up); window.addEventListener("pointercancel", up);
+}
+function bestElemVs() {
+  const cnt = {}; for (const e of B.enemies) if (e.hp > 0 && e.el) cnt[e.el] = (cnt[e.el] || 0) + 1;
+  let best = null, n = -1; for (const k in cnt) if (cnt[k] > n) { n = cnt[k]; best = k; }
+  const beat = ELEMS.find(a => ADV[a] === best);
+  return beat || pick(ELEMS);
+}
+function applyItem24(t, k) {
+  const it = ITEMS24[k];
+  if (k === "fly") { t.flyT = it.dur; t.y0 = t.y0 == null ? t.y : t.y0; }
+  else if (k === "fire") t.fireT = it.dur;
+  else { t.swapT = it.dur; let el2 = bestElemVs(); if (el2 === PET[t.id].el) el2 = ELEMS[(ELEMS.indexOf(el2) + 1) % ELEMS.length]; t.swapEl = el2; }
+  B.fx.push({ typ: "ring", x: t.x, y: t.y - 30, r0: 8, r1: 80, color: it.col, life: 0.45, max: 0.45 });
+  burst(t.x, t.y - 40, it.col, 16);
+  showToast(tr("it_used24", tr("it_" + k), stageName(t.id, t.star)) + (k === "swap" ? " " + elName(t.swapEl) : ""), 2);
+  try { sfx.shiny(); } catch (e) {}
+  B.itemUsed24 = (B.itemUsed24 | 0) + 1;
+}
+function pickDrop24(d) {
+  const i = (B.items24 || []).indexOf(null);
+  if (i < 0) { showToast(tr("item_full24")); return false; }
+  B.items24[i] = d.k; B.drops24 = B.drops24.filter(q => q !== d);
+  burst(d.x, d.y, ITEMS24[d.k].col, 10); try { sfx.coin(); } catch (e) {}
+  showToast(tr("item_got24", tr("it_" + d.k)), 2); renderItems24(); return true;
+}
+
+/* ---------- canvas input (captures before the base handler) ---------- */
+function arrowPos24(t) { return { x: t.x + 30, y: t.y - 96 }; }
+function onCanvasDown24(ev) {
+  if (screen !== "battle" || !B.running || B.over) return;
+  const { x, y } = toWorld(ev);
+  const stop = () => { ev.stopImmediatePropagation(); ev.preventDefault(); };
+  for (const t of B.towers) if (upgradeReady(t)) { const a = arrowPos24(t); if (dist(x, y, a.x, a.y) < 26) { stop(); if (B.gold < upgradeCost(t)) { showToast(tr("no_gold")); return; } upgradeTower(t); return; } }
+  for (const d of (B.drops24 || []).slice()) if (dist(x, y, d.x, d.y) < 32) { stop(); pickDrop24(d); return; }
+  if (dist(x, y, ULT_ICON.x, ULT_ICON.y) < ULT_ICON.r + 10) {
+    stop();
+    if (!B.waveActive && B.wave === 0) { showToast(tr("place_then")); return; }
+    if (B.ultCd24 > 0) { showToast(tr("ult_cd24", Math.ceil(B.ultCd24))); return; }
+    el("inspect").classList.add("hidden"); B.selTower = null;
+    B.ultSel = !B.ultSel; if (B.ultSel) showToast(tr("ult_pick24"), 2); try { sfx.click(); } catch (e) {} return;
+  }
+  if (B.ultSel) {
+    stop();
+    let best = null, bd = 60; for (const t of B.towers) { if (t.fainted) continue; const dd = dist(x, y, t.x, t.y - 30); if (dd < bd) { bd = dd; best = t; } }
+    if (best) openUltPreview(best); else B.ultSel = false;
+  }
+}
+
+/* ---------- canvas drawing on top of the base renderer ---------- */
+const _renderBattle24 = renderBattle;
+renderBattle = function () {
+  _renderBattle24();
+  const c = ctx;
+  if (!B || !B.level) return;
+  for (const t of B.towers) {
+    if (t.flyT > 0) { c.globalAlpha = 0.3; ell(c, t.x, (t.y0 || t.y) + 2, 26, 7, "#2a1c20"); c.globalAlpha = 1;
+      for (const sg of [-1, 1]) { const fl = Math.sin(time * 18) * 0.5; c.save(); c.translate(t.x + sg * 24, t.y - 44); c.rotate(sg * (0.4 + fl)); E(c, sg * 12, 0, 16, 8, "#ffffff", { lw: 2.5, hl: false }); c.restore(); } }
+    if (t.fireT > 0) flame(c, t.x + 22, t.y - 70 + Math.sin(time * 10) * 2, 7, "#ff7a3a", "#ffe14a");
+    if (t.swapT > 0 && t.swapEl) { c.globalAlpha = 0.8; c.lineWidth = 4; c.strokeStyle = ELEM_COL[t.swapEl]; c.beginPath(); c.ellipse(t.x, t.y + 2, 32, 11, 0, time * 4, time * 4 + 4.5); c.stroke(); c.globalAlpha = 1; }
+    if (upgradeReady(t)) {
+      const a = arrowPos24(t), bob = Math.sin(time * 7) * 4, okc = B.gold >= upgradeCost(t);
+      c.save(); c.translate(a.x, a.y + bob);
+      F(c, cc => { cc.moveTo(0, -18); cc.lineTo(15, 0); cc.lineTo(6, 0); cc.lineTo(6, 14); cc.lineTo(-6, 14); cc.lineTo(-6, 0); cc.lineTo(-15, 0); cc.closePath(); }, okc ? "#5fe06a" : "#a8b8a8", 3);
+      c.font = "900 11px sans-serif"; c.textAlign = "center"; c.lineWidth = 3; c.strokeStyle = OL; c.strokeText("🪙" + upgradeCost(t), 0, 28); c.fillStyle = okc ? "#fff" : "#ffb0b0"; c.fillText("🪙" + upgradeCost(t), 0, 28);
+      c.restore();
+    }
+    if (B.ultSel && !t.fainted) { c.globalAlpha = 0.5 + 0.3 * Math.sin(time * 8); c.lineWidth = 4; c.strokeStyle = "#ffffff"; c.setLineDash([6, 5]); c.beginPath(); c.ellipse(t.x, t.y - 30, 40, 46, 0, 0, TAU); c.stroke(); c.setLineDash([]); c.globalAlpha = 1; }
+  }
+  for (const d of B.drops24 || []) {
+    if (d.life < 3 && Math.sin(time * 20) > 0) continue;
+    const yy = d.y + Math.sin(time * 4 + d.ph) * 4;
+    c.globalAlpha = 0.35; dot(c, d.x, yy, 26, ITEMS24[d.k].col); c.globalAlpha = 1;
+    E(c, d.x, yy, 18, 18, "#fffdf3", { lw: 3, hl: false });
+    c.font = "20px sans-serif"; c.textAlign = "center"; c.textBaseline = "middle"; c.fillStyle = "#000"; c.fillText(ITEMS24[d.k].ic, d.x, yy + 1); c.textBaseline = "alphabetic";
+  }
+  for (const f of B.fx) {
+    const a = f.life / f.max;
+    if (f.typ === "muz24") { const p = 1 - a; c.globalAlpha = a; c.lineWidth = 4; c.strokeStyle = f.color; c.beginPath(); c.arc(f.x, f.y, 8 + p * 22, 0, TAU); c.stroke();
+      for (let i = 0; i < 6; i++) { const ang = i / 6 * TAU + f.x; c.beginPath(); c.moveTo(f.x + Math.cos(ang) * (10 + p * 10), f.y + Math.sin(ang) * (10 + p * 10)); c.lineTo(f.x + Math.cos(ang) * (18 + p * 24), f.y + Math.sin(ang) * (18 + p * 24)); c.stroke(); }
+      styShape24(c, f.sty, f.x, f.y - p * 18, 6 + p * 4, f.color, p * 3); c.globalAlpha = 1; }
+    else if (f.typ === "fire24") { c.globalAlpha = a; flame(c, f.x, f.y - (1 - a) * 14, 6, "#ff7a3a", "#ffe14a"); c.globalAlpha = 1; }
+    else if (f.typ === "lv24") { const p = 1 - a; c.globalAlpha = a; for (let i = 0; i < 3; i++) { const r = (p * 1.3 - i * 0.15) * 140; if (r <= 0) continue; c.lineWidth = 9 - i * 2; c.strokeStyle = i === 1 ? "#fff6a0" : "#ffc21a"; c.beginPath(); c.ellipse(f.x, f.y, r, r * 0.55, 0, 0, TAU); c.stroke(); }
+      for (let i = 0; i < 10; i++) { const ang = i / 10 * TAU; spark(c, f.x + Math.cos(ang) * p * 90, f.y + Math.sin(ang) * p * 50 - p * 20, 6, "#ffe14a"); } c.globalAlpha = 1; }
+    else if (f.typ === "ult24") { const p = 1 - a;
+      if (p < 0.25) { c.fillStyle = "rgba(255,255,240," + (0.75 * (1 - p / 0.25)) + ")"; c.fillRect(0, 0, W, H); }
+      c.globalAlpha = Math.min(1, a * 1.5);
+      for (let i = 0; i < 4; i++) { const r = Math.max(0, p * 1.4 - i * 0.12) * 820; c.lineWidth = 16 - i * 3; c.strokeStyle = i % 2 ? "#fff6a0" : f.color; c.beginPath(); c.arc(f.x, f.y, r, 0, TAU); c.stroke(); }
+      c.lineCap = "round"; for (let i = 0; i < 18; i++) { const ang = i / 18 * TAU + p; c.lineWidth = 7; c.strokeStyle = i % 2 ? f.color : "#ffffff"; c.beginPath(); c.moveTo(f.x + Math.cos(ang) * p * 120, f.y + Math.sin(ang) * p * 120); c.lineTo(f.x + Math.cos(ang) * (p * 120 + 260), f.y + Math.sin(ang) * (p * 120 + 260)); c.stroke(); }
+      for (let i = 0; i < 12; i++) { const ang = i / 12 * TAU - p * 2; styShape24(c, f.sty, f.x + Math.cos(ang) * p * 380, f.y + Math.sin(ang) * p * 380, 14, f.color, p * 6); }
+      c.globalAlpha = 1; }
+  }
+  if (B.running && !B.over) {   // white ultimate icon (bottom-left of the field)
+    const u = ULT_ICON, rdy = B.ultCd24 <= 0 && (B.waveActive || B.wave > 0), glow = B.ultSel ? 0.6 + 0.4 * Math.sin(time * 10) : 0;
+    if (glow) { c.globalAlpha = glow; dot(c, u.x, u.y, u.r + 9, "#ffe14a"); c.globalAlpha = 1; }
+    E(c, u.x, u.y, u.r, u.r, rdy ? "#ffffff" : "#d8d0d4", { lw: 3.5, hl: false });
+    F(c, cc => { cc.moveTo(u.x + 3, u.y - 15); cc.lineTo(u.x - 8, u.y + 2); cc.lineTo(u.x - 1, u.y + 2); cc.lineTo(u.x - 4, u.y + 15); cc.lineTo(u.x + 9, u.y - 3); cc.lineTo(u.x + 2, u.y - 3); cc.closePath(); }, rdy ? "#ffc21a" : "#a89aa0", 2.5);
+    if (B.ultCd24 > 0) { c.font = "900 13px sans-serif"; c.textAlign = "center"; c.lineWidth = 3; c.strokeStyle = OL; c.strokeText(Math.ceil(B.ultCd24), u.x, u.y + u.r + 14); c.fillStyle = "#fff"; c.fillText(Math.ceil(B.ultCd24), u.x, u.y + u.r + 14); }
+  }
+};
+
+/* ---------- incubator + cosmetic chest (Hatch tab) ---------- */
+function incFill24() {
+  const v = V(), cap = INC_SLOTS[v.inc.lv - 1];
+  let ch = false;
+  while (v.inc.s.length < cap && save.eggs.length) {
+    save.eggs.sort((a, b) => b.q - a.q);
+    const e = save.eggs.shift(), fast = (v.fastN | 0) > 0;
+    if (fast) v.fastN--;
+    v.inc.s.push({ q: e.q, sh: e.sh, t0: Date.now(), d: fast ? 5000 : Math.round(EGG_SEC[e.q] * 1000 * INC_SPD[v.inc.lv - 1]) });
+    ch = true;
+  }
+  if (ch) persist();
+}
+function incLeft24(s) { return Math.max(0, s.t0 + s.d - Date.now()); }
+function hatchSlot24(i) {
+  const v = V(), s = v.inc.s[i]; if (!s || incLeft24(s) > 0) return false;
+  v.inc.s.splice(i, 1);
+  save.eggs.push({ q: s.q, sh: s.sh });
+  return openHatch(save.eggs.length - 1);
+}
+function upgradeInc24() {
+  const v = V(), lv = v.inc.lv; if (lv >= 5) return false;
+  const c = INC_UP[lv - 1]; if (save.gems < c) { showToast(tr("no_gems_charm")); return false; }
+  save.gems -= c; v.inc.lv++; persist(); try { sfx.lvup(); } catch (e) {} renderHome(); return true;
+}
+renderHatchTab = function (body) {
+  incFill24();
+  const v = V(), lv = v.inc.lv;
+  renderBanner(body);
+  const inc = document.createElement("div"); inc.className = "box inc24"; inc.id = "inc24";
+  inc.innerHTML = "<div class='inc-hd'><b>🐣 " + tr("inc24", lv) + "</b><small>" + tr("inc_spd24", (1 / INC_SPD[lv - 1]).toFixed(1), INC_SLOTS[lv - 1]) + "</small>"
+    + (lv < 5 ? "<button type='button' class='mini b-gold' id='btn-inc-up'>" + tr("inc_up24", INC_UP[lv - 1]) + "</button>" : "<span class='mini'>" + tr("inc_max24") + "</span>") + "</div>"
+    + "<div class='inc-d'>" + tr("inc_d24") + "</div><div class='inc-slots'></div><div class='inc-q'>" + tr("inc_q24", save.eggs.length) + "</div>";
+  const sl = inc.querySelector(".inc-slots");
+  for (let i = 0; i < INC_SLOTS[lv - 1]; i++) {
+    const s = v.inc.s[i], d = document.createElement("div"); d.className = "inc-slot" + (s ? (incLeft24(s) <= 0 ? " ready" : "") : " empty"); d.dataset.i = i;
+    if (s) { d.appendChild(eggCanvas(s.q)); d.insertAdjacentHTML("beforeend", "<div class='inc-t' data-i='" + i + "'></div><div class='inc-bar'><i data-i='" + i + "'></i></div>");
+      d.addEventListener("click", () => { if (incLeft24(V().inc.s[i] || { t0: 0, d: 0 }) <= 0) { sfx.click(); hatchSlot24(i); } }); }
+    else d.innerHTML = "<div class='inc-e'>" + tr("inc_empty24") + "</div>";
+    sl.appendChild(d);
+  }
+  body.appendChild(inc);
+  const up = el("btn-inc-up"); if (up) { up.disabled = save.gems < INC_UP[lv - 1]; up.onclick = () => upgradeInc24(); }
+  body.insertAdjacentHTML("beforeend", "<div class='box' style='display:flex;align-items:center;gap:10px'>"
+    + "<div style='flex:1;font-weight:800;font-size:14px'>" + tr("egg_info", EGG_COST) + "</div>"
+    + "<button type='button' class='b-gold' id='btn-buy'>" + tr("buy_egg", EGG_COST) + "</button></div>");
+  el("btn-buy").disabled = save.gems < EGG_COST;
+  el("btn-buy").addEventListener("click", () => { if (save.gems < EGG_COST) return; save.gems -= EGG_COST; save.eggs.push({ q: Math.random() < 0.10 ? 2 : 1, sh: SHINY_BASE }); persist(); sfx.coin(); renderHome(); });
+  const owned = HATS.filter(h => v.hats[h.id]);
+  const ch = document.createElement("div"); ch.className = "box chest24"; ch.id = "chest24";
+  ch.innerHTML = "<div class='ch-ic'>🎁</div><div class='ch-i'><b>" + tr("chest24") + "</b><small>" + tr("chest_d24") + "</small><div class='ch-hats'>" + tr("hats24", owned.length, HATS.length) + " "
+    + owned.map(h => "<span title='" + esc(hatBonusText(h.id)) + "'>" + tr("hat_" + h.id) + "</span>").join("") + "</div></div>";
+  const cb = document.createElement("button"); cb.type = "button"; cb.className = "b-pink"; cb.id = "btn-chest24";
+  cb.textContent = v.free24 ? tr("chest_free24") : tr("chest_btn24", CHEST_COST); cb.disabled = !v.free24 && save.gems < CHEST_COST;
+  cb.onclick = () => { const free = !!V().free24; if (free) V().free24 = 0; if (openChest24(free)) renderHome(); };
+  ch.appendChild(cb); body.appendChild(ch);
+  updInc24();
+};
+function updInc24() {
+  const v = save.v24; if (!v || !v.inc) return;
+  document.querySelectorAll("#inc24 .inc-t").forEach(n => { const s = v.inc.s[n.dataset.i]; if (!s) return; const l = incLeft24(s); n.textContent = l <= 0 ? tr("inc_ready24") : fmtLeft(l); n.parentNode.classList.toggle("ready", l <= 0); });
+  document.querySelectorAll("#inc24 .inc-bar i").forEach(n => { const s = v.inc.s[n.dataset.i]; if (s) n.style.width = Math.min(100, (1 - incLeft24(s) / s.d) * 100) + "%"; });
+}
+const _openDetail24 = openDetail;
+openDetail = function (id) {
+  _openDetail24(id);
+  const v = V(), owned = HATS.filter(h => v.hats[h.id]);
+  if (!owned.length) return;
+  document.querySelectorAll("#detail-body .own-row[data-uid]").forEach(row => {
+    const uid = +row.dataset.uid, sel = document.createElement("select"); sel.className = "hat-sel24";
+    sel.innerHTML = "<option value=''>🎩 " + tr("hat_none24") + "</option>" + owned.map(h => "<option value='" + h.id + "'" + (v.eq[uid] === h.id ? " selected" : "") + ">🎩 " + tr("hat_" + h.id) + " (" + hatBonusText(h.id) + ")</option>").join("");
+    sel.onchange = () => { if (sel.value) v.eq[uid] = sel.value; else delete v.eq[uid]; persist(); openDetail(id); };
+    const info = row.querySelector(".own-info") || row; info.appendChild(sel);
+  });
+};
+
+/* ---------- news ---------- */
+showNewsModal = function (force) {
+  const m = el("news-modal"); if (!m) return;
+  el("news-body").innerHTML = "<h3>" + tr("v24_news_title") + "</h3><ul class='news-list'><li>" + tr("v24_news_1") + "</li><li>" + tr("v24_news_2") + "</li><li>" + tr("v24_news_3") + "</li><li>" + tr("v24_news_4") + "</li></ul>";
+  m.classList.remove("hidden");
+  if (!force) { V().seenNews = 1; persist(); }
+};
+showUpdateModal = function (ver) {
+  const m = el("update-modal"); if (!m) return;
+  el("update-body").innerHTML = "<h3>" + tr("update_live", ver || "2.4") + "</h3><p>" + tr("update_live_d") + "</p>";
+  m.classList.remove("hidden");
+};
+
+/* ---------- forced v2.4 hand-holding tutorial ---------- */
+const T24 = { on: false, i: 0, rect: null, stepT: 0 };
+function worldRect24(x, y, r) { const cr = canvas.getBoundingClientRect(), k = cr.width / W; return { left: cr.left + (x - r) * k, top: cr.top + (y - r) * k, width: 2 * r * k, height: 2 * r * k }; }
+function firstPet24() { return B.towers.find(t => !t.fainted) || B.towers[0]; }
+const T24_STEPS = [
+  { tx: "t24_1", next: true, tgt: () => el("tray"), scr: "battle" },
+  { tx: "t24_2", tgt: () => el("btn-next"), done: () => B.waveActive },
+  { tx: "t24_3", enter: () => { B.paused = true; B.drops24 = []; dropItem24(270, 420, "fire"); }, tgt: () => { const d = B.drops24[0]; return d ? worldRect24(d.x, d.y, 34) : null; }, done: () => (B.items24 || []).some(Boolean) },
+  { tx: "t24_4", tgt: () => el("i24-bar"), done: () => (B.itemUsed24 | 0) > 0, drag: true },
+  { tx: "t24_5", enter: () => { const t = firstPet24(); if (t) { t.kills24 = Math.max(t.kills24 | 0, UP_KILLS[Math.min(2, t.tier)]); if (t.tier >= 3) t.tier = 2; B.gold = Math.max(B.gold, upgradeCost(t) + 10); } }, tgt: () => { const t = B.towers.find(upgradeReady); if (!t) return null; const a = arrowPos24(t); return worldRect24(a.x, a.y, 30); }, done: () => !B.towers.some(upgradeReady) },
+  { tx: "t24_6", enter: () => { B.ultCd24 = 0; B.gold = Math.max(B.gold, 200); }, tgt: () => worldRect24(ULT_ICON.x, ULT_ICON.y, 34), done: () => B.ultSel },
+  { tx: "t24_7", tgt: () => { const t = firstPet24(); return t ? worldRect24(t.x, t.y - 30, 48) : null; }, done: () => U24.phase === "preview" },
+  { tx: "t24_8", tgt: () => el("u24-ok"), done: () => U24.phase === "timing" || (B.ultFired24 | 0) > 0 },
+  { tx: "t24_9", tgt: () => null, done: () => (B.ultFired24 | 0) > 0, top: true },
+  { tx: "t24_10", enter: () => { const t = firstPet24(); if (t) { t.fainted = true; t.hp = 0; T24.rev = t; } B.gold = Math.max(B.gold, 150); el("inspect").classList.add("hidden"); }, tgt: () => T24.rev ? worldRect24(T24.rev.x, T24.rev.y - 30, 48) : null, done: () => !!el("btn-rev24") },
+  { tx: "t24_11", tgt: () => el("btn-rev24"), done: () => T24.rev && !T24.rev.fainted },
+  { tx: "t24_12", next: true, tgt: () => el("st-lives"), leave: () => { B.tut24 = false; B.over = true; B.running = false; B.paused = false; document.body.classList.remove("b-locked24"); hideAll(); V().free24 = 1;
+      if (!save.eggs.length && !V().inc.s.length) save.eggs.push({ q: 1, sh: SHINY_BASE }); V().fastN = Math.max(V().fastN | 0, 1); persist(); openHome("hatch"); } },
+  { tx: "t24_13", next: true, scr: "home", enter: () => { incFill24(); const s = V().inc.s[0]; if (s) s.d = Math.min(s.d, 4000), s.t0 = Math.min(s.t0, Date.now()); persist(); renderHome(); }, tgt: () => el("inc24") },
+  { tx: "t24_14", tgt: () => document.querySelector("#inc24 .inc-slot.ready") || document.querySelector("#inc24 .inc-slot"), done: () => screen === "hatch" },
+  { tx: "t24_15", tgt: () => null, done: () => screen === "home", top: true, free: true },
+  { tx: "t24_16", enter: () => { if (homeTab !== "hatch") openHome("hatch"); }, tgt: () => el("btn-chest24"), done: () => (V().chests | 0) > 0 },
+  { tx: "t24_17", next: true, tgt: () => tabBtn("book") || null }
+];
+function t24Needed() { const v = save.v24; return save.started && save.pets.length > 0 && !(v && v.tut); }
+function t24Start() {
+  if (T24.on) return;
+  T24.on = true; T24.i = 0;
+  hideAll();
+  startRun("orchard"); B.tut24 = true;
+  if (!B.towers.length) autoDeploy();
+  renderTray();
+  t24Enter();
+}
+function t24Enter() { const s = T24_STEPS[T24.i]; T24.stepT = 0; if (s && s.enter) try { s.enter(); } catch (e) {} t24Draw(); }
+function t24Advance() {
+  const s = T24_STEPS[T24.i]; if (s && s.leave) try { s.leave(); } catch (e) {}
+  T24.i++;
+  if (T24.i >= T24_STEPS.length) { t24Finish(); return; }
+  t24Enter();
+}
+function t24Finish() {
+  T24.on = false; const v = V(); v.tut = 1; v.seenNews = 1; persist();
+  const o = el("t24"); if (o) o.classList.add("hidden");
+  if (B.tut24) { B.tut24 = false; }
+  if (screen === "battle") { B.over = true; B.running = false; openHome("play"); }
+}
+function t24Draw() {
+  const o = el("t24"); if (!o || !T24.on) return;
+  const s = T24_STEPS[T24.i]; if (!s) return;
+  o.classList.remove("hidden");
+  let tg = null; try { tg = s.tgt && s.tgt(); } catch (e) {}
+  if (tg && tg.getBoundingClientRect && T24.scrolledFor !== tg) { const rr = tg.getBoundingClientRect(); if (rr.top < 0 || rr.bottom > window.innerHeight) { try { tg.scrollIntoView({ block: "center" }); } catch (e) {} } T24.scrolledFor = tg; }
+  const r = tg ? (tg.getBoundingClientRect ? tg.getBoundingClientRect() : tg) : null;
+  T24.rect = r && r.width > 0 ? { left: r.left - 6, top: r.top - 6, width: r.width + 12, height: r.height + 12 } : null;
+  const ring = o.querySelector(".t24-ring"), bub = o.querySelector(".t24-bub"), arr = o.querySelector(".t24-arr");
+  if (T24.rect && !s.free) { ring.style.display = "block"; Object.assign(ring.style, { left: T24.rect.left + "px", top: T24.rect.top + "px", width: T24.rect.width + "px", height: T24.rect.height + "px" }); }
+  else ring.style.display = "none";
+  ring.classList.toggle("nodim", !!s.drag || !T24.rect);
+  const vh = window.innerHeight, vw = window.innerWidth;
+  bub.querySelector("p").textContent = tr(s.tx);
+  bub.querySelector(".t24-step").textContent = (T24.i + 1) + " / " + T24_STEPS.length;
+  const nb = bub.querySelector("button"); nb.style.display = s.next ? "" : "none";
+  const below = T24.rect ? (T24.rect.top + T24.rect.height / 2 < vh / 2) : false;
+  bub.style.top = s.top ? "8px" : T24.rect ? (below ? Math.min(vh - 150, T24.rect.top + T24.rect.height + 30) + "px" : Math.max(8, T24.rect.top - 150) + "px") : "40%";
+  bub.style.left = Math.max(8, Math.min(vw - Math.min(340, vw - 16) - 8, (T24.rect ? T24.rect.left + T24.rect.width / 2 : vw / 2) - 170)) + "px";
+  if (T24.rect && !s.free) { arr.style.display = "block"; arr.textContent = below ? "👆" : "👇"; arr.style.left = (T24.rect.left + T24.rect.width / 2 - 16) + "px"; arr.style.top = (below ? T24.rect.top + T24.rect.height + 2 : T24.rect.top - 36) + "px"; }
+  else arr.style.display = "none";
+}
+function t24Tick() {
+  if (!T24.on) {
+    if (t24Needed() && screen === "home" && !tut.active && el("news-modal").classList.contains("hidden") && el("update-modal").classList.contains("hidden")) t24Start();
+    return;
+  }
+  const s = T24_STEPS[T24.i]; if (!s) return;
+  T24.stepT += 0.25;
+  if (s.done) { let ok = false; try { ok = s.done(); } catch (e) {} if (ok) { t24Advance(); return; } }
+  if (T24.i >= 2 && T24.i <= 10 && screen === "battle" && U24.phase !== "timing" && U24.phase !== "preview") B.paused = true;
+  t24Draw();
+}
+function t24Allowed(ev) {
+  if (!T24.on) return true;
+  const s = T24_STEPS[T24.i]; if (!s) return true;
+  if (s.free || (!s.tgt() && !s.next)) return true;
+  const o = el("t24"); if (o && o.contains(ev.target) && ev.target.closest && ev.target.closest(".t24-bub button")) return true;
+  if (ev.target && ev.target.closest && ev.target.closest("#u24") && (U24.phase === "timing")) return true;
+  if (s.next) return false;
+  const r = T24.rect; if (!r) return true;
+  const x = ev.clientX != null ? ev.clientX : (ev.touches && ev.touches[0] ? ev.touches[0].clientX : -1), y = ev.clientY != null ? ev.clientY : (ev.touches && ev.touches[0] ? ev.touches[0].clientY : -1);
+  return x >= r.left && x <= r.left + r.width && y >= r.top && y <= r.top + r.height;
+}
+function t24Guard(ev) { if (!t24Allowed(ev)) { ev.stopImmediatePropagation(); ev.stopPropagation(); ev.preventDefault(); } }
+
+/* ---------- boot ---------- */
+function bootV24() {
+  V();
+  const st = el("stage");
+  if (st && !el("u24")) {
+    document.body.insertAdjacentHTML("beforeend", "<div id='u24' class='hidden'></div><div id='p24' class='hidden'></div>"
+      + "<div id='t24' class='hidden'><div class='t24-ring'></div><div class='t24-arr'>👇</div><div class='t24-bub'><b class='t24-h'>" + tr("t24_title") + "</b> <span class='t24-step'></span><p></p><button type='button' class='mini b-pink'>" + tr("t24_next") + "</button></div></div>");
+    el("t24").querySelector(".t24-bub button").addEventListener("click", (e) => { e.stopPropagation(); t24Advance(); });
+  }
+  const dock = el("dock");
+  if (dock && !el("i24-bar")) { const b = document.createElement("div"); b.id = "i24-bar"; dock.insertBefore(b, el("tray")); }
+  renderItems24();
+  canvas.addEventListener("pointerdown", onCanvasDown24, { capture: true });
+  for (const evn of ["pointerdown", "mousedown", "touchstart", "click"]) document.addEventListener(evn, t24Guard, { capture: true, passive: false });
+  setInterval(() => { try { t24Tick(); } catch (e) {} }, 250);
+  setInterval(() => { try { if (screen === "home" && homeTab === "hatch") { const before = (save.v24 && save.v24.inc.s.length) | 0; incFill24(); if (((save.v24 && save.v24.inc.s.length) | 0) !== before) renderHome(); else updInc24(); } } catch (e) {} }, 1000);
+  window.addEventListener("resize", () => { if (T24.on) setTimeout(t24Draw, 80); });
+  document.querySelectorAll(".ver-badge").forEach(v => { v.textContent = "v" + GAME_VERSION; });
+}
+
+if (typeof window !== "undefined") {
+  window.__v24 = {
+    V: () => JSON.parse(JSON.stringify(V())), state: () => ({ lives: B.lives, gold: B.gold, items: (B.items24 || []).slice(), drops: (B.drops24 || []).map(d => ({ k: d.k, x: d.x, y: d.y })), perks: Object.assign({}, B.perks24), ultFired: B.ultFired24 | 0, ultSel: !!B.ultSel, u: U24.phase, locked: battleLocked(), towers: B.towers.map(t => ({ uid: t.uid, tier: t.tier, kills: t.kills24 | 0, fainted: !!t.fainted, flyT: t.flyT || 0, fireT: t.fireT || 0, swapT: t.swapT || 0, y: t.y, y0: t.y0 })) }),
+    dropItem: (x, y, k) => dropItem24(x, y, k), applyItem: (i, k) => applyItem24(B.towers[i], k), tapTiming: (p) => tapTiming24(p), openPreview: (i) => openUltPreview(B.towers[i]), confirmUlt: () => el("u24-ok") && el("u24-ok").click(),
+    rawB: () => B, revive: (i) => revive24(B.towers[i]), faint: (i) => { const t = B.towers[i]; t.fainted = true; t.hp = 0; }, setKills: (i, n) => { B.towers[i].kills24 = n; }, upgrade: (i) => upgradeTower(B.towers[i]),
+    perk: () => openPerk24(), pickPerk: () => { const b = document.querySelector("#p24 .p24-b"); if (b) b.click(); }, chest: (free) => openChest24(free), equip: (uid, h) => { V().eq[uid] = h; persist(); },
+    incFill: () => incFill24(), hatchSlot: (i) => hatchSlot24(i), incUp: () => upgradeInc24(), finishInc: () => { for (const s of V().inc.s) s.t0 = Date.now() - s.d - 1; persist(); },
+    styleOf: styleOf24, tut: () => ({ on: T24.on, i: T24.i, n: T24_STEPS.length, tx: T24_STEPS[T24.i] && T24_STEPS[T24.i].tx }), tutSkipAll: () => { while (T24.on) t24Advance(); }, tutAdvance: () => t24Advance(), tutRect: () => T24.rect,
+    ultIconScreen: () => worldRect24(ULT_ICON.x, ULT_ICON.y, ULT_ICON.r), worldRect: (x, y, r) => worldRect24(x, y, r), HATS: HATS.map(h => h.id), PERKS: PERKS24.map(p => p.id)
+  };
+}
+
+/* ---------- v2.4 slime abilities (every slime has a skill that matches its look; bosses have 2) ---------- */
+Object.assign(STR.zh, { ab_heal: "治疗", ab_frost: "冰冻", ab_dash: "冲刺", ab_hop: "跳跃", ab_harden: "石化护甲", ab_guard: "护盾", ab_stealth: "隐身", ab_slam: "震地", ab_firetrail: "喷火", ab_boom: "自爆", ab_rich: "金币雨", ab_summonB: "召唤", ab_split: "分裂", ab_spit: "吐粘液", ab_summon: "召唤+催眠", ab_steal: "偷金币", rich24: "+{0} 新金币！" });
+Object.assign(STR.en, { ab_heal: "Heal", ab_frost: "Freeze", ab_dash: "Dash", ab_hop: "Hop", ab_harden: "Stone Skin", ab_guard: "Shield Allies", ab_stealth: "Stealth", ab_slam: "Ground Slam", ab_firetrail: "Fire Breath", ab_boom: "Explode", ab_rich: "Coin Shower", ab_summonB: "Summon", ab_split: "Split", ab_spit: "Goo Spit", ab_summon: "Summon + Sleep", ab_steal: "Steal Coins", rich24: "+{0} New Coins!" });
+const AB24 = { sprout: ["heal"], jelly: ["frost"], ember: ["boom"], zap: ["dash"], pebble: ["harden"], puff: ["stealth"], split: ["split"], splitling: ["hop"], thief: ["dash", "steal"],
+  shield: ["guard"], spitter: ["spit"], mage: ["summon"], mini: ["hop"], treasure: ["dash", "rich"], boss1: ["frost", "summonB"], boss2: ["harden", "slam"], boss3: ["firetrail", "boom"], bossX: ["stealth", "heal"] };
+const AB_CD = { heal: 4.5, frost: 5, dash: 4, hop: 3.4, harden: 7, guard: 5, slam: 8, firetrail: 3.2, summonB: 9 };
+const AB_COL = { heal: "#7fe07a", frost: "#9ad8ff", dash: "#ffe14a", hop: "#ffffff", harden: "#b0a8a0", guard: "#7ab8ff", slam: "#c08a5a", firetrail: "#ff7a3a", summonB: "#b07aff" };
+const AB_IC = { heal: "✚", frost: "❄", dash: "⚡", hop: "⤒", harden: "⛰", guard: "🛡", slam: "💥", firetrail: "🔥", summonB: "✦" };
+function abList(e) { return AB24[e.typ] || []; }
+const _spawnEnemy24 = spawnEnemy;
+spawnEnemy = function (o) {
+  _spawnEnemy24(o);
+  const e = B.enemies[B.enemies.length - 1]; if (!e) return;
+  e.cd24 = {}; for (const a of abList(e)) e.cd24[a] = (AB_CD[a] || 5) * (0.5 + Math.random() * 0.5);
+  e.spd0 = e.spd; e.sh24 = 0; e.stT24 = 2 + Math.random() * 3;
+  if (e.typ === "treasure") { e.spd *= 1.4; e.spd0 = e.spd; }
+};
+function nearPets(e, r) { return B.towers.filter(t => !t.fainted && !(t.flyT > 0) && dist(t.x, t.y, e.x, e.y) < r); }
+function abExec(e, a) {
+  const bossK = e.boss ? 1 : 0;
+  if (a === "heal") { let n = 0; for (const o of B.enemies) if (o.hp > 0 && o !== e && dist(o.x, o.y, e.x, e.y) < 130 && o.hp < o.max) { const h = o.max * (bossK ? 0.06 : 0.08); o.hp = Math.min(o.max, o.hp + h); n++; B.floaters.push({ x: o.x, y: o.y - 34, text: "+" + Math.round(h), color: "#7fe07a", life: 0.6, max: 0.6 }); }
+    B.fx.push({ typ: "ring", x: e.x, y: e.y, r0: 10, r1: 130, color: "#7fe07a", life: 0.45, max: 0.45 }); }
+  else if (a === "frost") { const ps = nearPets(e, bossK ? 230 : 170).sort((p, q) => dist(p.x, p.y, e.x, e.y) - dist(q.x, q.y, e.x, e.y)).slice(0, bossK ? 3 : 1);
+    for (const t of ps) { t.frz24 = bossK ? 1.0 : 1.2; t.stunT = Math.max(t.stunT || 0, t.frz24); B.fx.push({ typ: "frost", x1: e.x, y1: e.y - 20, x2: t.x, y2: t.y - 40, life: 0.35, max: 0.35 }); } }
+  else if (a === "dash") { e.dash24 = 0.6; B.fx.push({ typ: "ring", x: e.x, y: e.y, r0: 6, r1: 40, color: "#ffe14a", life: 0.3, max: 0.3 }); }
+  else if (a === "hop") { if (!e.biting) e.hop24 = 0.35; }
+  else if (a === "harden") { e.sh24 = Math.max(e.sh24 || 0, e.max * 0.25); B.fx.push({ typ: "ring", x: e.x, y: e.y, r0: 10, r1: 60, color: "#b0a8a0", life: 0.4, max: 0.4 }); }
+  else if (a === "guard") { for (const o of B.enemies) if (o.hp > 0 && o !== e && dist(o.x, o.y, e.x, e.y) < 140) o.sh24 = Math.min(o.max * 0.4, (o.sh24 || 0) + o.max * 0.2);
+    B.fx.push({ typ: "ring", x: e.x, y: e.y, r0: 10, r1: 140, color: "#7ab8ff", life: 0.45, max: 0.45 }); }
+  else if (a === "slam") { for (const t of nearPets(e, 200)) { t.stunT = Math.max(t.stunT || 0, 0.8); hitPet(t, e.atk * 0.5, e); } B.fx.push({ typ: "ring", x: e.x, y: e.y + 20, r0: 20, r1: 200, color: "#c08a5a", life: 0.5, max: 0.5 }); try { bumpShake(2.5); } catch (er) {} }
+  else if (a === "firetrail") { const t = nearPets(e, 210)[0]; if (t) { hitPet(t, e.atk * 0.4, e); for (let i = 0; i < 4; i++) B.fx.push({ typ: "fire24", x: lerp(e.x, t.x, i / 3), y: lerp(e.y, t.y - 30, i / 3), life: 0.5, max: 0.5 }); } }
+  else if (a === "summonB") { for (let k = 0; k < 2; k++) { spawnEnemy({ id: "mini", hpMul: (B.wave | 0) * 0.08 + 1, spdMul: 1, minion: true }); const m = B.enemies[B.enemies.length - 1]; m.lane = e.lane; m.y = e.y + 12; m.x = e.x + (k ? 18 : -18); m.reward = 1; }
+    B.fx.push({ typ: "ring", x: e.x, y: e.y, r0: 6, r1: 60, color: "#b07aff", life: 0.35, max: 0.35 }); }
+}
+const _enemySkills24 = enemySkills;
+enemySkills = function (e, dt) {
+  _enemySkills24(e, dt);
+  if (e.hp <= 0) return;
+  if (e.dash24 > 0) { e.dash24 -= dt; e.spd = (e.spd0 || e.spd) * (e.dash24 > 0 ? 1.8 : 1); }
+  if (e.hop24 > 0) { const k = Math.min(e.hop24, dt); e.y += 34 * k / 0.35; e.hop24 -= dt; if (e.hop24 <= 0) B.fx.push({ typ: "ring", x: e.x, y: e.y + 20, r0: 6, r1: 34, color: "#ffffff", life: 0.25, max: 0.25 }); }
+  if (abList(e).includes("stealth")) { e.stT24 -= dt; if (e.stT24 <= 0) { e.st24 = !e.st24; e.stT24 = e.st24 ? 2 : 4; burst(e.x, e.y, "#e8e0ff", 6); } }
+  if (e.y < 140 || e.frozenT > 0 || e.stunT > 0) return;
+  if (e.tele24 > 0) { e.tele24 -= dt; if (e.tele24 <= 0) { const a = e.teleA; e.teleA = ""; abExec(e, a); } return; }
+  for (const a of abList(e)) {
+    if (!(a in AB_CD)) continue;
+    e.cd24[a] -= dt;
+    if (e.cd24[a] <= 0) { e.cd24[a] = AB_CD[a] * (e.boss ? 1.1 : 1); if (a === "frost" && !nearPets(e, e.boss ? 230 : 170).length) continue; if (a === "firetrail" && !nearPets(e, 210).length) continue; e.tele24 = a === "hop" || a === "dash" ? 0.35 : 0.6; e.teleA = a; break; }
+  }
+};
+const _hitEnemy24b = hitEnemy;
+hitEnemy = function (e, dmg, elem, o) {
+  if (e && e.hp > 0) {
+    if (e.st24) dmg *= 0.5;
+    if (e.sh24 > 0 && dmg > 0) { const ab = Math.min(e.sh24, dmg); e.sh24 -= ab; dmg -= ab; if (dmg <= 0) { e.hitT = 0.1; return; } }
+  }
+  _hitEnemy24b(e, dmg, elem, o);
+};
+const _killEnemy24b = killEnemy;
+killEnemy = function (e) {
+  _killEnemy24b(e);
+  const ab = abList(e);
+  if (ab.includes("boom")) {
+    const r = e.boss ? 150 : 90;
+    B.fx.push({ typ: "ring", x: e.x, y: e.y, r0: 10, r1: r, color: "#ff7a3a", life: 0.45, max: 0.45 }); burst(e.x, e.y, "#ff7a3a", 16);
+    for (const t of B.towers) if (!t.fainted && dist(t.x, t.y, e.x, e.y) < r + 30) hitPet(t, (ENEMY[e.typ].atk || 8) * (e.boss ? 1.2 : 1.5) + (B.wave | 0), e);
+    B.zones.push({ x: e.x, y: e.y, r: r * 0.6, life: 2, max: 2, burn: 0, el: "火", color: "#ff7a3a" });
+  }
+  if (ab.includes("rich")) { const g = 25 + (B.wave | 0) * 3; B.gold += g; B.floaters.push({ x: e.x, y: e.y - 50, text: tr("rich24", g), color: "#ffe14a", life: 1.3, max: 1.3, big: true }); for (let i = 0; i < 3; i++) burst(e.x, e.y - 20, "#ffd23a", 10); }
+};
+const _fireTower24b = fireTower;
+fireTower = function (t, st) { if (t.frz24 > 0 || (t.stunT || 0) > 0 || (t.sleepT || 0) > 0) return false; return _fireTower24b(t, st); };
+const _tickV22b = tickV22;
+tickV22 = function (dt) { _tickV22b(dt); if (B && B.towers) for (const t of B.towers) if (t.frz24 > 0) t.frz24 = Math.max(0, t.frz24 - dt); };
+const _renderBattle24b = renderBattle;
+renderBattle = function () {
+  _renderBattle24b();
+  const c = ctx; if (!B || !B.enemies) return;
+  for (const e of B.enemies) {
+    if (e.hp <= 0) continue;
+    const sz = ENEMY[e.typ].size, cy = e.y + sz * 0.42 - sz * 0.45;
+    if (e.sh24 > 0) { c.globalAlpha = 0.35; dot(c, e.x, cy, sz * 0.5, "#9ad0ff"); c.globalAlpha = 0.9; c.lineWidth = 3; c.strokeStyle = "#5a9aff"; c.beginPath(); c.arc(e.x, cy, sz * 0.5, 0, TAU); c.stroke(); c.globalAlpha = 1; }
+    if (e.tele24 > 0 && e.teleA) { const col = AB_COL[e.teleA] || "#fff", k = 0.5 + 0.5 * Math.sin(B.t * 30);
+      c.globalAlpha = 0.5 + 0.4 * k; c.lineWidth = 5; c.strokeStyle = col; c.beginPath(); c.arc(e.x, cy, sz * (0.45 + 0.15 * k), 0, TAU); c.stroke(); c.globalAlpha = 1;
+      c.font = "900 18px sans-serif"; c.textAlign = "center"; c.lineWidth = 4; c.strokeStyle = OL; const ic = AB_IC[e.teleA] || "!"; c.strokeText(ic, e.x, cy - sz * 0.55); c.fillStyle = col; c.fillText(ic, e.x, cy - sz * 0.55); }
+    if (e.dash24 > 0) for (let i = 1; i <= 3; i++) { c.globalAlpha = 0.25; dot(c, e.x, cy - i * 14, sz * 0.3, "#ffe14a"); c.globalAlpha = 1; }
+  }
+  for (const t of B.towers) if (t.frz24 > 0) { c.globalAlpha = 0.45; E(c, t.x, t.y - 34, 34, 40, "#bfe6ff", { lw: 3, hl: false }); c.globalAlpha = 1; spark(c, t.x + 18, t.y - 64, 7, "#ffffff"); }
+};
+if (typeof window !== "undefined" && window.__v24) Object.assign(window.__v24, { AB24, abExec: (i, a) => abExec(B.enemies[i], a), enemyFx: () => B.enemies.map(e => ({ typ: e.typ, sh: e.sh24 || 0, st: !!e.st24, tele: e.teleA || "", y: e.y })) });
+
+/* ---------- per-pet launch point (mouth / paw / tail / horn / wings / beak) + per-pet impact ---------- */
+const PARTS24 = { mouth: [14, -56], paw: [24, -30], tail: [-26, -20], horn: [0, -84], wings: [28, -50], beak: [18, -52] };
+function partOf24(id) {
+  const d = PET[id] || {}, nm = ((d.names && d.names.join(" ")) || "") + " " + id;
+  if (/roc|bird|鸟|鹰|hen|chick|鸡|duck|鸭|owl|parrot|peck/i.test(nm) || d.typ === "coinpeck") return "beak";
+  if (/kirin|麟|unicorn|horn|角|dragon|龙|goat|ram/i.test(nm)) return "horn";
+  if (/bat|蝠|butterfly|蝶|bee|蜂|wing|fairy/i.test(nm)) return "wings";
+  if (/fox|狐|cat|猫|squirrel|鼠|mouse|monkey|猴|scorp/i.test(nm) && d.typ !== "slam") return "tail";
+  if (d.typ === "slam" || d.typ === "chomp" || d.typ === "spikeroll" || d.typ === "boomerang") return "paw";
+  const h = [...String(id)].reduce((a, c) => (a * 33 + c.charCodeAt(0)) >>> 0, 5) % 3;
+  return ["mouth", "paw", "mouth"][h];
+}
+const PART_CACHE24 = {};
+function originOf24(t) {
+  const part = PART_CACHE24[t.id] || (PART_CACHE24[t.id] = partOf24(t.id));
+  const o = PARTS24[part], sz = [0, 70, 80, 90, 100, 112, 118][clamp(t.star | 0, 1, 6)] / 90;
+  let side = (t.slot % 5) > 2 ? -1 : 1;
+  if (part === "wings") { t.wing24 = -(t.wing24 || 1); side = t.wing24; }
+  return { x: t.x + o[0] * sz * side, y: t.y + o[1] * sz, part, side };
+}
+const _hitEnemy24c = hitEnemy;
+hitEnemy = function (e, dmg, elem, o) {
+  const src = (o && o.src) || curSrc;
+  if (src && src.uid != null && e && e.hp > 0 && src.id !== "thunder_roc" && (src._impT24 || 0) <= B.t) {
+    src._impT24 = B.t + 0.12;
+    const d = PET[src.id] || {}, col = (d.fx && d.fx[src.shiny ? 1 : 0]) || ELEM_COL[d.el] || "#fff";
+    B.fx.push({ typ: "imp24", x: e.x, y: e.y - 18, color: col, sty: styleOf24(src.id), life: 0.32, max: 0.32, rot: Math.random() * 6 });
+  }
+  _hitEnemy24c(e, dmg, elem, o);
+};
+const _renderBattle24c = renderBattle;
+renderBattle = function () {
+  _renderBattle24c();
+  const c = ctx; if (!B || !B.fx) return;
+  for (const f of B.fx) if (f.typ === "imp24") {
+    const a = f.life / f.max, p = 1 - a;
+    c.globalAlpha = a; c.lineWidth = 3; c.strokeStyle = f.color; c.beginPath(); c.arc(f.x, f.y, 6 + p * 20, 0, TAU); c.stroke();
+    for (let i = 0; i < 4; i++) { const ang = f.rot + i * Math.PI / 2; styShape24(c, f.sty, f.x + Math.cos(ang) * p * 26, f.y + Math.sin(ang) * p * 26, 5 * (1 - p * 0.4), f.color, ang + p * 4); }
+    c.globalAlpha = 1;
+  }
+};
+
+/* ---------- v2.4 difficulty: rises faster mid/late and with the deployed team's power (waves 1-3 untouched) ---------- */
+function lineupPower24() { let s = 0; for (const t of (B && B.towers) || []) { const p = save.pets.find(q => q.uid === t.uid); if (p) s += petPower(p); } return s; }
+function diff24(n) {
+  if (n <= 5) return { hp: [0.62, 0.62, 0.7, 0.74, 0.84, 0.95][n] || 0.62, spd: 1 };
+  const curve = 1 + (n - 3) * 0.035 + Math.max(0, n - 10) * 0.03 + Math.max(0, n - 25) * 0.04;
+  const ref = 120 + n * 90, pf = clamp(Math.sqrt(lineupPower24() / ref), 1, 2.5);
+  return { hp: curve * pf, spd: 1 + Math.min(0.25, Math.max(0, n - 5) * 0.012) };
+}
+const _storySpec24 = storySpec;
+storySpec = function (map, n, hard) { const es = _storySpec24(map, n, hard); const d = diff24(n + ((map && map.off) | 0) * 0); es.hpMul = (es.hpMul || 1) * d.hp; es.spdMul = (es.spdMul || 1) * d.spd; return es; };
+const _endlessSpec24 = endlessSpec;
+endlessSpec = function (n) { const es = _endlessSpec24(n); const d = diff24(n); es.hpMul = (es.hpMul || 1) * d.hp; es.spdMul = (es.spdMul || 1) * d.spd; return es; };
+if (typeof window !== "undefined" && window.__v24) window.__v24.diff = (n) => diff24(n);
+
+/* ---------- v2.4 ranged / attacking slimes: bandit slingshot, thunder call, rock ram (telegraphed) ---------- */
+Object.assign(STR.zh, { ab_sling: "弹弓", ab_thunder: "召雷", ab_ram: "冲撞" });
+Object.assign(STR.en, { ab_sling: "Slingshot", ab_thunder: "Thunder Call", ab_ram: "Ram" });
+AB24.thief = ["sling", "dash"]; AB24.zap = ["thunder", "dash"]; AB24.pebble = ["harden", "ram"]; AB24.bossX = ["stealth", "heal", "thunder"];
+Object.assign(AB_CD, { sling: 3.2, thunder: 5.5, ram: 4.5 });
+Object.assign(AB_COL, { sling: "#ff5a5a", thunder: "#ffe14a", ram: "#c08a5a" });
+Object.assign(AB_IC, { sling: "🎯", thunder: "⚡", ram: "💢" });
+function pickTarget24(e, a) {
+  if (a === "ram") return nearPets(e, 120).sort((p, q) => dist(p.x, p.y, e.x, e.y) - dist(q.x, q.y, e.x, e.y))[0] || null;
+  const ps = nearPets(e, a === "thunder" ? 520 : 380); if (!ps.length) return null;
+  return ps.sort((p, q) => (p.hp / petStats(p).maxHp) - (q.hp / petStats(q).maxHp))[0];   // picks on the weakest pet
+}
+const _abExec24 = abExec;
+abExec = function (e, a) {
+  if (a !== "sling" && a !== "thunder" && a !== "ram") return _abExec24(e, a);
+  const t = e.tgt24; e.tgt24 = null;
+  if (!t || t.fainted || !B.towers.includes(t)) return;
+  const w = (B.wave | 0), base = (ENEMY[e.typ].atk || 8) * Math.sqrt(Math.max(1, e.max / (ENEMY[e.typ].hp || 1)));
+  if (a === "sling") {
+    B.fx.push({ typ: "peb24", x1: e.x, y1: e.y - 24, x2: t.x, y2: t.y - 40, life: 0.32, max: 0.32 });
+    setTimeout(() => { if (B.running && B.towers.includes(t) && !t.fainted) { hitPet(t, base * 1.3 + w * 0.8, e); burst(t.x, t.y - 40, "#b0a090", 6); } }, 320);
+  } else if (a === "thunder") {
+    B.fx.push({ typ: "bolt", x1: t.x + 10, y1: 0, x2: t.x, y2: t.y - 40, color: "#ffe14a", life: 0.3, max: 0.3, seed: Math.random() * 99 });
+    B.fx.push({ typ: "ring", x: t.x, y: t.y - 10, r0: 6, r1: 60, color: "#ffe14a", life: 0.35, max: 0.35 });
+    hitPet(t, base * 2.2 + w * 1.5, e); t.stunT = Math.max(t.stunT || 0, 0.4);
+    try { bumpShake(2); sfx.attack("thunder"); } catch (er) {}
+  } else {
+    e.dash24 = 0.25; hitPet(t, base * 1.6 + w, e); t.stunT = Math.max(t.stunT || 0, 0.3);
+    B.fx.push({ typ: "ring", x: t.x, y: t.y - 20, r0: 8, r1: 50, color: "#c08a5a", life: 0.3, max: 0.3 }); burst(t.x, t.y - 30, "#c08a5a", 10);
+  }
+};
+const _enemySkills24b = enemySkills;
+enemySkills = function (e, dt) {
+  // pick a target the moment a ranged attack starts its wind-up, so the aim line shows who is in danger
+  const before = e.teleA;
+  _enemySkills24b(e, dt);
+  if (e.teleA && e.teleA !== before && (e.teleA === "sling" || e.teleA === "thunder" || e.teleA === "ram")) {
+    e.tgt24 = pickTarget24(e, e.teleA);
+    if (!e.tgt24) { e.tele24 = 0; e.teleA = ""; } else e.tele24 = e.teleA === "thunder" ? 1.0 : e.teleA === "ram" ? 0.6 : 0.8;
+  }
+};
+const _renderBattle24d = renderBattle;
+renderBattle = function () {
+  _renderBattle24d();
+  const c = ctx; if (!B || !B.enemies) return;
+  for (const e of B.enemies) {
+    const t = e.tgt24; if (!(e.hp > 0 && e.tele24 > 0 && t)) continue;
+    const k = 0.5 + 0.5 * Math.sin(B.t * 28), col = AB_COL[e.teleA] || "#ff5a5a";
+    if (e.teleA === "thunder") { c.globalAlpha = 0.5 + 0.4 * k; c.lineWidth = 4; c.strokeStyle = "#ff3a3a"; c.beginPath(); c.ellipse(t.x, t.y + 2, 40, 14, 0, 0, TAU); c.stroke(); c.globalAlpha = 0.25; dot(c, t.x, t.y - 30, 40, "#ffe14a"); c.globalAlpha = 1; }
+    else { c.globalAlpha = 0.55 + 0.4 * k; c.setLineDash([10, 7]); c.lineWidth = 4; c.strokeStyle = col; c.beginPath(); c.moveTo(e.x, e.y - 20); c.lineTo(t.x, t.y - 40); c.stroke(); c.setLineDash([]);
+      c.lineWidth = 3; c.beginPath(); c.arc(t.x, t.y - 40, 16 + 4 * k, 0, TAU); c.stroke(); c.globalAlpha = 1; }
+  }
+  for (const f of B.fx) if (f.typ === "peb24") { const p = 1 - f.life / f.max; const x = lerp(f.x1, f.x2, p), y = lerp(f.y1, f.y2, p) - Math.sin(p * Math.PI) * 30; E(c, x, y, 6, 5, "#9a8a7a", { lw: 2, hl: false }); }
+};
+
+/* ---------- v2.4 mage frog polymorph + every boss summons its own themed minions ---------- */
+Object.assign(STR.zh, { ab_frog: "变青蛙", frog24: "{0} 被变成青蛙了！", ab_summonB: "召唤小弟" });
+Object.assign(STR.en, { ab_frog: "Frog Hex", frog24: "{0} got turned into a frog!", ab_summonB: "Summon Minions" });
+AB24.mage = ["summon", "frog"];
+AB24.boss1 = ["frost", "summonB"]; AB24.boss2 = ["harden", "slam", "summonB"]; AB24.boss3 = ["firetrail", "boom", "summonB"]; AB24.bossX = ["stealth", "heal", "thunder", "summonB"];
+Object.assign(AB_CD, { frog: 7, summonB: 8 }); Object.assign(AB_COL, { frog: "#6ad85a", summonB: "#b07aff" }); Object.assign(AB_IC, { frog: "🐸", summonB: "✦" });
+const BOSS_MINION = { boss1: "jelly", boss2: "pebble", boss3: "ember", bossX: "puff" };
+const _abExec24b = abExec;
+abExec = function (e, a) {
+  if (a === "frog") {
+    const t = e.tgt24; e.tgt24 = null;
+    if (!t || t.fainted || !B.towers.includes(t)) return;
+    t.frog24 = 4; B.fx.push({ typ: "frost", x1: e.x, y1: e.y - 30, x2: t.x, y2: t.y - 40, life: 0.35, max: 0.35 });
+    burst(t.x, t.y - 30, "#6ad85a", 16); B.fx.push({ typ: "ring", x: t.x, y: t.y - 20, r0: 8, r1: 60, color: "#6ad85a", life: 0.4, max: 0.4 });
+    showToast(tr("frog24", stageName(t.id, t.star)), 1.6); return;
+  }
+  if (a === "summonB") {
+    const kind = BOSS_MINION[e.typ] || "mini", hm = Math.max(0.6, (e.max / (ENEMY[e.typ].hp || 1)) * 0.45), n = (B.wave | 0) >= 15 ? 3 : 2;
+    for (let k = 0; k < n; k++) { spawnEnemy({ id: kind, hpMul: hm, spdMul: 1, minion: true }); const m = B.enemies[B.enemies.length - 1]; if (!m) continue; m.lane = e.lane; m.y = e.y + 14; m.x = e.x + (k - (n - 1) / 2) * 26; m.reward = 2; m.minion24 = true; }
+    B.fx.push({ typ: "ring", x: e.x, y: e.y + 30, r0: 10, r1: 110, color: "#b07aff", life: 0.5, max: 0.5 }); burst(e.x, e.y + 20, "#c89aff", 18);
+    return;
+  }
+  return _abExec24b(e, a);
+};
+const _enemySkills24c = enemySkills;
+enemySkills = function (e, dt) {
+  const before = e.teleA;
+  _enemySkills24c(e, dt);
+  if (e.teleA === "frog" && before !== "frog") { e.tgt24 = pickTarget24(e, "sling"); if (!e.tgt24) { e.tele24 = 0; e.teleA = ""; } else e.tele24 = 1.0; }
+  if (e.teleA === "summonB" && before !== "summonB") e.tele24 = 0.9;
+};
+const _fireTower24c = fireTower;
+fireTower = function (t, st) { if (t.frog24 > 0) return false; return _fireTower24c(t, st); };
+const _tickV22c = tickV22;
+tickV22 = function (dt) { _tickV22c(dt); if (B && B.towers) for (const t of B.towers) if (t.frog24 > 0) { t.frog24 = Math.max(0, t.frog24 - dt); if (!t.frog24) burst(t.x, t.y - 30, "#ffffff", 12); } };
+function drawFrog24(c, x, y, s) {
+  const hop = Math.abs(Math.sin(time * 5)) * 4;
+  c.save(); c.translate(x, y - hop);
+  ell(c, 0, hop + 2, 26 * s, 6 * s, "rgba(30,20,30,.25)");
+  E(c, 0, -18 * s, 28 * s, 20 * s, "#6ad85a", { lw: 3, hl: true });
+  for (const sg of [-1, 1]) { E(c, sg * 13 * s, -38 * s, 9 * s, 9 * s, "#6ad85a", { lw: 3, hl: false }); E(c, sg * 13 * s, -38 * s, 5 * s, 5 * s, "#ffffff", { lw: 0, hl: false }); dot(c, sg * 13 * s, -37 * s, 2.5 * s, OL);
+    E(c, sg * 22 * s, -4 * s, 9 * s, 5 * s, "#5cc04a", { lw: 2.5, hl: false }); }
+  c.strokeStyle = OL; c.lineWidth = 2.5; c.beginPath(); c.arc(0, -20 * s, 10 * s, 0.2, Math.PI - 0.2); c.stroke();
+  dot(c, -16 * s, -16 * s, 3 * s, "#ff9ab8"); dot(c, 16 * s, -16 * s, 3 * s, "#ff9ab8");
+  c.restore();
+}
+const _renderBattle24e = renderBattle;
+renderBattle = function () {
+  _renderBattle24e();
+  const c = ctx; if (!B || !B.towers) return;
+  for (const t of B.towers) if (t.frog24 > 0) drawFrog24(c, t.x, t.y + 4, 1.1);
+  for (const e of B.enemies) {
+    if (!(e.hp > 0 && e.tele24 > 0)) continue;
+    if (e.teleA === "summonB") { const sz = ENEMY[e.typ].size, gy = e.y + sz * 0.42, r = sz * 0.7;
+      c.save(); c.translate(e.x, gy); c.scale(1, 0.4); c.rotate(B.t * 3); c.globalAlpha = 0.85; c.lineWidth = 5; c.strokeStyle = "#b07aff";
+      c.beginPath(); c.arc(0, 0, r, 0, TAU); c.stroke(); c.beginPath(); starPath(c, 0, 0, r * 0.9, 5, 0.38); c.stroke(); c.restore(); c.globalAlpha = 1; }
+    if (e.teleA === "frog" && e.tgt24) { const t = e.tgt24, k = 0.5 + 0.5 * Math.sin(B.t * 26);
+      c.globalAlpha = 0.6 + 0.3 * k; c.setLineDash([4, 6]); c.lineWidth = 4; c.strokeStyle = "#6ad85a"; c.beginPath(); c.moveTo(e.x + 16, e.y - 40); c.lineTo(t.x, t.y - 40); c.stroke(); c.setLineDash([]);
+      spark(c, e.x + 16, e.y - 44, 6 + 4 * k, "#b6ff8a"); c.globalAlpha = 1; }
+  }
+};
+if (typeof window !== "undefined" && window.__v24) Object.assign(window.__v24, { frogFirst: () => { const t = B.towers[0]; if (t) t.frog24 = 4; return !!t; }, frogState: () => B.towers.map(t => t.frog24 || 0), BOSS_MINION });
+
+/* v2.4 gentle start: with only 1 life, slimes don't use attack abilities in waves 1-2 (bosses excepted) */
+const _enemySkillsGentle24 = enemySkills;
+enemySkills = function (e, dt) { if (B && B.wave <= 2 && !e.boss && !B.tut24) return; return _enemySkillsGentle24(e, dt); };
+
 /* ================= test / debug hooks ================= */
 window.__PETTD__ = {
   STR, PETS, LEVELS, ENEMY, SAVE_KEY, OLD_SAVE_KEY, SONG, endlessSpec, lootLevel, eggWeights, dropChance, shinyChance,
@@ -6806,7 +7878,7 @@ window.__PETTD__ = {
   getLang: () => LANG, setLang(l) { applyLang(l, true); },
   debugEnemies: () => B.enemies.map(e => ({ t: e.typ, x: Math.round(e.x), y: Math.round(e.y), hp: Math.round(e.hp), stun: e.stunT })),
   ready: () => assetsReady,
-  getSave: () => JSON.parse(JSON.stringify({ migratedV21: save.migratedV21, squad: save.squad, specialGot: save.specialGot, thiefKills: save.thiefKills, maps: save.maps, tutorialDone: save.tutorialDone, bgmVol: save.bgmVol, started: save.started, food: save.food, gems: save.gems, pets: save.pets, eggs: save.eggs, beaten: save.beaten, endlessBest: save.endlessBest, muted: save.muted, muteBgm: save.muteBgm, muteSfx: save.muteSfx, playerName: save.playerName, clientId: save.clientId, charms: save.charms, evoMain: save.evoMain, hatched: save.hatched, firstEgg: !!save.firstEgg, firstTreasureEggClaimed: !!save.firstTreasureEggClaimed, seenV23: !!save.seenV23 })),
+  getSave: () => JSON.parse(JSON.stringify({ migratedV21: save.migratedV21, squad: save.squad, specialGot: save.specialGot, thiefKills: save.thiefKills, maps: save.maps, tutorialDone: save.tutorialDone, bgmVol: save.bgmVol, started: save.started, food: save.food, gems: save.gems, pets: save.pets, eggs: save.eggs, beaten: save.beaten, endlessBest: save.endlessBest, muted: save.muted, muteBgm: save.muteBgm, muteSfx: save.muteSfx, playerName: save.playerName, clientId: save.clientId, charms: save.charms, evoMain: save.evoMain, hatched: save.hatched, firstEgg: !!save.firstEgg, v24: save.v24 || null, firstTreasureEggClaimed: !!save.firstTreasureEggClaimed, seenV23: !!save.seenV23 })),
   getBattle: () => ({ running: B.running, over: B.over, won: B.won, lives: B.lives, gold: B.gold, wave: B.wave, waveActive: B.waveActive,
     enemies: B.enemies.length, spawnQ: B.spawnQ.length, kills: B.kills, eggsGot: B.eggsGot.length, speed: B.speed, energy: B.energy, combo: B.combo || 0,
     towers: B.towers.map(t => ({ id: t.id, slot: t.slot, star: t.star, tier: t.tier, hp: t.hp, fainted: t.fainted })),
@@ -6925,7 +7997,7 @@ window.__PETTD__ = {
   }
 };
 
-try { bootV22(); bootV23(); if (save.started && !save.seenV23) setTimeout(function(){ showNewsModal(false); }, 600); } catch (e) {}
+try { bootV22(); bootV23(); bootV24(); } catch (e) {}
 })();
 </script>
 </body>
