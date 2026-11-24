@@ -32,6 +32,12 @@ copy_game() {
   # sprite atlases live in assets/ (not a subfolder)
   mkdir -p "$DEST/assets"
   cp -a "$SRC"/assets/atlas-*.webp "$DEST/assets/" 2>/dev/null || true
+  # Unapproved staged slime art must never be published (Carden, 2026-11-24)
+  for f in slime-bandit slime-wukong slime-ice; do rm -f "$DEST/assets/enemies/$f".*; done
+  # v2.7 held-back pets (redraw not approved yet): never publish their sprites
+  if [[ -f "$SRC/tools/v27/hide27.json" ]]; then
+    for id in $(python3 -c "import json,sys;print(' '.join(json.load(open(sys.argv[1]))))" "$SRC/tools/v27/hide27.json"); do rm -f "$DEST/assets/pets/$id"-*.webp; done
+  fi
   # Never publish raw source art or stray backups
   rm -rf "$DEST/assets"/raw*
   find "$DEST/assets" -maxdepth 1 -type d -name 'raw*' -exec rm -rf {} + 2>/dev/null || true
