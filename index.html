@@ -642,6 +642,11 @@
   }
   html.land .charm-wrap { grid-template-columns: minmax(300px, 1fr) 1.2fr; }
   html.land .evo-wrap { grid-template-columns: 170px 1fr; }
+  html.land .evo-head { padding: 6px 8px; }
+  html.land .evo-recipe { margin: 2px 0; }
+  html.land .evo-recipe .er-slot canvas { max-width: 76px; max-height: 76px; }
+  html.land .evo-btns { margin: 4px 0 2px; gap: 5px; }
+  html.land .evo-btns button { padding: 5px 10px !important; font-size: 13px !important; min-height: 32px !important; }
   html.land .grid3 { grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); }
   html.land .egg-grid { grid-template-columns: repeat(auto-fill, minmax(110px, 1fr)); }
   html.land .chain { grid-template-columns: repeat(5, 1fr); }
@@ -2285,19 +2290,48 @@ function charmPowerMul(p) {
   if (!c) return 1;
   return 1 + 0.06 + 0.04 * ((c.rar || 1) - 1);   // special charms (rar 4) count a bit more
 }
+const _pwrCache297 = typeof WeakMap === "function" ? new WeakMap() : null;
 function petPower(p) {
   if (!p || !PET[p.id]) return 0;
+  const t = p.tr, ta = (t && t.a) | 0, th = (t && t.h) | 0, ts = (t && t.s) | 0;
+  const star = p.star | 0, lv = p.lv | 0, apt = p.apt | 0, sh = p.shiny ? 1 : 0, ch = p.charm || "", tr = p.trait || "";
+  if (_pwrCache297) {
+    const c = _pwrCache297.get(p);
+    if (c && c.id === p.id && c.star === star && c.lv === lv && c.apt === apt && c.sh === sh && c.ch === ch && c.tr === tr && c.ta === ta && c.th === th && c.ts === ts) return c.val;
+  }
   const d = PET[p.id], m = indivMul(p);
-  const train = (p.tr && ((p.tr.a || 0) + (p.tr.h || 0) + (p.tr.s || 0))) || 0;
+  const train = ta + th + ts;
   const raw = 100 * starMul(d.rar, p.star) * 2.5 * rarPick(RAR_MUL, d.rar)
-    * m.base * (1 + 0.02 * train) * (p.shiny ? 1.08 : 1) * charmPowerMul(p) * perkPowerMul(p.lv | 0) * (p.trait ? 1.05 : 1);
-  return Math.max(1, Math.round(raw));
+    * m.base * (1 + 0.02 * train) * (sh ? 1.08 : 1) * charmPowerMul(p) * perkPowerMul(lv) * (tr ? 1.05 : 1);
+  const val = Math.max(1, Math.round(raw));
+  if (_pwrCache297) _pwrCache297.set(p, { id: p.id, star, lv, apt, sh, ch, tr, ta, th, ts, val });
+  return val;
+}
+function topPetsK(list, k) {
+  const out = [], pw = [];
+  if (!list || !list.length || k <= 0) return out;
+  for (let i = 0; i < list.length; i++) {
+    const p = list[i];
+    if (!p) continue;
+    const v = petPower(p);
+    if (out.length < k || v > pw[pw.length - 1]) {
+      let pos = out.length;
+      while (pos > 0 && pw[pos - 1] < v) pos--;
+      out.splice(pos, 0, p);
+      pw.splice(pos, 0, v);
+      if (out.length > k) { out.pop(); pw.pop(); }
+    }
+  }
+  return out;
 }
 function teamPower(list) {
-  return (list || []).slice().sort((a, b) => petPower(b) - petPower(a)).slice(0, 5).reduce((s, p) => s + petPower(p), 0);
+  const top = topPetsK(list, 5);
+  let s = 0;
+  for (let i = 0; i < top.length; i++) s += petPower(top[i]);
+  return s;
 }
 function topPetSummaries(list, n) {
-  return (list || []).slice().sort((a, b) => petPower(b) - petPower(a)).slice(0, n || 5).map(p => ({
+  return topPetsK(list, n || 5).map(p => ({
     species: p.id, star: p.star | 0, shiny: !!p.shiny, nickname: p.nick || "", power: petPower(p)
   }));
 }
@@ -2392,7 +2426,22 @@ const STR = {
     name_ok:"确定", name_shuffle:"换一个", name_later:"稍后再说", name_ph:"输入你的昵称", name_bad:"换个昵称再试试（1–20 个字，不要用符号）",
     name_edit:"改昵称", name_set:"设置昵称", name_lb_hint:"设个昵称才能上排行榜",
     newgame_title:"重新开始", newgame_confirm:"重新开始会清空这台设备上的当前进度（萌宠、宝石、波数都会被清掉）。确定要重新开始吗？",
-    newgame_yes:"清空并重开", newgame_no:"保留进度"
+    newgame_yes:"清空并重开", newgame_no:"保留进度",
+    evo_feed_all:"🍲 一键喂掉（{0} 只）", evo_feed_all_zero:"🍲 一键喂掉（0）",
+    evo_all_ready:"⚡ 一键升级全部（{0} 种）", evo_all_ready_zero:"⚡ 一键升级全部（0）",
+    evo_cf_title:"确认一键喂掉", evo_cf_one:"将把 {0} 只「{1}」复制体喂给主宠（进度 +{2}）。",
+    evo_cf_star:"主宠将从 {0}★ 升到 {1}★！", evo_cf_prog:"当前进度 {0}/{1} → {2}/{1}",
+    evo_cf_rare:"⚠️ 注意：该宠为「{0}」稀有度，请确认是否把同名复制体喂给主宠。",
+    evo_cf_all:"将升级 {0} 种可升星萌宠，共喂掉 {1} 只同名复制体。",
+    evo_cf_safe:"安全保护：出战队伍、锁定/收藏、异色、改过名、戴着挂件、更高资质 S 级以上、传说/神话/彩虹/限定宠，以及每种宠物的最后一只主宠都绝不会被一键消耗。",
+    evo_cf_go:"确认喂掉（{0} 只）", evo_cf_all_go:"确认升级全部（喂 {0} 只）",
+    evo_sum_title:"一键喂养完成", evo_sum_one:"已喂掉 {0} 只「{1}」复制体，进度 +{2}。",
+    evo_sum_all:"已升级 {0} 种萌宠，共消耗 {1} 只复制体。",
+    evo_sum_kept:"其余受保护的宠物已安全保留。",
+    show_more_n:"显示更多（还有 {0} 只）", show_all_n:"显示全部（共 {0} 只）",
+    v297_news_title:"萌宠防线 v2.9.7 更新",
+    v297_news_1:"宠物多也不卡：优化战力计算、列表分页、图鉴/进化索引与存档压缩",
+    v297_news_2:"进化界面新增「一键喂掉」和「一键升级全部」（带确认弹窗与安全保护）"
   },
   en: {
     game_title:"Pet Pals Defense", short_title:"Pet Pals", doc_title:"Pet Pals Defense — Catch · Hatch · Evolve", tagline:"Catch pets · Hatch & evolve · Battle endless slimes",
@@ -2475,7 +2524,22 @@ const STR = {
     name_ok:"Save", name_shuffle:"New idea", name_later:"Maybe later", name_ph:"Enter your name", name_bad:"Pick another name (1–20 characters, no symbols)",
     name_edit:"Edit name", name_set:"Set name", name_lb_hint:"Set a name to join the leaderboard",
     newgame_title:"New Game", newgame_confirm:"Starting a new game will erase the progress on this device (pets, gems, and waves). Are you sure?",
-    newgame_yes:"Erase and start over", newgame_no:"Keep my progress"
+    newgame_yes:"Erase and start over", newgame_no:"Keep my progress",
+    evo_feed_all:"🍲 Feed All ({0})", evo_feed_all_zero:"🍲 Feed All (0)",
+    evo_all_ready:"⚡ Upgrade All ({0})", evo_all_ready_zero:"⚡ Upgrade All (0)",
+    evo_cf_title:"Confirm Feed All", evo_cf_one:"Feed {0} duplicate(s) of {1} to your main pet (+{2} progress).",
+    evo_cf_star:"Main pet will star up: {0}★ → {1}★!", evo_cf_prog:"Progress: {0}/{1} → {2}/{1}",
+    evo_cf_rare:"⚠️ Note: This pet is {0} rarity. Please confirm feeding its duplicates.",
+    evo_cf_all:"Upgrade {0} ready species in one go, consuming {1} duplicate(s) total.",
+    evo_cf_safe:"Protected: active team, locked/favorited, shiny, nicknamed, charmed, higher-apt S+ copies, Gold/Mythic/Prismatic/Season pets, and the last copy of each species are never bulk-consumed.",
+    evo_cf_go:"Confirm Feed ({0})", evo_cf_all_go:"Upgrade All ({0} dupes)",
+    evo_sum_title:"Feed Complete", evo_sum_one:"Fed {0} duplicate(s) of {1} (+{2} progress).",
+    evo_sum_all:"Upgraded {0} species, consumed {1} duplicate(s).",
+    evo_sum_kept:"Protected pets were safely kept.",
+    show_more_n:"Show more (+{0})", show_all_n:"Show all ({0})",
+    v297_news_title:"Pet Pals Defense v2.9.7",
+    v297_news_1:"Smoother with thousands of pets: cached power/index, paged lists, and compact saves",
+    v297_news_2:"Evolution screen adds one-click Feed All and Upgrade All with confirmation & protection"
   }
 };
 /* ===== v13 strings: maps, hard mode, tutorial, training overhaul, volume ===== */
@@ -3043,13 +3107,13 @@ const PETS29_EN = {"capsule_chick":{"names":["Capsule Chick","Nutrient-Capsule C
 Object.assign(EN.pets, PETS29_EN);
 for (const id in PETS29_ZH) ZH.pets[id] = { names: PETS29_ZH[id].names.slice(), sk: PETS29_ZH[id].sk, skd: PETS29_ZH[id].skd, up: PETS29_ZH[id].up };
 /* auto-generated by tools/pack_atlas.py */
-const ATLAS_SHEETS = {"petsa":"assets/atlas-petsa.webp?v=2.9.6","petsb":"assets/atlas-petsb.webp?v=2.9.6","petsc":"assets/atlas-petsc.webp?v=2.9.6","petsd":"assets/atlas-petsd.webp?v=2.9.6","petse":"assets/atlas-petse.webp?v=2.9.6","petsf":"assets/atlas-petsf.webp?v=2.9.6","petsg":"assets/atlas-petsg.webp?v=2.9.6","mobs":"assets/atlas-mobs.webp?v=2.9.6"};
+const ATLAS_SHEETS = {"petsa":"assets/atlas-petsa.webp?v=2.9.7","petsb":"assets/atlas-petsb.webp?v=2.9.7","petsc":"assets/atlas-petsc.webp?v=2.9.7","petsd":"assets/atlas-petsd.webp?v=2.9.7","petse":"assets/atlas-petse.webp?v=2.9.7","petsf":"assets/atlas-petsf.webp?v=2.9.7","petsg":"assets/atlas-petsg.webp?v=2.9.7","mobs":"assets/atlas-mobs.webp?v=2.9.7"};
 const ATLAS_MAP = {"pets/chili-1":{"sheet":"petsa","x":2,"y":2,"w":217,"h":224},"pets/chili-1-s":{"sheet":"petsa","x":221,"y":2,"w":217,"h":224},"pets/chili-2":{"sheet":"petsa","x":440,"y":2,"w":220,"h":224},"pets/chili-2-s":{"sheet":"petsa","x":662,"y":2,"w":220,"h":224},"pets/chili-3":{"sheet":"petsa","x":884,"y":2,"w":220,"h":224},"pets/chili-3-s":{"sheet":"petsa","x":1106,"y":2,"w":220,"h":224},"pets/chili-4":{"sheet":"petsa","x":1328,"y":2,"w":215,"h":224},"pets/chili-4-s":{"sheet":"petsa","x":1545,"y":2,"w":215,"h":224},"pets/chestnut-1":{"sheet":"petsa","x":1762,"y":2,"w":223,"h":224},"pets/chestnut-1-s":{"sheet":"petsa","x":2,"y":228,"w":223,"h":224},"pets/chestnut-2":{"sheet":"petsa","x":227,"y":228,"w":215,"h":224},"pets/chestnut-2-s":{"sheet":"petsa","x":444,"y":228,"w":215,"h":224},"pets/chestnut-3":{"sheet":"petsa","x":661,"y":228,"w":217,"h":224},"pets/chestnut-3-s":{"sheet":"petsa","x":880,"y":228,"w":217,"h":224},"pets/berry-1":{"sheet":"petsa","x":1099,"y":228,"w":183,"h":224},"pets/berry-1-s":{"sheet":"petsa","x":1284,"y":228,"w":183,"h":224},"pets/berry-2":{"sheet":"petsa","x":1469,"y":228,"w":177,"h":224},"pets/berry-2-s":{"sheet":"petsa","x":1648,"y":228,"w":177,"h":224},"pets/berry-3":{"sheet":"petsa","x":1827,"y":228,"w":203,"h":224},"pets/berry-3-s":{"sheet":"petsa","x":2,"y":454,"w":203,"h":224},"pets/berry-4":{"sheet":"petsa","x":207,"y":454,"w":175,"h":224},"pets/berry-4-s":{"sheet":"petsa","x":384,"y":454,"w":175,"h":224},"pets/lychee-1":{"sheet":"petsa","x":561,"y":454,"w":219,"h":224},"pets/lychee-1-s":{"sheet":"petsa","x":782,"y":454,"w":219,"h":224},"pets/lychee-2":{"sheet":"petsa","x":1003,"y":454,"w":218,"h":224},"pets/lychee-2-s":{"sheet":"petsa","x":1223,"y":454,"w":218,"h":224},"pets/lychee-3":{"sheet":"petsa","x":1443,"y":454,"w":212,"h":224},"pets/lychee-3-s":{"sheet":"petsa","x":1657,"y":454,"w":212,"h":224},"pets/lychee-4":{"sheet":"petsa","x":2,"y":680,"w":209,"h":224},"pets/lychee-4-s":{"sheet":"petsa","x":213,"y":680,"w":209,"h":224},"pets/melon-2":{"sheet":"petsa","x":424,"y":680,"w":218,"h":224},"pets/melon-2-s":{"sheet":"petsa","x":644,"y":680,"w":218,"h":224},"pets/lemon-1":{"sheet":"petsa","x":864,"y":680,"w":195,"h":224},"pets/lemon-1-s":{"sheet":"petsa","x":1061,"y":680,"w":195,"h":224},"pets/lemon-2":{"sheet":"petsa","x":1258,"y":680,"w":192,"h":224},"pets/lemon-2-s":{"sheet":"petsa","x":1452,"y":680,"w":192,"h":224},"pets/lemon-3":{"sheet":"petsa","x":1646,"y":680,"w":189,"h":224},"pets/lemon-3-s":{"sheet":"petsa","x":1837,"y":680,"w":189,"h":224},"pets/lemon-4":{"sheet":"petsa","x":2,"y":906,"w":184,"h":224},"pets/lemon-4-s":{"sheet":"petsa","x":188,"y":906,"w":184,"h":224},"pets/coco-1":{"sheet":"petsa","x":374,"y":906,"w":181,"h":224},"pets/coco-1-s":{"sheet":"petsa","x":557,"y":906,"w":181,"h":224},"pets/coco-2":{"sheet":"petsa","x":740,"y":906,"w":180,"h":224},"pets/coco-2-s":{"sheet":"petsa","x":922,"y":906,"w":180,"h":224},"pets/coco-3":{"sheet":"petsa","x":1104,"y":906,"w":177,"h":224},"pets/coco-3-s":{"sheet":"petsa","x":1283,"y":906,"w":177,"h":224},"pets/coco-4":{"sheet":"petsa","x":1462,"y":906,"w":185,"h":224},"pets/coco-4-s":{"sheet":"petsa","x":1649,"y":906,"w":185,"h":224},"pets/taro-1":{"sheet":"petsa","x":1836,"y":906,"w":199,"h":224},"pets/taro-1-s":{"sheet":"petsa","x":2,"y":1132,"w":199,"h":224},"pets/taro-2":{"sheet":"petsa","x":203,"y":1132,"w":199,"h":224},"pets/taro-2-s":{"sheet":"petsa","x":404,"y":1132,"w":199,"h":224},"pets/taro-3":{"sheet":"petsa","x":605,"y":1132,"w":207,"h":224},"pets/taro-3-s":{"sheet":"petsa","x":814,"y":1132,"w":207,"h":224},"pets/taro-4":{"sheet":"petsa","x":1023,"y":1132,"w":212,"h":224},"pets/taro-4-s":{"sheet":"petsa","x":1237,"y":1132,"w":212,"h":224},"pets/peach-3":{"sheet":"petsa","x":1451,"y":1132,"w":218,"h":224},"pets/peach-3-s":{"sheet":"petsa","x":1671,"y":1132,"w":218,"h":224},"pets/peach-4":{"sheet":"petsa","x":2,"y":1358,"w":223,"h":224},"pets/peach-4-s":{"sheet":"petsa","x":227,"y":1358,"w":223,"h":224},"pets/blueberry-1":{"sheet":"petsa","x":452,"y":1358,"w":220,"h":224},"pets/blueberry-1-s":{"sheet":"petsa","x":674,"y":1358,"w":220,"h":224},"pets/blueberry-2":{"sheet":"petsa","x":896,"y":1358,"w":211,"h":224},"pets/blueberry-2-s":{"sheet":"petsa","x":1109,"y":1358,"w":211,"h":224},"pets/blueberry-3":{"sheet":"petsa","x":1322,"y":1358,"w":205,"h":224},"pets/blueberry-3-s":{"sheet":"petsa","x":1529,"y":1358,"w":205,"h":224},"pets/blueberry-4":{"sheet":"petsa","x":1736,"y":1358,"w":208,"h":224},"pets/blueberry-4-s":{"sheet":"petsa","x":2,"y":1584,"w":208,"h":224},"pets/pitaya-2":{"sheet":"petsa","x":212,"y":1584,"w":222,"h":224},"pets/pitaya-2-s":{"sheet":"petsa","x":436,"y":1584,"w":222,"h":224},"pets/kiwi-1":{"sheet":"petsa","x":660,"y":1584,"w":222,"h":224},"pets/kiwi-1-s":{"sheet":"petsa","x":884,"y":1584,"w":222,"h":224},"pets/kiwi-2":{"sheet":"petsa","x":1108,"y":1584,"w":202,"h":224},"pets/kiwi-2-s":{"sheet":"petsa","x":1312,"y":1584,"w":202,"h":224},"pets/kiwi-3":{"sheet":"petsa","x":1516,"y":1584,"w":182,"h":224},"pets/kiwi-3-s":{"sheet":"petsa","x":1700,"y":1584,"w":182,"h":224},"pets/kiwi-4":{"sheet":"petsa","x":2,"y":1810,"w":174,"h":224},"pets/kiwi-4-s":{"sheet":"petsa","x":178,"y":1810,"w":174,"h":224},"pets/grape-1":{"sheet":"petsa","x":354,"y":1810,"w":222,"h":224},"pets/grape-1-s":{"sheet":"petsa","x":578,"y":1810,"w":222,"h":224},"pets/grape-2":{"sheet":"petsa","x":802,"y":1810,"w":213,"h":224},"pets/grape-2-s":{"sheet":"petsa","x":1017,"y":1810,"w":213,"h":224},"pets/grape-3":{"sheet":"petsa","x":1232,"y":1810,"w":212,"h":224},"pets/grape-3-s":{"sheet":"petsa","x":1446,"y":1810,"w":212,"h":224},"pets/grape-4":{"sheet":"petsa","x":1660,"y":1810,"w":205,"h":224},"pets/grape-4-s":{"sheet":"petsb","x":2,"y":2,"w":205,"h":224},"pets/banana-1":{"sheet":"petsb","x":209,"y":2,"w":215,"h":224},"pets/banana-1-s":{"sheet":"petsb","x":426,"y":2,"w":215,"h":224},"pets/banana-2":{"sheet":"petsb","x":643,"y":2,"w":217,"h":224},"pets/banana-2-s":{"sheet":"petsb","x":862,"y":2,"w":217,"h":224},"pets/banana-3":{"sheet":"petsb","x":1081,"y":2,"w":217,"h":224},"pets/banana-3-s":{"sheet":"petsb","x":1300,"y":2,"w":217,"h":224},"pets/banana-4":{"sheet":"petsb","x":1519,"y":2,"w":220,"h":224},"pets/banana-4-s":{"sheet":"petsb","x":1741,"y":2,"w":220,"h":224},"pets/snowpear-3":{"sheet":"petsb","x":2,"y":228,"w":223,"h":224},"pets/snowpear-3-s":{"sheet":"petsb","x":227,"y":228,"w":223,"h":224},"pets/snowpear-4":{"sheet":"petsb","x":452,"y":228,"w":222,"h":224},"pets/snowpear-4-s":{"sheet":"petsb","x":676,"y":228,"w":222,"h":224},"pets/hen-3":{"sheet":"petsb","x":900,"y":228,"w":206,"h":224},"pets/hen-3-s":{"sheet":"petsb","x":1108,"y":228,"w":206,"h":224},"pets/hen-4":{"sheet":"petsb","x":1316,"y":228,"w":215,"h":224},"pets/hen-4-s":{"sheet":"petsb","x":1533,"y":228,"w":215,"h":224},"pets/chomp-1":{"sheet":"petsb","x":1750,"y":228,"w":217,"h":224},"pets/chomp-1-s":{"sheet":"petsb","x":2,"y":454,"w":217,"h":224},"pets/chomp-2":{"sheet":"petsb","x":221,"y":454,"w":220,"h":224},"pets/chomp-2-s":{"sheet":"petsb","x":443,"y":454,"w":220,"h":224},"pets/durian-2":{"sheet":"petsb","x":665,"y":454,"w":214,"h":224},"pets/durian-2-s":{"sheet":"petsb","x":881,"y":454,"w":214,"h":224},"pets/boba_hamster-1":{"sheet":"petsb","x":1097,"y":454,"w":211,"h":224},"pets/boba_hamster-1-s":{"sheet":"petsb","x":1310,"y":454,"w":211,"h":224},"pets/lychee_bunny-1":{"sheet":"petsb","x":1523,"y":454,"w":202,"h":224},"pets/lychee_bunny-1-s":{"sheet":"petsb","x":1727,"y":454,"w":202,"h":224},"pets/blueberry_penguin-1":{"sheet":"petsb","x":2,"y":680,"w":214,"h":224},"pets/blueberry_penguin-1-s":{"sheet":"petsb","x":218,"y":680,"w":214,"h":224},"pets/mango_dragon-1":{"sheet":"petsb","x":434,"y":680,"w":219,"h":224},"pets/mango_dragon-1-s":{"sheet":"petsb","x":655,"y":680,"w":219,"h":224},"pets/dragonfruit_dino-1":{"sheet":"petsb","x":876,"y":680,"w":209,"h":224},"pets/dragonfruit_dino-1-s":{"sheet":"petsb","x":1087,"y":680,"w":209,"h":224},"pets/chili_phoenix-1":{"sheet":"petsb","x":1298,"y":680,"w":197,"h":224},"pets/chili_phoenix-1-s":{"sheet":"petsb","x":1497,"y":680,"w":197,"h":224},"pets/avocado_sloth-1":{"sheet":"petsb","x":1696,"y":680,"w":199,"h":224},"pets/avocado_sloth-1-s":{"sheet":"petsb","x":2,"y":906,"w":199,"h":224},"pets/berry_sparrow-1":{"sheet":"petsb","x":203,"y":906,"w":217,"h":224},"pets/berry_sparrow-1-s":{"sheet":"petsb","x":422,"y":906,"w":217,"h":224},"pets/citrus_raccoon-1":{"sheet":"petsb","x":641,"y":906,"w":217,"h":224},"pets/citrus_raccoon-1-s":{"sheet":"petsb","x":860,"y":906,"w":217,"h":224},"pets/corn_hamster-1":{"sheet":"petsb","x":1079,"y":906,"w":208,"h":224},"pets/corn_hamster-1-s":{"sheet":"petsb","x":1289,"y":906,"w":208,"h":224},"pets/fig_beetle-1":{"sheet":"petsb","x":1499,"y":906,"w":207,"h":224},"pets/fig_beetle-1-s":{"sheet":"petsb","x":1708,"y":906,"w":207,"h":224},"pets/golden_fig_stag-1":{"sheet":"petsb","x":2,"y":1132,"w":216,"h":224},"pets/golden_fig_stag-1-s":{"sheet":"petsb","x":220,"y":1132,"w":216,"h":224},"pets/grape_chick-1":{"sheet":"petsb","x":438,"y":1132,"w":216,"h":224},"pets/grape_chick-1-s":{"sheet":"petsb","x":656,"y":1132,"w":216,"h":224},"pets/hibiscus_mantis-1":{"sheet":"petsb","x":874,"y":1132,"w":222,"h":224},"pets/hibiscus_mantis-1-s":{"sheet":"petsb","x":1098,"y":1132,"w":222,"h":224},"pets/honeycomb_valkyrie_bee-1":{"sheet":"petsb","x":1322,"y":1132,"w":223,"h":224},"pets/honeycomb_valkyrie_bee-1-s":{"sheet":"petsb","x":1547,"y":1132,"w":223,"h":224},"pets/honeydew_frog-1":{"sheet":"petsb","x":1772,"y":1132,"w":222,"h":224},"pets/honeydew_frog-1-s":{"sheet":"petsb","x":2,"y":1358,"w":222,"h":224},"pets/inferno_durian_behemoth-1":{"sheet":"petsb","x":226,"y":1358,"w":215,"h":224},"pets/inferno_durian_behemoth-1-s":{"sheet":"petsb","x":443,"y":1358,"w":215,"h":224},"pets/matcha_crane-1":{"sheet":"petsb","x":660,"y":1358,"w":217,"h":224},"pets/matcha_crane-1-s":{"sheet":"petsb","x":879,"y":1358,"w":217,"h":224},"pets/melon_chick-1":{"sheet":"petsb","x":1098,"y":1358,"w":217,"h":224},"pets/melon_chick-1-s":{"sheet":"petsb","x":1317,"y":1358,"w":217,"h":224},"pets/oat_sparrow-1":{"sheet":"petsb","x":1536,"y":1358,"w":222,"h":224},"pets/oat_sparrow-1-s":{"sheet":"petsb","x":1760,"y":1358,"w":222,"h":224},"pets/obsidian_plum_golem-1":{"sheet":"petsb","x":2,"y":1584,"w":221,"h":224},"pets/obsidian_plum_golem-1-s":{"sheet":"petsb","x":225,"y":1584,"w":221,"h":224},"pets/pea_frog-1":{"sheet":"petsb","x":448,"y":1584,"w":220,"h":224},"pets/pea_frog-1-s":{"sheet":"petsb","x":670,"y":1584,"w":220,"h":224},"pets/peach_alpaca-1":{"sheet":"petsb","x":892,"y":1584,"w":214,"h":224},"pets/peach_alpaca-1-s":{"sheet":"petsb","x":1108,"y":1584,"w":214,"h":224},"pets/pineapple_hedgehog-1":{"sheet":"petsb","x":1324,"y":1584,"w":209,"h":224},"pets/pineapple_hedgehog-1-s":{"sheet":"petsb","x":1535,"y":1584,"w":209,"h":224},"pets/pistachio_knight_beetle-1":{"sheet":"petsb","x":1746,"y":1584,"w":205,"h":224},"pets/pistachio_knight_beetle-1-s":{"sheet":"petsb","x":2,"y":1810,"w":205,"h":224},"pets/radish_pup-1":{"sheet":"petsb","x":209,"y":1810,"w":189,"h":224},"pets/radish_pup-1-s":{"sheet":"petsb","x":400,"y":1810,"w":189,"h":224},"pets/rambutan_porcupine-1":{"sheet":"petsb","x":591,"y":1810,"w":205,"h":224},"pets/rambutan_porcupine-1-s":{"sheet":"petsb","x":798,"y":1810,"w":205,"h":224},"pets/ruby_cherry_phoenix-1":{"sheet":"petsb","x":1005,"y":1810,"w":220,"h":224},"pets/ruby_cherry_phoenix-1-s":{"sheet":"petsb","x":1227,"y":1810,"w":220,"h":224},"pets/truffle_boar-1":{"sheet":"petsb","x":1449,"y":1810,"w":219,"h":224},"pets/truffle_boar-1-s":{"sheet":"petsb","x":1670,"y":1810,"w":219,"h":224},"pets/vanilla_swan-1":{"sheet":"petsc","x":2,"y":2,"w":215,"h":224},"pets/vanilla_swan-1-s":{"sheet":"petsc","x":219,"y":2,"w":215,"h":224},"pets/yuzu_otter-1":{"sheet":"petsc","x":436,"y":2,"w":217,"h":224},"pets/yuzu_otter-1-s":{"sheet":"petsc","x":655,"y":2,"w":217,"h":224},"pets/eggtart_puffin-1":{"sheet":"petsc","x":874,"y":2,"w":211,"h":224},"pets/eggtart_puffin-1-s":{"sheet":"petsc","x":1087,"y":2,"w":211,"h":224},"pets/loquat_fawn-1":{"sheet":"petsc","x":1300,"y":2,"w":209,"h":224},"pets/loquat_fawn-1-s":{"sheet":"petsc","x":1511,"y":2,"w":209,"h":224},"pets/tanghulu_ladybug-1":{"sheet":"petsc","x":1722,"y":2,"w":208,"h":224},"pets/tanghulu_ladybug-1-s":{"sheet":"petsc","x":2,"y":228,"w":208,"h":224},"pets/soymilk_guineapig-1":{"sheet":"petsc","x":212,"y":228,"w":223,"h":224},"pets/soymilk_guineapig-1-s":{"sheet":"petsc","x":437,"y":228,"w":223,"h":224},"pets/waxapple_loris-1":{"sheet":"petsc","x":662,"y":228,"w":194,"h":224},"pets/waxapple_loris-1-s":{"sheet":"petsc","x":858,"y":228,"w":194,"h":224},"pets/sago_jellyfish-1":{"sheet":"petsc","x":1054,"y":228,"w":223,"h":224},"pets/sago_jellyfish-1-s":{"sheet":"petsc","x":1279,"y":228,"w":223,"h":224},"pets/cottoncandy_llama-1":{"sheet":"petsc","x":1504,"y":228,"w":208,"h":224},"pets/cottoncandy_llama-1-s":{"sheet":"petsc","x":1714,"y":228,"w":208,"h":224},"pets/longan_quail-1":{"sheet":"petsc","x":2,"y":454,"w":195,"h":224},"pets/longan_quail-1-s":{"sheet":"petsc","x":199,"y":454,"w":195,"h":224},"pets/mungbean_goat-1":{"sheet":"petsc","x":396,"y":454,"w":196,"h":224},"pets/mungbean_goat-1-s":{"sheet":"petsc","x":594,"y":454,"w":196,"h":224},"pets/sugarcane_donkey-1":{"sheet":"petsc","x":792,"y":454,"w":184,"h":224},"pets/sugarcane_donkey-1-s":{"sheet":"petsc","x":978,"y":454,"w":184,"h":224},"pets/wintermelon_manatee-1":{"sheet":"petsc","x":1164,"y":454,"w":217,"h":224},"pets/wintermelon_manatee-1-s":{"sheet":"petsc","x":1383,"y":454,"w":217,"h":224},"pets/guava_meerkat-1":{"sheet":"petsc","x":1602,"y":454,"w":223,"h":224},"pets/guava_meerkat-1-s":{"sheet":"petsc","x":2,"y":680,"w":223,"h":224},"pets/shaobing_yak-1":{"sheet":"petsc","x":227,"y":680,"w":199,"h":224},"pets/shaobing_yak-1-s":{"sheet":"petsc","x":428,"y":680,"w":199,"h":224},"pets/lime_pika-1":{"sheet":"petsc","x":629,"y":680,"w":211,"h":224},"pets/lime_pika-1-s":{"sheet":"petsc","x":842,"y":680,"w":211,"h":224},"pets/jianbing_quokka-1":{"sheet":"petsc","x":1055,"y":680,"w":214,"h":224},"pets/jianbing_quokka-1-s":{"sheet":"petsc","x":1271,"y":680,"w":214,"h":224},"pets/raspberry_lovebird-1":{"sheet":"petsc","x":1487,"y":680,"w":222,"h":224},"pets/raspberry_lovebird-1-s":{"sheet":"petsc","x":1711,"y":680,"w":222,"h":224},"pets/wonton_dugong-1":{"sheet":"petsc","x":2,"y":906,"w":201,"h":224},"pets/wonton_dugong-1-s":{"sheet":"petsc","x":205,"y":906,"w":201,"h":224},"pets/jiaozi_hyrax-1":{"sheet":"petsc","x":408,"y":906,"w":217,"h":224},"pets/jiaozi_hyrax-1-s":{"sheet":"petsc","x":627,"y":906,"w":217,"h":224},"pets/shaomai_seahorse-1":{"sheet":"petsc","x":846,"y":906,"w":214,"h":224},"pets/shaomai_seahorse-1-s":{"sheet":"petsc","x":1062,"y":906,"w":214,"h":224},"pets/liangpi_cicada-1":{"sheet":"petsc","x":1278,"y":906,"w":193,"h":224},"pets/liangpi_cicada-1-s":{"sheet":"petsc","x":1473,"y":906,"w":193,"h":224},"pets/haishen_camel-1":{"sheet":"petsc","x":1668,"y":906,"w":217,"h":224},"pets/haishen_camel-1-s":{"sheet":"petsc","x":2,"y":1132,"w":217,"h":224},"pets/bingfen_mola-1":{"sheet":"petsc","x":221,"y":1132,"w":187,"h":224},"pets/bingfen_mola-1-s":{"sheet":"petsc","x":410,"y":1132,"w":187,"h":224},"pets/erkuai_zebra-1":{"sheet":"petsc","x":599,"y":1132,"w":219,"h":224},"pets/erkuai_zebra-1-s":{"sheet":"petsc","x":820,"y":1132,"w":219,"h":224},"pets/ginkgo_dodo-1":{"sheet":"petsc","x":1041,"y":1132,"w":204,"h":224},"pets/ginkgo_dodo-1-s":{"sheet":"petsc","x":1247,"y":1132,"w":204,"h":224},"pets/shengjian_takin-1":{"sheet":"petsc","x":1453,"y":1132,"w":218,"h":224},"pets/shengjian_takin-1-s":{"sheet":"petsc","x":1673,"y":1132,"w":218,"h":224},"pets/guazi_skunk-1":{"sheet":"petsc","x":2,"y":1358,"w":208,"h":224},"pets/guazi_skunk-1-s":{"sheet":"petsc","x":212,"y":1358,"w":208,"h":224},"pets/aiwowo_myna-1":{"sheet":"petsc","x":422,"y":1358,"w":221,"h":224},"pets/aiwowo_myna-1-s":{"sheet":"petsc","x":645,"y":1358,"w":221,"h":224},"pets/laopobing_okapi-1":{"sheet":"petsc","x":868,"y":1358,"w":210,"h":224},"pets/laopobing_okapi-1-s":{"sheet":"petsc","x":1080,"y":1358,"w":210,"h":224},"pets/mahua_moose-1":{"sheet":"petsc","x":1292,"y":1358,"w":205,"h":224},"pets/mahua_moose-1-s":{"sheet":"petsc","x":1499,"y":1358,"w":205,"h":224},"pets/ganlan_agouti-1":{"sheet":"petsc","x":1706,"y":1358,"w":210,"h":224},"pets/ganlan_agouti-1-s":{"sheet":"petsc","x":2,"y":1584,"w":210,"h":224},"pets/wampee_tamarin-1":{"sheet":"petsc","x":214,"y":1584,"w":214,"h":224},"pets/wampee_tamarin-1-s":{"sheet":"petsc","x":430,"y":1584,"w":214,"h":224},"pets/durian-1":{"sheet":"petsc","x":646,"y":1584,"w":224,"h":223},"pets/durian-1-s":{"sheet":"petsc","x":872,"y":1584,"w":224,"h":223},"pets/cherry_fox-1":{"sheet":"petsc","x":1098,"y":1584,"w":224,"h":223},"pets/cherry_fox-1-s":{"sheet":"petsc","x":1324,"y":1584,"w":224,"h":223},"pets/mint_rabbit-1":{"sheet":"petsc","x":1550,"y":1584,"w":224,"h":223},"pets/mint_rabbit-1-s":{"sheet":"petsc","x":1776,"y":1584,"w":224,"h":223},"pets/niangao_goose-1":{"sheet":"petsc","x":2,"y":1810,"w":224,"h":223},"pets/niangao_goose-1-s":{"sheet":"petsc","x":228,"y":1810,"w":224,"h":223},"pets/longxu_firefly-1":{"sheet":"petsc","x":454,"y":1810,"w":224,"h":223},"pets/longxu_firefly-1-s":{"sheet":"petsc","x":680,"y":1810,"w":224,"h":223},"pets/springroll_sable-1":{"sheet":"petsc","x":906,"y":1810,"w":224,"h":223},"pets/springroll_sable-1-s":{"sheet":"petsc","x":1132,"y":1810,"w":224,"h":223},"pets/millet_samoyed-1":{"sheet":"petsc","x":1358,"y":1810,"w":224,"h":223},"pets/millet_samoyed-1-s":{"sheet":"petsc","x":1584,"y":1810,"w":224,"h":223},"pets/melon-4":{"sheet":"petsc","x":1810,"y":1810,"w":224,"h":222},"pets/melon-4-s":{"sheet":"petsd","x":2,"y":2,"w":224,"h":222},"pets/shavedice_starfish-1":{"sheet":"petsd","x":228,"y":2,"w":224,"h":222},"pets/shavedice_starfish-1-s":{"sheet":"petsd","x":454,"y":2,"w":224,"h":222},"pets/cucumber_axolotl-1":{"sheet":"petsd","x":680,"y":2,"w":224,"h":222},"pets/cucumber_axolotl-1-s":{"sheet":"petsd","x":906,"y":2,"w":224,"h":222},"pets/qingtuan_kingfisher-1":{"sheet":"petsd","x":1132,"y":2,"w":224,"h":222},"pets/qingtuan_kingfisher-1-s":{"sheet":"petsd","x":1358,"y":2,"w":224,"h":222},"pets/starfruit_owl-1":{"sheet":"petsd","x":1584,"y":2,"w":224,"h":221},"pets/starfruit_owl-1-s":{"sheet":"petsd","x":1810,"y":2,"w":224,"h":221},"pets/lava_berry_wyvern-1":{"sheet":"petsd","x":2,"y":226,"w":224,"h":221},"pets/lava_berry_wyvern-1-s":{"sheet":"petsd","x":228,"y":226,"w":224,"h":221},"pets/taro_octopus-1":{"sheet":"petsd","x":454,"y":226,"w":224,"h":221},"pets/taro_octopus-1-s":{"sheet":"petsd","x":680,"y":226,"w":224,"h":221},"pets/goji_jerboa-1":{"sheet":"petsd","x":906,"y":226,"w":224,"h":221},"pets/goji_jerboa-1-s":{"sheet":"petsd","x":1132,"y":226,"w":224,"h":221},"pets/lilybulb_ptarmigan-1":{"sheet":"petsd","x":1358,"y":226,"w":224,"h":221},"pets/lilybulb_ptarmigan-1-s":{"sheet":"petsd","x":1584,"y":226,"w":224,"h":221},"pets/chestnut-4":{"sheet":"petsd","x":1810,"y":226,"w":224,"h":220},"pets/chestnut-4-s":{"sheet":"petsd","x":2,"y":449,"w":224,"h":220},"pets/strawberry_cat-1":{"sheet":"petsd","x":228,"y":449,"w":224,"h":220},"pets/strawberry_cat-1-s":{"sheet":"petsd","x":454,"y":449,"w":224,"h":220},"pets/pear_duck-1":{"sheet":"petsd","x":680,"y":449,"w":224,"h":220},"pets/pear_duck-1-s":{"sheet":"petsd","x":906,"y":449,"w":224,"h":220},"pets/huamei_gerbil-1":{"sheet":"petsd","x":1132,"y":449,"w":224,"h":220},"pets/huamei_gerbil-1-s":{"sheet":"petsd","x":1358,"y":449,"w":224,"h":220},"pets/fagao_tapir-1":{"sheet":"petsd","x":1584,"y":449,"w":224,"h":219},"pets/fagao_tapir-1-s":{"sheet":"petsd","x":1810,"y":449,"w":224,"h":219},"pets/xianhuabing_flamingo-1":{"sheet":"petsd","x":2,"y":671,"w":224,"h":219},"pets/xianhuabing_flamingo-1-s":{"sheet":"petsd","x":228,"y":671,"w":224,"h":219},"pets/mango-1":{"sheet":"petsd","x":454,"y":671,"w":224,"h":218},"pets/mango-1-s":{"sheet":"petsd","x":680,"y":671,"w":224,"h":218},"pets/blackberry_wolf-1":{"sheet":"petsd","x":906,"y":671,"w":224,"h":218},"pets/blackberry_wolf-1-s":{"sheet":"petsd","x":1132,"y":671,"w":224,"h":218},"pets/plum_squirrel-1":{"sheet":"petsd","x":1358,"y":671,"w":224,"h":218},"pets/plum_squirrel-1-s":{"sheet":"petsd","x":1584,"y":671,"w":224,"h":218},"pets/custardbun_joey-1":{"sheet":"petsd","x":1810,"y":671,"w":224,"h":218},"pets/custardbun_joey-1-s":{"sheet":"petsd","x":2,"y":892,"w":224,"h":218},"pets/eggwaffle_chinchilla-1":{"sheet":"petsd","x":228,"y":892,"w":224,"h":218},"pets/eggwaffle_chinchilla-1-s":{"sheet":"petsd","x":454,"y":892,"w":224,"h":218},"pets/osmanthus_koala-1":{"sheet":"petsd","x":680,"y":892,"w":224,"h":218},"pets/osmanthus_koala-1-s":{"sheet":"petsd","x":906,"y":892,"w":224,"h":218},"pets/mango-3":{"sheet":"petsd","x":1132,"y":892,"w":224,"h":217},"pets/mango-3-s":{"sheet":"petsd","x":1358,"y":892,"w":224,"h":217},"pets/orange_otter-1":{"sheet":"petsd","x":1584,"y":892,"w":224,"h":217},"pets/orange_otter-1-s":{"sheet":"petsd","x":1810,"y":892,"w":224,"h":217},"pets/saffron_griffin-1":{"sheet":"petsd","x":2,"y":1112,"w":224,"h":217},"pets/saffron_griffin-1-s":{"sheet":"petsd","x":228,"y":1112,"w":224,"h":217},"pets/sun_mango_falcon-1":{"sheet":"petsd","x":454,"y":1112,"w":224,"h":217},"pets/sun_mango_falcon-1-s":{"sheet":"petsd","x":680,"y":1112,"w":224,"h":217},"pets/tofu_pigeon-1":{"sheet":"petsd","x":906,"y":1112,"w":224,"h":217},"pets/tofu_pigeon-1-s":{"sheet":"petsd","x":1132,"y":1112,"w":224,"h":217},"pets/babao_redpanda-1":{"sheet":"petsd","x":1358,"y":1112,"w":224,"h":217},"pets/babao_redpanda-1-s":{"sheet":"petsd","x":1584,"y":1112,"w":224,"h":217},"pets/abalone_oriole-1":{"sheet":"petsd","x":1810,"y":1112,"w":224,"h":217},"pets/abalone_oriole-1-s":{"sheet":"petsd","x":2,"y":1331,"w":224,"h":217},"pets/malagao_macaw-1":{"sheet":"petsd","x":228,"y":1331,"w":224,"h":217},"pets/malagao_macaw-1-s":{"sheet":"petsd","x":454,"y":1331,"w":224,"h":217},"pets/lvdagun_peccary-1":{"sheet":"petsd","x":680,"y":1331,"w":224,"h":217},"pets/lvdagun_peccary-1-s":{"sheet":"petsd","x":906,"y":1331,"w":224,"h":217},"pets/blood_orange_cerberus-1":{"sheet":"petsd","x":1132,"y":1331,"w":224,"h":216},"pets/blood_orange_cerberus-1-s":{"sheet":"petsd","x":1358,"y":1331,"w":224,"h":216},"pets/cheungfun_pillbug-1":{"sheet":"petsd","x":1584,"y":1331,"w":224,"h":216},"pets/cheungfun_pillbug-1-s":{"sheet":"petsd","x":1810,"y":1331,"w":224,"h":216},"pets/snowpear-1":{"sheet":"petsd","x":2,"y":1550,"w":224,"h":215},"pets/snowpear-1-s":{"sheet":"petsd","x":228,"y":1550,"w":224,"h":215},"pets/lemon_bee-1":{"sheet":"petsd","x":454,"y":1550,"w":224,"h":215},"pets/lemon_bee-1-s":{"sheet":"petsd","x":680,"y":1550,"w":224,"h":215},"pets/cinnamon_owl-1":{"sheet":"petsd","x":906,"y":1550,"w":224,"h":215},"pets/cinnamon_owl-1-s":{"sheet":"petsd","x":1132,"y":1550,"w":224,"h":215},"pets/chomp-3":{"sheet":"petsd","x":1358,"y":1550,"w":224,"h":214},"pets/chomp-3-s":{"sheet":"petsd","x":1584,"y":1550,"w":224,"h":214},"pets/thunder_roc-1":{"sheet":"petsd","x":1810,"y":1550,"w":224,"h":214},"pets/thunder_roc-1-s":{"sheet":"petsd","x":2,"y":1767,"w":224,"h":214},"pets/ginger_cat-1":{"sheet":"petsd","x":228,"y":1767,"w":224,"h":214},"pets/ginger_cat-1-s":{"sheet":"petsd","x":454,"y":1767,"w":224,"h":214},"pets/eggplant_anteater-1":{"sheet":"petsd","x":680,"y":1767,"w":224,"h":214},"pets/eggplant_anteater-1-s":{"sheet":"petsd","x":906,"y":1767,"w":224,"h":214},"pets/peach-2":{"sheet":"petsd","x":1132,"y":1767,"w":224,"h":213},"pets/peach-2-s":{"sheet":"petsd","x":1358,"y":1767,"w":224,"h":213},"pets/pitaya-3":{"sheet":"petsd","x":1584,"y":1767,"w":224,"h":213},"pets/pitaya-3-s":{"sheet":"petsd","x":1810,"y":1767,"w":224,"h":213},"pets/mango-2":{"sheet":"petse","x":2,"y":2,"w":224,"h":213},"pets/mango-2-s":{"sheet":"petse","x":228,"y":2,"w":224,"h":213},"pets/mango-4":{"sheet":"petse","x":454,"y":2,"w":224,"h":213},"pets/mango-4-s":{"sheet":"petse","x":680,"y":2,"w":224,"h":213},"pets/matcha_turtle-1":{"sheet":"petse","x":906,"y":2,"w":224,"h":213},"pets/matcha_turtle-1-s":{"sheet":"petse","x":1132,"y":2,"w":224,"h":213},"pets/huajuan_chowchow-1":{"sheet":"petse","x":1358,"y":2,"w":224,"h":213},"pets/huajuan_chowchow-1-s":{"sheet":"petse","x":1584,"y":2,"w":224,"h":213},"pets/snowpear-2":{"sheet":"petse","x":1810,"y":2,"w":224,"h":212},"pets/snowpear-2-s":{"sheet":"petse","x":2,"y":217,"w":224,"h":212},"pets/waffle_bear-1":{"sheet":"petse","x":228,"y":217,"w":224,"h":212},"pets/waffle_bear-1-s":{"sheet":"petse","x":454,"y":217,"w":224,"h":212},"pets/durian-4":{"sheet":"petse","x":680,"y":217,"w":224,"h":211},"pets/durian-4-s":{"sheet":"petse","x":906,"y":217,"w":224,"h":211},"pets/croissant_corgi-1":{"sheet":"petse","x":1132,"y":217,"w":224,"h":211},"pets/croissant_corgi-1-s":{"sheet":"petse","x":1358,"y":217,"w":224,"h":211},"pets/pomegranate_lion-1":{"sheet":"petse","x":1584,"y":217,"w":224,"h":211},"pets/pomegranate_lion-1-s":{"sheet":"petse","x":1810,"y":217,"w":224,"h":211},"pets/enoki_hummingbird-1":{"sheet":"petse","x":2,"y":431,"w":224,"h":211},"pets/enoki_hummingbird-1-s":{"sheet":"petse","x":228,"y":431,"w":224,"h":211},"pets/melon-3":{"sheet":"petse","x":454,"y":431,"w":224,"h":210},"pets/melon-3-s":{"sheet":"petse","x":680,"y":431,"w":224,"h":210},"pets/peach-1":{"sheet":"petse","x":906,"y":431,"w":224,"h":210},"pets/peach-1-s":{"sheet":"petse","x":1132,"y":431,"w":224,"h":210},"pets/jujube_wombat-1":{"sheet":"petse","x":1358,"y":431,"w":224,"h":210},"pets/jujube_wombat-1-s":{"sheet":"petse","x":1584,"y":431,"w":224,"h":210},"pets/durian-3":{"sheet":"petse","x":1810,"y":431,"w":224,"h":208},"pets/durian-3-s":{"sheet":"petse","x":2,"y":644,"w":224,"h":208},"pets/peanut_calf-1":{"sheet":"petse","x":228,"y":644,"w":224,"h":208},"pets/peanut_calf-1-s":{"sheet":"petse","x":454,"y":644,"w":224,"h":208},"pets/nuomici_dolphin-1":{"sheet":"petse","x":680,"y":644,"w":224,"h":208},"pets/nuomici_dolphin-1-s":{"sheet":"petse","x":906,"y":644,"w":224,"h":208},"pets/shuangpi_canary-1":{"sheet":"petse","x":1132,"y":644,"w":224,"h":207},"pets/shuangpi_canary-1-s":{"sheet":"petse","x":1358,"y":644,"w":224,"h":207},"pets/xingren_snail-1":{"sheet":"petse","x":1584,"y":644,"w":224,"h":207},"pets/xingren_snail-1-s":{"sheet":"petse","x":1810,"y":644,"w":224,"h":207},"pets/latiao_ibis-1":{"sheet":"petse","x":2,"y":854,"w":224,"h":207},"pets/latiao_ibis-1-s":{"sheet":"petse","x":228,"y":854,"w":224,"h":207},"pets/cashew_macaque-1":{"sheet":"petse","x":454,"y":854,"w":224,"h":207},"pets/cashew_macaque-1-s":{"sheet":"petse","x":680,"y":854,"w":224,"h":207},"pets/mint_chameleon-1":{"sheet":"petse","x":906,"y":854,"w":224,"h":206},"pets/mint_chameleon-1-s":{"sheet":"petse","x":1132,"y":854,"w":224,"h":206},"pets/redbean_capybara-1":{"sheet":"petse","x":1358,"y":854,"w":224,"h":206},"pets/redbean_capybara-1-s":{"sheet":"petse","x":1584,"y":854,"w":224,"h":206},"pets/brownsugar_elephant-1":{"sheet":"petse","x":1810,"y":854,"w":224,"h":206},"pets/brownsugar_elephant-1-s":{"sheet":"petse","x":2,"y":1063,"w":224,"h":206},"pets/ninelayer_silkworm-1":{"sheet":"petse","x":228,"y":1063,"w":224,"h":206},"pets/ninelayer_silkworm-1-s":{"sheet":"petse","x":454,"y":1063,"w":224,"h":206},"pets/hen-5":{"sheet":"petse","x":680,"y":1063,"w":224,"h":205},"pets/hen-5-s":{"sheet":"petse","x":906,"y":1063,"w":224,"h":205},"pets/jade_koi-1":{"sheet":"petse","x":1132,"y":1063,"w":224,"h":205},"pets/jade_koi-1-s":{"sheet":"petse","x":1358,"y":1063,"w":224,"h":205},"pets/kiwi_ferret-1":{"sheet":"petse","x":1584,"y":1063,"w":224,"h":205},"pets/kiwi_ferret-1-s":{"sheet":"petse","x":1810,"y":1063,"w":224,"h":205},"pets/kumquat_chipmunk-1":{"sheet":"petse","x":2,"y":1271,"w":224,"h":205},"pets/kumquat_chipmunk-1-s":{"sheet":"petse","x":228,"y":1271,"w":224,"h":205},"pets/tomato_marmoset-1":{"sheet":"petse","x":454,"y":1271,"w":224,"h":205},"pets/tomato_marmoset-1-s":{"sheet":"petse","x":680,"y":1271,"w":224,"h":205},"pets/hen-2":{"sheet":"petse","x":906,"y":1271,"w":224,"h":204},"pets/hen-2-s":{"sheet":"petse","x":1132,"y":1271,"w":224,"h":204},"pets/wasabi_gecko-1":{"sheet":"petse","x":1358,"y":1271,"w":224,"h":204},"pets/wasabi_gecko-1-s":{"sheet":"petse","x":1584,"y":1271,"w":224,"h":204},"pets/mantou_pug-1":{"sheet":"petse","x":1810,"y":1271,"w":224,"h":204},"pets/mantou_pug-1-s":{"sheet":"petse","x":2,"y":1478,"w":224,"h":204},"pets/apricot_dormouse-1":{"sheet":"petse","x":228,"y":1478,"w":224,"h":204},"pets/apricot_dormouse-1-s":{"sheet":"petse","x":454,"y":1478,"w":224,"h":204},"pets/pitaya-1":{"sheet":"petse","x":680,"y":1478,"w":224,"h":203},"pets/pitaya-1-s":{"sheet":"petse","x":906,"y":1478,"w":224,"h":203},"pets/amber_honey_bear-1":{"sheet":"petse","x":1132,"y":1478,"w":224,"h":203},"pets/amber_honey_bear-1-s":{"sheet":"petse","x":1358,"y":1478,"w":224,"h":203},"pets/matigao_snubmonkey-1":{"sheet":"petse","x":1584,"y":1478,"w":224,"h":203},"pets/matigao_snubmonkey-1-s":{"sheet":"petse","x":1810,"y":1478,"w":224,"h":203},"pets/putchaigao_grouper-1":{"sheet":"petse","x":2,"y":1684,"w":224,"h":203},"pets/putchaigao_grouper-1-s":{"sheet":"petse","x":228,"y":1684,"w":224,"h":203},"pets/pudding_shiba-1":{"sheet":"petse","x":454,"y":1684,"w":224,"h":202},"pets/pudding_shiba-1-s":{"sheet":"petse","x":680,"y":1684,"w":224,"h":202},"pets/mooncake_pony-1":{"sheet":"petse","x":906,"y":1684,"w":224,"h":202},"pets/mooncake_pony-1-s":{"sheet":"petse","x":1132,"y":1684,"w":224,"h":202},"pets/mangosteen_armadillo-1":{"sheet":"petse","x":1358,"y":1684,"w":224,"h":202},"pets/mangosteen_armadillo-1-s":{"sheet":"petse","x":1584,"y":1684,"w":224,"h":202},"pets/shanzha_manul-1":{"sheet":"petse","x":1810,"y":1684,"w":224,"h":202},"pets/papaya_toucan-1":{"sheet":"petse","x":2,"y":1889,"w":224,"h":157},"pets/papaya_toucan-1-s":{"sheet":"petse","x":228,"y":1889,"w":224,"h":157},"pets/laozao_cuttlefish-1":{"sheet":"petse","x":454,"y":1889,"w":224,"h":156},"pets/laozao_cuttlefish-1-s":{"sheet":"petse","x":680,"y":1889,"w":224,"h":156},"pets/dabaitu_beluga-1":{"sheet":"petse","x":906,"y":1889,"w":224,"h":153},"pets/dabaitu_beluga-1-s":{"sheet":"petse","x":1132,"y":1889,"w":224,"h":153},"pets/guaiweidou_boxfish-1":{"sheet":"petse","x":1358,"y":1889,"w":224,"h":148},"pets/guaiweidou_boxfish-1-s":{"sheet":"petse","x":1584,"y":1889,"w":224,"h":148},"pets/shanzha_manul-1-s":{"sheet":"petsf","x":2,"y":2,"w":224,"h":202},"pets/shiitake_possum-1":{"sheet":"petsf","x":228,"y":2,"w":224,"h":202},"pets/shiitake_possum-1-s":{"sheet":"petsf","x":454,"y":2,"w":224,"h":202},"pets/kelp_blobfish-1":{"sheet":"petsf","x":680,"y":2,"w":224,"h":202},"pets/kelp_blobfish-1-s":{"sheet":"petsf","x":906,"y":2,"w":224,"h":202},"pets/woodear_cuscus-1":{"sheet":"petsf","x":1132,"y":2,"w":224,"h":202},"pets/woodear_cuscus-1-s":{"sheet":"petsf","x":1358,"y":2,"w":224,"h":202},"pets/hen-1":{"sheet":"petsf","x":1584,"y":2,"w":224,"h":201},"pets/hen-1-s":{"sheet":"petsf","x":1810,"y":2,"w":224,"h":201},"pets/cloud_sheep-1":{"sheet":"petsf","x":2,"y":206,"w":224,"h":201},"pets/cloud_sheep-1-s":{"sheet":"petsf","x":228,"y":206,"w":224,"h":201},"pets/plum_mole-1":{"sheet":"petsf","x":454,"y":206,"w":224,"h":201},"pets/plum_mole-1-s":{"sheet":"petsf","x":680,"y":206,"w":224,"h":201},"pets/xiaolongbao_shrimp-1":{"sheet":"petsf","x":906,"y":206,"w":224,"h":200},"pets/xiaolongbao_shrimp-1-s":{"sheet":"petsf","x":1132,"y":206,"w":224,"h":200},"pets/passionfruit_platypus-1":{"sheet":"petsf","x":1358,"y":206,"w":224,"h":200},"pets/passionfruit_platypus-1-s":{"sheet":"petsf","x":1584,"y":206,"w":224,"h":200},"pets/suanlafen_skink-1":{"sheet":"petsf","x":1810,"y":206,"w":224,"h":200},"pets/suanlafen_skink-1-s":{"sheet":"petsf","x":2,"y":409,"w":224,"h":200},"pets/cocoa_panther-1":{"sheet":"petsf","x":228,"y":409,"w":224,"h":199},"pets/cocoa_panther-1-s":{"sheet":"petsf","x":454,"y":409,"w":224,"h":199},"pets/donut_hippo-1":{"sheet":"petsf","x":680,"y":409,"w":224,"h":199},"pets/donut_hippo-1-s":{"sheet":"petsf","x":906,"y":409,"w":224,"h":199},"pets/sesame_badger-1":{"sheet":"petsf","x":1132,"y":409,"w":224,"h":199},"pets/sesame_badger-1-s":{"sheet":"petsf","x":1358,"y":409,"w":224,"h":199},"pets/tangyuan_pig-1":{"sheet":"petsf","x":1584,"y":409,"w":224,"h":199},"pets/tangyuan_pig-1-s":{"sheet":"petsf","x":1810,"y":409,"w":224,"h":199},"pets/youtiao_marmot-1":{"sheet":"petsf","x":2,"y":611,"w":224,"h":199},"pets/youtiao_marmot-1-s":{"sheet":"petsf","x":228,"y":611,"w":224,"h":199},"pets/jasmine_magpie-1":{"sheet":"petsf","x":454,"y":611,"w":224,"h":199},"pets/jasmine_magpie-1-s":{"sheet":"petsf","x":680,"y":611,"w":224,"h":199},"pets/jackfruit_haishi-1":{"sheet":"petsf","x":906,"y":611,"w":224,"h":199},"pets/jackfruit_haishi-1-s":{"sheet":"petsf","x":1132,"y":611,"w":224,"h":199},"pets/sachima_cheetah-1":{"sheet":"petsf","x":1358,"y":611,"w":224,"h":199},"pets/sachima_cheetah-1-s":{"sheet":"petsf","x":1584,"y":611,"w":224,"h":199},"pets/mulberry_lemur-1":{"sheet":"petsf","x":1810,"y":611,"w":224,"h":198},"pets/mulberry_lemur-1-s":{"sheet":"petsf","x":2,"y":812,"w":224,"h":198},"pets/persimmon_tanuki-1":{"sheet":"petsf","x":228,"y":812,"w":224,"h":197},"pets/persimmon_tanuki-1-s":{"sheet":"petsf","x":454,"y":812,"w":224,"h":197},"pets/pitaya-4":{"sheet":"petsf","x":680,"y":812,"w":224,"h":196},"pets/pitaya-4-s":{"sheet":"petsf","x":906,"y":812,"w":224,"h":196},"pets/danhuangsu_ermine-1":{"sheet":"petsf","x":1132,"y":812,"w":224,"h":196},"pets/danhuangsu_ermine-1-s":{"sheet":"petsf","x":1358,"y":812,"w":224,"h":196},"pets/espresso_hawk-1":{"sheet":"petsf","x":1584,"y":812,"w":224,"h":195},"pets/espresso_hawk-1-s":{"sheet":"petsf","x":1810,"y":812,"w":224,"h":195},"pets/mochi_seal-1":{"sheet":"petsf","x":2,"y":1012,"w":224,"h":195},"pets/mochi_seal-1-s":{"sheet":"petsf","x":228,"y":1012,"w":224,"h":195},"pets/mixian_salamander-1":{"sheet":"petsf","x":454,"y":1012,"w":224,"h":195},"pets/mixian_salamander-1-s":{"sheet":"petsf","x":680,"y":1012,"w":224,"h":195},"pets/luosifen_clownfish-1":{"sheet":"petsf","x":906,"y":1012,"w":224,"h":194},"pets/luosifen_clownfish-1-s":{"sheet":"petsf","x":1132,"y":1012,"w":224,"h":194},"pets/chomp-4":{"sheet":"petsf","x":1358,"y":1012,"w":224,"h":193},"pets/chomp-4-s":{"sheet":"petsf","x":1584,"y":1012,"w":224,"h":193},"pets/pretzel_dachshund-1":{"sheet":"petsf","x":1810,"y":1012,"w":224,"h":193},"pets/pretzel_dachshund-1-s":{"sheet":"petsf","x":2,"y":1209,"w":224,"h":193},"pets/royal_lychee_peacock-1":{"sheet":"petsf","x":228,"y":1209,"w":224,"h":193},"pets/royal_lychee_peacock-1-s":{"sheet":"petsf","x":454,"y":1209,"w":224,"h":193},"pets/sorbet_narwhal-1":{"sheet":"petsf","x":680,"y":1209,"w":212,"h":193},"pets/sorbet_narwhal-1-s":{"sheet":"petsf","x":906,"y":1209,"w":212,"h":193},"pets/yangmei_swallow-1":{"sheet":"petsf","x":1132,"y":1209,"w":224,"h":193},"pets/yangmei_swallow-1-s":{"sheet":"petsf","x":1358,"y":1209,"w":224,"h":193},"pets/shanyao_waterbuffalo-1":{"sheet":"petsf","x":1584,"y":1209,"w":224,"h":193},"pets/shanyao_waterbuffalo-1-s":{"sheet":"petsf","x":1810,"y":1209,"w":224,"h":193},"pets/crimson_lychee_tiger-1":{"sheet":"petsf","x":2,"y":1404,"w":224,"h":192},"pets/crimson_lychee_tiger-1-s":{"sheet":"petsf","x":228,"y":1404,"w":224,"h":192},"pets/durian-5":{"sheet":"petsf","x":454,"y":1404,"w":224,"h":191},"pets/durian-5-s":{"sheet":"petsf","x":680,"y":1404,"w":224,"h":191},"pets/coconut_crab-1":{"sheet":"petsf","x":906,"y":1404,"w":224,"h":190},"pets/coconut_crab-1-s":{"sheet":"petsf","x":1132,"y":1404,"w":224,"h":190},"pets/lotusroot_beaver-1":{"sheet":"petsf","x":1358,"y":1404,"w":224,"h":190},"pets/lotusroot_beaver-1-s":{"sheet":"petsf","x":1584,"y":1404,"w":224,"h":190},"pets/yimi_newt-1":{"sheet":"petsf","x":1810,"y":1404,"w":224,"h":190},"pets/yimi_newt-1-s":{"sheet":"petsf","x":2,"y":1598,"w":224,"h":190},"pets/chomp-5":{"sheet":"petsf","x":228,"y":1598,"w":224,"h":189},"pets/chomp-5-s":{"sheet":"petsf","x":454,"y":1598,"w":224,"h":189},"pets/ramen_panda-1":{"sheet":"petsf","x":680,"y":1598,"w":224,"h":189},"pets/ramen_panda-1-s":{"sheet":"petsf","x":906,"y":1598,"w":224,"h":189},"pets/fishball_puffer-1":{"sheet":"petsf","x":1132,"y":1598,"w":224,"h":189},"pets/fishball_puffer-1-s":{"sheet":"petsf","x":1358,"y":1598,"w":224,"h":189},"pets/pumpkin-1":{"sheet":"petsf","x":1584,"y":1598,"w":224,"h":187},"pets/pumpkin-1-s":{"sheet":"petsf","x":1810,"y":1598,"w":224,"h":187},"pets/pumpkin-3":{"sheet":"petsf","x":2,"y":1790,"w":224,"h":187},"pets/pumpkin-3-s":{"sheet":"petsf","x":228,"y":1790,"w":224,"h":187},"pets/apple_mouse-1":{"sheet":"petsf","x":454,"y":1790,"w":224,"h":187},"pets/apple_mouse-1-s":{"sheet":"petsf","x":680,"y":1790,"w":224,"h":187},"pets/aurora_peach_kirin-1":{"sheet":"petsf","x":906,"y":1790,"w":203,"h":188},"pets/aurora_peach_kirin-1-s":{"sheet":"petsf","x":1132,"y":1790,"w":203,"h":188},"pets/melon-1":{"sheet":"petsf","x":1358,"y":1790,"w":224,"h":185},"pets/melon-1-s":{"sheet":"petsf","x":1584,"y":1790,"w":224,"h":185},"pets/pumpkin-2":{"sheet":"petsf","x":1810,"y":1790,"w":224,"h":184},"pets/pumpkin-2-s":{"sheet":"petsg","x":2,"y":2,"w":224,"h":184},"pets/astral_berry_seraph-1":{"sheet":"petsg","x":228,"y":2,"w":189,"h":184},"pets/astral_berry_seraph-1-s":{"sheet":"petsg","x":454,"y":2,"w":190,"h":184},"pets/zongzi_goldfish-1":{"sheet":"petsg","x":680,"y":2,"w":224,"h":183},"pets/zongzi_goldfish-1-s":{"sheet":"petsg","x":906,"y":2,"w":224,"h":183},"pets/supernova_starfruit_dragon-1":{"sheet":"petsg","x":1132,"y":2,"w":193,"h":184},"pets/supernova_starfruit_dragon-1-s":{"sheet":"petsg","x":1358,"y":2,"w":193,"h":184},"pets/galaxy_kitsune-1":{"sheet":"petsg","x":1584,"y":2,"w":217,"h":184},"pets/galaxy_kitsune-1-s":{"sheet":"petsg","x":1810,"y":2,"w":217,"h":184},"pets/caramel_squirrel-1":{"sheet":"petsg","x":2,"y":188,"w":224,"h":178},"pets/caramel_squirrel-1-s":{"sheet":"petsg","x":228,"y":188,"w":224,"h":178},"pets/guilinggao_whaleshark-1":{"sheet":"petsg","x":454,"y":188,"w":224,"h":178},"pets/guilinggao_whaleshark-1-s":{"sheet":"petsg","x":680,"y":188,"w":224,"h":178},"pets/lotusseed_manta-1":{"sheet":"petsg","x":906,"y":188,"w":224,"h":175},"pets/lotusseed_manta-1-s":{"sheet":"petsg","x":1132,"y":188,"w":224,"h":175},"pets/pumpkin-4":{"sheet":"petsg","x":1358,"y":188,"w":224,"h":173},"pets/pumpkin-4-s":{"sheet":"petsg","x":1584,"y":188,"w":224,"h":173},"pets/celestial_melon_leviathan-1":{"sheet":"petsg","x":1810,"y":188,"w":178,"h":160},"pets/celestial_melon_leviathan-1-s":{"sheet":"petsg","x":2,"y":368,"w":180,"h":160},"enemies/b-1":{"sheet":"mobs","x":2,"y":2,"w":203,"h":224},"enemies/b-2":{"sheet":"mobs","x":207,"y":2,"w":200,"h":224},"enemies/b-3":{"sheet":"mobs","x":409,"y":2,"w":174,"h":224},"enemies/b-4":{"sheet":"mobs","x":585,"y":2,"w":190,"h":224},"enemies/z-1":{"sheet":"mobs","x":777,"y":2,"w":182,"h":224},"enemies/z-2":{"sheet":"mobs","x":2,"y":228,"w":210,"h":224},"enemies/z-3":{"sheet":"mobs","x":214,"y":228,"w":167,"h":224},"enemies/z-4":{"sheet":"mobs","x":383,"y":228,"w":169,"h":224},"enemies/z-5":{"sheet":"mobs","x":554,"y":228,"w":204,"h":224},"enemies/z-6":{"sheet":"mobs","x":760,"y":228,"w":128,"h":224},"eggs/egg-1":{"sheet":"mobs","x":2,"y":454,"w":194,"h":224},"eggs/egg-2":{"sheet":"mobs","x":198,"y":454,"w":193,"h":224},"eggs/egg-3":{"sheet":"mobs","x":393,"y":454,"w":194,"h":224},"eggs/egg-4":{"sheet":"mobs","x":589,"y":454,"w":174,"h":224},"enemies/mob-thief":{"sheet":"mobs","x":765,"y":454,"w":224,"h":223},"enemies/mob-shield":{"sheet":"mobs","x":2,"y":680,"w":197,"h":220},"enemies/mob-mage":{"sheet":"mobs","x":201,"y":680,"w":220,"h":214},"enemies/mob-mini":{"sheet":"mobs","x":423,"y":680,"w":220,"h":204},"enemies/mob-ranged":{"sheet":"mobs","x":645,"y":680,"w":220,"h":201},"enemies/mob-split-big":{"sheet":"mobs","x":2,"y":902,"w":224,"h":192},"fx/hen-egg":{"sheet":"mobs","x":228,"y":902,"w":165,"h":192},"enemies/mob-split-small":{"sheet":"mobs","x":395,"y":902,"w":224,"h":187},"fx/hen-minion":{"sheet":"mobs","x":621,"y":902,"w":192,"h":172},"fx/charm-anvil":{"sheet":"mobs","x":815,"y":902,"w":128,"h":128},"fx/charm-bell":{"sheet":"mobs","x":2,"y":1096,"w":93,"h":128},"fx/charm-bloodgem":{"sheet":"mobs","x":97,"y":1096,"w":128,"h":128},"fx/charm-bolt":{"sheet":"mobs","x":227,"y":1096,"w":89,"h":128},"fx/charm-clover":{"sheet":"mobs","x":318,"y":1096,"w":114,"h":128},"fx/charm-comet":{"sheet":"mobs","x":434,"y":1096,"w":128,"h":128},"fx/charm-compass":{"sheet":"mobs","x":564,"y":1096,"w":102,"h":128},"fx/charm-crest":{"sheet":"mobs","x":668,"y":1096,"w":108,"h":128},"fx/charm-emberheart":{"sheet":"mobs","x":778,"y":1096,"w":128,"h":128},"fx/charm-frost":{"sheet":"mobs","x":2,"y":1226,"w":119,"h":128},"fx/charm-hourglass":{"sheet":"mobs","x":123,"y":1226,"w":85,"h":128},"fx/charm-medal":{"sheet":"mobs","x":210,"y":1226,"w":82,"h":128},"fx/charm-monarch":{"sheet":"mobs","x":294,"y":1226,"w":128,"h":128},"fx/charm-orchardleaf":{"sheet":"mobs","x":424,"y":1226,"w":128,"h":128},"fx/charm-prism":{"sheet":"mobs","x":554,"y":1226,"w":111,"h":128},"fx/charm-relic":{"sheet":"mobs","x":667,"y":1226,"w":128,"h":128},"fx/charm-scarf":{"sheet":"mobs","x":797,"y":1226,"w":127,"h":128},"fx/charm-shield":{"sheet":"mobs","x":2,"y":1356,"w":114,"h":128},"fx/charm-stardust":{"sheet":"mobs","x":118,"y":1356,"w":128,"h":128},"fx/charm-thiefbell":{"sheet":"mobs","x":248,"y":1356,"w":89,"h":128},"fx/charm-tidal":{"sheet":"mobs","x":339,"y":1356,"w":128,"h":128},"fx/charm-whisper":{"sheet":"mobs","x":469,"y":1356,"w":128,"h":128},"fx/charm-spore":{"sheet":"mobs","x":599,"y":1356,"w":128,"h":126},"fx/charm-sugar":{"sheet":"mobs","x":729,"y":1356,"w":128,"h":123},"fx/charm-ribbon":{"sheet":"mobs","x":859,"y":1356,"w":128,"h":122},"fx/charm-bow":{"sheet":"mobs","x":2,"y":1486,"w":128,"h":108},"fx/charm-crown":{"sheet":"mobs","x":132,"y":1486,"w":128,"h":98},"fx/charm-halo":{"sheet":"mobs","x":262,"y":1486,"w":128,"h":96},"fx/charm-shades":{"sheet":"mobs","x":392,"y":1486,"w":128,"h":68},"fx/charm-wings":{"sheet":"mobs","x":522,"y":1486,"w":128,"h":68}};
 /* v2.8 generated by tools/v28/pack_slimes28.py */
-var SL28_SHEETS = {"slimesa": "assets/atlas-slimesa.webp?v=2.9.6", "slimesb": "assets/atlas-slimesb.webp?v=2.9.6"};
+var SL28_SHEETS = {"slimesa": "assets/atlas-slimesa.webp?v=2.9.7", "slimesb": "assets/atlas-slimesb.webp?v=2.9.7"};
 var SL28_MAP = {"enemies/s8-aloe":["slimesa",0,0,148,148],"enemies/s8-jumpbean":["slimesa",150,0,139,148],"enemies/s8-sticky":["slimesa",291,0,146,148],"enemies/s8-cactus":["slimesa",439,0,137,148],"enemies/s8-sponge":["slimesa",578,0,148,146],"enemies/s8-dough":["slimesa",728,0,148,139],"enemies/s8-dandelion":["slimesa",878,0,145,148],"enemies/s8-pepper":["slimesa",1025,0,148,144],"enemies/s8-hopper":["slimesa",1175,0,148,147],"enemies/s8-mozhi":["slimesa",1325,0,132,148],"enemies/s8-paopao":["slimesa",1459,0,147,148],"enemies/s8-tangci":["slimesa",1608,0,148,139],"enemies/s8-lantern":["slimesa",1758,0,163,168],"enemies/s8-mirror":["slimesa",0,170,168,160],"enemies/s8-bailong":["slimesa",170,170,196,187],"enemies/s8-redboy":["slimesa",368,170,179,196],"enemies/s8-lianhua":["slimesa",549,170,148,139],"enemies/s8-bamboo":["slimesa",699,170,148,139],"enemies/s8-xitang":["slimesa",849,170,146,148],"enemies/s8-liangcha":["slimesa",997,170,148,148],"enemies/s8-youtiao":["slimesa",1147,170,137,148],"enemies/s8-jianbing":["slimesa",1286,170,148,147],"enemies/s8-tanghulu":["slimesa",1436,170,148,145],"enemies/s8-shaobing":["slimesa",1586,170,148,116],"enemies/s8-nendofu":["slimesa",1736,170,148,136],"enemies/s8-choudoufu":["slimesa",1886,170,130,148],"enemies/s8-hulatang":["slimesa",0,368,148,140],"enemies/s8-tanglizi":["slimesa",150,368,148,139],"enemies/s8-malatang":["slimesa",300,368,147,148],"enemies/s8-baozi":["slimesa",449,368,148,135],"enemies/s8-jiaozi":["slimesa",599,368,148,145],"enemies/s8-doujiang":["slimesa",749,368,148,140],"enemies/s8-huoguo":["slimesa",899,368,149,168],"enemies/s8-shaokao":["slimesa",1050,368,168,161],"enemies/s8-nianshou":["slimesa",1220,368,190,196],"enemies/s8-zaoshen":["slimesa",1412,368,173,196],"enemies/s8-congyou":["slimesa",1587,368,148,145],"enemies/s8-guoba":["slimesa",1737,368,148,140],"enemies/s8-douhua":["slimesa",1887,368,148,140],"enemies/s8-mianjin":["slimesa",0,566,148,141],"enemies/s8-xiancao":["slimesa",150,566,148,144],"enemies/s8-liangfen":["slimesa",300,566,148,138],"enemies/s8-hongdou":["slimesa",450,566,148,147],"enemies/s8-shuangpi":["slimesa",600,566,148,148],"enemies/s8-majiang":["slimesa",750,566,148,140],"enemies/s8-yuyuan":["slimesa",900,566,144,148],"enemies/s8-jiuniang":["slimesa",1046,566,148,144],"enemies/s8-bingfen":["slimesa",1196,566,146,148],"enemies/s8-yanwo":["slimesa",1344,566,144,148],"enemies/s8-yuanyang":["slimesa",1490,566,148,144],"enemies/s8-heye":["slimesa",1640,566,148,143],"enemies/s8-yezi":["slimesa",1790,566,148,146],"enemies/s8-chahu":["slimesa",0,716,149,168],"enemies/s8-zhenglong":["slimesa",151,716,168,163],"enemies/s8-longwang":["slimesa",321,716,194,196],"enemies/s8-hebo":["slimesa",517,716,183,196],"enemies/s8-guihua":["slimesa",702,716,148,140],"enemies/s8-hongcha":["slimesa",852,716,124,148],"enemies/s8-lianzi":["slimesa",978,716,148,142],"enemies/s8-doufunao":["slimesa",1128,716,148,142],"enemies/s8-yuebing":["slimesa",1278,716,148,145],"enemies/s8-zongzi":["slimesa",1428,716,148,148],"enemies/s8-tangyuan":["slimesa",1578,716,148,142],"enemies/s8-qingtuan":["slimesa",1728,716,148,142],"enemies/s8-mahua":["slimesa",1878,716,148,144],"enemies/s8-qiaoguo":["slimesa",0,914,148,148],"enemies/s8-laba":["slimesa",150,914,148,147],"enemies/s8-mizao":["slimesa",300,914,127,148],"enemies/s8-bianpao":["slimesa",429,914,136,148],"enemies/s8-dengmi":["slimesa",567,914,143,148],"enemies/s8-wushi":["slimesa",712,914,148,147],"enemies/s8-tangren":["slimesa",862,914,130,148],"enemies/s8-longdeng":["slimesa",994,914,136,168],"enemies/s8-shehuo":["slimesa",1132,914,152,168],"enemies/s8-changefe":["slimesa",1286,914,182,196],"enemies/s8-yutu":["slimesa",1470,914,188,196],"enemies/s8-yuanxiao":["slimesa",1660,914,148,139],"enemies/s8-taohua":["slimesa",1810,914,148,141],"enemies/s8-chongyang":["slimesa",0,1112,148,147],"enemies/s8-meiguit":["slimesa",150,1112,148,147],"enemies/s8-haizhe":["slimesa",300,1112,148,143],"enemies/s8-haidai":["slimesa",450,1112,144,148],"enemies/s8-luosi":["slimesa",596,1112,148,141],"enemies/s8-yuwan":["slimesa",746,1112,148,146],"enemies/s8-zicai":["slimesa",896,1112,148,142],"enemies/s8-geli":["slimesa",1046,1112,148,146],"enemies/s8-haojian":["slimesa",1196,1112,148,140],"enemies/s8-yudoufu":["slimesa",1346,1112,148,147],"enemies/s8-baoyu":["slimesa",1496,1112,144,148],"enemies/s8-duixia":["slimesa",1642,1112,147,148],"enemies/s8-haidan":["slimesa",1791,1112,148,134],"enemies/s8-pangxie":["slimesa",0,1262,148,140],"enemies/s8-longxia":["slimesa",150,1262,168,160],"enemies/s8-manaobei":["slimesa",320,1262,168,163],"enemies/s8-mazu":["slimesa",490,1262,186,196],"enemies/s8-aoyu":["slimesa",678,1262,181,196],"enemies/s8-zicaot":["slimesa",861,1262,147,148],"enemies/s8-xiabing":["slimesa",1010,1262,145,148],"enemies/s8-chengzi":["slimesa",1157,1262,148,141],"enemies/s8-yupian":["slimesa",1307,1262,148,143],"enemies/s8-gouqi":["slimesa",1457,1262,138,148],"enemies/s8-huangqi":["slimesa",1597,1262,140,148],"enemies/s8-aicao":["slimesa",1739,1262,146,148],"enemies/s8-jinyinhua":["slimesa",1887,1262,148,146],"enemies/s8-gancao":["slimesa",0,1460,144,148],"enemies/s8-fuling":["slimesa",146,1460,144,148],"enemies/s8-chenpi":["slimesa",292,1460,148,146],"enemies/s8-bohe":["slimesa",442,1460,148,145],"enemies/s8-renshen":["slimesa",592,1460,131,148],"enemies/s8-lingzhi":["slimesa",725,1460,148,145],"enemies/s8-heshouwu":["slimesa",875,1460,146,148],"enemies/s8-tianma":["slimesa",1023,1460,148,132],"enemies/s8-yaolu":["slimesa",1173,1460,168,164],"enemies/s8-shijiu":["slimesa",1343,1460,166,168],"enemies/s8-huye":["slimesa",1511,1460,184,196],"enemies/s8-yaowang":["slimesa",1697,1460,182,196],"enemies/s8-juhua":["slimesa",1881,1460,148,147],"enemies/s8-shanyao":["slimesa",0,1658,148,146],"enemies/s8-bohegao":["slimesa",150,1658,148,144],"enemies/s8-zhuyeq":["slimesa",300,1658,148,148],"enemies/s8-mianbao":["slimesa",450,1658,148,143],"enemies/s8-danta":["slimesa",600,1658,148,145],"enemies/s8-niujiao":["slimesa",750,1658,148,143],"enemies/s8-danhuangsu":["slimesa",900,1658,144,148],"enemies/s8-taosu":["slimesa",1046,1658,148,144],"enemies/s8-weihua":["slimesa",1196,1658,143,148],"enemies/s8-saqima":["slimesa",1341,1658,148,147],"enemies/s8-danjuan":["slimesa",1491,1658,147,148],"enemies/s8-naiyou":["slimesa",1640,1658,127,148],"enemies/s8-paofu":["slimesa",1769,1658,148,146],"enemies/s8-fengli":["slimesa",0,1808,148,148],"enemies/s8-laopobing":["slimesa",150,1808,148,147],"enemies/s8-kaoxiang":["slimesa",300,1808,165,168],"enemies/s8-anban":["slimesa",467,1808,164,168],"enemies/s8-luban":["slimesa",633,1808,177,196],"enemies/s8-tudi":["slimesa",812,1808,173,196],"enemies/s8-huajuan":["slimesa",987,1808,146,148],"enemies/s8-lvdougao":["slimesa",1135,1808,148,145],"enemies/s8-naihuang":["slimesa",1285,1808,143,148],"enemies/s8-xianbing":["slimesa",1430,1808,147,148],"enemies/s8-bingbang":["slimesa",1579,1808,148,148],"enemies/s8-tanggua":["slimesa",1729,1808,148,142],"enemies/s8-xuehua":["slimesa",1879,1808,148,142],"enemies/s8-dongli":["slimesb",0,0,148,147],"enemies/s8-bingtang":["slimesb",150,0,148,146],"enemies/s8-lvdagun":["slimesb",300,0,148,143],"enemies/s8-xueqiu":["slimesb",450,0,145,148],"enemies/s8-dongshi":["slimesb",597,0,148,138],"enemies/s8-xuemei":["slimesb",747,0,148,146],"enemies/s8-baobing":["slimesb",897,0,144,148],"enemies/s8-binglao":["slimesb",1043,0,140,148],"enemies/s8-xuewu":["slimesb",1185,0,147,148],"enemies/s8-bingdiao":["slimesb",1334,0,168,161],"enemies/s8-xuedui":["slimesb",1504,0,166,168],"enemies/s8-xuepo":["slimesb",1672,0,184,196],"enemies/s8-shuangshen":["slimesb",1858,0,184,196],"enemies/s8-jiangtang":["slimesb",0,198,146,148],"enemies/s8-xuegao":["slimesb",148,198,148,148],"enemies/s8-meihuag":["slimesb",298,198,143,148],"enemies/s8-hongtang":["slimesb",443,198,148,147],"enemies/s8-kaodigua":["slimesb",593,198,148,142],"enemies/s8-tianluo":["slimesb",743,198,148,136],"enemies/s8-mianhua":["slimesb",893,198,148,145],"enemies/s8-baomi":["slimesb",1043,198,148,138],"enemies/s8-mianwo":["slimesb",1193,198,148,133],"enemies/s8-suanmei":["slimesb",1343,198,145,148],"enemies/s8-zhachuan":["slimesb",1490,198,148,145],"enemies/s8-dianfen":["slimesb",1640,198,148,145],"enemies/s8-kongming":["slimesb",1790,198,148,148],"enemies/s8-tanghua":["slimesb",0,348,148,138],"enemies/s8-piying":["slimesb",150,348,148,143],"enemies/s8-tangdou":["slimesb",300,348,148,140],"enemies/s8-zoumadeng":["slimesb",450,348,150,168],"enemies/s8-yanhuo":["slimesb",602,348,168,163],"enemies/s8-yuelao":["slimesb",772,348,186,196],"enemies/s8-yeyoushen":["slimesb",960,348,192,196],"enemies/s8-naicha":["slimesb",1154,348,148,148],"enemies/s8-denghua":["slimesb",1304,348,143,148],"enemies/s8-zhimagao":["slimesb",1449,348,148,137],"enemies/s8-putaoz":["slimesb",1599,348,142,148],"enemies/s8-longxusu":["slimesb",1743,348,146,148],"enemies/s8-yunpian":["slimesb",1891,348,148,148],"enemies/s8-fotiaoqiang":["slimesb",0,546,148,145],"enemies/s8-pantao":["slimesb",150,546,148,131],"enemies/s8-hehuan":["slimesb",300,546,131,148],"enemies/s8-bazhen":["slimesb",433,546,148,139],"enemies/s8-dingsheng":["slimesb",583,546,147,148],"enemies/s8-ruyi":["slimesb",732,546,148,136],"enemies/s8-jinbo":["slimesb",882,546,148,121],"enemies/s8-yulu":["slimesb",1032,546,136,148],"enemies/s8-xiandou":["slimesb",1170,546,144,148],"enemies/s8-yaochi":["slimesb",1316,546,148,142],"enemies/s8-jiding":["slimesb",1466,546,168,150],"enemies/s8-linglong":["slimesb",1636,546,168,159],"enemies/s8-pixiu":["slimesb",1806,546,196,185],"enemies/s8-qilin":["slimesb",0,733,189,196],"enemies/s8-xianlu":["slimesb",191,733,148,140],"enemies/s8-shoutao":["slimesb",341,733,148,137],"enemies/s8-yuzhi":["slimesb",491,733,148,148],"enemies/s8-qiongj":["slimesb",641,733,137,148]};
 /* v2.9 generated by tools/v29/build_cardpack.py — approved card-pack pet atlas */
-var CP29_SHEETS = {"packa":"assets/atlas-packa.webp?v=2.9.6","packb":"assets/atlas-packb.webp?v=2.9.6"};
+var CP29_SHEETS = {"packa":"assets/atlas-packa.webp?v=2.9.7","packb":"assets/atlas-packb.webp?v=2.9.7"};
 var CP29_MAP = {"pets/capsule_chick-1":["packa",2,2,221,224],"pets/capsule_chick-1-s":["packa",225,2,221,224],"pets/cornbread_chick-1":["packa",448,2,215,224],"pets/cornbread_chick-1-s":["packa",665,2,215,224],"pets/maple_fawn-1":["packa",882,2,219,224],"pets/maple_fawn-1-s":["packa",1103,2,219,224],"pets/moonsalt_hare-1":["packa",1324,2,188,224],"pets/moonsalt_hare-1-s":["packa",1514,2,188,224],"pets/mooncheese_owlet-1":["packa",1704,2,218,224],"pets/mooncheese_owlet-1-s":["packa",2,228,218,224],"pets/candycorn_owl-1":["packa",222,228,223,224],"pets/candycorn_owl-1-s":["packa",447,228,223,224],"pets/lantern_bunny-1":["packa",672,228,197,224],"pets/lantern_bunny-1-s":["packa",871,228,197,224],"pets/pineapple_caique-1":["packa",1070,228,224,224],"pets/pineapple_caique-1-s":["packa",1296,228,224,224],"pets/nougat_cockatiel-1":["packa",1522,228,184,224],"pets/nougat_cockatiel-1-s":["packa",1708,228,184,224],"pets/jelly_imp-1":["packa",2,454,217,224],"pets/jelly_imp-1-s":["packa",221,454,217,224],"pets/mochi_fairy-1":["packa",440,454,222,224],"pets/mochi_fairy-1-s":["packa",664,454,222,224],"pets/candycane_reindeer-1":["packa",888,454,213,224],"pets/candycane_reindeer-1-s":["packa",1103,454,213,224],"pets/rocket_mochi-1":["packa",1318,454,208,224],"pets/rocket_mochi-1-s":["packa",1528,454,208,224],"pets/pineapple_stego-1":["packa",1738,454,223,224],"pets/pineapple_stego-1-s":["packa",2,680,223,224],"pets/lemon_pteranodon-1":["packa",227,680,221,224],"pets/lemon_pteranodon-1-s":["packa",450,680,221,224],"pets/eggcrepe_poodle-1":["packa",673,680,223,224],"pets/eggcrepe_poodle-1-s":["packa",898,680,223,224],"pets/ghostmochi_bunny-1":["packa",1123,680,224,223],"pets/ghostmochi_bunny-1-s":["packa",1349,680,224,223],"pets/croissant_corgi-1":["packa",1575,680,224,223],"pets/croissant_corgi-1-s":["packa",1801,680,224,223],"pets/constellation_deer-1":["packa",2,906,224,221],"pets/constellation_deer-1-s":["packa",228,906,224,221],"pets/licorice_kitten-1":["packa",454,906,224,221],"pets/licorice_kitten-1-s":["packa",680,906,224,221],"pets/starjelly_fox-1":["packa",906,906,224,221],"pets/starjelly_fox-1-s":["packa",1132,906,224,221],"pets/candycorn_chick-1":["packa",1358,906,224,220],"pets/candycorn_chick-1-s":["packa",1584,906,224,220],"pets/inksugar_panda-1":["packa",1810,906,224,219],"pets/inksugar_panda-1-s":["packa",2,1129,224,219],"pets/sesame_triceratops-1":["packa",228,1129,224,219],"pets/sesame_triceratops-1-s":["packa",454,1129,224,219],"pets/taro_amazon-1":["packa",680,1129,224,219],"pets/taro_amazon-1-s":["packa",906,1129,224,219],"pets/tanghulu_pomeranian-1":["packa",1132,1129,224,218],"pets/tanghulu_pomeranian-1-s":["packa",1358,1129,224,218],"pets/marshmallow_ghostpup-1":["packa",1584,1129,224,218],"pets/marshmallow_ghostpup-1-s":["packa",1810,1129,224,218],"pets/litchi_lory-1":["packa",2,1350,224,217],"pets/litchi_lory-1-s":["packa",228,1350,224,217],"pets/sesamecream_bot-1":["packa",454,1350,224,217],"pets/sesamecream_bot-1-s":["packa",680,1350,224,217],"pets/niangao_loong-1":["packa",906,1350,224,217],"pets/niangao_loong-1-s":["packa",1132,1350,224,217],"pets/cocoa_sparrow-1":["packa",1358,1350,224,217],"pets/cocoa_sparrow-1-s":["packa",1584,1350,224,217],"pets/lvdagun_peccary-1":["packa",1810,1350,224,217],"pets/lvdagun_peccary-1-s":["packa",2,1569,224,217],"pets/wasabi_raptor-1":["packa",228,1569,224,217],"pets/wasabi_raptor-1-s":["packa",454,1569,224,217],"pets/niangao_akita-1":["packa",680,1569,224,216],"pets/niangao_akita-1-s":["packa",906,1569,224,216],"pets/blacksesame_cat-1":["packa",1132,1569,224,215],"pets/blacksesame_cat-1-s":["packa",1358,1569,224,215],"pets/pretzel_dachshund-1":["packa",1584,1569,224,215],"pets/pretzel_dachshund-1-s":["packa",1810,1569,224,215],"pets/soda_robodog-1":["packa",2,1788,224,214],"pets/soda_robodog-1-s":["packa",228,1788,224,214],"pets/yam_ankylo-1":["packa",454,1788,224,214],"pets/yam_ankylo-1-s":["packa",680,1788,224,214],"pets/jelly_bronto-1":["packa",906,1788,224,214],"pets/jelly_bronto-1-s":["packa",1132,1788,224,214],"pets/tangyuan_siamese-1":["packa",1358,1788,224,212],"pets/tangyuan_siamese-1-s":["packa",1584,1788,224,212],"pets/mooncake_pony-1":["packa",1810,1788,224,212],"pets/mooncake_pony-1-s":["packb",2,2,224,212],"pets/starmilk_seal-1":["packb",228,2,224,211],"pets/starmilk_seal-1-s":["packb",454,2,224,211],"pets/cream_scottish-1":["packb",680,2,224,211],"pets/cream_scottish-1-s":["packb",906,2,224,211],"pets/bluehawaii_frog-1":["packb",1132,2,224,211],"pets/bluehawaii_frog-1-s":["packb",1358,2,224,211],"pets/tangyuan_rex-1":["packb",1584,2,224,211],"pets/tangyuan_rex-1-s":["packb",1810,2,224,211],"pets/mochi_dilopho-1":["packb",2,216,224,211],"pets/mochi_dilopho-1-s":["packb",228,216,224,211],"pets/candycorn_chipmunk-1":["packb",454,216,224,210],"pets/candycorn_chipmunk-1-s":["packb",680,216,224,210],"pets/peppermint_fox-1":["packb",906,216,224,210],"pets/peppermint_fox-1-s":["packb",1132,216,224,210],"pets/mooncake_unicorn-1":["packb",1358,216,224,210],"pets/mooncake_unicorn-1-s":["packb",1584,216,224,210],"pets/energybar_corgi-1":["packb",1810,216,224,209],"pets/energybar_corgi-1-s":["packb",2,429,224,209],"pets/pudding_parasaur-1":["packb",228,429,224,208],"pets/pudding_parasaur-1-s":["packb",454,429,224,208],"pets/sesameink_wolf-1":["packb",680,429,224,206],"pets/sesameink_wolf-1-s":["packb",906,429,224,206],"pets/yam_pup-1":["packb",1132,429,224,205],"pets/yam_pup-1-s":["packb",1358,429,224,205],"pets/snowman_mochi-1":["packb",1584,429,224,205],"pets/snowman_mochi-1-s":["packb",1810,429,224,205],"pets/milkcustard_ragdoll-1":["packb",2,640,224,205],"pets/milkcustard_ragdoll-1-s":["packb",228,640,224,205],"pets/hawthorn_budgie-1":["packb",454,640,224,205],"pets/hawthorn_budgie-1-s":["packb",680,640,224,205],"pets/rouqiamo_beagle-1":["packb",906,640,224,202],"pets/rouqiamo_beagle-1-s":["packb",1132,640,224,202],"pets/cookie_pup-1":["packb",1358,640,224,202],"pets/cookie_pup-1-s":["packb",1584,640,224,202],"pets/spacericecracker_owl-1":["packb",1810,640,224,200],"pets/spacericecracker_owl-1-s":["packb",2,847,224,200],"pets/jellytube_axolotl-1":["packb",228,847,224,199],"pets/jellytube_axolotl-1-s":["packb",454,847,224,199],"pets/freezedry_mango_fox-1":["packb",680,847,224,199],"pets/freezedry_mango_fox-1-s":["packb",906,847,224,199],"pets/cranberry_fox-1":["packb",1132,847,224,199],"pets/cranberry_fox-1-s":["packb",1358,847,224,199],"pets/pumpkinpie_turkey-1":["packb",1584,847,224,199],"pets/pumpkinpie_turkey-1-s":["packb",1810,847,224,199],"pets/gingerbread_bear-1":["packb",2,1049,224,199],"pets/gingerbread_bear-1-s":["packb",228,1049,224,199],"pets/driedfish_kitten-1":["packb",454,1049,224,199],"pets/driedfish_kitten-1-s":["packb",680,1049,224,199],"pets/capsule_turtle-1":["packb",906,1049,224,195],"pets/capsule_turtle-1-s":["packb",1132,1049,224,195],"pets/yangzhi_calico-1":["packb",1358,1049,224,188],"pets/yangzhi_calico-1-s":["packb",1584,1049,224,188],"pets/springroll_sable-1":["packb",1810,1049,224,181],"pets/springroll_sable-1-s":["packb",2,1250,224,181]};
 if (typeof ATLAS_SHEETS !== "undefined") { for (const k in CP29_SHEETS) ATLAS_SHEETS[k] = CP29_SHEETS[k]; }
 if (typeof ATLAS_MAP !== "undefined") { for (const k in CP29_MAP) { const m = CP29_MAP[k]; ATLAS_MAP[k] = { sheet: m[0], x: m[1], y: m[2], w: m[3], h: m[4] }; } }
@@ -3131,7 +3195,7 @@ function crown(c, x, y, w, col, gem) {
 /* ================= image assets (atlases first, then leftover backgrounds) ================= */
 const IMG = {};
 const ATLAS_IMG = {};
-function assetUrl(k) { return "assets/" + k + (String(k).includes(".") ? "" : ".webp") + "?v=2.9.6"; }
+function assetUrl(k) { return "assets/" + k + (String(k).includes(".") ? "" : ".webp") + "?v=2.9.7"; }
 function loadImage(src) {
   return new Promise((res) => {
     const im = new Image();
@@ -3894,13 +3958,26 @@ function clamp(v, a, b) { return Math.max(a, Math.min(b, v)); }
 function hash(x, y) { let n = x * 374761393 + y * 668265263; n = (n ^ (n >> 13)) * 1274126177; return ((n ^ (n >> 16)) >>> 0) / 4294967296; }
 function pick(arr) { return arr[Math.floor(Math.random() * arr.length)]; }
 function starsHTML(n) { let s = ""; for (let i = 1; i <= MAX_STAR; i++) s += i <= n ? "★" : "<span class='off'>★</span>"; return "<span class='stars'>" + s + "</span>"; }
+const _petCvCache297 = new Map();
+function clearPetCvCache() { _petCvCache297.clear(); }
 function petCanvas(id, star, shiny, px, opts) {
+  opts = opts || {};
+  const k = opts.k || 1.0, sil = !!opts.silhouette;
+  const ch = opts.charm || "", ht = opts.hat || "", su = opts.suit || "", tr = opts.tier || 0;
+  const key = id + "|" + (star | 0) + "|" + (shiny ? 1 : 0) + "|" + px + "|" + k + "|" + (sil ? 1 : 0) + "|" + ch + "|" + ht + "|" + su + "|" + tr;
+  let cached = _petCvCache297.get(key);
+  if (!cached) {
+    cached = document.createElement("canvas");
+    cached.width = cached.height = px * 2;
+    const cc = cached.getContext("2d"); cc.scale(2, 2);
+    if (sil) cc.filter = "brightness(0) opacity(.35)";
+    drawPetCentered(cc, id, star, shiny, px / 2, px / 2 + 4 * k, px * k, { charm: ch || undefined, hat: ht || undefined, suit: su || undefined, fx: !sil, tier: tr || undefined });
+    if (_petCvCache297.size >= 700) _petCvCache297.delete(_petCvCache297.keys().next().value);
+    _petCvCache297.set(key, cached);
+  }
   const cv = document.createElement("canvas");
   cv.width = cv.height = px * 2;
-  const c = cv.getContext("2d"); c.scale(2, 2);
-  if (opts && opts.silhouette) { c.filter = "brightness(0) opacity(.35)"; }
-  const k = (opts && opts.k) || 1.0;
-  drawPetCentered(c, id, star, shiny, px / 2, px / 2 + 4 * k, px * k, { charm: opts && opts.charm, hat: opts && opts.hat, suit: opts && opts.suit, fx: !(opts && opts.silhouette), tier: opts && opts.tier });
+  cv.getContext("2d").drawImage(cached, 0, 0);
   return cv;
 }
 
@@ -3911,7 +3988,7 @@ let uidSeq = 1;
 const CLIENT_KEY = "mengchong-td-client-id";
 const NAME_KEY = "mengchong-td-player-name";
 const LB_URL = "https://pet-td-leaderboard.carden1218.workers.dev";
-const GAME_VERSION = '2.9.6';
+const GAME_VERSION = '2.9.7';
 let lastSeasonInfo = null;   // tournament build — the leaderboard rejects any other clientVersion
 const LB_CACHE_KEY = "mengchong-td-board-cache";
 function getClientId() {
@@ -3955,24 +4032,69 @@ function adoptExistingName() {
 }
 function normSquad(q) { const out = [], seenU = new Set(), seenS = new Set(); if (Array.isArray(q)) for (const x of q) { const u = x && (x.u != null ? x.u : x.uid) | 0, sl = x && (x.s != null ? x.s : x.slot) | 0; if (u > 0 && sl >= 0 && sl < SLOTS && !seenU.has(u) && !seenS.has(sl)) { seenU.add(u); seenS.add(sl); out.push({ u, s: sl }); } } return out; }
 function normMaps(m) { const o = {}; if (m && typeof m === "object") for (const k in m) if (MAP[k] && m[k]) o[k] = { c: m[k].c ? 1 : 0, h: m[k].h ? 1 : 0, n: Math.max(0, m[k].n | 0) }; return o; }
+function packPet(p) {
+  if (!p || !p.id) return p;
+  const d = PET[p.id];
+  const o = { uid: p.uid | 0, id: p.id, apt: p.apt | 0 };
+  if ((p.star | 0) > 1) o.star = p.star | 0;
+  if (p.shiny) o.shiny = 1;
+  if (d && p.grade && p.grade !== birthGrade(o.apt, d.rar, !!p.shiny)) o.grade = p.grade;
+  if ((p.lv | 0) > 1) o.lv = p.lv | 0;
+  if ((p.xp | 0) > 0) o.xp = p.xp | 0;
+  const tr = p.tr;
+  if (tr && (tr.a || tr.h || tr.s)) {
+    const t = {};
+    if (tr.a) t.a = tr.a | 0;
+    if (tr.h) t.h = tr.h | 0;
+    if (tr.s) t.s = tr.s | 0;
+    o.tr = t;
+  }
+  if ((p.evo | 0) > 0) o.evo = p.evo | 0;
+  if (p.nick) o.nick = p.nick;
+  if (p.charm) o.charm = p.charm;
+  if (p.trait) o.trait = p.trait;
+  if (p.tro && p.tro.length) o.tro = p.tro;
+  if ((p.bond | 0) > 0) o.bond = p.bond | 0;
+  if (p.locked) o.locked = 1;
+  if (p.fav) o.fav = 1;
+  return o;
+}
+let _batchPersistDepth = 0, _batchPersistDirty = false;
+function withBatchPersist(fn) {
+  _batchPersistDepth++;
+  try { return fn(); }
+  finally {
+    _batchPersistDepth--;
+    if (_batchPersistDepth === 0 && _batchPersistDirty) {
+      _batchPersistDirty = false;
+      persist();
+    }
+  }
+}
+if (typeof window !== "undefined") window.__persistHasExtras13 = true;
 function persist() {
+  if (_batchPersistDepth > 0) { _batchPersistDirty = true; return; }
   try {
-    // Never let an unstarted in-memory save wipe a real localStorage run.
     if (!save.started) {
       const raw = localStorage.getItem(SAVE_KEY);
       if (raw) {
         try { const prev = JSON.parse(raw); if (isUsableSave(prev)) return; } catch (e) {}
       }
     }
-    localStorage.setItem(SAVE_KEY, JSON.stringify({
+    const packedPets = new Array(save.pets.length);
+    for (let i = 0; i < save.pets.length; i++) packedPets[i] = packPet(save.pets[i]);
+    const payload = {
       v: 2, started: save.started, muted: !!(save.muteBgm && save.muteSfx), muteBgm: !!save.muteBgm, muteSfx: !!save.muteSfx,
-      gems: save.gems, pets: save.pets, eggs: save.eggs,
+      gems: save.gems, pets: packedPets, eggs: save.eggs,
       beaten: save.beaten, endlessBest: save.endlessBest, seen: save.seen, seenShiny: save.seenShiny,
       firstEgg: save.firstEgg, hatched: save.hatched, food: save.food, charms: save.charms, evoMain: save.evoMain, uidSeq,
       maps: save.maps || {}, tutorialDone: !!save.tutorialDone, bgmVol: bgmVolume(),
       specialGot: save.specialGot || {}, thiefKills: save.thiefKills | 0, squad: save.squad || [], migratedV21: true, charmLv: save.charmLv || {}, seenV22: !!save.seenV22, seenV23: !!save.seenV23, v24: save.v24 || null, v25: save.v25 || null, firstTreasureEggClaimed: !!save.firstTreasureEggClaimed,
       playerName: save.playerName || "", clientId: save.clientId || getClientId()
-    }));
+    };
+    if (save.gifts27) payload.gifts27 = save.gifts27;
+    if (save.revoke13) payload.revoke13 = save.revoke13;
+    localStorage.setItem(SAVE_KEY, JSON.stringify(payload));
   } catch (e) {}
   if (save.started) { try { maybeSubmitScore("persist"); } catch (e) {} }
 }
@@ -3984,12 +4106,49 @@ function flushSave() { if (!persistSuspended && save.started) { try { persist();
 function snapshotSave() {
   return {
     v: 2, started: save.started, muted: !!(save.muteBgm && save.muteSfx), muteBgm: !!save.muteBgm, muteSfx: !!save.muteSfx,
-    gems: save.gems, pets: save.pets, eggs: save.eggs, beaten: save.beaten, endlessBest: save.endlessBest,
+    gems: save.gems, pets: save.pets.map(packPet), eggs: save.eggs, beaten: save.beaten, endlessBest: save.endlessBest,
     seen: save.seen, seenShiny: save.seenShiny, firstEgg: save.firstEgg, hatched: save.hatched, food: save.food, charms: save.charms, evoMain: save.evoMain, uidSeq, lang: LANG,
     maps: save.maps || {}, tutorialDone: !!save.tutorialDone, bgmVol: bgmVolume(),
     specialGot: save.specialGot || {}, thiefKills: save.thiefKills | 0, squad: save.squad || [], migratedV21: true, charmLv: save.charmLv || {}, seenV22: !!save.seenV22, seenV23: !!save.seenV23, v24: save.v24 || null, v25: save.v25 || null, firstTreasureEggClaimed: !!save.firstTreasureEggClaimed,
     playerName: save.playerName || "", clientId: save.clientId || getClientId()
   };
+}
+let _petIdxArr = null, _petIdxLen = -1, _petIdxFirst = null, _petIdxLast = null;
+const _uidMap297 = new Map(), _spMap297 = new Map();
+function invPetIndex() { _petIdxLen = -1; }
+function _syncPetIndex() {
+  const arr = save && save.pets;
+  if (!arr) { _uidMap297.clear(); _spMap297.clear(); _petIdxLen = 0; return; }
+  const len = arr.length, f = len ? arr[0] : null, l = len ? arr[len - 1] : null;
+  if (_petIdxArr === arr && _petIdxLen === len && _petIdxFirst === f && _petIdxLast === l) return;
+  _uidMap297.clear();
+  _spMap297.clear();
+  for (let i = 0; i < len; i++) {
+    const p = arr[i];
+    if (!p) continue;
+    _uidMap297.set(p.uid, p);
+    let bucket = _spMap297.get(p.id);
+    if (!bucket) { bucket = []; _spMap297.set(p.id, bucket); }
+    bucket.push(p);
+  }
+  _petIdxArr = arr; _petIdxLen = len; _petIdxFirst = f; _petIdxLast = l;
+}
+function petByUid(uid) {
+  if (uid == null) return null;
+  _syncPetIndex();
+  const hit = _uidMap297.get(uid);
+  if (hit && hit.uid === uid) return hit;
+  return null;
+}
+function petsOfSpecies(id) {
+  _syncPetIndex();
+  return _spMap297.get(id) || [];
+}
+function squadUidSet() {
+  const s = new Set();
+  const sq = save && save.squad;
+  if (Array.isArray(sq)) for (let i = 0; i < sq.length; i++) { const x = sq[i]; if (x && x.u != null) s.add(x.u); }
+  return s;
 }
 function applySave(d) {
   save.started = true;
@@ -4030,10 +4189,16 @@ function applySave(d) {
   } else save.clientId = getClientId();
   const nm = adoptedPlayerName(d.playerName || readStoredName());
   save.playerName = nm; writeStoredName(nm);
-  for (const p of save.pets) { save.seen[p.id] = true; if (p.shiny) save.seenShiny[p.id] = true; }
-  uidSeq = Math.max(1, d.uidSeq | 0, ...save.pets.map(p => p.uid + 1));
+  let maxUid = Math.max(1, d.uidSeq | 0);
+  for (let i = 0; i < save.pets.length; i++) {
+    const p = save.pets[i];
+    save.seen[p.id] = true; if (p.shiny) save.seenShiny[p.id] = true;
+    if ((p.uid + 1) > maxUid) maxUid = p.uid + 1;
+  }
+  uidSeq = maxUid;
   for (const p of save.pets) if (!p.uid) p.uid = uidSeq++;
-  save.squad = save.squad.filter(x => save.pets.some(p => p.uid === x.u));
+  invPetIndex();
+  save.squad = save.squad.filter(x => !!petByUid(x.u));
   save.migratedV21 = !!d.migratedV21;
   if (!save.migratedV21) migrateV21();
 }
@@ -4046,7 +4211,7 @@ function migrateV21() {
   for (const p of save.pets) if (p.charm && !keep.includes(p)) save.charms[p.charm] = (save.charms[p.charm] | 0) + 1;   // charms on removed copies go back to the bag
   for (const p of keep) { p.star = 1; p.evo = 0; p.lv = 1; p.xp = 0; p.tr = { a: 0, h: 0, s: 0 }; p.trait = ""; p.tro = []; }
   const hadPets = save.pets.length;
-  save.pets = keep; save.evoMain = {};
+  save.pets = keep; save.evoMain = {}; invPetIndex();
   save.gems = Math.min(save.gems, 200);
   save.eggs = save.eggs.slice(0, 3).map(e => ({ q: Math.min(3, e.q), sh: Math.min(SHINY_CAP, e.sh) }));
   save.endlessBest = 0;
@@ -4059,12 +4224,15 @@ function normPet(p) {
   const d = PET[p.id], shiny = !!p.shiny;
   const apt = p.apt >= 1 && p.apt <= 100 ? p.apt | 0 : rollApt(d.rar, 20);
   const tr0 = p.tr || {}, cap = trainCap(apt);
-  return { uid: p.uid | 0, id: p.id, star: clamp(p.star | 0 || 1, 1, MAX_STAR), shiny, apt,
+  const out = { uid: p.uid | 0, id: p.id, star: clamp(p.star | 0 || 1, 1, MAX_STAR), shiny, apt,
     grade: GRADES.includes(p.grade) ? p.grade : birthGrade(apt, d.rar, shiny),
     lv: clamp(p.lv | 0 || 1, 1, MAX_LV), xp: Math.max(0, p.xp | 0),
     tr: { a: clamp(tr0.a | 0, 0, cap), h: clamp(tr0.h | 0, 0, cap), s: clamp(tr0.s | 0, 0, cap) },
     evo: Math.max(0, p.evo | 0), nick: sanitizeNick(p.nick), charm: p.charm && CHARM[p.charm] ? p.charm : "",
     trait: p.trait && TRAIT[p.trait] ? p.trait : "", tro: Array.isArray(p.tro) ? p.tro.filter(x => TRAIT[x]).slice(0, 3) : [], bond: Math.max(0, Math.min(100, p.bond | 0)) };
+  if (p.locked) out.locked = true;
+  if (p.fav) out.fav = true;
+  return out;
 }
 function loadSave() {
   try {
@@ -4116,6 +4284,15 @@ function addPet(id, star, shiny, o) {
   const rar = PET[id].rar, apt = o.apt != null ? clampN(o.apt | 0, 1, 100) : rollApt(rar, o.minApt);
   const p = { uid: uidSeq++, id, star: star || 1, shiny: !!shiny, apt, grade: birthGrade(apt, rar, !!shiny), lv: 1, xp: 0, tr: { a: 0, h: 0, s: 0 }, evo: 0, nick: "", charm: "", trait: "", tro: [] };
   save.pets.push(p); save.seen[id] = true; if (shiny) save.seenShiny[id] = true;
+  if (_petIdxArr === save.pets && _petIdxLen >= 0) {
+    _uidMap297.set(p.uid, p);
+    let bucket = _spMap297.get(p.id);
+    if (!bucket) { bucket = []; _spMap297.set(p.id, bucket); }
+    bucket.push(p);
+    _petIdxLen = save.pets.length;
+    if (_petIdxLen === 1) _petIdxFirst = p;
+    _petIdxLast = p;
+  }
   return p;
 }
 
@@ -4522,7 +4699,7 @@ function gainXp(p, n) {
   return ups;
 }
 function feedPet(uid, fid) {
-  const p = save.pets.find(q => q.uid === uid), f = FOOD[fid];
+  const p = petByUid(uid), f = FOOD[fid];
   if (!p || !f || !(save.food[fid] > 0)) return false;
   save.food[fid]--; if (!save.food[fid]) delete save.food[fid];
   const cap = trainCap(p.apt);
@@ -4533,18 +4710,20 @@ function feedPet(uid, fid) {
 }
 function saveSquad() { save.squad = B.towers.map(t => ({ u: t.uid, s: t.slot })); persist(); }
 function restoreSquad() {
-  const q = normSquad(save.squad).filter(x => save.pets.some(p => p.uid === x.u));
+  const q = normSquad(save.squad).filter(x => !!petByUid(x.u));
   if (!q.length) return false;
   for (const x of q) deploy(x.u, x.s, true);
   return B.towers.length > 0;
 }
 function fillEmptySlots() {
   const free = [2, 1, 3, 0, 4, 7, 6, 8, 5, 9].filter(sl => !B.towers.some(t => t.slot === sl));
-  const pool = save.pets.filter(p => !B.towers.some(t => t.uid === p.uid)).sort((a, b) => petPower(b) - petPower(a));
+  if (!free.length) return;
+  const used = deployedUids();
+  const pool = topPetsK(save.pets.filter(p => !used.has(p.uid)), free.length);
   free.forEach((sl, i) => { if (pool[i]) deploy(pool[i].uid, sl, true); });
 }
 function autoDeploy() {
-  const pets = save.pets.slice().sort((a, b) => petPower(b) - petPower(a)).slice(0, SLOTS);
+  const pets = topPetsK(save.pets, SLOTS);
   const tanks = pets.filter(p => PET[p.id].role === "tank");
   const others = pets.filter(p => PET[p.id].role !== "tank");
   const order = [2, 1, 3, 0, 4];
@@ -4556,7 +4735,7 @@ function autoDeploy() {
   back.slice(0, 5).forEach((p, i) => deploy(p.uid, 5 + order[i], true));
 }
 function deploy(uid, slot, quiet) {
-  const p = save.pets.find(q => q.uid === uid);
+  const p = petByUid(uid);
   if (!p || slot < 0 || slot >= SLOTS) return false;
   if (B.towers.some(t => t.uid === uid)) return false;
   const old = B.towers.find(t => t.slot === slot);
@@ -4606,8 +4785,12 @@ function teamAdvice(ids) {
   if (!ids.length) return tr("adv_empty");
   const roles = new Set(ids.map(role5)), miss = ADV_ORDER.find(r => !roles.has(r));
   if (miss) {
-    const used = new Set(B.towers.map(t => t.uid));
-    const cand = save.pets.filter(p => !used.has(p.uid) && role5(p.id) === miss).sort((a, b) => petPower(b) - petPower(a))[0];
+    const used = deployedUids();
+    let cand = null, bestPw = -1;
+    for (let i = 0; i < save.pets.length; i++) {
+      const p = save.pets[i];
+      if (!used.has(p.uid) && role5(p.id) === miss) { const pw = petPower(p); if (pw > bestPw) { bestPw = pw; cand = p; } }
+    }
     return cand ? tr("adv_missing", tr("r5_" + miss), petName(cand)) : tr("adv_missing_none", tr("r5_" + miss));
   }
   return tr("adv_great", teamSynergies(ids).length);
@@ -4619,7 +4802,7 @@ function renderTeamBar() {
   const ad = el("advisor"); if (ad) ad.textContent = "💡 " + teamAdvice(ids);
 }
 function suggestTeam() {
-  const want = { carry: 2, aoe: 2, control: 2, support: 2, summon: 2 }, pick = [], left = save.pets.slice().sort((a, b) => petPower(b) - petPower(a));
+  const want = { carry: 2, aoe: 2, control: 2, support: 2, summon: 2 }, pick = [], left = topPetsK(save.pets, 60);
   for (const r of ["carry", "control", "aoe", "support", "summon"]) for (const p of left.filter(p => role5(p.id) === r).slice(0, want[r])) pick.push(p);
   for (const p of left) if (pick.length < SLOTS && !pick.includes(p)) pick.push(p);
   const team = pick.slice(0, SLOTS), tm = B.terrain || {}, taken = new Set(), place = [];
@@ -4642,27 +4825,68 @@ function suggestTeam() {
   saveSquad(); renderTray(); refreshHUD(); sfx.place(); showToast(tr("suggest_done"), 2.6);
   return place.map(q => ({ uid: q.p.uid, slot: q.s, role: role5(q.p.id) }));
 }
+function syncTraySel297() {
+  const box = el("tray"); if (!box) return;
+  const cur = box.querySelectorAll(".tcard.on");
+  for (let i = 0; i < cur.length; i++) if (+cur[i].dataset.uid !== B.selPet) cur[i].classList.remove("on");
+  if (B.selPet != null) {
+    const hit = box.querySelector(".tcard[data-uid='" + B.selPet + "']");
+    if (hit) hit.classList.add("on");
+  }
+}
+function makeTrayCard297(p) {
+  const d = PET[p.id];
+  const div = document.createElement("div");
+  div.className = "tcard v13 r" + d.rar + (p.shiny ? " shiny" : "") + (B.selPet === p.uid ? " on" : "");
+  div.dataset.uid = p.uid;
+  div.innerHTML = "<div class='tc-top'><span class='tc-rar'>" + RAR_NAME[d.rar] + "</span><span class='tc-badges'>" + (p.charm ? "<span class='tc-charm' title='" + esc(tr("charm_" + p.charm)) + "'>🎀</span>" : "") + "<span class='r5b r5-" + d.r5 + "' title='" + esc(tr("r5_" + d.r5)) + "'>" + ROLE5_ICON[d.r5] + "</span><span class='el el-" + d.el + "'>" + elShort(d.el) + "</span></span></div>";
+  const art = document.createElement("div"); art.className = "tc-art";
+  art.appendChild(petCanvas(p.id, p.star, p.shiny, 84, { charm: p.charm, hat: hatOfUid(p.uid) }));
+  div.appendChild(art);
+  const ft = document.createElement("div"); ft.className = "tc-foot";
+  ft.innerHTML = "<div class='tc-nm'>" + (p.shiny ? "✦" : "") + petName(p) + "</div><div class='tc-st'>" + "★".repeat(p.star) + "</div><div class='tc-pw'>⚔ " + fmtPower(petPower(p)) + "</div>";
+  div.appendChild(ft);
+  div.addEventListener("click", (e) => {
+    e.stopPropagation(); sfx.click();
+    B.selPet = B.selPet === p.uid ? null : p.uid;
+    B.selTower = null; el("inspect").classList.add("hidden");
+    syncTraySel297();
+    if (B.selPet != null) tutEvent("pet_selected");
+  });
+  return div;
+}
 function renderTray() {
   renderTeamBar();
   const box = el("tray"); box.innerHTML = "";
   const used = deployedUids();
   const list = save.pets.filter(p => !used.has(p.uid)).sort((a, b) => petPower(b) - petPower(a));
   if (!list.length) { box.innerHTML = "<div class='empty'>" + (save.pets.length ? tr("all_out") : tr("no_pets")) + "</div>"; return; }
-  for (const p of list) {
-    const d = PET[p.id];
-    const div = document.createElement("div");
-    div.className = "tcard v13 r" + d.rar + (p.shiny ? " shiny" : "") + (B.selPet === p.uid ? " on" : "");
-    div.dataset.uid = p.uid;
-    // v13: three separate zones — top strip, unobstructed art, footer (nothing is drawn over the pet)
-    div.innerHTML = "<div class='tc-top'><span class='tc-rar'>" + RAR_NAME[d.rar] + "</span><span class='tc-badges'>" + (p.charm ? "<span class='tc-charm' title='" + esc(tr("charm_" + p.charm)) + "'>🎀</span>" : "") + "<span class='r5b r5-" + d.r5 + "' title='" + esc(tr("r5_" + d.r5)) + "'>" + ROLE5_ICON[d.r5] + "</span><span class='el el-" + d.el + "'>" + elShort(d.el) + "</span></span></div>";
-    const art = document.createElement("div"); art.className = "tc-art";
-    art.appendChild(petCanvas(p.id, p.star, p.shiny, 84, { charm: p.charm, hat: hatOfUid(p.uid) }));
-    div.appendChild(art);
-    const ft = document.createElement("div"); ft.className = "tc-foot";
-    ft.innerHTML = "<div class='tc-nm'>" + (p.shiny ? "✦" : "") + petName(p) + "</div><div class='tc-st'>" + "★".repeat(p.star) + "</div><div class='tc-pw'>⚔ " + fmtPower(petPower(p)) + "</div>";
-    div.appendChild(ft);
-    div.addEventListener("click", (e) => { e.stopPropagation(); sfx.click(); B.selPet = B.selPet === p.uid ? null : p.uid; B.selTower = null; el("inspect").classList.add("hidden"); renderTray(); if (B.selPet != null) tutEvent("pet_selected"); });
-    box.appendChild(div);
+  const PAGE = 48;
+  let shown = 0, moreBtn = null;
+  const appendChunk = () => {
+    if (moreBtn && moreBtn.parentNode === box) moreBtn.remove();
+    const end = Math.min(list.length, shown + PAGE);
+    const frag = document.createDocumentFragment();
+    for (let i = shown; i < end; i++) frag.appendChild(makeTrayCard297(list[i]));
+    shown = end;
+    box.appendChild(frag);
+    if (shown < list.length) {
+      moreBtn = document.createElement("button");
+      moreBtn.type = "button";
+      moreBtn.className = "tcard tcard-more";
+      moreBtn.style.cssText = "display:flex;flex-direction:column;align-items:center;justify-content:center;background:#fff8e6;color:#2b1b22;font-weight:900;font-size:13px;padding:8px;min-height:110px;border:3px solid var(--ol);border-radius:14px;flex:0 0 88px;text-shadow:none;";
+      moreBtn.textContent = "+" + (list.length - shown);
+      moreBtn.addEventListener("click", (e) => { e.stopPropagation(); sfx.click(); appendChunk(); });
+      box.appendChild(moreBtn);
+    } else moreBtn = null;
+  };
+  appendChunk();
+  box._trayMore297 = () => { if (shown < list.length) appendChunk(); };
+  if (!box._trayScrollBound297) {
+    box._trayScrollBound297 = true;
+    box.addEventListener("scroll", () => {
+      if (box.scrollLeft + box.clientWidth >= box.scrollWidth - 180 && box._trayMore297) box._trayMore297();
+    }, { passive: true });
   }
 }
 function showInspect(t) {
@@ -4674,7 +4898,7 @@ function showInspect(t) {
     + (t.charm ? "<div class='charm-line'>" + tr("charm_on", tr("charm_" + t.charm)) + " · " + tr("charm_" + t.charm + "_d") + "</div>" : "")
     + "<div><span class='role r5t r5-" + d.r5 + "'>" + ROLE5_ICON[d.r5] + " " + tr("r5_" + d.r5) + "</span> <span class='role'>" + tr("el_type", elName(d.el)) + "</span> · " + tr("field_lv", t.tier) + "</div>"
     + (t.terr || t._aura || t.jamT > 0 ? "<div class='terr-line'>" + (t.terr ? TERRAIN[t.terr].icon + " " + tr("terr_" + t.terr) + " <small>" + tr("terr_" + t.terr + "_d") + "</small> " : "") + (t._aura ? "✨ " + tr("aura_on") + " " : "") + (t.jamT > 0 ? "🟢 " + tr("jammed") : "") + (t.sleepT > 0 ? " 💤" : "") + (t.stunT > 0 ? " ✦" : "") + "</div>" : "")
-    + (save.pets.find(q => q.uid === t.uid) ? (() => { const q = save.pets.find(q => q.uid === t.uid); return "<div style='margin:3px 0'>" + lvHTML(q) + " " + gradeHTML(q.grade) + " <span class='pwr'>⚔ " + fmtPower(petPower(q)) + "</span></div>" + aptBarHTML(q, true); })() : "")
+    + (petByUid(t.uid) ? (() => { const q = petByUid(t.uid); return "<div style='margin:3px 0'>" + lvHTML(q) + " " + gradeHTML(q.grade) + " <span class='pwr'>⚔ " + fmtPower(petPower(q)) + "</span></div>" + aptBarHTML(q, true); })() : "")
     + "<div class='skill'><b>" + tr("skill_line", d.sk) + "</b>" + d.skd + "<br><span style='opacity:.8'>" + tr("skill_up", d.up) + "</span></div>"
     + "<div>" + (d.dmg ? tr("dmg", Math.round(st.dmg)) : "") + tr("range_hp", Math.round(st.range), Math.ceil(t.hp), Math.round(st.maxHp)) + "</div>"
     + "<div class='btn-row' style='margin-top:8px'>"
@@ -4888,14 +5112,16 @@ function waveCleared() {
   if (Math.random() < goldEggChance(lv, B.wave, false)) dropEgg(W / 2, FRONT_Y - 200, 4, shinyChance(lootLevel(lv, B.wave)) * 2);
   B.gemsGot += g; save.gems += g;
   const xpG = 6 + 2 * B.wave; let upMsg = "";
-  for (const t of B.towers) {
-    const p = save.pets.find(q => q.uid === t.uid);
-    if (p && gainXp(p, xpG)) { upMsg = tr("lvup", stageName(p.id, p.star), p.lv); t.ind = indivMul(p); t.lv = p.lv; }
-  }
-  try { onV22Wave(); } catch (e) {}
-  for (const t of B.towers) { t.fainted = false; t.hp = petStats(t).maxHp; }
-  if (lv.endless) { save.endlessBest = Math.max(save.endlessBest, B.wave); checkSpecialCharms(); }
-  persist();
+  withBatchPersist(() => {
+    for (const t of B.towers) {
+      const p = petByUid(t.uid);
+      if (p && gainXp(p, xpG)) { upMsg = tr("lvup", stageName(p.id, p.star), p.lv); t.ind = indivMul(p); t.lv = p.lv; }
+    }
+    try { onV22Wave(); } catch (e) {}
+    for (const t of B.towers) { t.fainted = false; t.hp = petStats(t).maxHp; }
+    if (lv.endless) { save.endlessBest = Math.max(save.endlessBest, B.wave); checkSpecialCharms(); }
+    persist();
+  });
   B.countdown = 4;
   if (lv.story && B.wave >= lv.waves) { refreshHUD(); endRun(true); return; }
   if (lv.endless && B.wave % 10 === 0) showToast(tr("wave_clear_zone", B.wave, g, zoneOf(B.wave + 1).name), 3.2);
@@ -5825,7 +6051,7 @@ function renderPlay(body) {
   const zi = spriteFrame("enemies/" + ENEMY[isEndless ? "sprout" : m.pool[m.pool.length - 1]].img), bi = spriteFrame("enemies/" + bossK);
   if (bi) { const [w, h] = fitBox(bi, 96); blit(c, bi, 158 - w / 2, 128 - h, w, h); }
   if (zi) { const [w, h] = fitBox(zi, 60); blit(c, zi, 72 - w / 2, 134 - h, w, h); }
-  const top = save.pets.slice().sort((a, b) => petPower(b) - petPower(a))[0];
+  const top = topPetsK(save.pets, 1)[0];
   if (top) drawPet(c, top.id, top.star, top.shiny, 208, 146, [0, 58, 64, 70, 76, 82][top.star], { charm: top.charm, shadow: false, glow: false, t: 0.6 });
   hero.appendChild(cv);
   const chips = isEndless
@@ -5912,7 +6138,7 @@ function planTrain(p, amt, useGems) {
   return { from: p.lv, to: q.lv, used, gems: gemCost, after: q, target };
 }
 function applyTrain(uid, amt, useGems) {
-  const p = save.pets.find(q => q.uid === uid);
+  const p = petByUid(uid);
   if (!p) return null;
   if (p.lv >= MAX_LV) return { from: p.lv, to: p.lv, maxed: true, milestones: [] };
   const plan = planTrain(p, amt, useGems == null ? trainUseGems : useGems);
@@ -5938,11 +6164,11 @@ function statSnap(p) {
 /* ===== v13 pet traits: one slot, pick 1 of 3, reroll for gems ===== */
 function traitOffers(p) { if (!p.tro || p.tro.length !== 3) { p.tro = rollTraitOffers(p.trait); persist(); } return p.tro; }
 function pickTrait(uid, id) {
-  const p = save.pets.find(q => q.uid === uid); if (!p || !TRAIT[id] || p.lv < TRAIT_UNLOCK_LV || !traitOffers(p).includes(id)) return false;
+  const p = petByUid(uid); if (!p || !TRAIT[id] || p.lv < TRAIT_UNLOCK_LV || !traitOffers(p).includes(id)) return false;
   p.trait = id; p.tro = []; persist(); return true;
 }
 function rerollTrait(uid) {
-  const p = save.pets.find(q => q.uid === uid); if (!p || p.lv < TRAIT_UNLOCK_LV || save.gems < TRAIT_REROLL_COST) return false;
+  const p = petByUid(uid); if (!p || p.lv < TRAIT_UNLOCK_LV || save.gems < TRAIT_REROLL_COST) return false;
   save.gems -= TRAIT_REROLL_COST; p.tro = rollTraitOffers(p.trait); persist(); return p.tro.slice();
 }
 function traitBox(p) {
@@ -5958,16 +6184,30 @@ function traitBox(p) {
   return tb;
 }
 function recommendedUids() {
-  const deployed = new Set((B.towers || []).map(t => t.uid));
-  const pool = save.pets.filter(p => p.lv < MAX_LV).sort((a, b) => (deployed.has(b.uid) - deployed.has(a.uid)) || (petPower(b) - petPower(a)));
-  return new Set(pool.slice(0, 3).map(p => p.uid));
+  const deployed = deployedUids();
+  const top3 = [];
+  for (let i = 0; i < save.pets.length; i++) {
+    const p = save.pets[i];
+    if (p.lv >= MAX_LV) continue;
+    const dep = deployed.has(p.uid) ? 1 : 0, pw = petPower(p);
+    let pos = top3.length;
+    while (pos > 0 && (dep > top3[pos - 1].dep || (dep === top3[pos - 1].dep && pw > top3[pos - 1].pw))) pos--;
+    if (pos < 3) {
+      top3.splice(pos, 0, { uid: p.uid, dep, pw });
+      if (top3.length > 3) top3.pop();
+    }
+  }
+  return new Set(top3.map(x => x.uid));
 }
 function renderTrain(body) {
   body.insertAdjacentHTML("beforeend", "<div class='box train-info' style='font-weight:800;font-size:13px'>" + tr("train_info") + "</div>");
   if (!save.pets.length) return;
   const recs = recommendedUids();
-  if (!save.pets.some(p => p.uid === trainSel)) trainSel = (save.pets.find(p => recs.has(p.uid)) || save.pets.slice().sort((a, b) => petPower(b) - petPower(a))[0]).uid;
-  const p = save.pets.find(q => q.uid === trainSel), cap = trainCap(p.apt);
+  if (!petByUid(trainSel)) {
+    const firstRec = save.pets.find(p => recs.has(p.uid));
+    trainSel = (firstRec || topPetsK(save.pets, 1)[0]).uid;
+  }
+  const p = petByUid(trainSel), cap = trainCap(p.apt);
   const box = document.createElement("div"); box.className = "box train-panel v13" + (p.shiny ? " shiny" : "");
   const need = xpNeed(p.lv);
   const head = document.createElement("div"); head.className = "tp-head";
@@ -6044,16 +6284,39 @@ function renderTrain(body) {
   pack.querySelector("button").addEventListener("click", () => { if (buyFoodPack()) { sfx.coin(); showToast(tr("food_pack_ok")); renderHome(); } });
   fr.appendChild(pack);
   body.appendChild(fr);
-  // ---- pick a pet (recommended first) ----
-  body.insertAdjacentHTML("beforeend", "<div class='sec-title'>" + tr("pick_pet") + "</div>");
+  // ---- pick a pet (recommended first, paged for huge collections) ----
+  body.insertAdjacentHTML("beforeend", "<div class='sec-title'>" + tr("pick_pet") + " (" + save.pets.length + ")</div>");
+  const sorted = save.pets.slice().sort((a, b) => (recs.has(b.uid) - recs.has(a.uid)) || (petPower(b) - petPower(a)));
   const grid = document.createElement("div"); grid.className = "grid3";
-  save.pets.slice().sort((a, b) => (recs.has(b.uid) - recs.has(a.uid)) || (petPower(b) - petPower(a))).forEach(q => {
-    const c = petCard(q.id, q.star, q.shiny, { pet: q }); if (q.uid === trainSel) c.classList.add("sel");
-    if (recs.has(q.uid)) { c.classList.add("rec"); c.insertAdjacentHTML("afterbegin", "<div class='rec-badge'>⭐ " + tr("rec_badge") + "</div>"); }
-    c.addEventListener("click", () => { sfx.click(); trainSel = q.uid; renderHome(); el("home-body").scrollTop = 0; });
-    grid.appendChild(c);
-  });
   body.appendChild(grid);
+  const moreRow = document.createElement("div");
+  moreRow.style.cssText = "display:flex;gap:8px;justify-content:center;flex-wrap:wrap;margin:10px 0;";
+  body.appendChild(moreRow);
+  const PAGE = 48;
+  let shown = 0;
+  const appendChunk = (limit) => {
+    const end = Math.min(sorted.length, shown + limit);
+    const frag = document.createDocumentFragment();
+    for (let i = shown; i < end; i++) {
+      const q = sorted[i];
+      const c = petCard(q.id, q.star, q.shiny, { pet: q });
+      if (q.uid === trainSel) c.classList.add("sel");
+      if (recs.has(q.uid)) { c.classList.add("rec"); c.insertAdjacentHTML("afterbegin", "<div class='rec-badge'>⭐ " + tr("rec_badge") + "</div>"); }
+      c.addEventListener("click", () => { sfx.click(); trainSel = q.uid; renderHome(); el("home-body").scrollTop = 0; });
+      frag.appendChild(c);
+    }
+    shown = end;
+    grid.appendChild(frag);
+    moreRow.innerHTML = "";
+    if (shown < sorted.length) {
+      const rem = sorted.length - shown;
+      const b1 = document.createElement("button"); b1.type = "button"; b1.className = "b-sky mini";
+      b1.textContent = tr("show_more_n", rem);
+      b1.addEventListener("click", () => { sfx.click(); appendChunk(PAGE); });
+      moreRow.appendChild(b1);
+    }
+  };
+  appendChunk(PAGE);
 }
 let lastHatchAll = [];
 function hatchAll() {
@@ -6077,7 +6340,15 @@ function hatchAll() {
   if (shiny) sfx.shiny(); else sfx.hatch();
   return got;
 }
-function bestOf(id) { return save.pets.filter(p => p.id === id).sort((a, b) => (b.star - a.star) || (b.shiny - a.shiny) || (b.apt - a.apt))[0] || null; }
+function bestOf(id) {
+  const arr = petsOfSpecies(id);
+  let best = null;
+  for (let i = 0; i < arr.length; i++) {
+    const p = arr[i];
+    if (!best || p.star > best.star || (p.star === best.star && ((p.shiny ? 1 : 0) > (best.shiny ? 1 : 0) || ((!!p.shiny === !!best.shiny) && (p.apt | 0) > (best.apt | 0))))) best = p;
+  }
+  return best;
+}
 function petCard(id, star, shiny, opts) {
   opts = opts || {};
   const d = PET[id];
@@ -6105,7 +6376,7 @@ function renderBook(body) {
   const grid = document.createElement("div"); grid.className = "grid3";
   for (const d of PETS) {
     const b = bestOf(d.id);
-    const owned = save.pets.filter(p => p.id === d.id).length;
+    const owned = petsOfSpecies(d.id).length;
     const card = b ? petCard(d.id, b.star, b.shiny, { extra: " ×" + owned, pet: b }) : save.seen[d.id] ? petCard(d.id, 1, false, { extra: " ×0" }) : petCard(d.id, 1, false, { locked: true });
     if (save.seen[d.id]) card.addEventListener("click", () => { sfx.click(); openDetail(d.id); });
     grid.appendChild(card);
@@ -6133,18 +6404,38 @@ function openDetail(id) {
     box.appendChild(ch);
   }
   setTimeout(() => resetScroll("detail"), 0);
-  const mine = save.pets.filter(p => p.id === id).sort((a, b) => (b.apt - a.apt) || (b.star - a.star));
+  const mine = petsOfSpecies(id).slice().sort((a, b) => (b.apt - a.apt) || (b.star - a.star));
   if (mine.length) {
     box.insertAdjacentHTML("beforeend", "<div class='sec-title'>" + tr("my_family", d.names[0], mine.length) + "</div><div class='apt-note' style='margin:-2px 0 6px'>" + tr("apt_note") + "</div>");
-    for (const p of mine) {
-      const row = document.createElement("div"); row.className = "own-row" + (p.shiny ? " shiny" : "") + (isUltra(p) ? " ultra-card" : "");
-      row.appendChild(petCanvas(p.id, p.star, p.shiny, 62, { charm: p.charm, hat: hatOfUid(p.uid), suit: suitOfUid25(p.uid) })); row.dataset.uid = p.uid;
-      row.insertAdjacentHTML("beforeend", "<div class='own-info'><div><b>" + (isUltra(p) ? "<span class='ultra'>" + tr("ultra") + "</span> " : p.shiny ? tr("shiny_pre") : "") + petName(p) + "</b> " + starsHTML(p.star) + " " + lvHTML(p) + " " + gradeHTML(p.grade)
-        + " <button type='button' class='mini b-sky' data-rename='" + p.uid + "'>✎</button></div>"
-        + aptBarHTML(p, true) + "<div class='pwr'>⚔ " + tr("power_n", fmtPower(petPower(p))) + "</div>" + "<div class='own-tr'>" + tr("st_atk") + " +" + p.tr.a * 3 + "% · " + tr("st_hp") + " +" + p.tr.h * 4 + "% · " + tr("st_spd") + " +" + Math.round(p.tr.s * 15) / 10 + "%</div></div>");
-      box.appendChild(row);
-    }
-    bindRename(box, () => openDetail(id));
+    const listWrap = document.createElement("div");
+    box.appendChild(listWrap);
+    const moreWrap = document.createElement("div"); moreWrap.style.cssText = "text-align:center;margin:8px 0;";
+    box.appendChild(moreWrap);
+    let shown = 0;
+    const appendOwn = (limit) => {
+      const end = Math.min(mine.length, shown + limit);
+      const frag = document.createDocumentFragment();
+      for (let i = shown; i < end; i++) {
+        const p = mine[i];
+        const row = document.createElement("div"); row.className = "own-row" + (p.shiny ? " shiny" : "") + (isUltra(p) ? " ultra-card" : "");
+        row.appendChild(petCanvas(p.id, p.star, p.shiny, 62, { charm: p.charm, hat: hatOfUid(p.uid), suit: suitOfUid25(p.uid) })); row.dataset.uid = p.uid;
+        row.insertAdjacentHTML("beforeend", "<div class='own-info'><div><b>" + (isUltra(p) ? "<span class='ultra'>" + tr("ultra") + "</span> " : p.shiny ? tr("shiny_pre") : "") + petName(p) + "</b> " + starsHTML(p.star) + " " + lvHTML(p) + " " + gradeHTML(p.grade)
+          + " <button type='button' class='mini b-sky' data-rename='" + p.uid + "'>✎</button></div>"
+          + aptBarHTML(p, true) + "<div class='pwr'>⚔ " + tr("power_n", fmtPower(petPower(p))) + "</div>" + "<div class='own-tr'>" + tr("st_atk") + " +" + p.tr.a * 3 + "% · " + tr("st_hp") + " +" + p.tr.h * 4 + "% · " + tr("st_spd") + " +" + Math.round(p.tr.s * 15) / 10 + "%</div></div>");
+        frag.appendChild(row);
+      }
+      shown = end;
+      listWrap.appendChild(frag);
+      bindRename(listWrap, () => openDetail(id));
+      moreWrap.innerHTML = "";
+      if (shown < mine.length) {
+        const b = document.createElement("button"); b.type = "button"; b.className = "b-sky mini";
+        b.textContent = tr("show_more_n", mine.length - shown);
+        b.addEventListener("click", () => { sfx.click(); appendOwn(48); });
+        moreWrap.appendChild(b);
+      }
+    };
+    appendOwn(48);
   }
   el("detail").classList.remove("hidden");
 }
@@ -6209,42 +6500,63 @@ function renderHatchTab(body) {
 }
 /* ================= v12 evolution: main pet + duplicate feeding ================= */
 let evoSpecies = null;
+function activeTeamUidSet() {
+  const s = squadUidSet();
+  if (B.running && !B.over && B.towers) for (let i = 0; i < B.towers.length; i++) s.add(B.towers[i].uid);
+  return s;
+}
+function isBulkProtectedSpecies297(id) {
+  const d = PET[id];
+  return !d || d.rar >= 4 || !!d.seasonExclusive || !!d.limited;
+}
 function evoMainOf(id) {
   const uid = save.evoMain[id];
-  let m = uid != null && save.pets.find(p => p.uid === uid && p.id === id);
-  if (!m) { m = bestOf(id); if (m) save.evoMain[id] = m.uid; }
+  let m = uid != null ? petByUid(uid) : null;
+  if (!m || m.id !== id) { m = bestOf(id); if (m) save.evoMain[id] = m.uid; }
   return m || null;
 }
-function evoProtected(main, p) {
-  return p.shiny || !!p.nick || !!p.charm || battleUids().has(p.uid) || (/^S/.test(p.grade) && (p.apt || 0) > (main.apt || 0));
+function evoProtected(main, p, busySet) {
+  const busy = busySet || activeTeamUidSet();
+  return p.shiny || !!p.nick || !!p.charm || !!p.locked || !!p.fav || busy.has(p.uid) || (/^S/.test(p.grade) && (p.apt || 0) > (main.apt || 0));
 }
-function evoCopies(main) { return save.pets.filter(p => p.id === main.id && p !== main); }
-function evoEligible(main) {
-  return evoCopies(main).filter(p => !evoProtected(main, p)).sort((a, b) => (a.star - b.star) || ((a.apt || 0) - (b.apt || 0)) || (a.uid - b.uid));
+function evoCopies(main) {
+  const arr = petsOfSpecies(main.id), out = [];
+  for (let i = 0; i < arr.length; i++) if (arr[i] !== main) out.push(arr[i]);
+  return out;
+}
+function evoEligible(main, busySet) {
+  const busy = busySet || activeTeamUidSet();
+  return evoCopies(main).filter(p => !evoProtected(main, p, busy)).sort((a, b) => (a.star - b.star) || ((a.apt || 0) - (b.apt || 0)) || (a.uid - b.uid));
 }
 function feedEvo(mainUid, uids, opt) {
   opt = opt || {};
-  const main = save.pets.find(p => p.uid === mainUid);
+  const main = petByUid(mainUid);
   if (!main) return { fed: 0, gained: 0, ups: 0 };
-  const busy = battleUids();
+  const busy = activeTeamUidSet();
   const oldStar = main.star, oldName = stageName(main.id, main.star);
   let fed = 0, gained = 0;
-  for (const uid of uids) {
+  const removed = new Set();
+  for (let i = 0; i < uids.length; i++) {
     if (main.star >= MAX_STAR) break;
-    const b = save.pets.find(p => p.uid === uid);
-    if (!b || b === main || b.id !== main.id || busy.has(b.uid)) continue;
+    const b = petByUid(uids[i]);
+    if (!b || b === main || b.id !== main.id || removed.has(b.uid) || busy.has(b.uid)) continue;
     const cap = trainCap(main.apt);
     if (b.lv > main.lv) { main.lv = b.lv; main.xp = b.xp; }
     main.tr = { a: Math.min(cap, Math.max(main.tr.a, b.tr.a)), h: Math.min(cap, Math.max(main.tr.h, b.tr.h)), s: Math.min(cap, Math.max(main.tr.s, b.tr.s)) };
     if (b.shiny && !main.shiny) { main.shiny = true; save.seenShiny[main.id] = true; }
     if (b.charm) save.charms[b.charm] = (save.charms[b.charm] | 0) + 1;
     const v = copyValue(b); main.evo = (main.evo | 0) + v; gained += v; fed++;
-    save.pets = save.pets.filter(p => p !== b);
+    removed.add(b.uid);
     while (main.star < MAX_STAR && main.evo >= evoRequired(main.star)) { main.evo -= evoRequired(main.star); main.star++; }
+  }
+  if (removed.size) {
+    save.pets = save.pets.filter(p => !removed.has(p.uid));
+    invPetIndex();
   }
   if (main.star >= MAX_STAR) main.evo = 0;
   save.evoMain[main.id] = main.uid;
-  persist(); checkSpecialCharms();
+  if (!opt.noPersist) persist();
+  if (!opt.noCharmCheck) checkSpecialCharms(opt.quiet);
   const ups = main.star - oldStar;
   if (ups > 0 && !opt.quiet) reveal(main, tr("evo_ok"), tr("evo_msg", oldName, main.shiny ? tr("shiny_pre") : "", petName(main)) + (main.star === MAX_STAR ? tr("max_star") : ""), true);
   else if (fed && !opt.quiet) { showToast(tr("evo_fed", fed, gained)); sfx.coin(); }
@@ -6253,26 +6565,115 @@ function feedEvo(mainUid, uids, opt) {
 function oneClickEvo(id) {
   const main = evoMainOf(id); if (!main) return { fed: 0, gained: 0, ups: 0 };
   if (main.star >= MAX_STAR) return { fed: 0, gained: 0, ups: 0 };
-  // feed only what is needed to reach 5★ (cheapest copies first)
   let need = 0; for (let s = main.star; s < MAX_STAR; s++) need += EVO_REQ[s]; need -= main.evo | 0;
   const pick = []; for (const p of evoEligible(main)) { if (need <= 0) break; pick.push(p.uid); need -= copyValue(p); }
   if (!pick.length) { showToast(tr("evo_nothing")); return { fed: 0, gained: 0, ups: 0 }; }
   return feedEvo(main.uid, pick);
 }
-function evoReady(main) {
+function evoReady(main, busySet) {
   if (!main || main.star >= MAX_STAR) return false;
-  let have = main.evo | 0; for (const p of evoEligible(main)) have += copyValue(p);
-  return have >= evoRequired(main.star);
+  let have = main.evo | 0;
+  const elig = evoEligible(main, busySet);
+  for (let i = 0; i < elig.length; i++) {
+    have += copyValue(elig[i]);
+    if (have >= evoRequired(main.star)) return true;
+  }
+  return false;
 }
-function directEvolve(id) {           // v2.1: one tap -> next star, using only the copies it needs (cheapest first)
+function directEvolve(id) {
   const main = evoMainOf(id); if (!evoReady(main)) { showToast(tr("evo_nothing")); return { ups: 0 }; }
   let need = evoRequired(main.star) - (main.evo | 0);
   const pick = []; for (const p of evoEligible(main).slice().sort((a, b) => copyValue(a) - copyValue(b) || (a.apt | 0) - (b.apt | 0))) { if (need <= 0) break; pick.push(p.uid); need -= copyValue(p); }
   return feedEvo(main.uid, pick);
 }
-function setEvoMain(uid) { const p = save.pets.find(q => q.uid === uid); if (!p) return false; save.evoMain[p.id] = uid; persist(); return true; }
-function evolve(uidA, uidB) {   // legacy hook: feed B into A
-  const a = save.pets.find(p => p.uid === uidA), b = save.pets.find(p => p.uid === uidB);
+function planEvoFeedAll297(main, busySet) {
+  if (!main || main.star >= MAX_STAR || isBulkProtectedSpecies297(main.id)) return { main, pick: [], fed: 0, gained: 0, starFrom: main ? main.star : 1, starTo: main ? main.star : 1, evoFrom: main ? (main.evo | 0) : 0, evoTo: main ? (main.evo | 0) : 0, reqFrom: main ? evoRequired(main.star) : 1 };
+  const elig = evoEligible(main, busySet).slice().sort((a, b) => copyValue(a) - copyValue(b) || (a.apt | 0) - (b.apt | 0) || (a.uid - b.uid));
+  let simStar = main.star, simEvo = main.evo | 0, gained = 0;
+  const pick = [];
+  for (let i = 0; i < elig.length; i++) {
+    if (simStar >= MAX_STAR) break;
+    const p = elig[i], v = copyValue(p);
+    pick.push(p.uid);
+    simEvo += v; gained += v;
+    while (simStar < MAX_STAR && simEvo >= evoRequired(simStar)) { simEvo -= evoRequired(simStar); simStar++; }
+  }
+  if (simStar >= MAX_STAR) simEvo = 0;
+  return { main, pick, fed: pick.length, gained, starFrom: main.star, starTo: simStar, evoFrom: main.evo | 0, evoTo: simEvo, reqFrom: evoRequired(main.star) };
+}
+function planEvoAllReady297(busySet) {
+  const busy = busySet || activeTeamUidSet();
+  const plans = [];
+  let totalFed = 0;
+  for (let i = 0; i < PETS.length; i++) {
+    const d = PETS[i];
+    if (isBulkProtectedSpecies297(d.id)) continue;
+    const arr = petsOfSpecies(d.id);
+    if (arr.length < 2) continue;
+    const main = evoMainOf(d.id);
+    if (!main || main.star >= MAX_STAR) continue;
+    const elig = evoEligible(main, busy).slice().sort((a, b) => copyValue(a) - copyValue(b) || (a.apt | 0) - (b.apt | 0) || (a.uid - b.uid));
+    if (!elig.length) continue;
+    let totalAvail = main.evo | 0;
+    for (let j = 0; j < elig.length; j++) totalAvail += copyValue(elig[j]);
+    let targetStar = main.star, rem = totalAvail;
+    while (targetStar < MAX_STAR && rem >= evoRequired(targetStar)) { rem -= evoRequired(targetStar); targetStar++; }
+    if (targetStar <= main.star) continue;
+    let need = 0;
+    for (let s = main.star; s < targetStar; s++) need += evoRequired(s);
+    need -= (main.evo | 0);
+    const pick = [];
+    let gained = 0;
+    for (let j = 0; j < elig.length && need > 0; j++) {
+      const p = elig[j], v = copyValue(p);
+      pick.push(p.uid); need -= v; gained += v;
+    }
+    if (pick.length) {
+      plans.push({ id: d.id, main, pick, fed: pick.length, gained, starFrom: main.star, starTo: targetStar });
+      totalFed += pick.length;
+    }
+  }
+  return { plans, speciesCount: plans.length, totalFed };
+}
+function ensureEvoModal297() {
+  let m = el("evo-modal-297");
+  if (!m) {
+    m = document.createElement("div");
+    m.id = "evo-modal-297";
+    m.className = "overlay dim-bg";
+    el("detail").parentNode.appendChild(m);
+  }
+  return m;
+}
+function showEvoConfirm297(opts) {
+  const m = ensureEvoModal297();
+  m.innerHTML = "<div class='panel' style='max-width:440px;width:92%;background:#fff8e6;color:#2b1b22;border:4px solid var(--ol);border-radius:20px;padding:18px;box-shadow:0 12px 32px rgba(43,27,34,.35);text-shadow:none'>"
+    + "<h3 style='margin:0 0 10px;color:#2b1b22;font-size:19px;font-weight:900;text-align:center'>" + esc(opts.title) + "</h3>"
+    + "<div style='font-size:14px;font-weight:800;line-height:1.5;color:#2b1b22'>" + opts.bodyHtml + "</div>"
+    + "<div style='background:#fff1cc;border:2px solid #e2c07a;color:#3b2618;border-radius:12px;padding:8px 10px;font-size:12px;font-weight:700;line-height:1.45;margin:10px 0'>" + esc(tr("evo_cf_safe")) + "</div>"
+    + "<div class='btn-row' style='justify-content:center;gap:10px;margin-top:12px'>"
+    + "<button type='button' class='b-sky' id='btn-evo-cf-cancel'>" + esc(tr("rename_cancel")) + "</button>"
+    + "<button type='button' class='b-gold' id='btn-evo-cf-ok'>" + esc(opts.okText) + "</button>"
+    + "</div></div>";
+  m.classList.remove("hidden");
+  m.querySelector("#btn-evo-cf-cancel").addEventListener("click", () => { sfx.click(); m.classList.add("hidden"); });
+  m.querySelector("#btn-evo-cf-ok").addEventListener("click", () => { sfx.click(); m.classList.add("hidden"); opts.onConfirm(); });
+}
+function showEvoSummary297(opts) {
+  const m = ensureEvoModal297();
+  m.innerHTML = "<div class='panel' style='max-width:440px;width:92%;background:#fff8e6;color:#2b1b22;border:4px solid var(--ol);border-radius:20px;padding:18px;box-shadow:0 12px 32px rgba(43,27,34,.35);text-shadow:none'>"
+    + "<h3 style='margin:0 0 10px;color:#2b1b22;font-size:19px;font-weight:900;text-align:center'>" + esc(tr("evo_sum_title")) + "</h3>"
+    + "<div style='font-size:14px;font-weight:800;line-height:1.5;color:#2b1b22'>" + opts.bodyHtml + "</div>"
+    + "<div style='background:#eef9ec;border:2px solid #96cfa2;color:#1e3a24;border-radius:12px;padding:8px 10px;font-size:12px;font-weight:700;line-height:1.45;margin:10px 0'>" + esc(tr("evo_sum_kept")) + "</div>"
+    + "<div class='btn-row' style='justify-content:center;margin-top:12px'>"
+    + "<button type='button' class='b-gold' id='btn-evo-sum-ok'>" + esc(tr("ok")) + "</button>"
+    + "</div></div>";
+  m.classList.remove("hidden");
+  m.querySelector("#btn-evo-sum-ok").addEventListener("click", () => { sfx.click(); m.classList.add("hidden"); });
+}
+function setEvoMain(uid) { const p = petByUid(uid); if (!p) return false; save.evoMain[p.id] = uid; persist(); return true; }
+function evolve(uidA, uidB) {
+  const a = petByUid(uidA), b = petByUid(uidB);
   if (!a || !b || a === b || a.id !== b.id || a.star >= MAX_STAR) return false;
   feedEvo(a.uid, [b.uid]); return true;
 }
@@ -6281,21 +6682,22 @@ function evoStatsOf(p, star) {
   return { dmg: Math.round(st.dmg), hp: Math.round(st.maxHp) };
 }
 function renderEvo(body) {
-  const owned = PETS.filter(d => save.pets.some(p => p.id === d.id));
+  const owned = PETS.filter(d => petsOfSpecies(d.id).length > 0);
   if (!owned.length) { body.insertAdjacentHTML("beforeend", "<div class='box' style='font-weight:800'>" + tr("evo_none") + "</div>"); return; }
+  const busy = activeTeamUidSet();
   if (!owned.some(d => d.id === evoSpecies)) {
-    const ready = owned.find(d => { const m = evoMainOf(d.id); return m.star < MAX_STAR && evoEligible(m).length; });
+    const ready = owned.find(d => { const m = evoMainOf(d.id); return m.star < MAX_STAR && evoEligible(m, busy).length; });
     evoSpecies = (ready || owned[0]).id;
   }
   const wrap = document.createElement("div"); wrap.className = "evo-wrap";
   const side = document.createElement("div"); side.className = "evo-side";
   side.insertAdjacentHTML("beforeend", "<div class='sec-title'>" + tr("evo_species") + "</div>");
   for (const d of owned) {
-    const m = evoMainOf(d.id), n = save.pets.filter(p => p.id === d.id).length, el2 = evoEligible(m).length;
+    const m = evoMainOf(d.id), n = petsOfSpecies(d.id).length, el2 = m.star < MAX_STAR ? evoEligible(m, busy).length : 0;
     const b = document.createElement("button"); b.type = "button"; b.className = "evo-sp" + (d.id === evoSpecies ? " on" : "") + (m.shiny ? " shiny" : "");
     b.dataset.sp = d.id;
     b.appendChild(petCanvas(m.id, m.star, m.shiny, 40, { charm: m.charm }));
-    b.insertAdjacentHTML("beforeend", "<span class='es-n'>" + petName(m) + "<small>" + "★".repeat(m.star) + " ×" + n + "</small></span>" + (m.star < MAX_STAR && el2 ? "<i class='es-dot'>" + el2 + "</i>" : ""));
+    b.insertAdjacentHTML("beforeend", "<span class='es-n'>" + petName(m) + "<small>" + "★".repeat(m.star) + " ×" + n + "</small></span>" + (el2 ? "<i class='es-dot'>" + el2 + "</i>" : ""));
     b.addEventListener("click", () => { sfx.click(); evoSpecies = d.id; renderHome(); });
     side.appendChild(b);
   }
@@ -6308,7 +6710,7 @@ function renderEvo(body) {
     + "<div class='evo-rules'>" + tr("evo_rules") + "</div>";
   const rec = document.createElement("div"); rec.className = "evo-recipe";
   const slot = (cv, lab, cls) => { const w = document.createElement("div"); w.className = "er-slot " + (cls || ""); w.appendChild(cv); w.insertAdjacentHTML("beforeend", "<div class='er-lab'>" + lab + "</div>"); return w; };
-  const req = evoRequired(main.star), elig = evoEligible(main);
+  const req = evoRequired(main.star);
   rec.appendChild(slot(petCanvas(main.id, main.star, main.shiny, 96, { charm: main.charm }), tr("evo_main") + " " + "★".repeat(main.star), "er-main"));
   if (main.star < MAX_STAR) {
     rec.insertAdjacentHTML("beforeend", "<span class='er-op'>+</span>");
@@ -6318,20 +6720,88 @@ function renderEvo(body) {
     rec.appendChild(slot(petCanvas(main.id, main.star + 1, main.shiny, 96, { charm: main.charm }), tr("evo_next") + " " + "★".repeat(main.star + 1), "er-next"));
   }
   hd.appendChild(rec);
+  const feedPlan = planEvoFeedAll297(main, busy);
+  const allPlan = planEvoAllReady297(busy);
   if (main.star < MAX_STAR) {
     const a = evoStatsOf(main, main.star), b2 = evoStatsOf(main, main.star + 1);
     hd.insertAdjacentHTML("beforeend", "<div class='evo-prog'><span class='ep-bar'><i style='width:" + Math.min(100, (main.evo | 0) / req * 100) + "%'></i></span><b>" + tr("evo_progress", main.evo | 0, req) + "</b></div>"
       + "<div class='evo-stats'><span>" + tr("evo_stats", STAR_MUL[main.star], STAR_MUL[main.star + 1]) + "</span><span>⚔ " + fmtPower(petPower(main)) + "</span>"
       + (d.dmg ? "<span>" + tr("st_atk") + " " + a.dmg + " ➜ <b>" + b2.dmg + "</b></span>" : "") + "<span>" + tr("st_hp") + " " + a.hp + " ➜ <b>" + b2.hp + "</b></span>"
       + "<span>" + tr("evo_look") + ": " + stageName(main.id, main.star) + " ➜ <b>" + (stageName(main.id, main.star + 1) === stageName(main.id, main.star) ? tr("evo_legend") : stageName(main.id, main.star + 1)) + "</b></span></div>");
-    const br = document.createElement("div"); br.className = "btn-row evo-btns";
-    const ready = evoReady(main);
-    const go = document.createElement("button"); go.type = "button"; go.className = "b-gold b-big evo-direct" + (ready ? " ready" : ""); go.id = "btn-evolve-now";
+  } else hd.insertAdjacentHTML("beforeend", "<div class='evo-max'>🏆 " + tr("evo_maxed") + "</div>");
+  const br = document.createElement("div"); br.className = "btn-row evo-btns"; br.style.cssText = "display:flex;flex-wrap:wrap;gap:6px;justify-content:center;align-items:center;";
+  if (main.star < MAX_STAR) {
+    const ready = evoReady(main, busy);
+    const go = document.createElement("button"); go.type = "button"; go.className = "b-gold evo-direct" + (ready ? " ready" : ""); go.id = "btn-evolve-now"; go.style.cssText = "padding:7px 14px;font-size:14px;font-weight:900;";
     go.textContent = ready ? "⚡ " + tr("evo_direct", main.star + 1) : tr("evo_direct_need", Math.max(0, req - (main.evo | 0)));
     go.disabled = !ready;
     go.addEventListener("click", () => { sfx.click(); directEvolve(main.id); renderHome(); });
-    br.appendChild(go); hd.appendChild(br);
-  } else hd.insertAdjacentHTML("beforeend", "<div class='evo-max'>🏆 " + tr("evo_maxed") + "</div>");
+    br.appendChild(go);
+    const fa = document.createElement("button"); fa.type = "button"; fa.className = "b-mint"; fa.id = "btn-evo-feed-all"; fa.style.cssText = "padding:7px 12px;font-size:14px;font-weight:900;";
+    fa.textContent = feedPlan.fed ? tr("evo_feed_all", feedPlan.fed) : tr("evo_feed_all_zero");
+    fa.disabled = !feedPlan.fed;
+    fa.addEventListener("click", () => {
+      sfx.click();
+      const pl = planEvoFeedAll297(main);
+      if (!pl.fed) return;
+      let html = "<div>" + esc(tr("evo_cf_one", pl.fed, petName(main), pl.gained)) + "</div>";
+      if (pl.starTo > pl.starFrom) html += "<div style='margin-top:4px;color:#a85500'>★ " + esc(tr("evo_cf_star", pl.starFrom, pl.starTo)) + "</div>";
+      else html += "<div style='margin-top:4px'>" + esc(tr("evo_cf_prog", pl.evoFrom, pl.reqFrom, pl.evoTo)) + "</div>";
+      showEvoConfirm297({
+        title: tr("evo_cf_title"),
+        bodyHtml: html,
+        okText: tr("evo_cf_go", pl.fed),
+        onConfirm: () => {
+          const res = feedEvo(main.uid, pl.pick, { quiet: true });
+          renderHome();
+          if (res.ups > 0) sfx.milestone(); else sfx.coin();
+          let sumHtml = "<div>" + esc(tr("evo_sum_one", res.fed, petName(main), res.gained)) + "</div>";
+          if (res.ups > 0) sumHtml += "<div style='margin-top:4px;color:#a85500'>★ " + esc(tr("evo_cf_star", pl.starFrom, res.star)) + "</div>";
+          else sumHtml += "<div style='margin-top:4px'>" + esc(tr("evo_cf_prog", pl.evoFrom, pl.reqFrom, res.evo)) + "</div>";
+          showEvoSummary297({ bodyHtml: sumHtml });
+        }
+      });
+    });
+    br.appendChild(fa);
+  }
+  const ar = document.createElement("button"); ar.type = "button"; ar.className = "b-pink"; ar.id = "btn-evo-all-ready"; ar.style.cssText = "padding:7px 12px;font-size:14px;font-weight:900;";
+  ar.textContent = allPlan.speciesCount ? tr("evo_all_ready", allPlan.speciesCount) : tr("evo_all_ready_zero");
+  ar.disabled = !allPlan.speciesCount;
+  ar.addEventListener("click", () => {
+    sfx.click();
+    const ap = planEvoAllReady297();
+    if (!ap.speciesCount) return;
+    const rows = ap.plans.slice(0, 12).map(x => "<div style='font-size:12px;margin:2px 0'>• " + esc(petName(x.main)) + ": " + x.starFrom + "★ → " + x.starTo + "★ (−" + x.fed + ")</div>").join("")
+      + (ap.plans.length > 12 ? "<div style='font-size:12px;opacity:.75'>+" + (ap.plans.length - 12) + "...</div>" : "");
+    showEvoConfirm297({
+      title: tr("evo_cf_title"),
+      bodyHtml: "<div>" + esc(tr("evo_cf_all", ap.speciesCount, ap.totalFed)) + "</div><div style='margin-top:6px;max-height:150px;overflow-y:auto'>" + rows + "</div>",
+      okText: tr("evo_cf_all_go", ap.totalFed),
+      onConfirm: () => {
+        let doneSpecies = 0, doneFed = 0;
+        const doneRows = [];
+        withBatchPersist(() => {
+          for (let i = 0; i < ap.plans.length; i++) {
+            const x = ap.plans[i];
+            const res = feedEvo(x.main.uid, x.pick, { quiet: true, noPersist: true, noCharmCheck: true });
+            if (res.fed > 0) {
+              doneSpecies++; doneFed += res.fed;
+              doneRows.push({ name: petName(x.main), starFrom: x.starFrom, starTo: res.star, fed: res.fed });
+            }
+          }
+          persist();
+        });
+        checkSpecialCharms();
+        renderHome();
+        sfx.milestone();
+        const sRows = doneRows.slice(0, 12).map(x => "<div style='font-size:12px;margin:2px 0'>• " + esc(x.name) + ": " + x.starFrom + "★ → " + x.starTo + "★ (−" + x.fed + ")</div>").join("")
+          + (doneRows.length > 12 ? "<div style='font-size:12px;opacity:.75'>+" + (doneRows.length - 12) + "...</div>" : "");
+        showEvoSummary297({ bodyHtml: "<div>" + esc(tr("evo_sum_all", doneSpecies, doneFed)) + "</div><div style='margin-top:6px;max-height:150px;overflow-y:auto'>" + sRows + "</div>" });
+      }
+    });
+  });
+  br.appendChild(ar);
+  hd.appendChild(br);
   hd.insertAdjacentHTML("beforeend", "<div class='apt-note'>" + tr("evo_protect_note") + "</div>");
   pane.appendChild(hd);
   const copies = evoCopies(main).sort((a, b) => (b.star - a.star) || (b.shiny - a.shiny) || ((b.apt || 0) - (a.apt || 0)));
@@ -6340,7 +6810,7 @@ function renderEvo(body) {
   copies.slice(0, 48).forEach(p => {
     const c = document.createElement("div"); c.className = "evo-copy" + (p.shiny ? " shiny" : "");
     c.appendChild(petCanvas(p.id, p.star, p.shiny, 52, { charm: p.charm }));
-    const prot = evoProtected(main, p);
+    const prot = evoProtected(main, p, busy);
     c.insertAdjacentHTML("beforeend", "<div class='ec-i'><b>" + petName(p) + "</b><span>" + "★".repeat(p.star) + " " + gradeHTML(p.grade) + " " + p.apt + "</span>"
       + "<small>" + tr("evo_value", copyValue(p)) + (prot ? " · 🔒" + tr("evo_protected") : "") + "</small></div>");
     const bm = document.createElement("button"); bm.type = "button"; bm.className = "mini b-sky"; bm.textContent = tr("evo_set_main");
@@ -6376,13 +6846,13 @@ function buyCharm(cid) {
   showToast(tr("charm_got", tr("charm_" + cid))); return true;
 }
 function equipCharm(uid, cid) {
-  const p = save.pets.find(q => q.uid === uid); if (!p || !CHARM[cid] || !(save.charms[cid] > 0)) return false;
+  const p = petByUid(uid); if (!p || !CHARM[cid] || !(save.charms[cid] > 0)) return false;
   if (p.charm) save.charms[p.charm] = (save.charms[p.charm] | 0) + 1;
   save.charms[cid]--; p.charm = cid; persist(); sfx.place();
   showToast(tr("charm_equipped", petName(p), tr("charm_" + cid))); return true;
 }
 function unequipCharm(uid) {
-  const p = save.pets.find(q => q.uid === uid); if (!p || !p.charm) return false;
+  const p = petByUid(uid); if (!p || !p.charm) return false;
   save.charms[p.charm] = (save.charms[p.charm] | 0) + 1; p.charm = ""; persist(); sfx.click(); return true;
 }
 function charmIconCanvas(cid, px) {
@@ -6391,11 +6861,11 @@ function charmIconCanvas(cid, px) {
 }
 function renderCharms(body) {
   body.insertAdjacentHTML("beforeend", "<div class='box charm-info'>" + tr("charm_info") + "</div>");
-  if (!save.pets.some(p => p.uid === charmSel)) { const b = save.pets.slice().sort((a, b) => petPower(b) - petPower(a))[0]; charmSel = b ? b.uid : null; }
+  if (!petByUid(charmSel)) { const b = topPetsK(save.pets, 1)[0]; charmSel = b ? b.uid : null; }
   const wrap = document.createElement("div"); wrap.className = "charm-wrap";
   const shop = document.createElement("div"); shop.className = "charm-shop";
   shop.insertAdjacentHTML("beforeend", "<div class='sec-title'>" + tr("charm_bag") + "</div>");
-  const sel = save.pets.find(p => p.uid === charmSel);
+  const sel = petByUid(charmSel);
   shop.insertAdjacentHTML("beforeend", "<div class='charm-sub'>" + tr("charm_shop") + "</div>");
   for (const c of SHOP_CHARMS) {
     const row = document.createElement("div"); row.className = "charm-row r" + c.rar + (sel && sel.charm === c.id ? " on" : ""); row.dataset.charm = c.id;
@@ -6439,7 +6909,7 @@ function renderCharms(body) {
   }
   right.insertAdjacentHTML("beforeend", "<div class='sec-title'>" + tr("charm_pick") + "</div>");
   const grid = document.createElement("div"); grid.className = "charm-grid";
-  save.pets.slice().sort((a, b) => petPower(b) - petPower(a)).slice(0, 60).forEach(p => {
+  topPetsK(save.pets, 60).forEach(p => {
     const c = document.createElement("button"); c.type = "button"; c.className = "charm-pet" + (p.uid === charmSel ? " on" : "") + (p.shiny ? " shiny" : "");
     c.appendChild(petCanvas(p.id, p.star, p.shiny, 52, { charm: p.charm }));
     c.insertAdjacentHTML("beforeend", "<span>" + petName(p) + "</span>");
@@ -6454,13 +6924,13 @@ function renderCharms(body) {
 
 /* ================= v12 pet naming ================= */
 function renamePet(uid, name) {
-  const p = save.pets.find(q => q.uid === uid); if (!p) return null;
+  const p = petByUid(uid); if (!p) return null;
   p.nick = sanitizeNick(name);
   for (const t of B.towers) if (t.uid === uid) t.nick = p.nick;
   persist(); return p.nick;
 }
 function openRename(uid, after) {
-  const p = save.pets.find(q => q.uid === uid); if (!p) return;
+  const p = petByUid(uid); if (!p) return;
   let m = el("rename-modal");
   if (!m) { m = document.createElement("div"); m.id = "rename-modal"; m.className = "overlay dim-bg"; el("detail").parentNode.appendChild(m); }
   m.innerHTML = "<div class='panel rename-panel'><div class='center' style='margin-top:-40px'><span class='ribbon'>" + tr("rename_title") + "</span></div>"
@@ -6893,7 +7363,7 @@ const assetLoad = loadAssets((d, n, st) => {
 // aren't stuck staring at a blank wait for every sprite.
 if (firstLaunch) revealGame();
 assetLoad.interactive.then(() => revealGame());
-assetLoad.all.then(() => { assetsReady = true; BG.clear(); revealGame(); if (screen === "home" && homeTab === "play") renderHome(); });
+assetLoad.all.then(() => { assetsReady = true; clearPetCvCache(); BG.clear(); revealGame(); if (screen === "home" && homeTab === "play") renderHome(); });
 
 
 /* ================= v2.2 (GB-12): skills, energy, tray fold, slot lock, bond, charms, version, S1 champion ================= */
@@ -7793,6 +8263,13 @@ function revive24(t) {
 function renderRevive24() {
   const bar = el("r24-bar"); if (!bar) return;
   const down = (B && B.towers) ? B.towers.filter(t => t.fainted) : [];
+  let sig = String(down.length);
+  for (let i = 0; i < down.length; i++) {
+    const t = down[i], c = reviveCost(t);
+    sig += "|" + t.uid + ":" + c + ":" + (B.gold < c ? 1 : 0);
+  }
+  if (bar._sig24 === sig) return;
+  bar._sig24 = sig;
   bar.innerHTML = "";
   const h = document.createElement("div"); h.className = "r24-h";
   h.textContent = tr("rev_title24");
@@ -10922,7 +11399,7 @@ function itemCanvas26(it, px) {
   const c = cv.getContext("2d"); c.scale(2, 2);
   if (it.kind === "charm") drawCharmIcon(c, it.id, px / 2, px / 2, px * 0.82);
   else if (it.kind === "furniture") drawFurn25(c, it.id, px / 2, px * 0.9, px * 0.72);
-  else { const who = save.pets.slice().sort((a, b) => (b.lv | 0) - (a.lv | 0))[0] || { id: "chili", star: 1, shiny: false }; try { drawPet(c, who.id, who.star || 1, who.shiny, px / 2, px * 0.92, px * 0.8, { suit: it.id }); } catch (e) {} }
+  else { let who = null; for (let i = 0; i < save.pets.length; i++) if (!who || (save.pets[i].lv | 0) > (who.lv | 0)) who = save.pets[i]; who = who || { id: "chili", star: 1, shiny: false }; try { drawPet(c, who.id, who.star || 1, who.shiny, px / 2, px * 0.92, px * 0.8, { suit: it.id }); } catch (e) {} }
   return cv;
 }
 function drawCover26(cv, p) {
@@ -12448,7 +12925,7 @@ function loadSlimes28() {
   for (const k in SL28_SHEETS) {
     if (ATLAS_IMG[k]) continue; left++;
     const im = new Image(); im.decoding = "async";
-    im.onload = () => { ATLAS_IMG[k] = im; if (--left === 0 && sheets28()) { for (const id of SL28_IDS) delete SPR25.shiny[id]; try { if (screen === "home" && homeTab === "slime") renderHome(); } catch (e) {} } };
+    im.onload = () => { ATLAS_IMG[k] = im; if (--left === 0 && sheets28()) { for (const id of SL28_IDS) delete SPR25.shiny[id]; try { if (typeof clearPetCvCache === "function") clearPetCvCache(); if (screen === "home" && homeTab === "slime") renderHome(); } catch (e) {} } };
     im.onerror = () => { setTimeout(() => { im.src = SL28_SHEETS[k] + (SL28_SHEETS[k].includes("?") ? "&" : "?") + "r=" + Date.now(); }, 4000); };
     im.src = SL28_SHEETS[k];
   }
@@ -12819,7 +13296,11 @@ function statusBadgePP(pk) {
 
 /* ---------- pity / pull for complete pet packs ---------- */
 function pityOfPP(id) { return pkState26().pity[id] | 0; }
+const _bucketsCachePP = new Map();
 function bucketsPP(pk) {
+  const readyFlag = (typeof assetsReady !== "undefined" && assetsReady) ? 1 : 0;
+  let cKey = readyFlag + "|" + pk.id + "|" + (pk.pets ? pk.pets.length : 0);
+  if (readyFlag && _bucketsCachePP.has(cKey)) return _bucketsCachePP.get(cKey);
   const odds = PP_ODDS[pk.oddsKey] || PP_ODDS.featuredIsR5;
   const keys = pk.oddsKey === "featuredIsR6" ? PP_BUCKETS_R6 : PP_BUCKETS_R5;
   const feat = pk.featured;
@@ -12842,7 +13323,9 @@ function bucketsPP(pk) {
       buckets[i].w = 0;
     }
   }
-  return buckets.filter(b => b.w > 0 && b.items.length);
+  const out = buckets.filter(b => b.w > 0 && b.items.length);
+  if (out.length) _bucketsCachePP.set(cKey, out);
+  return out;
 }
 function pickWeightedPP(items) { return items[Math.floor(Math.random() * items.length)]; }
 function rollBucketPP(buckets, featBoost) {
@@ -15259,7 +15742,7 @@ function bootCrazyGames() {
   var _persist13 = persist;
   persist = function () {
     _persist13();
-    mergeSaveExtras13();
+    if (!window.__persistHasExtras13) mergeSaveExtras13();
   };
   if (typeof snapshotSave === "function") {
     var _snap13 = snapshotSave;
@@ -15318,7 +15801,8 @@ function bootCrazyGames() {
       } else kept.push(p);
     }
     save.pets = kept;
-    if (Array.isArray(save.squad)) save.squad = save.squad.filter(x => kept.some(p => p.uid === x.u));
+    if (typeof invPetIndex === "function") invPetIndex();
+    if (Array.isArray(save.squad)) { const ks = new Set(kept.map(p => p.uid)); save.squad = save.squad.filter(x => ks.has(x.u)); }
     if (save.evoMain) for (const id in petIds) delete save.evoMain[id];
     let gemCut = 0;
     const god = recipe.gemsGod | 0, starter = recipe.gemsStarter | 0;
@@ -18659,7 +19143,9 @@ function teamUids296() {
 function reservedEvoFodder296() {
   const reserved = new Set();
   const seen = {};
-  for (const p of save.pets) {
+  const busy = typeof activeTeamUidSet === "function" ? activeTeamUidSet() : null;
+  for (let i = 0; i < save.pets.length; i++) {
+    const p = save.pets[i];
     if (!p || seen[p.id]) continue;
     seen[p.id] = 1;
     const main = evoMainOf(p.id);
@@ -18668,10 +19154,10 @@ function reservedEvoFodder296() {
     for (let s = main.star; s < MAX_STAR; s++) need += EVO_REQ[s];
     need -= main.evo | 0;
     if (need <= 0) continue;
-    for (const c of evoEligible(main)) {
-      if (need <= 0) break;
-      reserved.add(c.uid);
-      need -= copyValue(c);
+    const elig = evoEligible(main, busy);
+    for (let j = 0; j < elig.length && need > 0; j++) {
+      reserved.add(elig[j].uid);
+      need -= copyValue(elig[j]);
     }
   }
   return reserved;
@@ -18736,21 +19222,29 @@ function feedAllSnacks296(reserved) {
   const used = {}, lvGains = [];
   const gems0 = save.gems | 0;
   const lv0 = {};
-  save.pets.forEach(p => { lv0[p.uid] = p.lv; });
+  for (let i = 0; i < save.pets.length; i++) lv0[save.pets[i].uid] = save.pets[i].lv;
   const order = feedPriority296(reserved);
-  for (const p of order) {
-    if (p.lv >= MAX_LV) continue;
-    if (typeof applyTrain === "function") applyTrain(p.uid, "max", false);
-  }
-  /* leftover snacks: only onto pets that can still use them (train caps), never onto reserved evo fodder */
-  let guard = 0;
-  while (guard++ < 8000) {
-    const fid = (typeof TRAIN_ORDER !== "undefined" ? TRAIN_ORDER : FOODS.map(f => f.id)).find(id => (save.food[id] | 0) > 0);
-    if (!fid) break;
-    const pets = feedPriority296(reserved).filter(p => canUseFood296(p, fid));
-    if (!pets.length) break;
-    if (!feedPet(pets[0].uid, fid)) break;
-  }
+  const run = () => {
+    for (let i = 0; i < order.length; i++) {
+      const p = order[i];
+      if (p.lv >= MAX_LV) continue;
+      if (typeof applyTrain === "function") applyTrain(p.uid, "max", false);
+    }
+    /* leftover snacks: only onto pets that can still use them (train caps), never onto reserved evo fodder */
+    const fids = typeof TRAIN_ORDER !== "undefined" ? TRAIN_ORDER : FOODS.map(f => f.id);
+    let guard = 0;
+    for (let fi = 0; fi < fids.length && guard < 8000; fi++) {
+      const fid = fids[fi];
+      if ((save.food[fid] | 0) <= 0) continue;
+      for (let pi = 0; pi < order.length && (save.food[fid] | 0) > 0 && guard < 8000; pi++) {
+        const p = order[pi];
+        while ((save.food[fid] | 0) > 0 && canUseFood296(p, fid) && guard++ < 8000) {
+          if (!feedPet(p.uid, fid)) break;
+        }
+      }
+    }
+  };
+  if (typeof withBatchPersist === "function") withBatchPersist(run); else run();
   /* gems must stay: applyTrain was called with useGems=false */
   if ((save.gems | 0) > gems0) save.gems = gems0; /* should not happen */
   /* if a bug spent gems, refund — never auto-spend gems */
@@ -18785,24 +19279,30 @@ function evolveAllReady296() {
     if (rb !== ra) return rb - ra;
     return (b.star | 0) - (a.star | 0);
   });
-  for (const main0 of mains) {
-    const main = save.pets.find(p => p.uid === main0.uid);
-    if (!main || !evoReady(main)) continue;
-    const rar0 = (PET[main.id] || {}).rar;
-    const oldStar = main.star, oldName = stageName(main.id, main.star);
-    let need = 0;
-    for (let s = main.star; s < MAX_STAR; s++) need += EVO_REQ[s];
-    need -= main.evo | 0;
-    const pick = [];
-    for (const p of evoEligible(main)) { if (need <= 0) break; pick.push(p.uid); need -= copyValue(p); }
-    if (!pick.length) continue;
-    const r = feedEvo(main.uid, pick, { quiet: true });
-    const after = save.pets.find(p => p.uid === main.uid) || main;
-    if ((PET[after.id] || {}).rar !== rar0) {
-      /* hard rule: never change rarity (gold must not become mythic/prismatic). Should be impossible. */
+  const busy = typeof activeTeamUidSet === "function" ? activeTeamUidSet() : null;
+  const runEvos = () => {
+    for (const main0 of mains) {
+      const main = typeof petByUid === "function" ? petByUid(main0.uid) : save.pets.find(p => p.uid === main0.uid);
+      if (!main || !evoReady(main, busy)) continue;
+      const rar0 = (PET[main.id] || {}).rar;
+      const oldStar = main.star, oldName = stageName(main.id, main.star);
+      let need = 0;
+      for (let s = main.star; s < MAX_STAR; s++) need += EVO_REQ[s];
+      need -= main.evo | 0;
+      const pick = [];
+      for (const p of evoEligible(main, busy)) { if (need <= 0) break; pick.push(p.uid); need -= copyValue(p); }
+      if (!pick.length) continue;
+      const r = feedEvo(main.uid, pick, { quiet: true, noPersist: true, noCharmCheck: true });
+      const after = (typeof petByUid === "function" ? petByUid(main.uid) : save.pets.find(p => p.uid === main.uid)) || main;
+      if ((PET[after.id] || {}).rar !== rar0) {
+        /* hard rule: never change rarity */
+      }
+      if (r && r.ups > 0) evos.push({ uid: after.uid, id: after.id, from: oldStar, to: after.star, name: oldName, newName: stageName(after.id, after.star), fed: r.fed, gained: r.gained });
     }
-    if (r && r.ups > 0) evos.push({ uid: after.uid, id: after.id, from: oldStar, to: after.star, name: oldName, newName: stageName(after.id, after.star), fed: r.fed, gained: r.gained });
-  }
+  };
+  if (typeof withBatchPersist === "function") withBatchPersist(() => { runEvos(); persist(); });
+  else { runEvos(); persist(); }
+  try { checkSpecialCharms(); } catch (e) {}
   return evos;
 }
 function canAutoGrow296() {
@@ -18815,13 +19315,17 @@ function canAutoGrow296() {
 function autoGrow296() {
   if (battleLive296()) return { hatched: [], fed: { lvGains: [], snacks: 0 }, evos: [], skippedReady: 0, blocked: true };
   const food0 = countFood296(), gems0 = save.gems | 0;
-  const hatch = hatchReadyOnly296();
-  const reserved = reservedEvoFodder296();
-  const foodBeforeFeed = countFood296();
-  const fed = feedAllSnacks296(reserved);
-  fed.snacks = Math.max(0, foodBeforeFeed - countFood296());
-  const evos = evolveAllReady296();
-  persist();
+  let hatch, fed, evos;
+  const runAll = () => {
+    hatch = hatchReadyOnly296();
+    const reserved = reservedEvoFodder296();
+    const foodBeforeFeed = countFood296();
+    fed = feedAllSnacks296(reserved);
+    fed.snacks = Math.max(0, foodBeforeFeed - countFood296());
+    evos = evolveAllReady296();
+    persist();
+  };
+  if (typeof withBatchPersist === "function") withBatchPersist(runAll); else runAll();
   try { el("hatch").classList.add("hidden"); } catch (e) {}
   const result = { hatched: hatch.got, skippedReady: hatch.skippedReady, fed, evos, gems0, gems: save.gems | 0, food0 };
   if (window.__v296) window.__v296.last = summarizeGrow296(result);
@@ -18874,11 +19378,18 @@ function showAutoGrowSum296(r) {
   if (got.length) {
     const list = document.createElement("div"); list.className = "ha296-list";
     const grid = document.createElement("div"); grid.className = "grid3";
-    got.forEach(p => {
+    const capGot = got.slice(0, 48);
+    capGot.forEach(p => {
       const c = petCard(p.id, 1, p.shiny, { pet: p });
       if (p.shiny || /^S/.test(p.grade)) c.classList.add("hl");
       grid.appendChild(c);
     });
+    if (got.length > 48) {
+      const more = document.createElement("div");
+      more.style.cssText = "grid-column:1/-1;text-align:center;font-weight:900;color:#2b1b22;padding:6px";
+      more.textContent = "+" + (got.length - 48);
+      grid.appendChild(more);
+    }
     list.appendChild(grid); body.appendChild(list);
   }
   if (fed.lvGains && fed.lvGains.length) {
@@ -19009,6 +19520,21 @@ function bootV296() {
     battleLive: () => battleLive296()
   };
   try { bootBulkPull296(); } catch (e) { console.warn(e); }
+  if (typeof showNewsModal === "function") {
+    const _snm297 = showNewsModal;
+    showNewsModal = function (force) {
+      _snm297.apply(this, arguments);
+      const b = el("news-body");
+      if (b && tr("v297_news_title")) {
+        b.insertAdjacentHTML("afterbegin",
+          "<h3>" + tr("v297_news_title") + "</h3><ul class='news-list'>"
+          + "<li>" + tr("v297_news_1") + "</li>"
+          + "<li>" + tr("v297_news_2") + "</li>"
+          + "</ul>"
+        );
+      }
+    };
+  }
 }
 
 function packBulkCost296(n, rules) {
@@ -19021,7 +19547,7 @@ function packBulkCost296(n, rules) {
 function applyTenFloorPet296(pk, chunk) {
   if (chunk.length !== 10 || chunk.some(r => r && r.kind === "pet" && r.rar >= 3)) return chunk;
   const last = chunk[9];
-  if (last && last.pet) save.pets = save.pets.filter(p => p !== last.pet);
+  if (last && last.pet) { save.pets = save.pets.filter(p => p !== last.pet); if (typeof invPetIndex === "function") invPetIndex(); }
   if (last && last.dup && last.refund) save.gems -= last.refund;
   const ps = pkState26();
   if (!(last && last.featured)) ps.pity[pk.id] = Math.max(0, (ps.pity[pk.id] | 0) - 1);
