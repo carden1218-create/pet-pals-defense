@@ -21000,17 +21000,157 @@ function bootWorlds() {
   startRun = function (mapId, hard) {
     const map = mapId && MAP[mapId];
     if (map && map.world) { wtSnapSB = save.storyBest | 0; wtSnapEB = save.endlessBest | 0; wtSnapOn = true; }
-    return _srW.apply(this, arguments);
+    const r = _srW.apply(this, arguments);
+    try { wtSyncWaveCard(); setTimeout(wtSyncWaveCard, 0); setTimeout(wtSyncWaveCard, 80); } catch (e) {}
+    return r;
   };
   function wtRestoreBests() {
     if (!wtSnapOn) return;
     save.storyBest = wtSnapSB; save.endlessBest = wtSnapEB;
     try { persist(); } catch (e) {}
   }
+  function wtMapTitle(lv) {
+    if (!lv) return "";
+    if (lv.endless) return "♾ " + tr("endless_title");
+    return typeof mapName === "function" ? mapName(lv) : (lv.name || "");
+  }
+  function wtSyncWaveCard() {
+    try {
+      const lv = B && B.level;
+      if (!lv || !lv.world) return;
+      const p = el("p26"); if (!p) return;
+      if (typeof renderP26 === "function" && p.offsetParent) {
+        try { renderP26(); } catch (e) {}
+      }
+      let wv = p.querySelector(".p26-wave");
+      if (!wv) {
+        const col = p.querySelector(".p26-col") || p;
+        wv = document.createElement("div");
+        wv.className = "p26-card p26-wave";
+        col.insertBefore(wv, col.firstChild);
+      }
+      let wt = wv.querySelector(".p26-wt");
+      if (!wt) {
+        const keep = wv.innerHTML;
+        wv.innerHTML = "<div class='p26-wt'><b></b><small></small></div>" + keep;
+        wt = wv.querySelector(".p26-wt");
+      }
+      const bEl = wt.querySelector("b"), sm = wt.querySelector("small");
+      const num = lv.story ? tr("p26_wave_of", Math.max(1, B.wave | 0), lv.waves || 10) : tr("p26_wave", Math.max(1, B.wave | 0));
+      const title = wtMapTitle(lv);
+      if (bEl) bEl.textContent = num;
+      if (sm) sm.textContent = title;
+    } catch (e) {}
+  }
+  function wtHudGapTop() {
+    const hud = el("hud"), stage = el("stage");
+    if (!hud || !stage || hud.classList.contains("hidden")) return 80;
+    const sr = stage.getBoundingClientRect();
+    if (!sr.height) return 80;
+    let bottom = 0;
+    const nodes = [hud.querySelector(".hud-row") || hud];
+    for (const id of ["wave-prev293", "chg294-hud", "hint294-hud", "left294-hud", "battle-hint"]) {
+      const n = el(id);
+      if (!n) continue;
+      if (id === "battle-hint" && !n.classList.contains("show")) continue;
+      const cs = getComputedStyle(n);
+      if (cs.display === "none" || cs.visibility === "hidden" || cs.opacity === "0") continue;
+      nodes.push(n);
+    }
+    for (const n of nodes) {
+      if (!n) continue;
+      const r = n.getBoundingClientRect();
+      if (r.height >= 2 && r.width >= 2) bottom = Math.max(bottom, r.bottom);
+    }
+    if (!bottom) return 80;
+    return Math.round((bottom - sr.top) * (stage.offsetHeight / sr.height) + 10);
+  }
+  function wtPlaceToast() {
+    const t = el("toast"), hud = el("hud"), stage = el("stage");
+    if (!t || !stage || t.classList.contains("hidden")) return;
+    if (!hud || hud.classList.contains("hidden")) return;
+    if (!(B && B.running && B.level && B.level.world)) return;
+    try {
+      let top = Math.max(80, wtHudGapTop());
+      const feat = el("wt-feat");
+      if (feat && !feat.classList.contains("hidden")) {
+        const fr = feat.getBoundingClientRect(), sr = stage.getBoundingClientRect();
+        if (sr.height && fr.height >= 2) top = Math.max(top, Math.round((fr.bottom - sr.top) * (stage.offsetHeight / sr.height) + 8));
+      }
+      t.style.setProperty("position", "absolute", "important");
+      t.style.setProperty("top", top + "px", "important");
+      t.style.setProperty("left", "50%", "important");
+      t.style.setProperty("right", "auto", "important");
+      t.style.setProperty("transform", "translateX(-50%)", "important");
+      t.style.setProperty("max-width", "min(90%, 340px)", "important");
+      t.style.setProperty("white-space", "normal", "important");
+      t.style.setProperty("overflow", "visible", "important");
+      t.style.setProperty("text-overflow", "unset", "important");
+      t.style.setProperty("text-align", "center", "important");
+      t.style.setProperty("line-height", "1.3", "important");
+      t.style.setProperty("z-index", "4", "important");
+      t.style.setProperty("pointer-events", "none", "important");
+    } catch (e) {}
+  }
+  var wtFeatT = 0;
+  function wtEnsureFeat() {
+    let n = el("wt-feat");
+    if (n) return n;
+    n = document.createElement("div");
+    n.id = "wt-feat";
+    n.className = "hidden";
+    (el("stage") || document.body).appendChild(n);
+    return n;
+  }
+  function wtPlaceFeat() {
+    const n = el("wt-feat"), hud = el("hud"), stage = el("stage");
+    if (!n || n.classList.contains("hidden") || !stage || !hud || hud.classList.contains("hidden")) return;
+    n.style.top = Math.max(80, wtHudGapTop()) + "px";
+  }
+  function wtShowFeat(msg, dur) {
+    const n = wtEnsureFeat();
+    n.textContent = msg;
+    n.classList.remove("hidden");
+    wtPlaceFeat();
+    clearTimeout(wtFeatT);
+    wtFeatT = setTimeout(function () { n.classList.add("hidden"); }, Math.round((dur || 4.5) * 1000));
+    try { requestAnimationFrame(function () { wtPlaceFeat(); requestAnimationFrame(wtPlaceFeat); }); } catch (e) { setTimeout(wtPlaceFeat, 16); }
+  }
+  const _placeToast = placeToastBelowHud;
+  placeToastBelowHud = function () {
+    if (typeof _placeToast === "function") _placeToast.apply(this, arguments);
+    wtPlaceToast();
+    wtPlaceFeat();
+  };
+  const _showToast = showToast;
+  showToast = function (msg, dur, ink) {
+    if (B && B.level && B.level.world && typeof msg === "string" && msg.indexOf("🌟") === 0) {
+      wtShowFeat(msg, dur || 4.5);
+      return;
+    }
+    const r = _showToast.apply(this, arguments);
+    wtPlaceToast();
+    try { setTimeout(wtPlaceToast, 0); requestAnimationFrame(function () { wtPlaceToast(); }); } catch (e) {}
+    return r;
+  };
+  const _rhW = refreshHUD;
+  refreshHUD = function () {
+    const r = _rhW.apply(this, arguments);
+    wtSyncWaveCard();
+    try { const t = el("toast"); if (t && !t.classList.contains("hidden")) wtPlaceToast(); } catch (e) {}
+    return r;
+  };
+  const _snW = startNextWave;
+  startNextWave = function () {
+    const r = _snW.apply(this, arguments);
+    try { requestAnimationFrame(function () { wtSyncWaveCard(); wtPlaceToast(); requestAnimationFrame(wtSyncWaveCard); }); } catch (e) { setTimeout(wtSyncWaveCard, 0); }
+    return r;
+  };
   const _wcW = waveCleared;
   waveCleared = function () {
     const r = _wcW.apply(this, arguments);
     wtRestoreBests();
+    wtSyncWaveCard();
     return r;
   };
   const _erW = endRun;
@@ -21037,9 +21177,43 @@ function bootWorlds() {
       ".wt-soon { font-size:12px; }",
       ".th-jungle { background:#f4ffe8; } .th-sky { background:#eef2ff; } .th-lava { background:#ffe8dc; }",
       ".th-snow { background:#f2fbff; } .th-swamp { background:#f0f6e0; } .th-candy { background:#fff0f6; }",
-      "@media (max-width:700px) { .wt-card { overflow:hidden; min-height:64px; padding:5px 6px; gap:8px; } .wt-th { flex:0 0 86px; max-height:54px; } .wt-tx b { font-size:15px; } .wt-tx span { display:none; } .wt-soon { font-size:12px; } .wt-info { font-size:13px; } }"
+      "@media (max-width:700px) { .wt-card { overflow:hidden; min-height:64px; padding:5px 6px; gap:8px; } .wt-th { flex:0 0 86px; max-height:54px; } .wt-tx b { font-size:15px; } .wt-tx span { display:none; } .wt-soon { font-size:12px; } .wt-info { font-size:13px; } }",
+      "html.land #toast, html.port #toast, html.tight-land #toast, #toast, body.b-locked24 #toast, html.land body.b-locked24 #toast { white-space:normal !important; overflow:visible !important; text-overflow:unset !important; max-width:min(90%,340px) !important; line-height:1.3 !important; text-align:center !important; z-index:4 !important; pointer-events:none !important; }",
+      "html.land #toast, html.land body.b-locked24 #toast { left:50% !important; right:auto !important; transform:translateX(-50%) !important; position:absolute !important; }",
+      "#wt-feat { position:absolute; left:50%; transform:translateX(-50%); z-index:4; pointer-events:none; max-width:min(90%,340px); box-sizing:border-box; background:#fffdf3; color:#2b1b22; border:3px solid #2b1b22; border-radius:14px; padding:7px 12px; font-weight:800; font-size:13px; line-height:1.35; text-align:center; white-space:normal; box-shadow:0 3px 0 rgba(43,27,34,.28); }",
+      "#wt-feat.hidden { display:none !important; }",
+      "html.port #wt-feat { font-size:12.5px; padding:6px 10px; max-width:min(92%, 320px); }"
     ].join("\n");
     document.head.appendChild(st);
+    /* Outermost: run after bootV294's toast hooks so the world tip stays under the HUD. */
+    const _stBoot = showToast;
+    showToast = function (msg, dur, ink) {
+      if (B && B.level && B.level.world && typeof msg === "string" && msg.indexOf("🌟") === 0) {
+        wtShowFeat(msg, dur || 4.5);
+        return;
+      }
+      const r = _stBoot.apply(this, arguments);
+      wtPlaceToast();
+      setTimeout(wtPlaceToast, 0);
+      setTimeout(wtPlaceToast, 40);
+      return r;
+    };
+    const _ptBoot = placeToastBelowHud;
+    placeToastBelowHud = function () {
+      if (typeof _ptBoot === "function") _ptBoot.apply(this, arguments);
+      wtPlaceToast();
+      wtPlaceFeat();
+    };
+    setInterval(function () {
+      try {
+        if (B && B.running && B.level && B.level.world) {
+          wtSyncWaveCard();
+          const t = el("toast");
+          if (t && !t.classList.contains("hidden")) wtPlaceToast();
+          wtPlaceFeat();
+        }
+      } catch (e) {}
+    }, 200);
   };
 })();
 
