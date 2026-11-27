@@ -20246,7 +20246,6 @@ function openWorlds() {
   const trail = document.createElement("div"); trail.className = "wt-trail";
   WORLDS.forEach((w, i) => {
     const un = wtUnlocked(i), cl = !!d.c[w.id];
-    if (i) { const dots = document.createElement("div"); dots.className = "wt-dots" + (un ? " on" : ""); dots.innerHTML = "<i></i><i></i><i></i>"; trail.appendChild(dots); }
     const b = document.createElement("button"); b.type = "button"; b.dataset.world = w.id;
     b.className = "wt-card th-" + w.key + (un ? "" : " locked") + (cl ? " clear" : "") + (wtSel === w.id ? " on" : "");
     const th = document.createElement("div"); th.className = "wt-th"; th.appendChild(wtThumb(w, 168, 92));
@@ -20322,7 +20321,7 @@ function bootWorlds() {
     ".wt-top { display:flex; align-items:center; gap:10px; justify-content:space-between; background:#fff8e0; color:#2b1b22; border:3px solid #2b1b22; border-radius:14px; padding:6px 12px; }",
     ".wt-top p { margin:0; font-weight:800; font-size:14px; line-height:1.35; }",
     ".wt-prog { flex:0 0 auto; background:#ffe14a; color:#2b1b22; border:2px solid #2b1b22; border-radius:10px; padding:2px 10px; font-weight:900; font-size:13px; }",
-    ".wt-trail { display:flex; align-items:center; gap:4px; }",
+    ".wt-trail { display:grid; grid-template-columns:repeat(3, minmax(0, 1fr)); gap:6px; align-items:stretch; }",
     ".wt-dots { flex:0 0 26px; display:flex; justify-content:center; gap:3px; }",
     ".wt-dots i { width:6px; height:6px; border-radius:50%; background:rgba(255,255,255,.45); border:1.5px solid #2b1b22; }",
     ".wt-dots.on i { background:#ffe14a; }",
@@ -20346,7 +20345,7 @@ function bootWorlds() {
     ".wt-btns { display:flex; gap:10px; align-items:stretch; }",
     ".wt-btns .b-lav { flex:0 0 auto; padding:0 18px; font-weight:900; }",
     ".wt-btns .b-go { flex:1; margin:0; }",
-    "@media (max-width:700px) { .wt-trail { flex-direction:column; align-items:stretch; } .wt-dots { flex:0 0 14px; } .wt-card { flex-direction:row; align-items:center; } .wt-th { flex:0 0 44%; } .wt-top { flex-direction:column; align-items:flex-start; gap:4px; } .wt-top p { font-size:13px; } .wt-btns .b-go { font-size:21px; letter-spacing:0; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; } }",
+    "@media (max-width:700px) { .wt-trail { display:flex; flex-direction:column; align-items:stretch; } .wt-card { flex-direction:row; align-items:center; } .wt-th { flex:0 0 44%; } .wt-top { flex-direction:column; align-items:flex-start; gap:4px; } .wt-top p { font-size:13px; } .wt-btns .b-go { font-size:21px; letter-spacing:0; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; } }",
     "@media (max-height:500px) and (orientation:landscape) { .wt-panel { padding:10px 10px 6px; } .wt-top { padding:3px 10px; } .wt-top p { font-size:12px; } .wt-th { max-height:58px; } .wt-th canvas { margin-top:-12%; } .wt-tx { font-size:11px; } .wt-tx b { font-size:13px; } .wt-info { font-size:12px; padding:4px 10px; } #wt-foot { padding-top:5px; } .wt-btns .b-go { font-size:20px; padding:7px 10px; min-height:0; height:auto; line-height:1.2; } }"
   ].join("\n");
   document.head.appendChild(st);
@@ -20383,6 +20382,666 @@ function bootWorlds() {
     boss: () => { const e = B.enemies.find(q => q.wb && q.hp > 0); return e ? { hp: e.hp, max: e.max, tough: e.tough, toughMax: e.toughMax, breakT: e.breakT, y: e.y, dmgIn: e.dmgIn || 0 } : null; },
     cv: () => B.towers.reduce((a, t) => a + (t.fainted ? 0 : combatValue(t)), 0) };
 }
+
+/* ================= World Tour batch 2 (preview only): six new worlds =================
+   Register after 19-worlds.js. Existing orchard / desert / ocean stay as they are.
+   Progress still lives in mengchong-td-worlds-v1. The main save format is not changed. */
+(function () {
+  const NEWS = [
+    { id: "w_jungle", key: "jungle", theme: "jungle", path: "w_jungle", waves: 10, off: 9, pool: ["sprout", "split", "thief", "jelly"], boss: ["boss1", "wb_jungle"], gems: 90, egg: 2, terrain: { 4: "high", 2: "bend", 8: "rune" }, feat: "vine", obst: "log", icon: "🌿" },
+    { id: "w_sky", key: "sky", theme: "sky", path: "w_sky", waves: 10, off: 10, pool: ["puff", "zap", "shield", "spitter"], boss: ["boss2", "wb_sky"], gems: 100, egg: 2, terrain: { 3: "high", 6: "bend", 9: "rune" }, feat: "wind", obst: "kite", icon: "☁️" },
+    { id: "w_lava", key: "lava", theme: "volcano", path: "w_lava", waves: 10, off: 11, pool: ["ember", "pebble", "zap", "split"], boss: ["boss3", "wb_lava"], gems: 110, egg: 3, terrain: { 8: "high", 1: "bend", 5: "rune" }, feat: "geyser", obst: "boulder", icon: "🌋" },
+    { id: "w_snow", key: "snow", theme: "snow", path: "w_snow", waves: 10, off: 12, pool: ["puff", "shield", "pebble", "jelly"], boss: ["boss2", "wb_snow"], gems: 120, egg: 3, terrain: { 5: "high", 0: "bend", 7: "rune" }, feat: "ice", obst: "snowball", icon: "❄️" },
+    { id: "w_swamp", key: "swamp", theme: "swamp", path: "w_swamp", waves: 10, off: 13, pool: ["sprout", "mage", "split", "thief", "puff"], boss: ["boss1", "wb_swamp"], gems: 130, egg: 3, terrain: { 6: "high", 2: "bend", 4: "rune" }, feat: "spore", obst: "lily", icon: "🍄" },
+    { id: "w_candy", key: "candy", theme: "candy", path: "w_candy", waves: 10, off: 14, pool: ["jelly", "shield", "spitter", "puff", "ember"], boss: ["boss3", "wb_candy"], gems: 140, egg: 3, terrain: { 4: "high", 8: "high", 3: "bend", 7: "rune" }, feat: "taffy", obst: "lolli", icon: "🍭" }
+  ];
+  for (const w of NEWS) { w.world = true; MAP[w.id] = w; WORLDS.push(w); }
+  WORLDS_SOON.length = 0;
+  WORLDS_SOON.push("lantern", "boba");
+
+  Object.assign(ENEMY, {
+    wb_jungle: { name: "藤甲花王", col: "#3d8a3a", el: "草", hp: 4200, spd: 10, atk: 72, reward: 250, size: 176, img: "b-2", boss: true, wboss: "jungle" },
+    wb_sky:    { name: "云端星王", col: "#7ec8ff", el: "光", hp: 4600, spd: 11, atk: 74, reward: 270, size: 172, img: "b-4", boss: true, wboss: "sky" },
+    wb_lava:   { name: "熔核岩王", col: "#e03a2a", el: "火", hp: 5000, spd: 10, atk: 78, reward: 290, size: 178, img: "b-3", boss: true, wboss: "lava" },
+    wb_snow:   { name: "冰晶兽王", col: "#d6efff", el: "水", hp: 5400, spd: 10, atk: 80, reward: 310, size: 176, img: "b-2", boss: true, wboss: "snow" },
+    wb_swamp:  { name: "伞菇蟾王", col: "#7aaa3a", el: "草", hp: 5800, spd: 10, atk: 82, reward: 330, size: 178, img: "b-1", boss: true, wboss: "swamp" },
+    wb_candy:  { name: "糖霜皇冠王", col: "#ff8ab8", el: "光", hp: 6200, spd: 10, atk: 84, reward: 350, size: 176, img: "b-1", boss: true, wboss: "candy" }
+  });
+  Object.assign(ZH.enemy, { wb_jungle: "藤甲花王", wb_sky: "云端星王", wb_lava: "熔核岩王", wb_snow: "冰晶兽王", wb_swamp: "伞菇蟾王", wb_candy: "糖霜皇冠王" });
+  Object.assign(EN.enemy, { wb_jungle: "Vinebloom King", wb_sky: "Starcloud King", wb_lava: "Magma Core King", wb_snow: "Ice Crystal King", wb_swamp: "Toadstool King", wb_candy: "Sugarfrost King" });
+  const BOSS_IDS = ["wb_jungle", "wb_sky", "wb_lava", "wb_snow", "wb_swamp", "wb_candy"];
+  for (const id of BOSS_IDS) ENEMY[id].name = (LANG === "en" ? EN : ZH).enemy[id];
+  try {
+    AB24.wb_jungle = ["slam"]; AB24.wb_sky = ["frost"]; AB24.wb_lava = ["slam"];
+    AB24.wb_snow = ["frost"]; AB24.wb_swamp = ["slam"]; AB24.wb_candy = ["frost"];
+  } catch (e) {}
+  Object.assign(WB_MINION, { jungle: ["sprout", "split"], sky: ["puff", "zap"], lava: ["ember", "pebble"], snow: ["puff", "shield"], swamp: ["sprout", "mage"], candy: ["jelly", "shield"] });
+  Object.assign(WB_K, { jungle: 12, sky: 13, lava: 14, snow: 14.5, swamp: 15, candy: 14 });
+  Object.assign(ROAD, {
+    jungle: { fill: "#c6b06a", edge: "#3a5a24", dot: "#8fce5a" },
+    volcano: { fill: "#6a3a28", edge: "#2a1410", dot: "#ff8a3a" },
+    teagarden: { fill: "#d8e8a0", edge: "#5a7a30", dot: "#fff6dc" }
+  });
+
+  Object.assign(STR.zh, {
+    wt_sub: "9 个主题世界 · 打败 Boss 解锁下一个",
+    map_w_jungle: "翠绿丛林", map_w_sky: "天空之城", map_w_lava: "熔岩火山",
+    map_w_snow: "冰雪林地", map_w_swamp: "蘑菇沼泽", map_w_candy: "糖果城堡",
+    map_w_jungle_d: "弯曲的密林小径。藤蔓会抽打史莱姆，滚木挡路，点一下能把它推上去。",
+    map_w_sky_d: "在浮岛之间绕大弧。气流柱会把史莱姆吹回去，风筝挡住子弹，点一下就俯冲。",
+    map_w_lava_d: "越走越弯的火山地带。熔岩喷泉会喷发，滚石从坡上冲下来，点一下砸碎它。",
+    map_w_snow_d: "雪道像滑雪道一样来回摆。冰面会让史莱姆打滑，也会定时把它们冻住；点一下把雪球踢出去。",
+    map_w_swamp_d: "绕着大圈走的沼泽路。毒菇喷出孢子，踩上去会把史莱姆弹回去。点一下翻起睡莲拍打。",
+    map_w_candy_d: "拐杖糖一样的弯路。粘糖河会拖慢史莱姆，时不时有糖球滚过来。点一下把棒棒糖砸下去。",
+    wt_soon_lantern: "月下灯会", wt_soon_boba: "波波茶港",
+    wt_f_vine: "捕蝇藤：每隔一阵抽打附近的史莱姆，把它缠在原地；连抽 3 次会砸地一下",
+    wt_f_wind: "星风柱：站在风柱里的史莱姆会被吹回路上；一阵强风还能把它们掀得更远",
+    wt_f_geyser: "熔岩喷泉：喷发时灼烧路过的史莱姆，也会烧掉喷口里的子弹；喷完留下一层会减速的岩壳",
+    wt_f_ice: "冰面：史莱姆走上去会打滑变快，但每隔一阵冰面会封冻，把它们冻住",
+    wt_f_spore: "喷毒菌：定时喷出孢子云，让史莱姆变慢；踩到菌盖会被弹回路上",
+    wt_f_taffy: "粘糖河：横在路上的糖浆会拖慢史莱姆；时不时有糖球滚过来把它们撞回去",
+    wt_o_log: "滚木：横着滚，挡住子弹、撞退史莱姆。点一下把它推上去撞！",
+    wt_o_kite: "风筝：斜着飘过来挡子弹。点一下剪断线，它会俯冲去撞史莱姆",
+    wt_o_boulder: "滚石：从坡上冲下来碾压史莱姆、挡住子弹。点一下砸碎它",
+    wt_o_snowball: "雪球：边滚边变大，把史莱姆推开。点一下把它踢向一条路",
+    wt_o_lily: "睡莲：漂在路上挡住子弹。点一下翻过来拍打史莱姆",
+    wt_o_lolli: "棒棒糖：原地旋转挡住子弹。点一下把它砸下去！",
+    wt_s_vine: "捕蝇藤", wt_s_wind: "星风柱", wt_s_geyser: "熔岩喷泉", wt_s_ice: "冰面", wt_s_spore: "喷毒菌", wt_s_taffy: "粘糖河",
+    wt_s_log: "滚木", wt_s_kite: "风筝", wt_s_boulder: "滚石", wt_s_snowball: "雪球", wt_s_lily: "睡莲", wt_s_lolli: "棒棒糖",
+    wt_lash: "抽！", wt_slam: "砸地！", wt_gust: "吹走！", wt_erupt: "喷发！", wt_freeze: "冰封！", wt_bounce: "弹回！", wt_sticky: "黏住！",
+    wt_cut: "剪断！", wt_smash: "砸碎！", wt_flop: "拍！", wt_whack: "砸！"
+  });
+  Object.assign(STR.en, {
+    wt_sub: "9 themed worlds · beat the boss to unlock the next",
+    map_w_jungle: "Emerald Jungle", map_w_sky: "Sky City", map_w_lava: "Lava Volcano",
+    map_w_snow: "Snow Woods", map_w_swamp: "Mushroom Swamp", map_w_candy: "Candy Castle",
+    map_w_jungle_d: "A twisting jungle path. Vines lash slimes and rolling logs block the way — tap a log to shove it up the road.",
+    map_w_sky_d: "A wide arc between floating isles. Updrafts blow slimes back, and kites block shots — tap one to send it diving.",
+    map_w_lava_d: "Switchbacks down the volcano. Geysers erupt and boulders crash down the slope — tap a boulder to smash it.",
+    map_w_snow_d: "A slalom snow road. Ice makes slimes slip faster, then a freeze pulse holds them still. Tap a snowball to kick it.",
+    map_w_swamp_d: "A looping swamp trail. Spore caps puff a slow cloud, and stepping on one bounces a slime back. Tap a lilypad to slap.",
+    map_w_candy_d: "A candy-cane bend. The taffy river slows slimes, and gumballs bump them back. Tap a lollipop to slam it down.",
+    wt_soon_lantern: "Lantern Night", wt_soon_boba: "Boba Harbor",
+    wt_f_vine: "Flytrap Vines: periodically lash a nearby slime and root it; after 3 catches they slam the ground",
+    wt_f_wind: "Starwind Columns: slimes in a column are blown back up the path; a strong gust shoves them even farther",
+    wt_f_geyser: "Lava Geysers: eruptions burn slimes and shots in the plume, then leave a cooling crust that slows walkers",
+    wt_f_ice: "Ice Sheets: slimes slip and speed up on the ice, but a regular freeze pulse locks them in place",
+    wt_f_spore: "Spore Caps: puff a slowing cloud, and a slime that steps on a cap is bounced back up the path",
+    wt_f_taffy: "Taffy River: sticky syrup slows slimes; a gumball sometimes rolls through and bumps them back",
+    wt_o_log: "Rolling Logs: roll sideways, block shots and bump slimes. Tap to shove one up the road!",
+    wt_o_kite: "Kites: drift across and block shots. Tap to cut the string and send one diving into slimes",
+    wt_o_boulder: "Boulders: crash down a lane, crush slimes and block shots. Tap to smash one",
+    wt_o_snowball: "Snowballs: grow as they roll and shove slimes. Tap to kick one down a lane",
+    wt_o_lily: "Lilypads: drift on the path and block shots. Tap to flip one and slap a slime",
+    wt_o_lolli: "Lollipops: spin in place and block shots. Tap to slam one down!",
+    wt_s_vine: "Flytrap Vines", wt_s_wind: "Starwind", wt_s_geyser: "Lava Geyser", wt_s_ice: "Ice Sheets", wt_s_spore: "Spore Caps", wt_s_taffy: "Taffy River",
+    wt_s_log: "Rolling Logs", wt_s_kite: "Kites", wt_s_boulder: "Boulders", wt_s_snowball: "Snowballs", wt_s_lily: "Lilypads", wt_s_lolli: "Lollipops",
+    wt_lash: "Lash!", wt_slam: "Slam!", wt_gust: "Whoosh!", wt_erupt: "Eruption!", wt_freeze: "Frozen!", wt_bounce: "Boing!", wt_sticky: "Sticky!",
+    wt_cut: "Cut!", wt_smash: "Smash!", wt_flop: "Slap!", wt_whack: "Whack!"
+  });
+
+  /* unique winding roads — each formula is a different shape */
+  const WT_PATH2 = {
+    w_jungle: (u) => 86 * Math.sin(u * TAU * 0.75) * Math.cos(u * Math.PI * 1.35),
+    w_sky: (u) => 70 * Math.sin(u * Math.PI) * Math.cos(u * TAU * 1.15),
+    w_lava: (u) => { const p = (u * 3.2) % 1, tri = p < 0.5 ? p * 4 - 1 : 3 - p * 4; return 84 * Math.sign(tri) * Math.pow(Math.abs(tri), 0.7) * (0.6 + 0.4 * u); },
+    w_snow: (u) => 66 * Math.sin(u * TAU * 1.75 + Math.sin(u * TAU) * 0.6),
+    w_swamp: (u) => 86 * Math.sin(u * Math.PI * 2.15) * Math.sin(u * Math.PI + 0.35),
+    w_candy: (u) => 78 * Math.sin(u * Math.PI * 0.95) + 32 * Math.sin(u * TAU * 2.5)
+  };
+  const _p2 = pathDX;
+  pathDX = function (path, y) {
+    const fn = WT_PATH2[path];
+    if (!fn) return _p2(path, y);
+    const u = Math.max(0, Math.min(1, (y - 86) / (450 - 86))), fade = y < 450 ? 1 : y > 545 ? 0 : 0.5 + 0.5 * Math.cos((y - 450) / 95 * Math.PI);
+    return fn(u) * fade;
+  };
+
+  /* painted backgrounds already in assets/. Jungle uses the leafy tea-garden painting plus vine overlays. */
+  (function () {
+    const alias = { jungle: "teagarden", lava: "volcano" };
+    ["teagarden", "volcano", "sky", "snow", "swamp", "candy"].forEach((k) => {
+      try {
+        loadImage(assetUrl("bg/" + k)).then((im) => {
+          if (!im) return;
+          IMG["bg/" + k] = im;
+          for (const a in alias) if (alias[a] === k) IMG["bg/" + a] = im;
+          try { BG.clear(); } catch (e) {}
+        });
+      } catch (e) {}
+    });
+  })();
+
+  const _wi = wtInit;
+  wtInit = function () {
+    _wi();
+    const w = wtDef(); if (!WT || !w) return;
+    if (w.feat === "vine") WT.vines = [{ y: 268, lane: 1, cd: 1.2, catch: 0, lash: 0 }, { y: 470, lane: 3, cd: 2.4, catch: 0, lash: 0 }].map((v) => Object.assign(v, { x: wtRoadX(v.lane, v.y) }));
+    if (w.feat === "wind") WT.winds = [{ y: 250, lane: 1, r: 42 }, { y: 430, lane: 3, r: 44 }].map((v) => Object.assign(v, { x: wtRoadX(v.lane, v.y), gust: 0 }));
+    if (w.feat === "geyser") WT.geysers = [{ y: 260, lane: 2 }, { y: 455, lane: 0 }].map((v) => Object.assign(v, { x: wtRoadX(v.lane, v.y), phase: "idle", t: 1 + Math.random() * 2 }));
+    if (w.feat === "ice") WT.ices = [{ y: 280, lane: 1, r: 58 }, { y: 460, lane: 3, r: 54 }].map((v) => Object.assign(v, { x: wtRoadX(v.lane, v.y) }));
+    if (w.feat === "ice") WT.freezeT = 7;
+    if (w.feat === "spore") WT.spores = [{ y: 240, lane: 0 }, { y: 360, lane: 2 }, { y: 500, lane: 4 }].map((v) => Object.assign(v, { x: wtRoadX(v.lane, v.y), puff: 0, bounceCd: 0, cloud: 0 }));
+    if (w.feat === "taffy") WT.taffy = { y: 360, h: 42, ballT: 5, balls: [] };
+    if (w.obst === "log") WT.obs = [{ k: "log", x: 150, y: 210, dir: 1, hp: 7, r: 34, rot: 0 }, { k: "log", x: 400, y: 430, dir: -1, hp: 7, r: 34, rot: 0 }];
+    if (w.obst === "lily") WT.obs = [{ k: "lily", x: 160, y: 250, dir: 1, hp: 5, r: 32, cd: 0 }, { k: "lily", x: 390, y: 470, dir: -1, hp: 5, r: 32, cd: 0 }];
+    if (w.obst === "lolli") WT.obs = [{ k: "lolli", x: 150, y: 230, dir: 1, hp: 6, r: 30, rot: 0 }, { k: "lolli", x: 400, y: 445, dir: -1, hp: 6, r: 30, rot: 0 }];
+    if (w.obst === "snowball") WT.obs = [{ k: "snowball", x: 120, y: 240, dir: 1, hp: 4, r: 22, grow: 0 }, { k: "snowball", x: 420, y: 430, dir: -1, hp: 4, r: 22, grow: 0 }];
+    if (w.obst === "kite" || w.obst === "boulder") { WT.obs = []; WT.spawn = w.obst; WT.spawnT = 1.6; }
+  };
+
+  const _wt = wtTick;
+  wtTick = function (dt) {
+    _wt(dt);
+    if (!WT || !B.running || B.over) return;
+    const live = B.enemies.filter((e) => e.hp > 0);
+    tickVines(dt, live); tickWinds(dt, live); tickGeysers(dt, live); tickIce(dt, live); tickSpores(dt, live); tickTaffy(dt, live);
+    tickSpawn(dt, live);
+    for (const o of WT.obs) tickNewObs(o, dt, live);
+    WT.obs = WT.obs.filter((o) => !((o.k === "kite" || o.k === "boulder") && o.gone));
+  };
+
+  function tickVines(dt, live) {
+    if (!WT.vines) return;
+    for (const v of WT.vines) {
+      v.cd -= dt; v.lash = Math.max(0, v.lash - dt);
+      if (v.cd > 0) continue;
+      const e = live.filter((q) => !q.fly && dist(q.x, q.y, v.x, v.y) < 88).sort((a, b) => dist(a.x, a.y, v.x, v.y) - dist(b.x, b.y, v.x, v.y))[0];
+      if (!e) { v.cd = 0.5; continue; }
+      v.cd = 3.4; v.lash = 0.35; v.catch++;
+      e.stunT = Math.max(e.stunT, e.boss ? 0.35 : 1.15);
+      wtHit(e, 0.18, "草"); wtFloat(e.x, e.y - 44, tr("wt_lash"), "#5ab83a"); burst(e.x, e.y, "#5ab83a", 6);
+      if (v.catch >= 3) {
+        v.catch = 0;
+        for (const q of live) if (dist(q.x, q.y, v.x, v.y) < 130) wtHit(q, 0.2, "草");
+        wtFloat(v.x, v.y - 70, tr("wt_slam"), "#3d8a3a", true);
+        B.fx.push({ typ: "ring", x: v.x, y: v.y, r0: 12, r1: 120, color: "#5ab83a", life: 0.4, max: 0.4 });
+      }
+    }
+  }
+  function tickWinds(dt, live) {
+    if (!WT.winds) return;
+    WT.gustT = (WT.gustT || 11) - dt;
+    const big = WT.gustT <= 0; if (big) WT.gustT = 12;
+    for (const w of WT.winds) {
+      w.gust = Math.max(0, (w.gust || 0) - dt);
+      for (const e of live) {
+        if (dist(e.x, e.y, w.x, w.y) > w.r) continue;
+        if (!e.boss && !e.fly) e.y = Math.max(FIELD_TOP - 10, e.y - 38 * dt);
+        e.slowT = Math.max(e.slowT, 0.15); e.slowV = Math.min(e.slowV, e.boss ? 0.85 : 0.7);
+      }
+      if (big) {
+        w.gust = 0.6;
+        for (const e of live) if (!e.boss && !e.fly && dist(e.x, e.y, w.x, w.y) < w.r + 30) { e.y = Math.max(FIELD_TOP - 10, e.y - 46); wtFloat(e.x, e.y - 40, tr("wt_gust"), "#bfe6ff"); burst(e.x, e.y, "#c8e8ff", 5); }
+      }
+    }
+  }
+  function tickGeysers(dt, live) {
+    if (!WT.geysers) return;
+    const IDLE = 7, RUMBLE = 0.7, ERUPT = 1.6, CRUST = 2.8;
+    for (const g of WT.geysers) {
+      g.t += dt;
+      if (g.phase === "idle" && g.t > IDLE) { g.phase = "rumble"; g.t = 0; }
+      else if (g.phase === "rumble" && g.t > RUMBLE) { g.phase = "erupt"; g.t = 0; wtFloat(g.x, g.y - 50, tr("wt_erupt"), "#ff8a3a", true); }
+      else if (g.phase === "erupt" && g.t > ERUPT) { g.phase = "crust"; g.t = 0; }
+      else if (g.phase === "crust" && g.t > CRUST) { g.phase = "idle"; g.t = 0; }
+      if (g.phase === "erupt") {
+        g.dot = (g.dot || 0) - dt;
+        if (g.dot <= 0) { g.dot = 0.28; for (const e of live) if (dist(e.x, e.y, g.x, g.y) < 48) wtHit(e, 0.08, "火"); }
+        for (const s of B.shots) if (!s.dead && dist(s.x, s.y, g.x, g.y - 20) < 40) { s.dead = true; burst(s.x, s.y, "#ff8a3a", 3); }
+      } else if (g.phase === "crust") {
+        for (const e of live) if (!e.fly && dist(e.x, e.y, g.x, g.y) < 46) { e.slowT = Math.max(e.slowT, 0.2); e.slowV = Math.min(e.slowV, e.boss ? 0.75 : 0.5); }
+      }
+    }
+  }
+  function tickIce(dt, live) {
+    if (!WT.ices) return;
+    WT.freezeT -= dt;
+    const pulse = WT.freezeT <= 0; if (pulse) WT.freezeT = 8;
+    for (const p of WT.ices) {
+      for (const e of live) {
+        if (e.fly || dist(e.x, e.y + 10, p.x, p.y) > p.r) continue;
+        if (!e.boss) e.y += 16 * dt;
+        if (pulse) { e.stunT = Math.max(e.stunT, e.boss ? 0.35 : 1.35); wtFloat(e.x, e.y - 40, tr("wt_freeze"), "#d6efff"); burst(e.x, e.y, "#ffffff", 6); }
+      }
+    }
+    if (pulse) B.fx.push({ typ: "ring", x: W / 2, y: 360, r0: 20, r1: 200, color: "#d6efff", life: 0.35, max: 0.35 });
+  }
+  function tickSpores(dt, live) {
+    if (!WT.spores) return;
+    for (const m of WT.spores) {
+      m.bounceCd = Math.max(0, m.bounceCd - dt);
+      m.cloud = Math.max(0, m.cloud - dt);
+      m.puff -= dt;
+      if (m.puff <= 0) { m.puff = 5.5 + Math.random(); m.cloud = 2.2; }
+      if (m.cloud > 0) for (const e of live) if (dist(e.x, e.y, m.x, m.y) < 58) { e.slowT = Math.max(e.slowT, 0.2); e.slowV = Math.min(e.slowV, e.boss ? 0.8 : 0.55); }
+      if (m.bounceCd <= 0) {
+        const e = live.find((q) => !q.boss && !q.fly && dist(q.x, q.y, m.x, m.y) < 28);
+        if (e) { m.bounceCd = 2.6; e.y = Math.max(FIELD_TOP - 10, e.y - 52); wtFloat(e.x, e.y - 40, tr("wt_bounce"), "#b8e05a", true); burst(e.x, e.y, "#b8e05a", 6); }
+      }
+    }
+  }
+  function tickTaffy(dt, live) {
+    const t = WT.taffy; if (!t) return;
+    const y0 = t.y - t.h / 2, y1 = t.y + t.h / 2;
+    for (const e of live) if (!e.fly && e.y > y0 && e.y < y1) { e.slowT = Math.max(e.slowT, 0.2); e.slowV = Math.min(e.slowV, e.boss ? 0.7 : 0.42); }
+    t.ballT -= dt;
+    if (t.ballT <= 0) { t.ballT = 8; t.balls.push({ x: -20, y: t.y, vx: 90, life: 8, hit: new Set() }); }
+    for (const b of t.balls) {
+      b.x += b.vx * dt; b.life -= dt;
+      for (const e of live) if (!b.hit.has(e) && dist(e.x, e.y, b.x, b.y) < 30) { b.hit.add(e); if (!e.boss) e.y = Math.max(FIELD_TOP - 10, e.y - 28); wtHit(e, 0.1, "光"); burst(e.x, e.y, "#ff8ab8", 4); }
+    }
+    t.balls = t.balls.filter((b) => b.life > 0 && b.x < W + 30);
+  }
+  function tickSpawn(dt) {
+    if (!WT.spawn) return;
+    WT.spawnT -= dt;
+    const n = WT.obs.filter((o) => !o.gone && o.k === WT.spawn).length;
+    if (WT.spawnT > 0 || n >= 3) return;
+    if (WT.spawn === "kite") {
+      WT.spawnT = 2.8 + Math.random() * 2.2;
+      const left = Math.random() < 0.5;
+      WT.obs.push({ k: "kite", x: left ? -20 : W + 20, y: 140 + Math.random() * 280, vx: (left ? 1 : -1) * (50 + Math.random() * 30), vy: 18, hp: 2, r: 26, rot: 0, dive: false });
+    } else if (WT.spawn === "boulder") {
+      WT.spawnT = 3.2 + Math.random() * 2;
+      const lane = (Math.random() * 5) | 0, y = 130;
+      WT.obs.push({ k: "boulder", x: wtRoadX(lane, y), y, lane, vy: 70, hp: 5, r: 30, rot: 0, hitSet: new Set() });
+    }
+  }
+  function tickNewObs(o, dt, live) {
+    o.hitT = Math.max(0, (o.hitT || 0) - dt);
+    if (o.k === "log") {
+      if (o.kick) {
+        o.y -= 300 * dt; o.rot = (o.rot || 0) - dt * 7;
+        for (const e of live) if (!o.kickSet.has(e) && dist(e.x, e.y, o.x, o.y) < 44) { o.kickSet.add(e); wtHit(e, 0.28, "土"); if (!e.boss) e.y = Math.max(FIELD_TOP - 20, e.y - 36); burst(e.x, e.y, "#8a5a30", 5); }
+        if (o.y < 60) { o.kick = false; o.gone = true; o.back = 6; }
+        return;
+      }
+      if (o.gone) { o.back -= dt; if (o.back <= 0) { o.gone = false; o.hp = 7; o.y = o.homeY || o.y; o.x = o.dir > 0 ? 110 : 430; } return; }
+      o.homeY = o.homeY || o.y;
+      o.x += o.dir * 30 * dt; o.rot += o.dir * dt * 1.6; if (o.x > 440) o.dir = -1; if (o.x < 100) o.dir = 1;
+      for (const e of live) if (!e.fly && dist(e.x, e.y, o.x, o.y) < 40) { e.slowT = Math.max(e.slowT, 0.2); e.slowV = Math.min(e.slowV, 0.55); if (!e.boss) e.y = Math.max(FIELD_TOP - 20, e.y - 10 * dt); }
+      if (wtShotBlock(o)) { o.gone = true; o.back = 7; burst(o.x, o.y, "#8a5a30", 12); }
+    } else if (o.k === "kite") {
+      if (o.gone) return;
+      if (o.dive) {
+        o.x += (o.tx - o.x) * Math.min(1, dt * 6); o.y += (o.ty - o.y) * Math.min(1, dt * 6);
+        if (dist(o.x, o.y, o.tx, o.ty) < 10) {
+          for (const e of live) if (dist(e.x, e.y, o.x, o.y) < 50) wtHit(e, 0.22, "光");
+          burst(o.x, o.y, "#ffe14a", 10); o.gone = true;
+        }
+        return;
+      }
+      o.x += o.vx * dt; o.y += Math.sin((o.x + WT.t * 40) / 40) * 18 * dt; o.rot = Math.sin(WT.t * 3) * 0.3;
+      if (o.x < -50 || o.x > W + 50) o.gone = true;
+      if (wtShotBlock(o)) { o.gone = true; burst(o.x, o.y, "#ffd23a", 8); }
+    } else if (o.k === "boulder") {
+      if (o.gone) return;
+      o.y += o.vy * dt; o.x = wtRoadX(o.lane, o.y); o.rot += dt * 3;
+      if (o.y > FRONT_Y - 20) { o.gone = true; return; }
+      for (const e of live) if (!o.hitSet.has(e) && dist(e.x, e.y, o.x, o.y) < 36) { o.hitSet.add(e); wtHit(e, 0.2, "土"); if (!e.boss) e.stunT = Math.max(e.stunT, 0.5); burst(e.x, e.y, "#8a6a4a", 5); }
+      if (wtShotBlock(o)) { o.gone = true; burst(o.x, o.y, "#8a6a4a", 14); WT.fx.push({ k: "straw", x: o.x, y: o.y, life: 0.6, max: 0.6, col: "#8a6a4a" }); }
+    } else if (o.k === "snowball") {
+      if (o.kick) {
+        o.y -= 280 * dt; o.r = Math.min(36, o.r + 10 * dt);
+        for (const e of live) if (!o.kickSet.has(e) && dist(e.x, e.y, o.x, o.y) < o.r + 10) { o.kickSet.add(e); wtHit(e, 0.22, "水"); if (!e.boss) { e.stunT = Math.max(e.stunT, 0.6); e.y = Math.max(FIELD_TOP - 20, e.y - 28); } burst(e.x, e.y, "#ffffff", 5); }
+        if (o.y < 60) { o.kick = false; o.gone = true; o.back = 5; }
+        return;
+      }
+      if (o.gone) { o.back -= dt; if (o.back <= 0) { o.gone = false; o.hp = 4; o.r = 22; o.y = o.homeY || 240; o.x = o.dir > 0 ? 110 : 430; } return; }
+      o.homeY = o.homeY || o.y;
+      o.x += o.dir * 36 * dt; o.r = Math.min(32, o.r + 3 * dt); if (o.x > 450) o.dir = -1; if (o.x < 90) o.dir = 1;
+      for (const e of live) if (!e.fly && dist(e.x, e.y, o.x, o.y) < o.r + 8) { e.slowT = Math.max(e.slowT, 0.2); e.slowV = Math.min(e.slowV, 0.6); }
+      if (wtShotBlock(o)) { o.gone = true; o.back = 6; burst(o.x, o.y, "#ffffff", 10); }
+    } else if (o.k === "lily") {
+      if (o.flip > 0) { o.flip -= dt; return; }
+      o.x += o.dir * 22 * dt; if (o.x > 440) o.dir = -1; if (o.x < 100) o.dir = 1;
+      if (wtShotBlock(o)) o.hp = 5;
+    } else if (o.k === "lolli") {
+      if (o.down) { o.down -= dt; if (o.down <= 0) { o.down = 0; o.hp = 6; o.rot = 0; } return; }
+      if (o.slam) {
+        o.slam -= dt; o.rot = Math.min(1.2, (o.rot || 0) + dt * 8);
+        if (o.slamHit && o.rot > 0.8) {
+          o.slamHit = false;
+          for (const e of live) if (Math.abs(e.y - o.y) < 50 && Math.abs(e.x - o.x) < 80) { wtHit(e, 0.24, "光"); if (!e.boss) e.stunT = Math.max(e.stunT, 0.7); burst(e.x, e.y, "#ff8ab8", 6); }
+          wtFloat(o.x, o.y - 50, tr("wt_whack"), "#ff5a8a", true);
+        }
+        if (o.slam <= 0) { o.slam = 0; o.rot = 0; }
+        return;
+      }
+      o.rot = (o.rot || 0) + dt * 2.2;
+      if (wtShotBlock(o)) { o.down = 4; burst(o.x, o.y, "#ff8ab8", 8); }
+    }
+  }
+
+  const _tap = wtTap;
+  wtTap = function (x, y) {
+    if (!WT || !B.running || B.over) return _tap(x, y);
+    for (const o of WT.obs) {
+      if (o.gone || dist(x, y, o.x, o.y - 12) > (o.r || 28) + 18) continue;
+      if (o.k === "log" && !o.kick) { o.kick = true; o.kickSet = new Set(); wtFloat(o.x, o.y - 50, tr("wt_kick"), "#ffe14a", true); try { sfx.click(); } catch (e) {} return true; }
+      if (o.k === "kite" && !o.dive) {
+        const e = B.enemies.filter((q) => q.hp > 0).sort((a, b) => dist(a.x, a.y, o.x, o.y) - dist(b.x, b.y, o.x, o.y))[0];
+        o.dive = true; o.tx = e ? e.x : o.x; o.ty = e ? e.y : o.y + 80; wtFloat(o.x, o.y - 40, tr("wt_cut"), "#ffe14a", true); try { sfx.click(); } catch (er) {} return true;
+      }
+      if (o.k === "boulder" && !o.gone) { o.gone = true; for (const e of B.enemies) if (e.hp > 0 && dist(e.x, e.y, o.x, o.y) < 60) wtHit(e, 0.16, "土"); burst(o.x, o.y, "#8a6a4a", 16); wtFloat(o.x, o.y - 40, tr("wt_smash"), "#ffe14a", true); try { sfx.click(); } catch (e) {} return true; }
+      if (o.k === "snowball" && !o.kick) { o.kick = true; o.kickSet = new Set(); wtFloat(o.x, o.y - 50, tr("wt_kick"), "#d6efff", true); try { sfx.click(); } catch (e) {} return true; }
+      if (o.k === "lily" && !(o.flip > 0)) {
+        o.flip = 0.7;
+        const e = B.enemies.filter((q) => q.hp > 0 && Math.abs(q.y - o.y) < 90).sort((a, b) => Math.abs(a.x - o.x) - Math.abs(b.x - o.x))[0];
+        if (e) { wtHit(e, 0.2, "水"); e.stunT = Math.max(e.stunT, e.boss ? 0.4 : 1.1); burst(e.x, e.y, "#b8e05a", 7); }
+        wtFloat(o.x, o.y - 44, tr("wt_flop"), "#8fe07a", true); try { sfx.click(); } catch (e) {} return true;
+      }
+      if (o.k === "lolli" && !o.slam) { o.slam = 0.55; o.slamHit = true; try { sfx.click(); } catch (e) {} return true; }
+    }
+    return _tap(x, y);
+  };
+
+  const _dg = wtDrawGround;
+  wtDrawGround = function (c) {
+    _dg(c);
+    if (!WT) return;
+    drawJungleDecor(c);
+    drawWinds(c); drawGeysers(c); drawIces(c); drawSpores(c); drawTaffy(c); drawVines(c);
+  };
+  const _do = drawObstacle;
+  drawObstacle = function (c, o) {
+    if (o.k === "hay" || o.k === "tumble" || o.k === "crab") return _do(c, o);
+    drawObstacle2(c, o);
+  };
+  const _dtp = wtDrawTop;
+  wtDrawTop = function (c) {
+    _dtp(c);
+  };
+
+  function drawJungleDecor(c) {
+    if (!WT || WT.key !== "jungle") return;
+    const t = B.t;
+    c.save();
+    for (let i = 0; i < 5; i++) {
+      const x = 18 + (i % 2) * 8, y = 120 + i * 110;
+      c.strokeStyle = "#2a4a18"; c.lineWidth = 7; c.beginPath(); c.moveTo(x, y - 80); c.quadraticCurveTo(x + 16 + Math.sin(t + i) * 6, y - 20, x + 4, y + 40); c.stroke();
+      c.strokeStyle = "#3d8a3a"; c.lineWidth = 4; c.stroke();
+      leaf(c, x + 10, y - 30, 28, -0.6 + Math.sin(t + i) * 0.1, i % 2 ? "#5ab83a" : "#3d8a3a");
+    }
+    for (let i = 0; i < 5; i++) {
+      const x = W - 22 - (i % 2) * 8, y = 140 + i * 110;
+      c.strokeStyle = "#2a4a18"; c.lineWidth = 7; c.beginPath(); c.moveTo(x, y - 80); c.quadraticCurveTo(x - 16 + Math.sin(t + i + 1) * 6, y - 20, x - 4, y + 40); c.stroke();
+      c.strokeStyle = "#3d8a3a"; c.lineWidth = 4; c.stroke();
+      leaf(c, x - 10, y - 24, 28, 0.6 + Math.sin(t + i) * 0.1, "#4aaa32");
+    }
+    c.restore();
+  }
+  function drawVines(c) {
+    if (!WT.vines) return;
+    const t = B.t;
+    for (const v of WT.vines) {
+      c.save();
+      ell(c, v.x, v.y + 6, 30, 9, "rgba(40,25,20,.25)");
+      c.strokeStyle = OL; c.lineWidth = 8; c.lineCap = "round";
+      c.beginPath(); c.moveTo(v.x - 24, v.y + 16); c.quadraticCurveTo(v.x - 8, v.y - 20, v.x, v.y - 8 - (v.lash > 0 ? 16 : 0)); c.stroke();
+      c.beginPath(); c.moveTo(v.x + 24, v.y + 16); c.quadraticCurveTo(v.x + 8, v.y - 20, v.x, v.y - 8 - (v.lash > 0 ? 16 : 0)); c.stroke();
+      c.strokeStyle = "#3d8a3a"; c.lineWidth = 5;
+      c.beginPath(); c.moveTo(v.x - 24, v.y + 16); c.quadraticCurveTo(v.x - 8, v.y - 20, v.x, v.y - 8 - (v.lash > 0 ? 16 : 0)); c.stroke();
+      c.beginPath(); c.moveTo(v.x + 24, v.y + 16); c.quadraticCurveTo(v.x + 8, v.y - 20, v.x, v.y - 8 - (v.lash > 0 ? 16 : 0)); c.stroke();
+      E(c, v.x - 20, v.y + 10, 16, 11, "#5ab83a", { lw: 3, rot: -0.4 });
+      E(c, v.x + 20, v.y + 10, 16, 11, "#5ab83a", { lw: 3, rot: 0.4 });
+      const open = v.lash > 0 ? 0.15 : 0.55 + Math.sin(t * 3) * 0.08;
+      F(c, (cc) => { cc.moveTo(v.x - 14, v.y + 4); cc.quadraticCurveTo(v.x, v.y + 4 - 22 * open, v.x + 14, v.y + 4); cc.quadraticCurveTo(v.x, v.y + 16, v.x - 14, v.y + 4); }, "#7a1a3a", 3);
+      for (let i = 0; i < 3; i++) dot(c, v.x - 10 + i * 10, v.y + 22, 3.2, i < v.catch ? "#5ac83a" : "rgba(43,27,34,.25)");
+      c.restore();
+    }
+  }
+  function drawWinds(c) {
+    if (!WT.winds) return;
+    const t = B.t;
+    for (const w of WT.winds) {
+      c.save(); c.globalAlpha = 0.55 + (w.gust > 0 ? 0.3 : 0);
+      c.strokeStyle = "#ffffff"; c.lineWidth = 3;
+      for (let k = 0; k < 3; k++) {
+        c.beginPath();
+        for (let i = 0; i <= 16; i++) {
+          const a = i / 16 * TAU, rr = w.r * (0.35 + 0.2 * k) + Math.sin(t * 4 + k + i) * 3;
+          const X = w.x + Math.cos(a + t * 1.4) * rr, Y = w.y + Math.sin(a + t * 1.4) * rr * 0.55 - (i * 0.4);
+          i ? c.lineTo(X, Y) : c.moveTo(X, Y);
+        }
+        c.stroke();
+      }
+      c.strokeStyle = "#7ec8ff"; c.lineWidth = 2.2;
+      c.beginPath(); c.moveTo(w.x, w.y + 16); c.quadraticCurveTo(w.x + 10, w.y - 10, w.x, w.y - 28 - Math.sin(t * 5) * 6); c.stroke();
+      c.restore();
+    }
+  }
+  function drawGeysers(c) {
+    if (!WT.geysers) return;
+    const t = B.t;
+    for (const g of WT.geysers) {
+      c.save();
+      E(c, g.x, g.y + 4, 28, 12, "#4a2418", { lw: 3 });
+      E(c, g.x, g.y + 2, 18, 7, "#2a1410", { lw: 2, hl: false });
+      if (g.phase === "rumble") c.translate(Math.sin(t * 40) * 2, 0);
+      if (g.phase === "erupt") {
+        for (let i = 0; i < 7; i++) {
+          const h = 30 + i * 10 + Math.sin(t * 20 + i) * 6;
+          E(c, g.x + Math.sin(t * 12 + i) * 6, g.y - h, 9 - i * 0.6, 12, i % 2 ? "#ff8a3a" : "#ffd23a", { lw: 2.2, hl: false });
+        }
+      } else if (g.phase === "crust") {
+        F(c, (cc) => cc.ellipse(g.x, g.y, 26, 10, 0, 0, TAU), "#8a5a3a", 2.4);
+      }
+      c.restore();
+    }
+  }
+  function drawIces(c) {
+    if (!WT.ices) return;
+    const t = B.t;
+    for (const p of WT.ices) {
+      c.save();
+      c.beginPath();
+      for (let i = 0; i <= 24; i++) { const a = i / 24 * TAU, j = 1 + jit(i, p.lane) * 0.08; const X = p.x + Math.cos(a) * p.r * j, Y = p.y + Math.sin(a) * p.r * 0.48 * j; i ? c.lineTo(X, Y) : c.moveTo(X, Y); }
+      c.fillStyle = "rgba(210,240,255,.78)"; c.fill(); grain(c, 0.4); c.strokeStyle = "#5a9ccc"; c.lineWidth = 3; c.stroke();
+      c.strokeStyle = "rgba(255,255,255,.85)"; c.lineWidth = 2;
+      c.beginPath(); c.moveTo(p.x - p.r * 0.4, p.y); c.lineTo(p.x, p.y - p.r * 0.2); c.lineTo(p.x + p.r * 0.3, p.y + p.r * 0.1); c.stroke();
+      if (WT.freezeT < 1.2) { c.globalAlpha = 0.5 + Math.sin(t * 8) * 0.2; crayonRing(c, p.x, p.y, p.r * 0.7, p.r * 0.3, "#ffffff", 8); }
+      c.restore();
+    }
+  }
+  function drawSpores(c) {
+    if (!WT.spores) return;
+    const t = B.t;
+    for (const m of WT.spores) {
+      c.save();
+      ell(c, m.x, m.y + 8, 22, 8, "rgba(40,25,20,.25)");
+      E(c, m.x, m.y + 2, 8, 14, "#f2e0b0", { lw: 2.6 });
+      E(c, m.x, m.y - 14, 26, 16, "#e0506a", { lw: 3.2 });
+      for (const d of [[-10, -16], [4, -20], [12, -12], [-2, -10]]) E(c, m.x + d[0], m.y + d[1], 4.5, 3.5, "#fff4c8", { lw: 1.6, hl: false });
+      if (m.cloud > 0) {
+        c.globalAlpha = Math.min(0.55, m.cloud * 0.4);
+        for (let i = 0; i < 5; i++) E(c, m.x + Math.sin(t + i) * 16, m.y - 8 - i * 6, 14, 10, "#c8e080", { lw: 2, hl: false });
+      }
+      c.restore();
+    }
+  }
+  function drawTaffy(c) {
+    const t = WT.taffy; if (!t) return;
+    const tm = B.t;
+    c.save(); c.globalAlpha = 0.82;
+    c.beginPath(); c.moveTo(-10, t.y - t.h / 2);
+    for (let x = -10; x <= W + 10; x += 10) c.lineTo(x, t.y - t.h / 2 + Math.sin(x / 28 + tm * 2) * 5);
+    for (let x = W + 10; x >= -10; x -= 10) c.lineTo(x, t.y + t.h / 2 + Math.sin(x / 26 + tm * 2 + 1) * 5);
+    c.closePath(); c.fillStyle = "#ff9ac8"; c.fill(); grain(c, 0.45);
+    c.strokeStyle = "#c04080"; c.lineWidth = 3; c.stroke();
+    c.strokeStyle = "rgba(255,255,255,.7)"; c.lineWidth = 2.2;
+    c.beginPath(); for (let x = 0; x < W; x += 14) c.lineTo(x, t.y + Math.sin(x / 22 + tm * 3) * 6); c.stroke();
+    for (const b of t.balls) {
+      E(c, b.x, b.y, 14, 14, b.x % 80 < 40 ? "#ff5a8a" : "#7ad0ff", { lw: 3 });
+      E(c, b.x - 3, b.y - 4, 4, 3, "#fff", { lw: 1.4, hl: false });
+    }
+    c.restore();
+  }
+
+  function drawObstacle2(c, o) {
+    const t = B.t;
+    if (o.gone && o.k !== "log" && o.k !== "snowball") return;
+    c.save(); c.translate(o.x, o.y);
+    if (o.hitT > 0) c.translate(Math.sin(t * 60) * 2, 0);
+    ell(c, 0, 4, (o.r || 28) * 0.95, 8, "rgba(40,25,20,.25)");
+    if (o.k === "log") {
+      if (o.gone && !o.kick) { c.restore(); return; }
+      c.rotate(o.rot || 0);
+      F(c, (cc) => cc.roundRect(-36, -16, 72, 28, 10), "#8a5a30", 3.4);
+      c.strokeStyle = "rgba(50,28,12,.7)"; c.lineWidth = 2;
+      for (let i = -2; i <= 2; i++) { c.beginPath(); c.moveTo(-32, i * 5); c.lineTo(32, i * 5 + 2); c.stroke(); }
+      E(c, -36, 0, 10, 12, "#c8a070", { lw: 2.6 }); E(c, 36, 0, 10, 12, "#c8a070", { lw: 2.6 });
+      if (!o.kick) { c.font = "900 11px sans-serif"; c.textAlign = "center"; c.fillStyle = "#2b1b22"; c.globalAlpha = 0.55 + 0.35 * Math.sin(t * 4); c.fillText("👆", 26, -24); }
+    } else if (o.k === "kite") {
+      c.rotate(o.rot || 0);
+      c.strokeStyle = OL; c.lineWidth = 2.4; c.beginPath(); c.moveTo(0, 16); c.lineTo(0, -8); c.stroke();
+      F(c, (cc) => { cc.moveTo(0, -28); cc.lineTo(18, -6); cc.lineTo(0, 6); cc.lineTo(-18, -6); cc.closePath(); }, "#ff5a8a", 3);
+      F(c, (cc) => { cc.moveTo(0, -28); cc.lineTo(18, -6); cc.lineTo(0, -6); cc.closePath(); }, "#ffe14a", 2);
+      if (!o.dive) { c.font = "900 11px sans-serif"; c.textAlign = "center"; c.fillStyle = "#2b1b22"; c.globalAlpha = 0.55 + 0.35 * Math.sin(t * 4); c.fillText("👆", 22, -32); }
+    } else if (o.k === "boulder") {
+      c.rotate(o.rot || 0);
+      E(c, 0, -4, 28, 22, "#8a6a4a", { lw: 3.4 });
+      E(c, -8, -8, 8, 6, "#c8b090", { lw: 2, hl: false });
+      c.font = "900 11px sans-serif"; c.textAlign = "center"; c.fillStyle = "#2b1b22"; c.globalAlpha = 0.55 + 0.35 * Math.sin(t * 4); c.fillText("👆", 22, -28);
+    } else if (o.k === "snowball") {
+      if (o.gone && !o.kick) { c.restore(); return; }
+      E(c, 0, -o.r * 0.2, o.r, o.r * 0.92, "#f4fbff", { lw: 3 });
+      E(c, -o.r * 0.3, -o.r * 0.4, o.r * 0.25, o.r * 0.18, "#ffffff", { lw: 1.6, hl: false });
+      if (!o.kick) { c.font = "900 11px sans-serif"; c.textAlign = "center"; c.fillStyle = "#2b1b22"; c.globalAlpha = 0.55 + 0.35 * Math.sin(t * 4); c.fillText("👆", 22, -o.r - 8); }
+    } else if (o.k === "lily") {
+      if (o.flip > 0) c.rotate(Math.PI * (1 - o.flip / 0.7));
+      E(c, 0, 0, 30, 14, "#7ccc4a", { lw: 3.2 });
+      E(c, 0, 0, 16, 7, "#c8f08a", { lw: 2, hl: false });
+      c.strokeStyle = "#3a6a20"; c.lineWidth = 2; c.beginPath(); c.moveTo(0, 0); c.lineTo(28, -4); c.stroke();
+      if (!(o.flip > 0)) { c.font = "900 11px sans-serif"; c.textAlign = "center"; c.fillStyle = "#2b1b22"; c.globalAlpha = 0.55 + 0.35 * Math.sin(t * 4); c.fillText("👆", 24, -22); }
+    } else if (o.k === "lolli") {
+      c.rotate(o.slam ? Math.min(1.15, o.rot || 0) : 0);
+      c.strokeStyle = OL; c.lineWidth = 5; c.beginPath(); c.moveTo(0, 8); c.lineTo(0, 36); c.stroke();
+      c.strokeStyle = "#fff6dc"; c.lineWidth = 2.6; c.stroke();
+      const spin = o.slam ? 0 : (o.rot || 0);
+      c.rotate(spin);
+      E(c, 0, -8, 20, 20, "#ff5a8a", { lw: 3.2 });
+      c.strokeStyle = "#fff"; c.lineWidth = 3; c.beginPath(); c.arc(0, -8, 12, spin, spin + 2); c.stroke();
+      if (!o.slam) { c.setTransform(1, 0, 0, 1, o.x, o.y); c.font = "900 11px sans-serif"; c.textAlign = "center"; c.fillStyle = "#2b1b22"; c.globalAlpha = 0.55 + 0.35 * Math.sin(t * 4); c.fillText("👆", 24, -36); }
+    }
+    c.restore();
+  }
+
+  const _wa = wbAccessory;
+  wbAccessory = function (c, e) {
+    if (e.wb === "orchard" || e.wb === "desert" || e.wb === "ocean") return _wa(c, e);
+    const def = ENEMY[e.typ], sz = def.size, ph2 = B.t * (e.biting ? 9 : 4) + e.ph, hop = e.stunT > 0 ? 0 : Math.max(0, Math.sin(ph2)) * 5;
+    const x = e.x, top = e.y + sz * 0.42 - hop - sz * (def.img === "b-1" ? 0.71 : def.img === "b-3" ? 0.8 : 0.86);
+    c.save();
+    if (e.wb === "jungle") {
+      /* leaf mask and vine beard — covers the stock crown */
+      leaf(c, x - 22, top + 2, 36, 0.6, "#3d8a3a"); leaf(c, x + 22, top + 2, 36, -0.6, "#5ab83a");
+      leaf(c, x, top - 18, 40, 0, "#2f6a28");
+      E(c, x, top + 4, 26, 16, "#5ab83a", { lw: 3 });
+      c.strokeStyle = "#2a4a18"; c.lineWidth = 3.2;
+      for (const s of [-1, 1]) { c.beginPath(); c.moveTo(x + s * 8, top + 14); c.quadraticCurveTo(x + s * 22, top + 28, x + s * 10, top + 36); c.stroke(); }
+      for (const s of [-1, 1]) { E(c, x + s * 10, top + 6, 5, 6, "#fff", { lw: 2, hl: false }); dot(c, x + s * 10.5, top + 6, 2.2, OL); }
+    } else if (e.wb === "sky") {
+      /* cloud halo and a smiling star diadem */
+      for (const d of [[-28, 2], [0, -10], [28, 2], [-14, -4], [14, -4]]) E(c, x + d[0], top + d[1], 16, 11, "#ffffff", { lw: 3 });
+      F(c, (cc) => { cc.moveTo(x, top - 28); for (let i = 0; i < 5; i++) { const a = -Math.PI / 2 + i * TAU / 5; cc.lineTo(x + Math.cos(a) * 16, top - 16 + Math.sin(a) * 16); const b = a + TAU / 10; cc.lineTo(x + Math.cos(b) * 7, top - 16 + Math.sin(b) * 7); } cc.closePath(); }, "#ffe14a", 3);
+    } else if (e.wb === "lava") {
+      /* cooled-lava horns and a glowing magma crack across the brow */
+      for (const s of [-1, 1]) F(c, (cc) => { cc.moveTo(x + s * 10, top + 8); cc.lineTo(x + s * 18, top - 28); cc.lineTo(x + s * 4, top - 4); cc.closePath(); }, "#3a1a16", 3);
+      F(c, (cc) => { cc.moveTo(x + 10, top + 8); cc.lineTo(x + 18, top - 28); cc.lineTo(x + 4, top - 4); cc.closePath(); }, "#3a1a16", 3);
+      c.strokeStyle = "#ff8a3a"; c.lineWidth = 3.2; c.beginPath(); c.moveTo(x - 16, top + 4); c.lineTo(x - 2, top - 6); c.lineTo(x + 16, top + 6); c.stroke();
+      E(c, x, top - 2, 8, 6, "#ffd23a", { lw: 2, hl: false });
+    } else if (e.wb === "snow") {
+      /* icicle crown and a frozen mane */
+      for (let i = -2; i <= 2; i++) F(c, (cc) => { cc.moveTo(x + i * 12 - 6, top + 6); cc.lineTo(x + i * 12, top - 22 + Math.abs(i) * 3); cc.lineTo(x + i * 12 + 6, top + 6); cc.closePath(); }, i % 2 ? "#d6efff" : "#ffffff", 2.6);
+      F(c, (cc) => cc.ellipse(x, top + 14, 34, 10, 0, 0, TAU), "#f4fbff", 3);
+    } else if (e.wb === "swamp") {
+      /* spotted toadstool cap that swallows the old crown */
+      E(c, x, top + 8, 54, 16, "#c04040", { lw: 3.4 });
+      F(c, (cc) => { cc.moveTo(x - 48, top + 6); cc.quadraticCurveTo(x, top - 44, x + 48, top + 6); cc.closePath(); }, "#e0506a", 3.4);
+      for (const d of [[-18, -8], [6, -16], [20, -6], [-4, -4]]) E(c, x + d[0], top + d[1], 7, 5, "#fff4c8", { lw: 2, hl: false });
+    } else if (e.wb === "candy") {
+      /* frosting swirl wig and a lollipop scepter */
+      for (const d of [[-24, 0], [-8, -12], [10, -12], [26, 2], [0, 6]]) E(c, x + d[0], top + d[1], 16, 12, d[0] < 0 ? "#fff6fb" : "#ffc0dc", { lw: 3 });
+      c.save(); c.translate(x + 44, top + 8); c.rotate(-0.5);
+      c.strokeStyle = OL; c.lineWidth = 4; c.beginPath(); c.moveTo(0, 8); c.lineTo(0, 42); c.stroke();
+      E(c, 0, 0, 14, 14, "#7ad0ff", { lw: 3 });
+      c.strokeStyle = "#fff"; c.lineWidth = 2.4; c.beginPath(); c.arc(0, 0, 8, 0, 3); c.stroke();
+      c.restore();
+    }
+    c.restore();
+  };
+
+  /* entry-card collage shows all nine worlds in a 3×3 grid */
+  const _dec = decoratePlayWt;
+  decoratePlayWt = function (body) {
+    _dec(body);
+    try {
+      const card = body.querySelector(".wt-entry"); if (!card) return;
+      const cv = card.querySelector("canvas"); if (!cv) return;
+      const c = cv.getContext("2d"), cols = 3, rows = 3, tw = Math.floor(cv.width / cols), th = Math.floor(cv.height / rows);
+      c.clearRect(0, 0, cv.width, cv.height);
+      for (let i = 0; i < Math.min(9, WORLDS.length); i++) {
+        const thm = wtThumb(WORLDS[i], tw, th);
+        const x = (i % cols) * tw, y = Math.floor(i / cols) * th;
+        c.drawImage(thm, 0, 0, tw, th, x, y, tw, th);
+      }
+      c.fillStyle = "#2b1b22";
+      for (let i = 1; i < cols; i++) c.fillRect(i * tw - 1, 0, 2, cv.height);
+      for (let i = 1; i < rows; i++) c.fillRect(0, i * th - 1, cv.width, 2);
+    } catch (e) {}
+  };
+
+  /* Snapshot story/endless bests at world start and always restore+persist after a wave or run ends.
+     waveCleared persists inside withBatchPersist before our earlier wrapper can put the old value back. */
+  var wtSnapSB = 0, wtSnapEB = 0, wtSnapOn = false;
+  const _srW = startRun;
+  startRun = function (mapId, hard) {
+    const map = mapId && MAP[mapId];
+    if (map && map.world) { wtSnapSB = save.storyBest | 0; wtSnapEB = save.endlessBest | 0; wtSnapOn = true; }
+    return _srW.apply(this, arguments);
+  };
+  function wtRestoreBests() {
+    if (!wtSnapOn) return;
+    save.storyBest = wtSnapSB; save.endlessBest = wtSnapEB;
+    try { persist(); } catch (e) {}
+  }
+  const _wcW = waveCleared;
+  waveCleared = function () {
+    const r = _wcW.apply(this, arguments);
+    wtRestoreBests();
+    return r;
+  };
+  const _erW = endRun;
+  endRun = function (won) {
+    const r = _erW.apply(this, arguments);
+    wtRestoreBests();
+    return r;
+  };
+
+  const _boot = bootWorlds;
+  bootWorlds = function () {
+    _boot();
+    const st = document.createElement("style");
+    st.textContent = [
+      ".wt-card { min-height:0; overflow:hidden; }",
+      ".wt-th { max-height:62px; }",
+      ".wt-th canvas { width:100%; height:auto; display:block; margin-top:-16%; }",
+      ".wt-tx { font-size:12px; gap:0; line-height:1.25; }",
+      ".wt-tx b { font-size:13.5px; }",
+      ".wt-tx span { display:block; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }",
+      ".wt-info { font-size:12.5px; padding:4px 10px; }",
+      ".wt-info p { margin:0 0 2px; } .wt-info ul { margin:2px 0 0; padding-left:18px; }",
+      ".wt-top p { font-size:13px; }",
+      ".wt-soon { font-size:12px; }",
+      ".th-jungle { background:#f4ffe8; } .th-sky { background:#eef2ff; } .th-lava { background:#ffe8dc; }",
+      ".th-snow { background:#f2fbff; } .th-swamp { background:#f0f6e0; } .th-candy { background:#fff0f6; }",
+      "@media (max-width:700px) { .wt-card { overflow:hidden; min-height:64px; padding:5px 6px; gap:8px; } .wt-th { flex:0 0 86px; max-height:54px; } .wt-tx b { font-size:15px; } .wt-tx span { display:none; } .wt-soon { font-size:12px; } .wt-info { font-size:13px; } }"
+    ].join("\n");
+    document.head.appendChild(st);
+  };
+})();
 
 /* ================= test / debug hooks ================= */
 window.__PETTD__ = {
